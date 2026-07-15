@@ -1,0 +1,31 @@
+{
+  "name": "Cloud Engineering Learning OS",
+  "short_name": "Cloud Eng OS",
+  "description": "The Operating System for Your Cloud Engineering Career",
+  "start_url": "/AEP/",
+  "scope": "/AEP/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f172a",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "img/logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "img/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "img/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["education", "developer tools"],
+  "lang": "en-US"
+}
