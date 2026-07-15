@@ -1,0 +1,42 @@
+{
+  "version": "1.0.0",
+  "description": "Content schema definitions for all content types in the platform",
+  "content_types": {
+    "lesson": {
+      "directory": "lessons/",
+      "schema": "../schemas/lesson.schema.json",
+      "template": "../templates/lesson-template.mdx",
+      "description": "Single-topic educational content, 15-45 minutes",
+      "required_fields": ["title", "slug", "description", "ai_metadata"],
+      "slug_prefix": "/lessons/"
+    },
+    "project": {
+      "directory": "projects/",
+      "schema": "../schemas/project.schema.json",
+      "template": "../templates/project-template.mdx",
+      "description": "Hands-on project with implementation steps, 2-8 hours",
+      "required_fields": ["title", "slug", "description", "ai_metadata"],
+      "slug_prefix": "/projects/"
+    },
+    "lab": {
+      "directory": "labs/",
+      "schema": "../schemas/lab.schema.json",
+      "template": "../templates/lab-template.mdx",
+      "description": "Guided interactive lab exercise, 30-90 minutes",
+      "required_fields": ["title", "slug", "description", "ai_metadata"],
+      "slug_prefix": "/labs/"
+    },
+    "concept": {
+      "directory": "curriculum/",
+      "template": "../templates/concept-template.mdx",
+      "description": "Theoretical concept explanation, 10-20 minutes",
+      "required_fields": ["title", "slug", "description", "ai_metadata"],
+      "slug_prefix": "/curriculum/"
+    },
+    "documentation": {
+      "directory": "docs/",
+      "description": "Platform and project documentation",
+      "required_fields": ["title", "slug", "description"]
+    }
+  }
+}

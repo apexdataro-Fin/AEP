@@ -1,0 +1,289 @@
+/**
+ * Cloud Engineering Learning OS — Custom Theme
+ *
+ * Design system based on sky-blue / slate professional palette
+ * optimized for readability, accessibility, and dark mode.
+ */
+
+/* ============================================================
+   CSS Custom Properties — Light Mode
+   ============================================================ */
+:root {
+  /* Brand */
+  --ifm-color-primary: #0284c7;
+  --ifm-color-primary-dark: #026ea5;
+  --ifm-color-primary-darker: #025f8e;
+  --ifm-color-primary-darkest: #014a6e;
+  --ifm-color-primary-light: #0ea5e9;
+  --ifm-color-primary-lighter: #22b1f0;
+  --ifm-color-primary-lightest: #38bdf8;
+
+  /* Neutral surface tokens */
+  --celos-surface: #ffffff;
+  --celos-surface-alt: #f8fafc;
+  --celos-surface-raised: #f1f5f9;
+  --celos-border: #e2e8f0;
+  --celos-text-primary: #0f172a;
+  --celos-text-secondary: #475569;
+  --celos-text-muted: #94a3b8;
+
+  /* Accent */
+  --celos-accent-blue: #0ea5e9;
+  --celos-accent-cyan: #06b6d4;
+  --celos-accent-emerald: #10b981;
+  --celos-accent-amber: #f59e0b;
+  --celos-accent-violet: #8b5cf6;
+
+  /* Typography */
+  --ifm-font-family-base: "Inter", system-ui, -apple-system, sans-serif;
+  --ifm-font-family-monospace: "JetBrains Mono", "Fira Code", monospace;
+  --ifm-font-size-base: 1rem;
+  --ifm-line-height-base: 1.75;
+  --ifm-heading-font-weight: 700;
+  --ifm-code-font-size: 0.9rem;
+  --ifm-h1-font-size: 2.5rem;
+  --ifm-h2-font-size: 1.75rem;
+  --ifm-h3-font-size: 1.375rem;
+
+  /* Spacing */
+  --ifm-spacing-horizontal: 1.5rem;
+  --ifm-navbar-padding-vertical: 0.75rem;
+  --ifm-navbar-padding-horizontal: 1.5rem;
+
+  /* Code */
+  --docusaurus-highlighted-code-line-bg: rgba(2, 132, 199, 0.08);
+  --ifm-pre-background: #f8fafc;
+  --ifm-code-background: #f1f5f9;
+
+  /* Misc */
+  --ifm-global-radius: 0.5rem;
+  --ifm-global-shadow-lw: 0 1px 2px rgba(0, 0, 0, 0.06);
+  --ifm-global-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --ifm-global-shadow-tl: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================================
+   CSS Custom Properties — Dark Mode
+   ============================================================ */
+[data-theme="dark"] {
+  --ifm-color-primary: #38bdf8;
+  --ifm-color-primary-dark: #22b1f0;
+  --ifm-color-primary-darker: #0ea5e9;
+  --ifm-color-primary-darkest: #0284c7;
+  --ifm-color-primary-light: #4cc5fa;
+  --ifm-color-primary-lighter: #60cdfb;
+  --ifm-color-primary-lightest: #7dd5fc;
+
+  --celos-surface: #0f172a;
+  --celos-surface-alt: #1e293b;
+  --celos-surface-raised: #334155;
+  --celos-border: #334155;
+  --celos-text-primary: #f1f5f9;
+  --celos-text-secondary: #94a3b8;
+  --celos-text-muted: #64748b;
+
+  --docusaurus-highlighted-code-line-bg: rgba(56, 189, 248, 0.12);
+  --ifm-pre-background: #1e293b;
+  --ifm-code-background: #1e293b;
+}
+
+/* ============================================================
+   Global Reset & Base
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--ifm-font-family-base);
+  color: var(--celos-text-primary);
+  background: var(--celos-surface);
+}
+
+/* ============================================================
+   Typography
+   ============================================================ */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+}
+
+.markdown h1 {
+  border-bottom: 2px solid var(--celos-border);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.markdown h2 {
+  border-bottom: 1px solid var(--celos-border);
+  padding-bottom: 0.375rem;
+  margin-top: 2.5rem;
+}
+
+.markdown a {
+  color: var(--ifm-color-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--ifm-color-primary-lighter);
+  text-underline-offset: 3px;
+}
+
+.markdown a:hover {
+  color: var(--ifm-color-primary-light);
+  text-decoration-color: var(--ifm-color-primary);
+}
+
+/* ============================================================
+   Navbar
+   ============================================================ */
+.navbar {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid var(--celos-border);
+}
+
+[data-theme="dark"] .navbar {
+  background: rgba(15, 23, 42, 0.85);
+}
+
+.navbar__title {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer {
+  background: var(--celos-surface-alt);
+  border-top: 1px solid var(--celos-border);
+}
+
+/* ============================================================
+   Code Blocks
+   ============================================================ */
+code {
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+  font-size: 0.9em;
+}
+
+pre {
+  border-radius: var(--ifm-global-radius);
+  border: 1px solid var(--celos-border);
+}
+
+/* ============================================================
+   Tables
+   ============================================================ */
+.markdown table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.markdown th {
+  background: var(--celos-surface-raised);
+  font-weight: 600;
+  text-align: left;
+}
+
+.markdown th,
+.markdown td {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--celos-border);
+}
+
+/* ============================================================
+   Mermaid Diagrams
+   ============================================================ */
+.docusaurus-mermaid-container {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: var(--celos-surface-alt);
+  border-radius: var(--ifm-global-radius);
+  border: 1px solid var(--celos-border);
+}
+
+/* ============================================================
+   Admonitions (Callouts)
+   ============================================================ */
+.alert {
+  border-radius: var(--ifm-global-radius);
+  border: 1px solid var(--celos-border);
+}
+
+.alert--info {
+  --ifm-alert-background-color: rgba(14, 165, 233, 0.08);
+  --ifm-alert-border-color: var(--celos-accent-blue);
+}
+
+.alert--success {
+  --ifm-alert-background-color: rgba(16, 185, 129, 0.08);
+  --ifm-alert-border-color: var(--celos-accent-emerald);
+}
+
+.alert--warning {
+  --ifm-alert-background-color: rgba(245, 158, 11, 0.08);
+  --ifm-alert-border-color: var(--celos-accent-amber);
+}
+
+/* ============================================================
+   Scrollbar
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--celos-surface-alt);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--celos-text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--celos-text-secondary);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 996px) {
+  :root {
+    --ifm-h1-font-size: 2rem;
+    --ifm-h2-font-size: 1.5rem;
+    --ifm-h3-font-size: 1.25rem;
+  }
+
+  .navbar__title {
+    font-size: 1rem;
+  }
+}
+
+/* ============================================================
+   Print Styles
+   ============================================================ */
+@media print {
+  .navbar,
+  .footer,
+  .pagination-nav,
+  .table-of-contents {
+    display: none;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "label": "Simulators",
+  "position": 7,
+  "link": {
+    "type": "generated-index",
+    "title": "Cloud Simulators",
+    "description": "Interactive cloud simulators — experiment without real infrastructure costs.",
+    "slug": "/simulators"
+  }
+}

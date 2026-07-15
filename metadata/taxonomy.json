@@ -1,0 +1,141 @@
+{
+  "$schema": "../schemas/metadata.schema.json",
+  "version": "1.0.0",
+  "last_updated": "2026-07-15",
+  "categories": {
+    "getting_started": {
+      "label": "Getting Started",
+      "description": "Onboarding and introductory content",
+      "difficulty": "beginner"
+    },
+    "architecture": {
+      "label": "Architecture",
+      "description": "System design and platform architecture",
+      "difficulty": "intermediate"
+    },
+    "development": {
+      "label": "Development",
+      "description": "Development guides and environment setup",
+      "difficulty": "intermediate"
+    },
+    "standards": {
+      "label": "Standards",
+      "description": "Coding and content standards",
+      "difficulty": "beginner"
+    },
+    "guides": {
+      "label": "Guides",
+      "description": "How-to guides and tutorials",
+      "difficulty": "beginner"
+    },
+    "reference": {
+      "label": "Reference",
+      "description": "Reference material and specifications",
+      "difficulty": "beginner"
+    },
+    "compute": {
+      "label": "Compute",
+      "description": "Virtual machines, instances, and compute services",
+      "difficulty": "beginner"
+    },
+    "networking": {
+      "label": "Networking",
+      "description": "VPC, subnets, routing, DNS, load balancing",
+      "difficulty": "intermediate"
+    },
+    "storage": {
+      "label": "Storage",
+      "description": "Object, block, and file storage",
+      "difficulty": "beginner"
+    },
+    "security": {
+      "label": "Security",
+      "description": "IAM, encryption, compliance, security best practices",
+      "difficulty": "intermediate"
+    },
+    "databases": {
+      "label": "Databases",
+      "description": "Relational, NoSQL, and managed database services",
+      "difficulty": "intermediate"
+    },
+    "serverless": {
+      "label": "Serverless",
+      "description": "Functions, event-driven architecture, managed services",
+      "difficulty": "intermediate"
+    },
+    "containers": {
+      "label": "Containers",
+      "description": "Docker, container registries, and container services",
+      "difficulty": "intermediate"
+    },
+    "kubernetes": {
+      "label": "Kubernetes",
+      "description": "Container orchestration, K8s architecture, and operations",
+      "difficulty": "advanced"
+    },
+    "ci_cd": {
+      "label": "CI/CD",
+      "description": "Continuous integration and delivery pipelines",
+      "difficulty": "intermediate"
+    },
+    "observability": {
+      "label": "Observability",
+      "description": "Monitoring, logging, tracing, and alerting",
+      "difficulty": "intermediate"
+    },
+    "iac": {
+      "label": "Infrastructure as Code",
+      "description": "Terraform, CloudFormation, Pulumi, Ansible",
+      "difficulty": "intermediate"
+    },
+    "career": {
+      "label": "Career",
+      "description": "Career paths, job preparation, and professional growth",
+      "difficulty": "beginner"
+    },
+    "certifications": {
+      "label": "Certifications",
+      "description": "Cloud certification preparation and exam guides",
+      "difficulty": "intermediate"
+    }
+  },
+  "difficulty_levels": {
+    "beginner": {
+      "label": "Beginner",
+      "description": "No prior cloud experience required. Concepts are explained from first principles.",
+      "typical_time_minutes": { "min": 10, "max": 45 }
+    },
+    "intermediate": {
+      "label": "Intermediate",
+      "description": "Assumes basic cloud familiarity. Focuses on practical implementation.",
+      "typical_time_minutes": { "min": 15, "max": 90 }
+    },
+    "advanced": {
+      "label": "Advanced",
+      "description": "For experienced engineers. Deep dives into architecture and trade-offs.",
+      "typical_time_minutes": { "min": 20, "max": 180 }
+    }
+  },
+  "relationship_types": {
+    "prerequisite_of": {
+      "description": "A must be learned before B",
+      "bidirectional": false
+    },
+    "implemented_by": {
+      "description": "Concept is implemented by a specific technology",
+      "bidirectional": false
+    },
+    "part_of": {
+      "description": "Component is part of a larger system",
+      "bidirectional": false
+    },
+    "related_to": {
+      "description": "Concepts are related but not in a hierarchy",
+      "bidirectional": true
+    },
+    "certified_by": {
+      "description": "Skill or knowledge is validated by a certification",
+      "bidirectional": false
+    }
+  }
+}

@@ -1,0 +1,53 @@
+.heroBanner {
+  padding: 5rem 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary) 50%, var(--ifm-color-primary-lightest) 100%);
+}
+
+@media (max-width: 996px) {
+  .heroBanner {
+    padding: 3rem 1rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.buttons a {
+  margin: 0;
+}
+
+.hero__title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #fff;
+}
+
+@media (max-width: 996px) {
+  .hero__title {
+    font-size: 2.25rem;
+  }
+}
+
+.hero__subtitle {
+  font-size: 1.35rem;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 600px;
+  margin: 1.5rem auto 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 996px) {
+  .hero__subtitle {
+    font-size: 1.1rem;
+  }
+}

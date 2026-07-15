@@ -1,0 +1,10 @@
+{
+  "label": "Career",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "title": "Career Paths",
+    "description": "Guided career paths for cloud engineering roles — from junior to architect.",
+    "slug": "/career"
+  }
+}

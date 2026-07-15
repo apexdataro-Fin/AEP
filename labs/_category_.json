@@ -1,0 +1,10 @@
+{
+  "label": "Labs",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "title": "Labs",
+    "description": "Hands-on cloud labs. Practice in safe, sandboxed environments.",
+    "slug": "/labs"
+  }
+}

@@ -1,0 +1,134 @@
+openapi: "3.1.0"
+info:
+  title: Cloud Engineering Learning OS API
+  version: "0.1.0"
+  description: >
+    API specification for the Cloud Engineering Learning OS.
+    Phase 1 is static-only. This spec defines future API capabilities.
+  contact:
+    name: Cloud Engineering Learning OS
+    url: https://github.com/apexdataro-Fin/AEP
+servers:
+  - url: https://apexdataro-fin.github.io/AEP/api/v1
+    description: Production (Phase 3+)
+
+tags:
+  - name: Lessons
+    description: Lesson content and progress
+  - name: Search
+    description: Content search
+  - name: Knowledge Graph
+    description: Concept relationships
+  - name: Labs
+    description: Interactive lab sessions
+
+paths:
+  /lessons:
+    get:
+      tags: [Lessons]
+      summary: List all lessons
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+            enum: [beginner, intermediate, advanced]
+      responses:
+        "200":
+          description: List of lessons
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  lessons:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/LessonSummary"
+
+  /lessons/{slug}:
+    get:
+      tags: [Lessons]
+      summary: Get lesson by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Lesson details
+        "404":
+          description: Lesson not found
+
+  /search:
+    get:
+      tags: [Search]
+      summary: Search content
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Search results
+
+  /knowledge-graph:
+    get:
+      tags: [Knowledge Graph]
+      summary: Get full knowledge graph
+      responses:
+        "200":
+          description: Knowledge graph data
+
+  /knowledge-graph/{nodeId}:
+    get:
+      tags: [Knowledge Graph]
+      summary: Get node and its relationships
+      parameters:
+        - name: nodeId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Node with edges
+        "404":
+          description: Node not found
+
+components:
+  schemas:
+    LessonSummary:
+      type: object
+      properties:
+        title:
+          type: string
+        slug:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        estimated_time_minutes:
+          type: integer
+        category:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string

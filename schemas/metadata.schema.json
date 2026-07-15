@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apexdataro-fin.github.io/AEP/schemas/metadata.schema.json",
+  "title": "Content Metadata Schema",
+  "description": "Schema for AI-friendly content metadata across all content types",
+  "type": "object",
+  "required": ["category", "difficulty", "estimated_time_minutes"],
+  "properties": {
+    "category": {
+      "type": "string",
+      "description": "Primary content category from the taxonomy",
+      "enum": [
+        "getting_started",
+        "architecture",
+        "development",
+        "standards",
+        "guides",
+        "reference",
+        "compute",
+        "networking",
+        "storage",
+        "security",
+        "databases",
+        "serverless",
+        "containers",
+        "kubernetes",
+        "ci_cd",
+        "observability",
+        "iac",
+        "career",
+        "certifications"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Difficulty level of the content"
+    },
+    "estimated_time_minutes": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 2880,
+      "description": "Estimated time to complete in minutes"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Slugs of prerequisite content"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9_]*$"
+      },
+      "minItems": 1,
+      "maxItems": 15,
+      "description": "Search and classification tags"
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 10
+      },
+      "minItems": 1,
+      "maxItems": 10,
+      "description": "Measurable learning objectives"
+    },
+    "related_content": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Related content slugs"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the content"
+    },
+    "last_validated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO date of last accuracy review"
+    },
+    "author": {
+      "type": "string",
+      "description": "Content author identifier"
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apexdataro-fin.github.io/AEP/schemas/lesson.schema.json",
+  "title": "Lesson Schema",
+  "description": "Schema for lesson content in the Cloud Engineering Learning OS",
+  "type": "object",
+  "required": [
+    "title",
+    "slug",
+    "description",
+    "ai_metadata"
+  ],
+  "properties": {
+    "sidebar_position": {
+      "type": "integer",
+      "description": "Position in sidebar navigation"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "Display title of the lesson"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^/lessons/[a-z0-9-]+(/[a-z0-9-]+)*$",
+      "description": "URL path, unique across the project"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 160,
+      "description": "SEO description and AI summary"
+    },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 10,
+      "description": "SEO keywords"
+    },
+    "image": {
+      "type": "string",
+      "description": "Social card image path"
+    },
+    "ai_metadata": {
+      "type": "object",
+      "required": ["category", "difficulty", "estimated_time_minutes"],
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Content category from taxonomy"
+        },
+        "difficulty": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced"]
+        },
+        "estimated_time_minutes": {
+          "type": "integer",
+          "minimum": 5,
+          "maximum": 480
+        },
+        "prerequisites": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Slugs of prerequisite content"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$"
+          },
+          "minItems": 1,
+          "maxItems": 10
+        },
+        "learning_objectives": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 10 },
+          "minItems": 1,
+          "maxItems": 10
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "last_validated": {
+          "type": "string",
+          "format": "date"
+        },
+        "author": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

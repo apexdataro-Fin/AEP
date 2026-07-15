@@ -1,0 +1,10 @@
+{
+  "label": "Curriculum",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "title": "Curriculum",
+    "description": "Structured learning paths to master cloud engineering — from fundamentals to advanced topics.",
+    "slug": "/curriculum"
+  }
+}

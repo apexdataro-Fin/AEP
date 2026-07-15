@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+  </defs>
+  <path d="M8 30 Q2 22 10 16 Q12 8 22 10 Q28 4 36 12 Q44 6 48 16 Q54 14 54 22 Q54 28 48 30 Z" fill="url(#g)"/>
+  <text x="64" y="28" fill="#0f172a" font-family="system-ui,sans-serif" font-size="18" font-weight="800" letter-spacing="-0.5">CLOUD ENG OS</text>
+</svg>

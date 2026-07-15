@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apexdataro-fin.github.io/AEP/schemas/project.schema.json",
+  "title": "Project Schema",
+  "description": "Schema for hands-on project content",
+  "type": "object",
+  "required": ["title", "slug", "description", "ai_metadata"],
+  "properties": {
+    "sidebar_position": { "type": "integer" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 120 },
+    "slug": {
+      "type": "string",
+      "pattern": "^/projects/[a-z0-9-]+(/[a-z0-9-]+)*$"
+    },
+    "description": { "type": "string", "minLength": 10, "maxLength": 160 },
+    "keywords": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 10
+    },
+    "image": { "type": "string" },
+    "ai_metadata": {
+      "$ref": "./metadata.schema.json"
+    }
+  }
+}

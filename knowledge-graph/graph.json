@@ -1,0 +1,49 @@
+{
+  "version": "0.1.0",
+  "last_updated": "2026-07-15",
+  "description": "Knowledge graph for the Cloud Engineering Learning OS. Nodes represent concepts, technologies, skills, and certifications. Edges represent relationships between them.",
+  "domains": [
+    {
+      "id": "foundations",
+      "label": "Cloud Foundations",
+      "description": "Core cloud computing concepts"
+    },
+    {
+      "id": "compute",
+      "label": "Compute",
+      "description": "Virtual machines, containers, and serverless compute"
+    },
+    {
+      "id": "networking",
+      "label": "Networking",
+      "description": "Cloud networking concepts and services"
+    },
+    {
+      "id": "storage",
+      "label": "Storage",
+      "description": "Cloud storage services and patterns"
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "description": "Cloud security concepts and practices"
+    },
+    {
+      "id": "databases",
+      "label": "Databases",
+      "description": "Cloud database services and patterns"
+    },
+    {
+      "id": "devops",
+      "label": "DevOps & SRE",
+      "description": "Operational practices and tooling"
+    },
+    {
+      "id": "architecture",
+      "label": "Architecture",
+      "description": "Cloud architecture patterns and best practices"
+    }
+  ],
+  "nodes": [],
+  "edges": []
+}

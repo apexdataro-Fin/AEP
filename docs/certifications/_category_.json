@@ -1,0 +1,10 @@
+{
+  "label": "Certifications",
+  "position": 6,
+  "link": {
+    "type": "generated-index",
+    "title": "Certifications",
+    "description": "Certification exam preparation — AWS, Azure, GCP, Kubernetes, and more.",
+    "slug": "/certifications"
+  }
+}
