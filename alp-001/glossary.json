@@ -1,0 +1,479 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "Cloud Engineering Glossary — 60+ fundamental terms organized by domain. Every term includes definition, also-known-as, related terms, and module references.",
+  "entries": [
+    {
+      "term": "Cloud Computing",
+      "definition": "On-demand delivery of compute power, database, storage, applications, and other IT resources through a cloud services platform via the internet with pay-as-you-go pricing.",
+      "aka": ["Cloud", "Public Cloud"],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["IaaS", "PaaS", "SaaS", "Public Cloud"]
+    },
+    {
+      "term": "IaaS (Infrastructure as a Service)",
+      "definition": "Cloud computing model that provides virtualized computing resources over the internet. You manage the OS, middleware, and applications; the provider manages the hardware.",
+      "aka": ["Infrastructure as a Service"],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["PaaS", "SaaS", "Virtual Machine"]
+    },
+    {
+      "term": "PaaS (Platform as a Service)",
+      "definition": "Cloud computing model that provides a platform allowing customers to develop, run, and manage applications without the complexity of building and maintaining infrastructure.",
+      "aka": ["Platform as a Service"],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["IaaS", "SaaS", "Azure App Service"]
+    },
+    {
+      "term": "SaaS (Software as a Service)",
+      "definition": "Cloud computing model where software is licensed on a subscription basis and centrally hosted. Users access it via a web browser.",
+      "aka": ["Software as a Service"],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["IaaS", "PaaS", "Microsoft 365"]
+    },
+    {
+      "term": "Shared Responsibility Model",
+      "definition": "Security model defining which security tasks are handled by the cloud provider and which are handled by the customer. The provider secures the cloud; you secure what's in the cloud.",
+      "aka": [],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["Security", "Compliance"]
+    },
+    {
+      "term": "Region",
+      "definition": "A geographical area containing one or more datacenters networked together with low-latency connections. Resources deployed in a region stay within that region unless you explicitly replicate them.",
+      "aka": ["Azure Region", "AWS Region"],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["Availability Zone", "Latency", "Geo-redundancy"]
+    },
+    {
+      "term": "Availability Zone",
+      "definition": "Physically separate datacenters within a region, each with independent power, cooling, and networking. Deploying across zones protects against datacenter-level failures.",
+      "aka": ["AZ", "Availability Zone"],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["Region", "High Availability", "Fault Tolerance"]
+    },
+    {
+      "term": "Docker",
+      "definition": "Platform for developing, shipping, and running applications in containers. Docker packages an application and its dependencies into a standardized unit called a container.",
+      "aka": ["Docker Engine"],
+      "category": "containers",
+      "module": "09-docker",
+      "related": ["Container", "Dockerfile", "Docker Compose", "Container Registry"]
+    },
+    {
+      "term": "Container",
+      "definition": "A lightweight, standalone, executable package that includes everything needed to run software: code, runtime, system tools, libraries, and settings. Containers share the host OS kernel.",
+      "aka": ["Linux Container", "OCI Container"],
+      "category": "containers",
+      "module": "08-containers",
+      "related": ["Docker", "Kubernetes", "Image", "Namespace", "Cgroup"]
+    },
+    {
+      "term": "Kubernetes",
+      "definition": "Open-source container orchestration platform that automates deployment, scaling, and management of containerized applications across clusters of hosts.",
+      "aka": ["K8s", "Kube"],
+      "category": "containers",
+      "module": "10-kubernetes",
+      "related": ["Pod", "Deployment", "Service", "Ingress", "AKS"]
+    },
+    {
+      "term": "Pod",
+      "definition": "The smallest deployable unit in Kubernetes. A Pod encapsulates one or more containers that share storage, network, and a specification for how to run them.",
+      "aka": ["K8s Pod"],
+      "category": "containers",
+      "module": "10-kubernetes",
+      "related": ["Container", "Deployment", "Service", "Namespace"]
+    },
+    {
+      "term": "Terraform",
+      "definition": "Infrastructure as Code (IaC) tool that lets you define cloud resources using declarative configuration files. It manages resource lifecycle: create, update, delete.",
+      "aka": ["HashiCorp Terraform"],
+      "category": "iac",
+      "module": "12-terraform",
+      "related": ["IaC", "State", "Provider", "Module", "HCL"]
+    },
+    {
+      "term": "Infrastructure as Code (IaC)",
+      "definition": "Practice of managing and provisioning infrastructure through machine-readable definition files rather than physical hardware configuration or interactive tools.",
+      "aka": ["IaC"],
+      "category": "iac",
+      "module": "12-terraform",
+      "related": ["Terraform", "Declarative", "Immutable Infrastructure"]
+    },
+    {
+      "term": "CI/CD",
+      "definition": "Continuous Integration and Continuous Delivery/Deployment. CI: automatically building and testing code changes. CD: automatically deploying those changes to production.",
+      "aka": ["CI/CD Pipeline", "Continuous Delivery", "Continuous Deployment"],
+      "category": "devops",
+      "module": "15-cicd",
+      "related": ["DevOps", "Pipeline", "GitHub Actions", "Azure DevOps"]
+    },
+    {
+      "term": "GitOps",
+      "definition": "Operating model where Git repositories are the single source of truth for declarative infrastructure and applications. Automated processes ensure the actual state matches the desired state in Git.",
+      "aka": [],
+      "category": "devops",
+      "module": "18-gitops",
+      "related": ["ArgoCD", "Flux", "Git", "Declarative"]
+    },
+    {
+      "term": "ArgoCD",
+      "definition": "Declarative GitOps continuous delivery tool for Kubernetes. It monitors Git repositories for changes and automatically syncs the cluster state to match.",
+      "aka": ["Argo CD"],
+      "category": "devops",
+      "module": "18-gitops",
+      "related": ["GitOps", "Kubernetes", "Flux"]
+    },
+    {
+      "term": "DevOps",
+      "definition": "Set of practices combining software development (Dev) and IT operations (Ops) to shorten the development lifecycle and provide continuous delivery with high software quality.",
+      "aka": [],
+      "category": "devops",
+      "module": "16-devops",
+      "related": ["CI/CD", "SRE", "CALMS", "DORA Metrics"]
+    },
+    {
+      "term": "SRE (Site Reliability Engineering)",
+      "definition": "Discipline that applies software engineering principles to infrastructure and operations. Focuses on creating scalable and highly reliable software systems through automation, SLOs, and error budgets.",
+      "aka": ["Site Reliability Engineering"],
+      "category": "devops",
+      "module": "16-devops",
+      "related": ["DevOps", "SLO", "Error Budget", "Toil"]
+    },
+    {
+      "term": "SLO (Service Level Objective)",
+      "definition": "A target value or range for a service level measured by an SLI. Example: '99.9% of requests complete in under 200ms over a 30-day window.'",
+      "aka": ["Service Level Objective"],
+      "category": "observability",
+      "module": "20-monitoring",
+      "related": ["SLA", "SLI", "Error Budget", "Monitoring"]
+    },
+    {
+      "term": "Observability",
+      "definition": "The ability to understand a system's internal state by examining its outputs: metrics, logs, and traces. Goes beyond monitoring by enabling exploration of unknown-unknowns.",
+      "aka": ["o11y"],
+      "category": "observability",
+      "module": "21-observability",
+      "related": ["Monitoring", "Metrics", "Logs", "Traces", "OpenTelemetry"]
+    },
+    {
+      "term": "Prometheus",
+      "definition": "Open-source monitoring and alerting toolkit designed for reliability. It collects and stores metrics as time series data with a powerful query language (PromQL).",
+      "aka": [],
+      "category": "observability",
+      "module": "20-monitoring",
+      "related": ["Grafana", "Metrics", "AlertManager", "Time Series"]
+    },
+    {
+      "term": "Grafana",
+      "definition": "Open-source platform for monitoring and observability. It allows you to query, visualize, alert on, and understand your metrics through rich dashboards.",
+      "aka": [],
+      "category": "observability",
+      "module": "20-monitoring",
+      "related": ["Prometheus", "Dashboard", "Alerting", "Loki"]
+    },
+    {
+      "term": "FinOps",
+      "definition": "Cloud financial management discipline that enables organizations to get maximum business value from cloud spending through cross-functional collaboration between engineering, finance, and business teams.",
+      "aka": ["Cloud Financial Management", "Cloud Cost Optimization"],
+      "category": "cost",
+      "module": "22-finops",
+      "related": ["Cost Optimization", "Tagging", "Reserved Instances", "Chargeback"]
+    },
+    {
+      "term": "Zero Trust",
+      "definition": "Security model that assumes no trust by default — every access request must be authenticated, authorized, and continuously validated, regardless of where it originates.",
+      "aka": ["Zero Trust Architecture", "ZTA"],
+      "category": "security",
+      "module": "04-security",
+      "related": ["IAM", "Least Privilege", "MFA", "Conditional Access"]
+    },
+    {
+      "term": "IAM (Identity and Access Management)",
+      "definition": "Framework of policies and technologies ensuring the right individuals access the right resources at the right times for the right reasons.",
+      "aka": ["Identity and Access Management"],
+      "category": "security",
+      "module": "04-security",
+      "related": ["RBAC", "MFA", "Zero Trust", "Azure AD"]
+    },
+    {
+      "term": "RBAC (Role-Based Access Control)",
+      "definition": "Method of regulating access to resources based on the roles of individual users within an organization. Permissions are assigned to roles, not directly to users.",
+      "aka": ["Role-Based Access Control"],
+      "category": "security",
+      "module": "04-security",
+      "related": ["IAM", "Least Privilege", "Azure RBAC"]
+    },
+    {
+      "term": "RAG (Retrieval-Augmented Generation)",
+      "definition": "Technique that enhances LLM responses by retrieving relevant information from a knowledge base before generating an answer. Grounds AI outputs in factual data.",
+      "aka": ["Retrieval-Augmented Generation"],
+      "category": "ai",
+      "module": "26-rag",
+      "related": ["Vector Database", "Embedding", "LLM", "Chunking"]
+    },
+    {
+      "term": "Vector Database",
+      "definition": "Database optimized for storing and querying high-dimensional vectors (embeddings). Used for semantic search, recommendation systems, and AI applications.",
+      "aka": ["Vector DB", "Vector Store"],
+      "category": "ai",
+      "module": "25-vector-db",
+      "related": ["Embedding", "Similarity Search", "RAG", "pgvector"]
+    },
+    {
+      "term": "Embedding",
+      "definition": "Numerical representation of data (text, images, audio) as a vector in high-dimensional space. Similar items have similar vectors, enabling semantic comparison.",
+      "aka": ["Vector Embedding", "Text Embedding"],
+      "category": "ai",
+      "module": "25-vector-db",
+      "related": ["Vector Database", "Cosine Similarity", "RAG"]
+    },
+    {
+      "term": "LLM (Large Language Model)",
+      "definition": "AI model trained on vast text corpora that can understand, generate, and manipulate human language. Examples: GPT-4, Claude, Llama, Gemini.",
+      "aka": ["Large Language Model", "Foundation Model"],
+      "category": "ai",
+      "module": "24-azure-ai",
+      "related": ["RAG", "Prompt Engineering", "Fine-tuning", "Azure OpenAI"]
+    },
+    {
+      "term": "Prompt Engineering",
+      "definition": "Practice of designing and optimizing prompts to effectively interact with LLMs. Involves crafting instructions, examples, and context to get desired outputs.",
+      "aka": ["Prompt Design"],
+      "category": "ai",
+      "module": "24-azure-ai",
+      "related": ["LLM", "Few-shot Prompting", "Chain of Thought", "Function Calling"]
+    },
+    {
+      "term": "MLOps",
+      "definition": "Set of practices combining Machine Learning, DevOps, and Data Engineering to deploy and maintain ML models in production reliably and efficiently.",
+      "aka": ["Machine Learning Operations"],
+      "category": "ai",
+      "module": "28-mlops",
+      "related": ["LLMOps", "DevOps", "Model Registry", "Feature Store"]
+    },
+    {
+      "term": "GPU (Graphics Processing Unit)",
+      "definition": "Specialized processor originally designed for graphics rendering, now essential for AI/ML workloads due to its ability to perform massive parallel computations.",
+      "aka": ["Graphics Processing Unit"],
+      "category": "ai",
+      "module": "30-ai-infra",
+      "related": ["CUDA", "NVIDIA", "Distributed Training", "Inference"]
+    },
+    {
+      "term": "Helm",
+      "definition": "Package manager for Kubernetes. Helm Charts define, install, and upgrade even the most complex Kubernetes applications through templated configuration.",
+      "aka": ["Helm Chart"],
+      "category": "containers",
+      "module": "11-helm",
+      "related": ["Kubernetes", "Chart", "Release", "Repository"]
+    },
+    {
+      "term": "Platform Engineering",
+      "definition": "Discipline of designing and building toolchains and workflows that enable self-service capabilities for software engineering organizations. Builds Internal Developer Platforms (IDPs).",
+      "aka": [],
+      "category": "platform",
+      "module": "19-platform",
+      "related": ["IDP", "Backstage", "Golden Paths", "DevOps"]
+    },
+    {
+      "term": "DevSecOps",
+      "definition": "Integration of security practices within the DevOps process. Shifts security left in the development lifecycle rather than treating it as a final gate.",
+      "aka": ["DevSecOps", "Shift Left Security"],
+      "category": "security",
+      "module": "17-devsecops",
+      "related": ["SAST", "DAST", "Supply Chain Security", "CI/CD"]
+    },
+    {
+      "term": "Git",
+      "definition": "Distributed version control system that tracks changes in source code during software development. Designed for speed, data integrity, and support for distributed workflows.",
+      "aka": [],
+      "category": "foundations",
+      "module": "13-git",
+      "related": ["GitHub", "Branch", "Commit", "Merge", "Rebase"]
+    },
+    {
+      "term": "CIDR (Classless Inter-Domain Routing)",
+      "definition": "Method for allocating IP addresses and routing. CIDR notation (e.g., 10.0.0.0/16) specifies a network prefix and the number of significant bits, defining the network size.",
+      "aka": ["CIDR Notation", "Classless Inter-Domain Routing"],
+      "category": "networking",
+      "module": "03-networking",
+      "related": ["Subnet", "IP Address", "VNet", "Routing"]
+    },
+    {
+      "term": "DNS (Domain Name System)",
+      "definition": "Hierarchical naming system that translates human-readable domain names (e.g., google.com) to machine-readable IP addresses (e.g., 142.250.80.46).",
+      "aka": ["Domain Name System"],
+      "category": "networking",
+      "module": "03-networking",
+      "related": ["IP Address", "DNS Record", "Name Server", "CDN"]
+    },
+    {
+      "term": "TLS (Transport Layer Security)",
+      "definition": "Cryptographic protocol designed to provide communications security over a computer network. Successor to SSL. Used for HTTPS, secure email, and VPNs.",
+      "aka": ["Transport Layer Security", "SSL (predecessor)"],
+      "category": "networking",
+      "module": "03-networking",
+      "related": ["HTTPS", "Certificate", "Encryption", "PKI"]
+    },
+    {
+      "term": "Load Balancer",
+      "definition": "Device or service that distributes network traffic across multiple servers to ensure no single server bears too much demand, improving responsiveness and availability.",
+      "aka": ["LB", "Load Balancing"],
+      "category": "networking",
+      "module": "03-networking",
+      "related": ["High Availability", "Auto Scaling", "Reverse Proxy", "Health Probe"]
+    },
+    {
+      "term": "Azure Resource Manager (ARM)",
+      "definition": "Deployment and management service for Azure. Provides a consistent management layer to create, update, and delete resources in your Azure subscription.",
+      "aka": ["ARM", "Azure Resource Manager"],
+      "category": "azure",
+      "module": "07-azure-core",
+      "related": ["Resource Group", "Azure CLI", "Template", "Terraform"]
+    },
+    {
+      "term": "Resource Group",
+      "definition": "Logical container for Azure resources. Resources in a group share the same lifecycle, permissions, and policies. Deleting a resource group deletes all contained resources.",
+      "aka": ["Azure Resource Group", "RG"],
+      "category": "azure",
+      "module": "07-azure-core",
+      "related": ["ARM", "Subscription", "Tag", "Policy"]
+    },
+    {
+      "term": "AKS (Azure Kubernetes Service)",
+      "definition": "Managed Kubernetes service on Azure that simplifies deploying, managing, and operating Kubernetes clusters by offloading much of the operational overhead to Azure.",
+      "aka": ["Azure Kubernetes Service"],
+      "category": "azure",
+      "module": "10-kubernetes",
+      "related": ["Kubernetes", "Azure", "Container", "Node Pool"]
+    },
+    {
+      "term": "Azure AD / Entra ID",
+      "definition": "Microsoft's cloud-based identity and access management service. Provides single sign-on, multi-factor authentication, and conditional access for applications.",
+      "aka": ["Entra ID", "Azure Active Directory"],
+      "category": "azure",
+      "module": "23-identity",
+      "related": ["IAM", "SSO", "MFA", "Conditional Access", "RBAC"]
+    },
+    {
+      "term": "Azure OpenAI Service",
+      "definition": "Microsoft Azure service providing access to OpenAI's powerful language models (GPT-4, DALL-E) with Azure's enterprise-grade security, compliance, and regional availability.",
+      "aka": ["Azure OpenAI"],
+      "category": "azure",
+      "module": "24-azure-ai",
+      "related": ["OpenAI", "GPT-4", "LLM", "RAG"]
+    },
+    {
+      "term": "OpenTelemetry",
+      "definition": "Open-source observability framework for generating, collecting, and exporting telemetry data (traces, metrics, logs). Vendor-neutral standard for instrumentation.",
+      "aka": ["OTel", "OpenTelemetry"],
+      "category": "observability",
+      "module": "21-observability",
+      "related": ["Tracing", "Metrics", "Logs", "Jaeger", "Prometheus"]
+    },
+    {
+      "term": "Azure Monitor",
+      "definition": "Microsoft's unified monitoring solution for Azure and hybrid environments. Collects, analyzes, and acts on telemetry data from cloud and on-premises environments.",
+      "aka": [],
+      "category": "azure",
+      "module": "20-monitoring",
+      "related": ["Log Analytics", "Application Insights", "Metrics", "Alerts"]
+    },
+    {
+      "term": "GitHub Actions",
+      "definition": "CI/CD platform integrated into GitHub that allows automation of build, test, and deployment pipelines directly from GitHub repositories.",
+      "aka": ["Actions"],
+      "category": "devops",
+      "module": "14-github",
+      "related": ["CI/CD", "Workflow", "GitHub", "Runner"]
+    },
+    {
+      "term": "State (Terraform)",
+      "definition": "Terraform state file that maps real-world resources to your configuration. Critical for tracking resource metadata and enabling Terraform to know what to create, update, or delete.",
+      "aka": ["Terraform State", "tfstate"],
+      "category": "iac",
+      "module": "12-terraform",
+      "related": ["Backend", "Remote State", "State Locking", "Terraform"]
+    },
+    {
+      "term": "Pod (Kubernetes)",
+      "definition": "The smallest deployable unit in Kubernetes. A Pod encapsulates one or more containers that share storage, network namespace, and a specification for how to run them.",
+      "aka": ["K8s Pod"],
+      "category": "containers",
+      "module": "10-kubernetes",
+      "related": ["Container", "Deployment", "Node", "Namespace"]
+    },
+    {
+      "term": "Active Recall",
+      "definition": "Learning technique that involves actively stimulating memory during the learning process rather than passively reviewing material. Testing yourself is more effective than re-reading.",
+      "aka": ["Retrieval Practice", "Practice Testing"],
+      "category": "learning-science",
+      "module": "01-foundations",
+      "related": ["Spaced Repetition", "Feynman Technique", "Learning How to Learn"]
+    },
+    {
+      "term": "Spaced Repetition",
+      "definition": "Evidence-based learning technique where review sessions are spaced over increasing intervals of time. Exploits the psychological spacing effect for better long-term retention.",
+      "aka": ["Spaced Practice", "Distributed Practice"],
+      "category": "learning-science",
+      "module": "01-foundations",
+      "related": ["Active Recall", "Forgetting Curve", "Learning How to Learn"]
+    },
+    {
+      "term": "Feynman Technique",
+      "definition": "Learning method that involves explaining a concept in simple terms as if teaching it to someone else. Identifies gaps in understanding when you can't explain something simply.",
+      "aka": ["Feynman Method"],
+      "category": "learning-science",
+      "module": "01-foundations",
+      "related": ["Active Recall", "Teaching Effect", "Learning How to Learn"]
+    },
+    {
+      "term": "Well-Architected Framework",
+      "definition": "Set of guiding tenets for building secure, high-performing, resilient, and efficient infrastructure. Pillars: Operational Excellence, Security, Reliability, Performance Efficiency, Cost Optimization.",
+      "aka": ["WAF", "Cloud Adoption Framework"],
+      "category": "cloud-fundamentals",
+      "module": "06-cloud-fundamentals",
+      "related": ["Cost Optimization", "Security", "Reliability", "Operational Excellence"]
+    },
+    {
+      "term": "Service Mesh",
+      "definition": "Dedicated infrastructure layer for handling service-to-service communication in microservices. Provides observability, traffic management, and security without changing application code.",
+      "aka": [],
+      "category": "containers",
+      "module": "10-kubernetes",
+      "related": ["Istio", "Linkerd", "Sidecar Proxy", "Microservices"]
+    },
+    {
+      "term": "Blue-Green Deployment",
+      "definition": "Deployment strategy using two identical environments (blue = current, green = new). Traffic is switched to green after validation. Enables instant rollback by switching back to blue.",
+      "aka": ["Blue-Green", "Red-Black Deployment"],
+      "category": "devops",
+      "module": "15-cicd",
+      "related": ["Canary Deployment", "Rolling Deployment", "CI/CD"]
+    },
+    {
+      "term": "DORA Metrics",
+      "definition": "Four key metrics identified by Google's DORA team for measuring software delivery performance: Deployment Frequency, Lead Time for Changes, Change Failure Rate, Time to Restore Service.",
+      "aka": ["DORA 4 Metrics", "DevOps Metrics"],
+      "category": "devops",
+      "module": "16-devops",
+      "related": ["DevOps", "CI/CD", "SRE", "Continuous Delivery"]
+    },
+    {
+      "term": "Conditional Access",
+      "definition": "Azure AD feature that uses if-then statements to enforce organizational policies for accessing resources. Example: 'If user is outside the office, require MFA.'",
+      "aka": ["Azure Conditional Access", "CA Policy"],
+      "category": "security",
+      "module": "23-identity",
+      "related": ["Azure AD", "MFA", "Zero Trust", "RBAC"]
+    }
+  ]
+}

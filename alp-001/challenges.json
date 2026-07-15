@@ -1,0 +1,141 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "Challenge System — progressive difficulty challenges across all Cloud Engineering domains. Challenges are designed to be solved independently, not as guided labs.",
+  "challenge_types": {
+    "debugging": { "description": "Broken system — diagnose and fix. Root cause analysis required.", "icon": "🐛" },
+    "architecture": { "description": "Design a system given constraints. Defend your choices.", "icon": "🏗️" },
+    "optimization": { "description": "Improve an existing system — performance, cost, or security.", "icon": "⚡" },
+    "scenario": { "description": "Real-world production scenario. Make decisions under pressure.", "icon": "🎯" },
+    "build": { "description": "Build something from scratch with specific requirements.", "icon": "🔨" }
+  },
+  "difficulty_tiers": {
+    "apprentice": { "level": 1, "label": "Apprentice", "xp_reward": 50, "time_estimate": "30 min" },
+    "practitioner": { "level": 2, "label": "Practitioner", "xp_reward": 100, "time_estimate": "60 min" },
+    "professional": { "level": 3, "label": "Professional", "xp_reward": 200, "time_estimate": "90 min" },
+    "expert": { "level": 4, "label": "Expert", "xp_reward": 400, "time_estimate": "2-3 hours" },
+    "master": { "level": 5, "label": "Master", "xp_reward": 800, "time_estimate": "4-6 hours" }
+  },
+  "challenges": [
+    {
+      "id": "ch-001",
+      "title": "The Vanishing Disk Space",
+      "type": "debugging",
+      "difficulty": "apprentice",
+      "module": "02-linux",
+      "xp": 50,
+      "scenario": "A developer at CloudNova reports their application server is 'out of disk space.' You SSH in and `df -h` shows 65% used. Yet applications fail with 'No space left on device.' What's really happening? Diagnose and fix.",
+      "skills_tested": ["inode-management", "find-command", "disk-analysis"],
+      "hints": ["Check inode usage, not just disk space", "Look for directories with millions of tiny files"],
+      "success_criteria": ["Correctly identifies inode exhaustion", "Uses df -i to confirm", "Finds and resolves the file accumulation", "Explains prevention strategy"]
+    },
+    {
+      "id": "ch-002",
+      "title": "Design the CloudNova VNet",
+      "type": "architecture",
+      "difficulty": "practitioner",
+      "module": "03-networking",
+      "xp": 100,
+      "scenario": "CloudNova needs a production VNet for a new microservice platform. Requirements: 50+ services, 3 tiers (web, app, data), must isolate public-facing from internal services, support future growth to 200+ services, and integrate with on-premises via VPN.",
+      "skills_tested": ["subnet-design", "cidr-planning", "network-security", "hub-spoke-topology"],
+      "hints": ["Start with CIDR planning", "Consider hub-spoke vs. flat topology", "Plan for future growth"],
+      "success_criteria": ["CIDR allocation documented and justified", "Subnet plan accounts for all 3 tiers", "NSG rules follow least privilege", "VPN gateway integration designed", "Diagram provided"]
+    },
+    {
+      "id": "ch-003",
+      "title": "The Leaking S3 Bucket",
+      "type": "debugging",
+      "difficulty": "practitioner",
+      "module": "04-security",
+      "xp": 100,
+      "scenario": "Security alerts: a CloudNova storage bucket containing customer PII is publicly accessible. 847 objects exposed. You discover this at 2 PM on a Friday. What do you do? Walk through your incident response — immediate action, investigation, remediation, and prevention.",
+      "skills_tested": ["incident-response", "iam-audit", "data-classification", "security-posture"],
+      "hints": ["Triage first: stop the bleeding", "Then investigate: how did this happen?", "Finally prevent: ensure it can't happen again"],
+      "success_criteria": ["Immediate action stops data exposure", "Root cause identified (misconfigured policy, missing guardrail)", "Prevention: bucket policies, SCP, or automated scanning implemented", "Postmortem drafted"]
+    },
+    {
+      "id": "ch-004",
+      "title": "Build the CloudNova DevOps Pipeline",
+      "type": "build",
+      "difficulty": "professional",
+      "module": "15-cicd",
+      "xp": 200,
+      "scenario": "CloudNova's infrastructure team manually deploys to production by running Terraform from laptops. This has caused 3 production incidents this quarter. Design and justify a CI/CD pipeline for Terraform that: prevents manual apply, requires PR review, runs plan on PR, applies on merge, and includes cost estimation and security scanning.",
+      "skills_tested": ["pipeline-design", "terraform-cicd", "github-actions", "policy-as-code"],
+      "hints": ["GitHub Actions + Terraform Cloud or OIDC", "Separate plan and apply stages", "Add guardrails: cost estimation, security scan, approval gates"],
+      "success_criteria": ["Pipeline architecture diagram", "Justification for each pipeline stage", "Describes how manual apply is prevented", "Cost and security gates described", "Rollback strategy defined"]
+    },
+    {
+      "id": "ch-005",
+      "title": "Kubernetes Cluster Meltdown",
+      "type": "scenario",
+      "difficulty": "professional",
+      "module": "10-kubernetes",
+      "xp": 200,
+      "scenario": "It's 3:17 AM. PagerDuty wakes you: 'AKS node pool at 100% memory, pods OOMKilled, API returning 503s.' The new ML inference service deployed 4 hours ago. You're the on-call engineer. Walk through your incident response — from first alert to resolution.",
+      "skills_tested": ["incident-response", "kubernetes-troubleshooting", "resource-management", "on-call-practices"],
+      "hints": ["Acknowledge and assess first", "Mitigate before investigating", "Use kubectl top, describe, logs", "Consider cordoning nodes, scaling, or rolling back"],
+      "success_criteria": ["Incident acknowledged and communicated", "Mitigation stops the bleeding", "Root cause: ML service resource misconfiguration", "Prevention: resource requests/limits, HPA, monitoring alerts", "Postmortem written"]
+    },
+    {
+      "id": "ch-006",
+      "title": "Cost Optimization Treasure Hunt",
+      "type": "optimization",
+      "difficulty": "professional",
+      "module": "22-finops",
+      "xp": 200,
+      "scenario": "CloudNova's monthly Azure bill is $47,000. The CFO wants it under $35,000 by next quarter — without degrading service. You're given: resource inventory, 3 months of Cost Management data, and read-only access. Find $12,000/month in savings. Document your findings and recommendations.",
+      "skills_tested": ["cost-analysis", "right-sizing", "reservation-planning", "waste-elimination"],
+      "hints": ["Check for idle resources", "Analyze reservation coverage", "Look for over-provisioned VMs", "Check storage tiering", "Review data transfer costs"],
+      "success_criteria": ["Identifies $12K+ in monthly savings", "Each recommendation has cost impact quantified", "No recommendations degrade performance or availability", "Prioritized by effort vs. savings", "Executive summary written"]
+    },
+    {
+      "id": "ch-007",
+      "title": "Architect the CloudNova AI Platform",
+      "type": "architecture",
+      "difficulty": "expert",
+      "module": "30-ai-infra",
+      "xp": 400,
+      "scenario": "CloudNova wants to deploy an internal AI platform. Requirements: serve 5 LLM models, vector search for 10M+ documents, RAG pipeline, GPU scheduling, model versioning, cost tracking per team, and self-service for data scientists. Budget: $25K/month. Design the architecture.",
+      "skills_tested": ["ai-infrastructure", "gpu-scheduling", "cost-modeling", "platform-design"],
+      "hints": ["AKS + GPU node pools", "Consider model serving frameworks (vLLM, TGI)", "Vector DB: pgvector vs Qdrant tradeoffs", "KubeFlow or Ray for orchestration"],
+      "success_criteria": ["Architecture diagram covering all requirements", "GPU sizing justified", "Cost model per component", "Self-service API design described", "Tradeoffs discussed (managed vs self-hosted)"]
+    },
+    {
+      "id": "ch-008",
+      "title": "The APT Incident at CloudNova",
+      "type": "scenario",
+      "difficulty": "expert",
+      "module": "17-devsecops",
+      "xp": 400,
+      "scenario": "A nation-state APT has been detected in CloudNova's environment. They've been present for 3 weeks, exfiltrated data from 2 databases, and left backdoors in 4 services. You're the incident commander. Walk through the full incident response: containment, eradication, recovery, post-incident. Coordinate: Security, Infrastructure, Legal, PR, and Executive teams.",
+      "skills_tested": ["incident-command", "security-investigation", "crisis-communication", "system-recovery"],
+      "hints": ["Contain first", "Preserve evidence", "Coordinate communication", "Plan phased recovery", "Conduct blameless postmortem"],
+      "success_criteria": ["Containment plan defined", "Eradication steps documented", "Recovery phased by criticality", "Communication plan for each stakeholder", "Postmortem identifies process gaps", "Prevention measures defined"]
+    },
+    {
+      "id": "ch-009",
+      "title": "Build the Capstone Platform",
+      "type": "build",
+      "difficulty": "master",
+      "module": "31-portfolio",
+      "xp": 800,
+      "scenario": "Integrate all previous projects into one production platform. One `terraform apply` provisions everything. One GitOps repo manages everything. One observability stack monitors it all. Include: landing zone, AKS cluster, GitOps pipeline, observability stack, AI inference endpoint. Document with ADRs and a polished case study.",
+      "skills_tested": ["platform-integration", "gitops", "terraform", "observability", "technical-communication"],
+      "hints": ["Start from your Project 004 landing zone", "Use app-of-apps pattern with ArgoCD", "Unified monitoring with Prometheus + Grafana"],
+      "success_criteria": ["Single terraform apply provisions platform", "ArgoCD manages all apps", "Complete observability stack", "5+ ADRs documented", "Case study written", "Portfolio-ready README"]
+    },
+    {
+      "id": "ch-010",
+      "title": "Production Database Migration (Zero Downtime)",
+      "type": "scenario",
+      "difficulty": "expert",
+      "module": "16-devops",
+      "xp": 400,
+      "scenario": "CloudNova's primary PostgreSQL database (500GB, 5000 TPS) needs to migrate from VMs to a managed service. Acceptable downtime: zero. You have a 4-hour maintenance window where degraded performance is acceptable but complete downtime is not. Design and execute the migration plan.",
+      "skills_tested": ["database-migration", "replication", "rollback-planning", "risk-management"],
+      "hints": ["Consider logical replication", "Use read replica promotion", "Plan rollback for every step", "Practice on staging first"],
+      "success_criteria": ["Migration plan with timeline", "Zero-downtime strategy justified", "Rollback plan for each phase", "Verification steps defined", "Risk assessment documented"]
+    }
+  ]
+}

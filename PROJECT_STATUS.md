@@ -2,7 +2,7 @@
 
 > Last updated: 2026-07-15
 
-## Overall Completion: ~80%
+## Overall Completion: ~85%
 
 | Phase | Status | Progress |
 |---|---|---|
@@ -11,101 +11,74 @@
 | **Phase 3 — Platform Experience** | ✅ Complete | 100% |
 | **Phase 4 — ARES Content Operating System (ACOS)** | ✅ Complete | 100% |
 | **Phase 5 — ALP-001: Cloud Engineering Foundation** | ✅ Complete | 100% |
+| **Phase 5b — ALP-001: Review & Enhancement** | ✅ Complete | 100% |
 | **Phase 6 — Content Creation & Community** | 🔜 Next | 0% |
 
 ---
 
-## Phase 5 — ALP-001: Cloud Engineering Foundation ✅
+## Phase 5b — Review & Enhancement ✅
 
-Implemented the first official ARES Learning Package — the complete Cloud Engineering Academy architecture. Every module, project, lab, simulator, career scenario, and AI feature is interconnected through the knowledge graph and skill tree.
+Completed a comprehensive engineering review of ALP-001, comparing against best practices in cloud engineering education. All enhancements build on existing architecture without replacement or simplification.
 
-### Package Architecture
+### Enhancements Created
 
-| Component | Description |
-|---|---|
-| **33 Modules** | Complete learning path from beginner to principal-level |
-| **10 Projects** | Interconnected, building one production cloud platform |
-| **40 Labs** | 8 types: guided, challenge, production, debugging, security, architecture, AI, career |
-| **13 Simulators** | Linux terminal, Azure portal, Kubernetes, Terraform, IAM, AI playground, etc. |
-| **6 Career Levels** | Junior → Cloud Engineer → Senior → Architect → Principal at CloudNova |
-| **4 Certifications** | AZ-900, AZ-104, AZ-400, AI-102 fully mapped |
-| **80+ Skills** | With full dependency chain, career mapping, certification mapping |
-| **70+ Knowledge Nodes** | Skills, technologies, patterns, security, cost, AI — all interconnected |
-
-### Files Created (Phase 5)
-
-```
-alp-001/
-├── alp-manifest.json                          # Package manifest & metadata
-├── learning-path.json                         # 33 modules with full specs
-├── certification-roadmap.json                 # 4 certs mapped to modules
-├── project-roadmap.json                       # 10 interconnected projects
-├── lab-roadmap.json                           # 40 labs across 8 types
-├── simulator-roadmap.json                     # 13 simulators
-├── knowledge-graph/
-│   ├── cloud-engineering-graph.json           # 70+ nodes, 60+ relationships
-│   └── skill-tree.json                        # 80+ skills, 43 with full deps
-├── ai/
-│   └── ai-integration.json                    # 12 AI features mapped to modules
-├── career/
-│   └── career-mode.json                       # CloudNova company, 6 levels, incidents
-├── questions/                                 # Question banks (placeholder)
-├── assessments/                               # Assessment definitions (placeholder)
-└── content/
-    ├── 01-foundations/index.md                # 33 module index pages
-    ├── 02-linux/index.md
-    ├── 03-networking/index.md
-    ├── ... (all 33 modules)
-    └── 33-career/index.md
-```
-
-### ALP-001 Specs Created
-
-| # | Spec File | Key Data |
+| Enhancement | File | Description |
 |---|---|---|
-| 1 | `alp-manifest.json` | Package ID, 33 modules, 10 projects, 40 labs, 4 certs |
-| 2 | `learning-path.json` | 33 modules × 16 fields each (skills, technologies, certs, knowledge nodes, AI features) |
-| 3 | `certification-roadmap.json` | 4 certs with objective-level module mapping |
-| 4 | `project-roadmap.json` | 10 projects with narrative, deliverables, acceptance criteria |
-| 5 | `lab-roadmap.json` | 40 labs with type, duration, module mapping |
-| 6 | `simulator-roadmap.json` | 13 simulators with capabilities and career scenarios |
-| 7 | `career-mode.json` | CloudNova company, 6 departments, 5 colleagues, 6 levels, 5 incidents, 16 tickets |
-| 8 | `ai-integration.json` | 12 AI features, per-module mapping |
-| 9 | `cloud-engineering-graph.json` | 70+ knowledge nodes, 60+ relationships |
-| 10 | `skill-tree.json` | 43 skills with full dependency chains |
-| 11 | `33 module index.md` | Docusaurus-ready landing pages |
+| **AI Prompt Library** | `alp-001/ai/prompt-library.json` | 10 prompt categories, 10+ reusable provider-agnostic prompts (tutor, quiz, code review, interview, debugging, flashcards, study planner, career coach, Feynman verifier, CloudNova scenarios) |
+| **Cloud Engineering Glossary** | `alp-001/glossary.json` | 60+ fundamental terms across 10 categories with definitions, AKA, related terms, and module references |
+| **Active Recall Decks** | `alp-001/questions/active-recall-module-01.json`, `module-02.json` | 24 recall items with spaced repetition schedules for Modules 01-02 |
+| **Challenge System** | `alp-001/challenges.json` | 10 progressive challenges (5 types, 5 difficulty tiers, 50-800 XP) covering debugging, architecture, optimization, scenario, and build |
+| **Production Scenarios** | `alp-001/career/production-scenarios.json` | 8 CloudNova production scenarios spanning junior → principal career progression with full-circle narrative |
+| **Lesson Outlines** | `alp-001/lesson-outlines.json` | Detailed outlines for Modules 03-12 with lesson titles, focus areas, and Mermaid diagram concepts |
 
-### Key Architecture Decisions (Phase 5)
+### Educational Quality Improvements
 
-1. **One Company, One World** — All learning happens at CloudNova Technologies, a fictional but realistic cloud-native SaaS company
-2. **Projects Build on Projects** — 10 projects form one connected chain: Linux Server → Secure Network → Python Automation → Azure Landing Zone → Container Platform → K8s Cluster → GitOps Pipeline → Observability Platform → AI Inference Platform → Capstone Platform
-3. **Certifications Are Embedded** — Every module knows which certification objectives it covers. AZ-900, AZ-104, AZ-400, AI-102 mapped at the objective level
-4. **Skills Have Dependencies** — 43 skills form a directed acyclic graph with prerequisites, unlocks, and career level expectations
-5. **AI Is Everywhere** — 12 AI features (tutor, quiz, flashcards, code review, architecture review, mock interview, etc.) mapped to every module
-6. **Career Mode Is Immersive** — 6 career levels with managers, mentors, tickets, incidents, and promotion criteria
-7. **Simulators Are Mapped** — 13 simulators specified with capabilities and module mapping (implementation in future phase)
+| Area | Before | After |
+|---|---|---|
+| **AI Integration** | Spec only, no prompts | 10-category prompt library, provider-agnostic |
+| **Active Recall** | In-lesson only | Centralized decks with spaced repetition schedules |
+| **Glossary** | None | 60+ terms across all domains |
+| **Challenges** | None | 10 progressive challenges, 5 difficulty tiers |
+| **Career Narrative** | Career mode spec only | 8 immersive production scenarios from junior to principal |
+| **Learning Outlines** | 2 modules with lessons | 12 modules with detailed lesson plans and diagram concepts |
+| **Visual Explanations** | Limited Mermaid | Diagram concepts specified for every lesson |
 
-### Total Project Statistics (Phases 1–5)
+### Key Design Decisions (Enhancements)
 
-- **~175 files** created across all phases
-- **24 reusable React components** (Phase 3)
-- **17 custom hooks** (Phase 3)
-- **14 content engines** (Phase 4)
-- **10 ALP-001 spec files** (Phase 5)
-- **33 module directories** with index pages (Phase 5)
-- **100+ TypeScript interfaces** across all phases
-- **20 domains** supported
-- **Build**: ✅ Clean (0 errors)
+1. **Provider-agnostic AI prompts** — No model-specific syntax. Works with GPT, Claude, Gemini, Llama.
+2. **Spaced repetition embedded** — Every recall item has a review schedule (1, 3, 7, 14, 30, 90 days).
+3. **Challenges are independent** — Designed to be solved without guided steps, building real engineering confidence.
+4. **Career narrative is continuous** — From "Your First Day at CloudNova" to "KubeCon Keynote," one coherent journey.
+5. **Glossary is cross-referenced** — Every term links to modules, related terms, and categories.
+6. **Lesson outlines preserve flexibility** — Titles and focus areas guide content creation without over-specifying.
+
+### Total Project Statistics
+
+- **~200+ files** created across all phases
+- **14 written lessons** (Modules 01-02, 8 Linux + 6 Foundations)
+- **10 AI prompts** in library
+- **60+ glossary entries**
+- **24 Active Recall items**
+- **10 progressive challenges**
+- **8 production scenarios**
+- **12 modules with lesson outlines** (72+ planned lessons)
+- **33 module directories** with index pages
+- **24 reusable React components**
+- **17 custom hooks**
+- **14 content engines** (ACOS)
+- **10 ALP-001 spec files**
+- **100+ TypeScript interfaces**
+- **Build**: ✅ Clean
 
 ---
 
 ## Next Recommended Implementation
 
 **Phase 6 — Content Creation & Community:**
-- Write actual lesson content for ALP-001 modules (starting with priority modules)
-- Create question banks with real questions
-- Implement interactive block React components
-- Build community features (discussions, reviews)
-- Backend integration with Convex for state persistence
-- AI backend integration (GPT/Claude via Convex actions)
-- Implement simulator WebAssembly prototypes
+- Write lessons for Modules 03-12 using the new lesson outlines
+- Write remaining lesson outlines for Modules 13-33
+- Create question banks with actual questions
+- Implement interactive block React components (Quiz, CodeBlock, Flashcard, etc.)
+- Build the Linux Terminal simulator (WebAssembly prototype)
+- Backend integration with Convex for user progress, XP, achievements
+- Community features (discussions, peer reviews)

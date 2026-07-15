@@ -1,0 +1,93 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "module": "02-linux",
+  "deck_name": "Linux Mastery — Active Recall Deck",
+  "description": "Centralized active recall questions for Module 02. Review at spaced intervals.",
+  "recall_items": [
+    {
+      "id": "ar02-001",
+      "question": "What are the three main components of the Linux operating system?",
+      "answer": "1. The Kernel — manages hardware, processes, memory. 2. The Shell — command-line interface (bash, zsh). 3. User-space programs — everything else (nginx, docker, python, ls, grep).",
+      "hint": "Think about layers from hardware to user.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ar02-002",
+      "question": "What is the difference between kernel space and user space?",
+      "answer": "Kernel space has direct access to hardware and runs with full privileges. User space is where all applications run — they must request kernel services via system calls. This separation is the foundation of Linux security and stability.",
+      "hint": "One talks to hardware, the other asks permission.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ar02-003",
+      "question": "What are stdin, stdout, and stderr and their file descriptors?",
+      "answer": "stdin (0): Standard input — where commands read data from. stdout (1): Standard output — where commands write normal results. stderr (2): Standard error — where commands write error messages, separate from stdout.",
+      "hint": "0-in, 1-out, 2-error",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ar02-004",
+      "question": "What does `set -euo pipefail` do in a bash script?",
+      "answer": "`set -e`: Exit immediately if any command fails. `set -u`: Treat unset variables as errors (no silent typos). `set -o pipefail`: A pipeline fails if ANY command in it fails, not just the last one. This is the 'fail fast, fail loud' pattern for production scripts.",
+      "hint": "Three safety features: fail on error, fail on undefined, fail on pipe failure.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ar02-005",
+      "question": "What is an inode and what information does it store?",
+      "answer": "An inode is a data structure storing metadata about a file: permissions, owner, size, timestamps (created, modified, accessed), and pointers to data blocks. It does NOT store the filename — that's in the directory entry. Running out of inodes means you can't create files even with free disk space.",
+      "hint": "Think of it as the 'ID card' of a file — everything except the name and the data.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ar02-006",
+      "question": "What's the difference between SIGTERM (15) and SIGKILL (9)?",
+      "answer": "SIGTERM politely asks a process to shut down — it can clean up, close connections, and save state. SIGKILL forcefully terminates immediately — no cleanup, the kernel just stops it. Always try SIGTERM first. Use SIGKILL only if the process ignores SIGTERM.",
+      "hint": "One is polite, the other is instant death.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ar02-007",
+      "question": "What 3 SSH hardening steps should you apply to every production server?",
+      "answer": "1. Disable password authentication (keys only). 2. Disable root login (SSH as regular user, use sudo). 3. Limit allowed users with AllowUsers directive. Bonus: change default port (reduces automated attacks, security by obscurity).",
+      "hint": "No passwords, no root, limited users.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ar02-008",
+      "question": "What does the USE method stand for in troubleshooting?",
+      "answer": "Utilization: How busy is each resource? (CPU%, memory%, disk%). Saturation: How much queued work is waiting? (run queue, swap usage). Errors: How many errors? (disk errors, network drops, dmesg output). Check in that order.",
+      "hint": "U-S-E = Utilization, Saturation, Errors",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ar02-009",
+      "question": "What's the difference between a symbolic link and a hard link?",
+      "answer": "Symlink (ln -s): points to a file PATH. If the original is deleted, the symlink breaks. Works across filesystems. Hard link (ln): points to the same INODE. If 'original' is deleted, data persists as long as any hard link exists. Does NOT work across filesystems.",
+      "hint": "Symlink = points to name. Hard link = points to data.",
+      "difficulty": "medium"
+    },
+    {
+      "id": "ar02-010",
+      "question": "What is the Unix philosophy?",
+      "answer": "1. Do one thing well. 2. Expect output to become input to another program. 3. Use text streams as the universal interface. Example: `cat log | grep ERROR | awk '{print $1}' | sort | uniq -c | sort -rn` — each command does one thing, connected by pipes.",
+      "hint": "Small tools, text streams, pipes.",
+      "difficulty": "easy"
+    },
+    {
+      "id": "ar02-011",
+      "question": "You run `df -h` and see 60% disk used, but applications report 'disk full.' What's likely happening?",
+      "answer": "You've run out of inodes, not disk space. Run `df -i` to check inode usage. A common cause: millions of tiny files (session files, temp files, log files) consuming all available inodes. Fix: find and delete or rotate the small files.",
+      "hint": "Space ≠ inodes. Check both.",
+      "difficulty": "hard"
+    },
+    {
+      "id": "ar02-012",
+      "question": "How do you configure a systemd service to auto-restart on failure?",
+      "answer": "Add to the [Service] section: `Restart=on-failure` and `RestartSec=5s`. This tells systemd to restart the service if it exits with a non-zero code and wait 5 seconds before restarting (prevents restart storms). For critical services, use `Restart=always`.",
+      "hint": "Two directives: Restart and RestartSec.",
+      "difficulty": "medium"
+    }
+  ]
+}

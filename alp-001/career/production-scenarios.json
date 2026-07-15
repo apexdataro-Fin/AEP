@@ -1,0 +1,79 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "Enhanced production scenarios that weave the CloudNova narrative through every module. Each scenario is a real-world situation the learner encounters at their current career level.",
+  "scenarios": [
+    {
+      "id": "scn-fnd-001",
+      "title": "Your First Day at CloudNova",
+      "module": "01-foundations",
+      "career_level": "junior",
+      "narrative": "It's your first day as a Junior Cloud Engineer at CloudNova Technologies. Marcus Williams, your manager, hands you a laptop and says: 'Welcome to the infrastructure team. Your first task is to set up your development environment, clone the infrastructure repo, and read our engineering handbook. Tomorrow, you pair with David Kim on a real ticket.' David Kim, your mentor, slides over and says: 'First tip — read the runbooks before you need them. And never be afraid to ask why.'",
+      "learning_tie": "Directly applies 'Engineering Mindset', 'Technical Writing', and 'Documentation Culture' lessons.",
+      "key_takeaway": "Culture of mentorship, documentation-first, and continuous questioning is established from day one."
+    },
+    {
+      "id": "scn-lnx-001",
+      "title": "The 3 AM Server Alert",
+      "module": "02-linux",
+      "career_level": "junior",
+      "narrative": "3:14 AM. Your phone buzzes — PagerDuty. Alert: 'web-prod-uswest2-04: Disk usage > 90%.' You're shadowing on-call this week with Emma Wilson. She messages: 'You take the lead on this one. I'm here if you need me.' You SSH into the server. What do you check first? As you work through the troubleshooting methodology, Emma occasionally drops hints in Slack: 'Did you check inode usage? What about log rotation?' After resolving it (a runaway log file from a misconfigured service), Emma debriefs: 'Good job. One thing you missed — always check what changed recently before diving into diagnostics.'",
+      "learning_tie": "Applies 'Linux Troubleshooting Methodology' and 'Process Management' lessons. The 'always check what changed' principle becomes a career-long habit.",
+      "key_takeaway": "Production troubleshooting under pressure with mentor guidance. Shadowing builds confidence before solo on-call."
+    },
+    {
+      "id": "scn-net-002",
+      "title": "The Cross-Region Connectivity Mystery",
+      "module": "03-networking",
+      "career_level": "cloud_engineer",
+      "narrative": "Emma Wilson, now your peer, pulls you into a war room: 'Our US-West and US-East services can't communicate. Latency between regions jumped from 45ms to 350ms, and some connections are timing out.' You're now a Cloud Engineer — no shadowing. You own this. Together, you trace the issue: a recent BGP route change by the cloud provider routed traffic through a congested peering point. You work with Azure support, implement a backup ExpressRoute circuit, and write the postmortem. James Okafor from SRE reads your postmortem and comments: 'Solid root cause analysis. Add a recommendation for cross-region latency monitoring with alerts at 2x baseline.'",
+      "learning_tie": "Applies DNS, routing, latency analysis, and hybrid networking from Module 03. The postmortem feedback connects to SRE culture from Module 16.",
+      "key_takeaway": "Cross-team collaboration (infra + SRE), vendor escalation, postmortem quality standards."
+    },
+    {
+      "id": "scn-k8s-003",
+      "title": "The Black Friday Scaling Crisis",
+      "module": "10-kubernetes",
+      "career_level": "senior",
+      "narrative": "Black Friday. CloudNova's logistics platform handles 10x normal traffic. You're now a Senior Cloud Engineer, and you're incident commander for the day. At 6 AM, the cluster autoscaler hits its maximum node count. Pods are pending. Latency is climbing. Marcus Williams is in the war room. Sarah Chen (Director) is asking for updates every 15 minutes. You make the call: temporarily increase the node limit, manually scale critical services, and throttle non-critical batch jobs. The platform holds. After the event, you write an ADR proposing predictive scaling based on historical traffic patterns. Sarah approves it for Q1. David Kim (your former mentor) smiles: 'Remember when you couldn't SSH into a server without help? Now you're commanding Black Friday.'",
+      "learning_tie": "Applies Kubernetes autoscaling, resource management, incident command, ADR writing, and capacity planning.",
+      "key_takeaway": "Full-circle career growth visible — from junior (shadowing on-call) to senior (commanding Black Friday)."
+    },
+    {
+      "id": "scn-sec-004",
+      "title": "The Zero-Day Vulnerability Response",
+      "module": "17-devsecops",
+      "career_level": "senior",
+      "narrative": "Friday 4:47 PM. A critical zero-day CVE (CVSS 9.8) is announced for a library used in 12 of CloudNova's 35 microservices. Rebecca Martinez (CISO) calls an emergency meeting: 'I need a remediation plan in 2 hours.' You lead the technical response. SBOM analysis shows 12 affected services. You coordinate with 4 teams to patch, test, and redeploy. By 9 PM, all services are patched. Monday morning, you propose automated SBOM generation and CVE scanning in the CI/CD pipeline. Rebecca champions the initiative. It becomes a company-wide standard within the quarter.",
+      "learning_tie": "Applies SBOM, SAST/DAST, supply chain security, incident response, and compliance from Modules 04 and 17.",
+      "key_takeaway": "Security is everyone's job. Automation prevents recurrence. Cross-functional leadership demonstrated."
+    },
+    {
+      "id": "scn-arch-005",
+      "title": "The Multi-Cloud Architecture Debate",
+      "module": "19-platform",
+      "career_level": "architect",
+      "narrative": "You're now Cloud Architect, reporting to Sarah Chen. The CTO asks you to evaluate whether CloudNova should adopt a multi-cloud strategy. You have 2 weeks to produce a recommendation with technical analysis, cost modeling, and organizational impact assessment. You interview teams across the company, model costs for single-cloud vs multi-cloud, analyze the complexity tax of multi-cloud abstraction layers, and evaluate whether the business actually needs multi-cloud or just better disaster recovery. Your recommendation — 'Single cloud with multi-region DR is the right call for our scale. Revisit multi-cloud at $50M ARR' — is accepted by the CTO and board. You mentor Raj Mehta on how to structure architecture decisions for executive audiences.",
+      "learning_tie": "Applies platform engineering, architecture decision-making, cost modeling, and organizational influence.",
+      "key_takeaway": "Architect-level thinking: business context, organizational impact, build-vs-buy, executive communication."
+    },
+    {
+      "id": "scn-ai-006",
+      "title": "The AI Platform Launch",
+      "module": "30-ai-infra",
+      "career_level": "architect",
+      "narrative": "CloudNova is launching its first AI-powered feature: intelligent route optimization for the logistics platform. You're leading the AI infrastructure workstream. Dr. Jordan Taylor (Head of AI Platform) needs: GPU-accelerated inference, vector search for 50M+ shipment records, and a RAG pipeline for the customer support chatbot. You design the architecture with AKS GPU node pools, Qdrant for vector search, and Azure OpenAI for LLM inference. The launch is successful. The CTO mentions your work in the all-hands. Raj Mehta tells you: 'You built the foundation. Now let's scale it to every team.'",
+      "learning_tie": "Applies GPU infrastructure, vector databases, RAG, LLM deployment, and platform architecture.",
+      "key_takeaway": "AI infrastructure is just infrastructure — applied with the same engineering principles learned throughout the academy."
+    },
+    {
+      "id": "scn-prn-007",
+      "title": "KubeCon Keynote: CloudNova's Platform Journey",
+      "module": "33-career",
+      "career_level": "principal",
+      "narrative": "You're on stage at KubeCon. 5,000 engineers in the audience. Your talk: 'From 1 Server to 50 Clusters: CloudNova's 5-Year Platform Journey.' You walk through the architecture evolution — from that first Linux server you provisioned as a junior, through the Kubernetes migration, GitOps adoption, observability platform, and AI infrastructure. You share the incidents, the lessons, the postmortems. After the talk, a junior engineer approaches you: 'Your story is exactly what I needed to hear. I'm at month 3 and feeling lost.' You tell them what David Kim told you on your first day: 'Read the runbooks before you need them. And never be afraid to ask why.'",
+      "learning_tie": "The entire academy converges — every module, every project, every incident, every lesson learned.",
+      "key_takeaway": "Full-circle closure. The learner sees their entire journey reflected. They are now the mentor."
+    }
+  ]
+}
