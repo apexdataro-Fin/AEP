@@ -1,0 +1,303 @@
+---
+id: "cld-01-what-is-cloud"
+title: "What Is Cloud Computing?"
+slug: /cloud-engineering/06-cloud-fundamentals/what-is-cloud-computing
+content_type: "lesson"
+summary: "Understand what cloud computing really is: on-demand access to compute, storage, and services over the internet. Learn the history, key characteristics, and why cloud computing transformed the technology industry."
+description: "Cloud computing fundamentals: definition, history, key characteristics, cloud vs on-premises, and how the cloud transformed IT infrastructure."
+difficulty: "beginner"
+estimated_time:
+  minutes: 30
+  hours: 0.5
+  display: "30 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+
+technologies:
+  - name: "Azure Portal"
+    category: "cloud-platform"
+    proficiency_required: "awareness"
+
+skills:
+  - id: "sk-cloud-service-models"
+    name: "Cloud Service Models"
+    proficiency: "basic"
+
+learning_levels:
+  has_simple: true
+  has_core: true
+  has_professional: true
+  has_production: false
+  has_architect: false
+
+prerequisites: ["linux-01-architecture"]
+related_projects: []
+related_labs: ["lab-cloud-01"]
+certifications:
+  - code: "AZ-900"
+    objective_id: "az900-1.1"
+    weight: 8
+
+career_relevance:
+  - role: "Junior Cloud Engineer"
+    level: "junior"
+    importance: 5
+
+knowledge_nodes: ["cloud-deployment-models", "cloud-characteristics", "cloud-economics"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Define cloud computing and list its 5 essential characteristics (NIST)"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-2"
+    description: "Explain the difference between cloud and traditional on-premises infrastructure"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-3"
+    description: "Identify CapEx vs OpEx and explain why cloud shifts spending models"
+    category: "concept"
+    bloom_level: "understand"
+
+active_recall:
+  - question: "What are the 5 essential characteristics of cloud computing according to NIST?"
+    answer: "1. On-demand self-service. 2. Broad network access. 3. Resource pooling. 4. Rapid elasticity. 5. Measured service (pay-per-use)."
+    hint: "Think about what makes cloud different from traditional data centers."
+    difficulty: "medium"
+
+feynman_points:
+  - "Explain cloud computing to someone who has never used a computer before. Use the 'electricity grid' analogy."
+
+review_schedule:
+  intervals_days: [1, 3, 7, 14, 30, 90]
+  priority: "high"
+  retention_target: 0.90
+
+tags: [cloud-fundamentals, AZ-900, beginner, cloud-computing]
+search_keywords: [what is cloud computing, NIST cloud definition, cloud vs on-premises, cloud characteristics, AZ-900 fundamentals]
+---
+
+import Definition from "@site/src/components/Definition";
+
+# What Is Cloud Computing?
+
+:::level simple
+
+**Cloud computing is renting someone else's computers over the internet.**
+
+Think about electricity. You don't own a power plant. You plug into the grid and pay for what you use. Cloud computing works the same way: instead of buying servers, installing them in a data center, and managing everything yourself, you rent compute power, storage, and services from companies like Microsoft, Amazon, or Google. You pay only for what you use.
+
+Before cloud, every company had to buy their own servers. Need more capacity? Buy more servers (takes weeks). Traffic drops? Those servers sit idle, but you still paid for them. Cloud fixes both problems: scale up in minutes, scale down when you don't need it, and only pay for what you use.
+
+:::
+
+:::level core
+
+## The NIST Definition of Cloud Computing
+
+The National Institute of Standards and Technology (NIST) defines cloud computing with 5 essential characteristics:
+
+| Characteristic | What It Means |
+|---|---|
+| **On-demand self-service** | Provision resources without human interaction with the provider |
+| **Broad network access** | Accessible over the internet from any device (laptop, phone, tablet) |
+| **Resource pooling** | Provider's resources are pooled to serve multiple customers (multi-tenant) |
+| **Rapid elasticity** | Scale up and down quickly — appear to have unlimited resources |
+| **Measured service** | Pay only for what you use; usage is metered, monitored, and reported |
+
+<Definition term="Cloud Computing">
+A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (networks, servers, storage, applications, and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction. — NIST SP 800-145
+</Definition>
+
+:::
+
+:::level professional
+
+## Cloud vs On-Premises: The Economic Shift
+
+```mermaid
+graph LR
+    subgraph "On-Premises (CapEx)"
+        A[Buy Servers: $500K] --> B[Install: 4-6 weeks]
+        B --> C[Provision: 25% utilized]
+        C --> D[Maintain: staff, power, cooling]
+        D --> E[Depreciate over 3-5 years]
+    end
+    
+    subgraph "Cloud (OpEx)"
+        F[Provision VMs: $0.10/hr] --> G[Running in 5 minutes]
+        G --> H[Scale with demand]
+        H --> I[Pay only for usage]
+        I --> J[Zero depreciation]
+    end
+    
+    style A fill:#ef4444,stroke:#dc2626,color:#fff
+    style F fill:#10b981,stroke:#059669,color:#fff
+```
+
+**CapEx (Capital Expenditure):** Upfront investment in physical infrastructure. You own it, you depreciate it, you maintain it.
+
+**OpEx (Operational Expenditure):** Ongoing operational cost. Pay as you go. No upfront investment. No long-term commitment.
+
+Cloud shifts IT spending from CapEx to OpEx — this is the fundamental economic transformation.
+
+### Real Numbers: CloudNova's Migration
+
+| | On-Premises (Before) | Cloud (After) |
+|---|---|---|
+| Upfront cost | $850,000 | $0 |
+| Monthly cost | $12,000 (power, staffing, colo) | $8,400 (compute + storage + networking) |
+| Provisioning time | 4-8 weeks | 5 minutes |
+| Utilization | 22% | 65% (with auto-scaling) |
+| Disaster recovery | Manual, 48-hour RTO | Automated, 4-hour RTO |
+
+:::
+
+---
+
+## Learning Objectives
+
+- Define cloud computing and list its 5 essential characteristics
+- Explain the difference between cloud and traditional on-premises infrastructure
+- Identify CapEx vs OpEx and explain the economic shift
+
+---
+
+## Core Content
+
+### The Cloud Computing Timeline
+
+```mermaid
+timeline
+    title Cloud Computing Evolution
+    1960s : Timesharing — multiple users share one mainframe
+    1999 : Salesforce launches — first SaaS
+    2002 : AWS launches — first IaaS
+    2006 : Amazon S3/EC2 — cloud goes mainstream
+    2010 : Microsoft Azure launches
+    2014 : Docker & containers
+    2015 : Kubernetes 1.0
+    2023 : AI cloud services (GPT-4, Azure OpenAI)
+```
+
+The cloud didn't appear overnight. It evolved from timesharing in the 1960s through the dot-com era's data centers to today's hyperscale cloud platforms. Understanding this evolution helps you see where the industry is heading next.
+
+### Public, Private, and Hybrid Cloud
+
+```mermaid
+graph TD
+    subgraph "Public Cloud"
+        A[Azure / AWS / GCP]
+        B[Shared infrastructure]
+        C[Pay-as-you-go]
+    end
+    
+    subgraph "Private Cloud"
+        D[Your own datacenter]
+        E[Dedicated infrastructure]
+        F[Full control]
+    end
+    
+    subgraph "Hybrid Cloud"
+        G[Public + Private]
+        H[Best of both]
+        I[Common in enterprise]
+    end
+    
+    style A fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style D fill:#8b5cf6,stroke:#7c3aed,color:#fff
+    style G fill:#10b981,stroke:#059669,color:#fff
+```
+
+| Model | Who Uses It | Typical Use Case |
+|---|---|---|
+| **Public Cloud** | Startups, scale-ups, most companies | Web apps, SaaS platforms, data analytics |
+| **Private Cloud** | Regulated industries, government | Financial services, healthcare data |
+| **Hybrid Cloud** | Large enterprises | Keep sensitive data on-prem, burst to cloud for scale |
+
+CloudNova uses **public cloud** (Azure) — the right choice for a fast-growing SaaS company that needs to scale quickly without managing hardware.
+
+---
+
+<BestPractice title="The Cloud Decision Framework">
+
+Ask yourself these 5 questions before any cloud decision:
+
+1. **Scale:** Does our demand fluctuate? (Cloud = yes)
+2. **Speed:** Do we need to move faster than hardware procurement allows? (Cloud = yes)
+3. **Cost:** Is our utilization low? (Cloud = probably cheaper)
+4. **Compliance:** Do regulations require physical control? (On-prem = maybe)
+5. **Skills:** Does our team know cloud operations? (If not, invest in this academy 😉)
+
+</BestPractice>
+
+---
+
+## Common Mistakes
+
+<CommonMistake
+  mistake="Thinking 'cloud is just someone else's computer'"
+  correction="That's like saying 'a car is just a horse with wheels.' Cloud isn't just remote servers — it's the entire ecosystem of managed services (databases, AI, CDN, serverless) that would take years to build yourself. The value is in the services, not just the compute."
+/>
+
+<CommonMistake
+  mistake="Assuming cloud is always cheaper"
+  correction="Cloud CAN be cheaper — if you use it correctly. Lift-and-shift migrations without optimization often cost more. Cloud requires different operational practices: right-sizing, auto-scaling, reserved instances, and FinOps discipline."
+/>
+
+---
+
+## Check Your Understanding
+
+1. **Which is NOT one of the 5 essential characteristics of cloud computing?**
+   - A) On-demand self-service
+   - B) Rapid elasticity
+   - C) Physical hardware ownership
+   - D) Measured service
+
+   <details><summary>Answer</summary>**C.** Cloud computing means you DON'T own the physical hardware — that's the point. The provider owns and manages it.</details>
+
+2. **A company buys servers for $200,000. Is this CapEx or OpEx?**
+   - A) CapEx
+   - B) OpEx
+   - C) Neither
+   - D) Both
+
+   <details><summary>Answer</summary>**A.** CapEx — capital expenditure. Upfront investment in physical assets. Cloud shifts this to OpEx — paying monthly for what you use.</details>
+
+3. **CloudNova handles GDPR data. Should they use public or private cloud?**
+   - A) Only private cloud — GDPR requires it
+   - B) Public cloud is fine — all major clouds are GDPR compliant with proper configuration
+   - C) Hybrid is always the answer
+   - D) GDPR doesn't apply to cloud
+
+   <details><summary>Answer</summary>**B.** All major cloud providers are GDPR compliant. You still need to configure services correctly (encryption, data residency, access controls), but public cloud is absolutely viable for regulated workloads.</details>
+
+---
+
+## Key Takeaways
+
+- **Cloud = on-demand, pay-per-use, over the internet, elastic.**
+- **5 NIST characteristics:** Self-service, broad access, resource pooling, elasticity, measured service.
+- **CapEx → OpEx:** The fundamental economic shift that makes cloud powerful.
+- **Public, private, hybrid** — choose based on scale, speed, cost, compliance, and skills.
+
+---
+
+## Career at CloudNova
+
+At CloudNova, every engineer understands WHY we're on Azure — not just that we use it. When you provision your first VM in Module 07, you'll understand the economic and architectural reasoning behind that decision.
+
+---
+
+## Next Steps
+
+- **Next Lesson:** [IaaS, PaaS, SaaS, FaaS Explained](/cloud-engineering/06-cloud-fundamentals/service-models)
+- **AZ-900 Alignment:** This lesson covers objective `az900-1.1: Describe cloud computing`
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

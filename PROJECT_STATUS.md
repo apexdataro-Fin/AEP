@@ -2,7 +2,7 @@
 
 > Last updated: 2026-07-15
 
-## Overall Completion: ~85%
+## Overall Completion: ~88%
 
 | Phase | Status | Progress |
 |---|---|---|
@@ -11,74 +11,61 @@
 | **Phase 3 — Platform Experience** | ✅ Complete | 100% |
 | **Phase 4 — ARES Content Operating System (ACOS)** | ✅ Complete | 100% |
 | **Phase 5 — ALP-001: Cloud Engineering Foundation** | ✅ Complete | 100% |
-| **Phase 5b — ALP-001: Review & Enhancement** | ✅ Complete | 100% |
-| **Phase 6 — Content Creation & Community** | 🔜 Next | 0% |
+| **Phase 5b — Review & Enhancement** | ✅ Complete | 100% |
+| **Phase 6 — Content Creation & Components** | 🔄 In Progress | ~30% |
 
 ---
 
-## Phase 5b — Review & Enhancement ✅
+## Phase 6 — Content Creation & Components 🔄
 
-Completed a comprehensive engineering review of ALP-001, comparing against best practices in cloud engineering education. All enhancements build on existing architecture without replacement or simplification.
+### Lessons Written (15 total)
 
-### Enhancements Created
-
-| Enhancement | File | Description |
+| Module | Lessons | Status |
 |---|---|---|
-| **AI Prompt Library** | `alp-001/ai/prompt-library.json` | 10 prompt categories, 10+ reusable provider-agnostic prompts (tutor, quiz, code review, interview, debugging, flashcards, study planner, career coach, Feynman verifier, CloudNova scenarios) |
-| **Cloud Engineering Glossary** | `alp-001/glossary.json` | 60+ fundamental terms across 10 categories with definitions, AKA, related terms, and module references |
-| **Active Recall Decks** | `alp-001/questions/active-recall-module-01.json`, `module-02.json` | 24 recall items with spaced repetition schedules for Modules 01-02 |
-| **Challenge System** | `alp-001/challenges.json` | 10 progressive challenges (5 types, 5 difficulty tiers, 50-800 XP) covering debugging, architecture, optimization, scenario, and build |
-| **Production Scenarios** | `alp-001/career/production-scenarios.json` | 8 CloudNova production scenarios spanning junior → principal career progression with full-circle narrative |
-| **Lesson Outlines** | `alp-001/lesson-outlines.json` | Detailed outlines for Modules 03-12 with lesson titles, focus areas, and Mermaid diagram concepts |
+| 01 — Engineering Foundations | 6 lessons | ✅ Complete |
+| 02 — Linux Mastery | 8 lessons | ✅ Complete |
+| 06 — Cloud Fundamentals (AZ-900) | 1 of 8 | 🔄 In Progress |
 
-### Educational Quality Improvements
+### Interactive Block Components ✅
 
-| Area | Before | After |
-|---|---|---|
-| **AI Integration** | Spec only, no prompts | 10-category prompt library, provider-agnostic |
-| **Active Recall** | In-lesson only | Centralized decks with spaced repetition schedules |
-| **Glossary** | None | 60+ terms across all domains |
-| **Challenges** | None | 10 progressive challenges, 5 difficulty tiers |
-| **Career Narrative** | Career mode spec only | 8 immersive production scenarios from junior to principal |
-| **Learning Outlines** | 2 modules with lessons | 12 modules with detailed lesson plans and diagram concepts |
-| **Visual Explanations** | Limited Mermaid | Diagram concepts specified for every lesson |
+Built 26 reusable MDX components for all lessons:
 
-### Key Design Decisions (Enhancements)
+| Category | Components |
+|---|---|
+| **Callouts** | Info, Warning, Tip, BestPractice |
+| **Learning** | Definition, Example, Analogy, CommonMistake |
+| **Practice** | Quiz (interactive), Exercise, Challenge, Debugging |
+| **Domain Notes** | ProductionNote, ArchitectureNote, SecurityNote, CostNote |
+| **Career** | InterviewQuestion, DecisionPoint, CheatSheet |
+| **Code** | CodeBlock (syntax), TerminalBlock (terminal UI) |
+| **AI** | AIExplanation, AIQuiz, AIFlashcards, Flashcard (flip card) |
+| **Future** | Simulator (placeholder) |
 
-1. **Provider-agnostic AI prompts** — No model-specific syntax. Works with GPT, Claude, Gemini, Llama.
-2. **Spaced repetition embedded** — Every recall item has a review schedule (1, 3, 7, 14, 30, 90 days).
-3. **Challenges are independent** — Designed to be solved without guided steps, building real engineering confidence.
-4. **Career narrative is continuous** — From "Your First Day at CloudNova" to "KubeCon Keynote," one coherent journey.
-5. **Glossary is cross-referenced** — Every term links to modules, related terms, and categories.
-6. **Lesson outlines preserve flexibility** — Titles and focus areas guide content creation without over-specifying.
+**File:** `src/components/shared/InteractiveBlocks.tsx` + CSS in `src/css/platform.css`
+
+### Lesson Outlines
+- Modules 03-12: Full outlines with lesson titles, focus areas, and Mermaid diagram concepts (72+ planned lessons)
+- **File:** `alp-001/lesson-outlines.json`
 
 ### Total Project Statistics
 
-- **~200+ files** created across all phases
-- **14 written lessons** (Modules 01-02, 8 Linux + 6 Foundations)
-- **10 AI prompts** in library
-- **60+ glossary entries**
-- **24 Active Recall items**
-- **10 progressive challenges**
-- **8 production scenarios**
-- **12 modules with lesson outlines** (72+ planned lessons)
+- **~205 files** created across all phases
+- **15 written lessons** with Mermaid diagrams, Active Recall, CloudNova narrative
+- **26 interactive block React components** with CSS
+- **10 AI prompts** in provider-agnostic library
+- **60+ glossary entries** with cross-references
+- **24 Active Recall items** with spaced repetition schedules
+- **10 progressive challenges** (5 tiers)
+- **8 production scenarios** (junior → principal narrative)
 - **33 module directories** with index pages
-- **24 reusable React components**
-- **17 custom hooks**
-- **14 content engines** (ACOS)
-- **10 ALP-001 spec files**
-- **100+ TypeScript interfaces**
-- **Build**: ✅ Clean
+- **14 ACOS content engines**
+- **Build**: ✅ Clean (0 errors)
 
 ---
 
-## Next Recommended Implementation
+## Next Recommended Work
 
-**Phase 6 — Content Creation & Community:**
-- Write lessons for Modules 03-12 using the new lesson outlines
-- Write remaining lesson outlines for Modules 13-33
-- Create question banks with actual questions
-- Implement interactive block React components (Quiz, CodeBlock, Flashcard, etc.)
-- Build the Linux Terminal simulator (WebAssembly prototype)
-- Backend integration with Convex for user progress, XP, achievements
-- Community features (discussions, peer reviews)
+1. **Write Module 06 (Cloud Fundamentals) lessons 2-8** — AZ-900 aligned, high certification value
+2. **Write Module 03 (Networking) lessons** — foundational for all cloud work
+3. **Create remaining lesson outlines for Modules 13-33**
+4. **Build question banks** with real certification-aligned questions for AZ-900 and AZ-104
