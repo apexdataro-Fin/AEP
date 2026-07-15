@@ -1,0 +1,208 @@
+---
+id: "cld-02-service-models"
+title: "IaaS, PaaS, SaaS, FaaS Explained"
+slug: /cloud-engineering/06-cloud-fundamentals/service-models
+content_type: "lesson"
+summary: "Understand the four cloud service models with real Azure examples. Learn the shared responsibility model and how to choose the right model for each workload."
+description: "Cloud service models: IaaS, PaaS, SaaS, FaaS. Shared responsibility, Azure examples, and how to choose the right model."
+difficulty: "beginner"
+estimated_time:
+  minutes: 35
+  hours: 0.58
+  display: "35 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-cloud-service-models"
+    name: "Cloud Service Models"
+    proficiency: "basic"
+certifications:
+  - code: "AZ-900"
+    objective_id: "az900-1.2"
+    weight: 8
+  - code: "AZ-900"
+    objective_id: "az900-1.3"
+    weight: 8
+career_relevance:
+  - role: "Junior Cloud Engineer"
+    level: "junior"
+    importance: 5
+knowledge_nodes: ["cloud-service-models", "shared-responsibility"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Differentiate between IaaS, PaaS, SaaS, and FaaS with concrete Azure examples"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-2"
+    description: "Explain the shared responsibility model for each service type"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-3"
+    description: "Choose the appropriate service model for common workload scenarios"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What is the shared responsibility model and how does it differ between IaaS and SaaS?"
+    answer: "IaaS: provider secures physical hardware, network, and hypervisor. You secure OS, apps, data, and access. SaaS: provider secures everything — you just manage users and data. PaaS sits in between — provider secures everything except your application code and data."
+    difficulty: "medium"
+tags: [cloud-fundamentals, AZ-900, IaaS, PaaS, SaaS, FaaS]
+search_keywords: [IaaS PaaS SaaS, cloud service models, shared responsibility, Azure service models, AZ-900]
+---
+
+# IaaS, PaaS, SaaS, FaaS Explained
+
+:::level simple
+
+**The cloud gives you different levels of control — like different ways to get pizza.**
+
+- **IaaS (Infrastructure):** You get the kitchen. You cook. You clean. Complete control, more work.
+- **PaaS (Platform):** You get a pre-heated oven and ingredients. You assemble and bake. Less work, less control.
+- **SaaS (Software):** You order delivery. Eat and enjoy. No cooking, no cleanup, but you can't change the recipe.
+- **FaaS (Functions):** You bring one ingredient. The kitchen does everything else for exactly 30 seconds. Pay only for those 30 seconds.
+
+Each model solves a different problem. The art of cloud engineering is knowing which model to use when.
+
+:::
+
+:::level core
+
+## The Four Service Models
+
+```mermaid
+graph TD
+    subgraph "On-Premises"
+        A1[Applications]
+        A2[Data]
+        A3[Runtime]
+        A4[Middleware]
+        A5[OS]
+        A6[Virtualization]
+        A7[Servers]
+        A8[Storage]
+        A9[Networking]
+    end
+    
+    subgraph "IaaS"
+        B1[Applications]
+        B2[Data]
+        B3[Runtime]
+        B4[Middleware]
+        B5[OS]
+    end
+    
+    subgraph "PaaS"
+        C1[Applications]
+        C2[Data]
+    end
+    
+    subgraph "SaaS"
+        D1[Data]
+    end
+    
+    style A1 fill:#ef4444,stroke:#dc2626,color:#fff
+    style B5 fill:#f59e0b,stroke:#d97706,color:#000
+    style C2 fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style D1 fill:#10b981,stroke:#059669,color:#fff
+```
+
+| Model | You Manage | Provider Manages | Azure Example |
+|---|---|---|---|
+| **IaaS** | OS, middleware, apps, data | Hardware, network, hypervisor | Azure VM |
+| **PaaS** | Apps, data | OS, runtime, middleware, hardware | Azure App Service |
+| **SaaS** | Data, users | Everything else | Microsoft 365 |
+| **FaaS** | Code only | Entire runtime, scales to zero | Azure Functions |
+
+:::
+
+## Azure Examples
+
+| Model | Azure Service | When to Use |
+|---|---|---|
+| **IaaS** | Virtual Machines, AKS node pools | Full OS control, legacy apps, custom networking |
+| **PaaS** | App Service, SQL Database, AKS control plane | Focus on code, not infrastructure |
+| **SaaS** | Microsoft 365, Dynamics 365 | Ready-to-use business applications |
+| **FaaS** | Azure Functions, Logic Apps | Event-driven, bursty workloads |
+
+## The Shared Responsibility Model
+
+```mermaid
+graph LR
+    subgraph "Your Responsibility"
+        Y1[Data Classification]
+        Y2[Endpoint Protection]
+        Y3[Account Management]
+        Y4[Application Code]
+    end
+    
+    subgraph "Shared"
+        S1[Identity Management]
+        S2[Network Controls]
+        S3[OS Patching - IaaS]
+    end
+    
+    subgraph "Provider Responsibility"
+        P1[Physical Security]
+        P2[Host Infrastructure]
+        P3[Network Fabric]
+        P4[Hypervisor]
+    end
+    
+    style Y1 fill:#f59e0b,stroke:#d97706,color:#000
+    style S1 fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style P1 fill:#10b981,stroke:#059669,color:#fff
+```
+
+**The golden rule:** The provider secures the cloud. You secure what's IN the cloud.
+
+---
+
+## Check Your Understanding
+
+1. **You need to run a legacy .NET Framework app that requires specific IIS configuration. Which model?**
+   - A) SaaS — just use SharePoint
+   - B) FaaS — rewrite as Azure Functions
+   - C) IaaS — run on an Azure VM with full OS/IIS control
+   - D) PaaS — deploy to App Service
+
+   <details><summary>Answer</summary>**C.** Legacy apps with specific OS/IIS requirements often need IaaS. App Service (PaaS) is great for modern .NET but may not support legacy configurations.</details>
+
+2. **Who is responsible for patching the OS on an Azure SQL Database?**
+   - A) You — it's your data
+   - B) Microsoft — it's a PaaS service
+   - C) Shared — you do security patches, Microsoft does feature updates
+   - D) Nobody — PaaS doesn't need patches
+
+   <details><summary>Answer</summary>**B.** Azure SQL Database is PaaS. Microsoft patches the OS, the SQL engine, and the infrastructure. You manage your data and access.</details>
+
+3. **You want the cheapest option for a workload that runs once a day for 30 seconds. Which model?**
+   - A) IaaS VM running 24/7
+   - B) PaaS App Service with always-on
+   - C) FaaS — Azure Functions consumption plan
+   - D) SaaS — it's always the cheapest
+
+   <details><summary>Answer</summary>**C.** FaaS (Functions) scales to zero and charges only for execution time. A 30-second daily job costs pennies. A 24/7 VM would cost ~$30+/month for the same workload.</details>
+
+---
+
+## Key Takeaways
+
+- **IaaS = most control, most work.** Use for legacy or specialized workloads.
+- **PaaS = sweet spot.** Use for most new applications. Let the provider manage the platform.
+- **SaaS = ready to use.** For business apps you consume, not build.
+- **FaaS = pay per execution.** For event-driven, bursty, or infrequent workloads.
+- **Shared responsibility:** Provider secures the cloud, you secure what's in it.
+
+---
+
+## Next Steps
+
+- **Next Lesson:** [Cloud Economics & Business Case](/cloud-engineering/06-cloud-fundamentals/cloud-economics)
+- **AZ-900 Alignment:** Objectives `az900-1.2` and `az900-1.3`
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

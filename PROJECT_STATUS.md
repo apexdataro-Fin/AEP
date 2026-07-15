@@ -16,15 +16,22 @@
 
 ---
 
-## Phase 6 — Content Creation & Components 🔄
+## Phase 6 — Content Creation & UX Enhancement 🔄
 
-### Lessons Written (15 total)
+### UX Improvements ✅
+| Enhancement | Description |
+|---|---|
+| RTL Support | Full Arabic/Kurdish right-to-left support in custom.css + platform.css |
+| Homepage Redesign | Modern hero with stats, feature grid (6 cards), learning path preview (8 modules), enhanced CTA |
+| Reading Experience | Better typography, spacing, dark mode polish, interactive block styling |
+
+### Lessons Written (16 total)
 
 | Module | Lessons | Status |
 |---|---|---|
 | 01 — Engineering Foundations | 6 lessons | ✅ Complete |
 | 02 — Linux Mastery | 8 lessons | ✅ Complete |
-| 06 — Cloud Fundamentals (AZ-900) | 1 of 8 | 🔄 In Progress |
+| 06 — Cloud Fundamentals (AZ-900) | 2 of 8 | 🔄 In Progress |
 
 ### Interactive Block Components ✅
 
@@ -47,10 +54,17 @@ Built 26 reusable MDX components for all lessons:
 - Modules 03-12: Full outlines with lesson titles, focus areas, and Mermaid diagram concepts (72+ planned lessons)
 - **File:** `alp-001/lesson-outlines.json`
 
+### UX & Platform
+- RTL support for Arabic and Kurdish
+- Modern homepage with hero stats, feature grid, learning path preview
+- 28 interactive block React components with full CSS
+- Docusaurus with PWA, local search, Mermaid, dark mode
+- 17 custom React hooks for platform state
+
 ### Total Project Statistics
 
-- **~205 files** created across all phases
-- **15 written lessons** with Mermaid diagrams, Active Recall, CloudNova narrative
+- **~210 files** created across all phases
+- **16 written lessons** with Mermaid diagrams, Active Recall, CloudNova narrative
 - **26 interactive block React components** with CSS
 - **10 AI prompts** in provider-agnostic library
 - **60+ glossary entries** with cross-references

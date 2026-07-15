@@ -272,6 +272,61 @@ pre {
 }
 
 /* ============================================================
+   RTL Support (Arabic, Kurdish, etc.)
+   ============================================================ */
+html[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+html[dir="rtl"] .markdown h1,
+html[dir="rtl"] .markdown h2,
+html[dir="rtl"] .markdown h3,
+html[dir="rtl"] .markdown h4 {
+  text-align: right;
+}
+
+html[dir="rtl"] .markdown table th,
+html[dir="rtl"] .markdown table td {
+  text-align: right;
+}
+
+html[dir="rtl"] .navbar__items--right {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+html[dir="rtl"] .pagination-nav__link--next .pagination-nav__label::after {
+  content: " ←";
+}
+
+html[dir="rtl"] .pagination-nav__link--prev .pagination-nav__label::before {
+  content: " →";
+}
+
+html[dir="rtl"] .pagination-nav__link--next .pagination-nav__label::after,
+html[dir="rtl"] .pagination-nav__link--prev .pagination-nav__label::before {
+  display: inline;
+}
+
+html[dir="rtl"] .interactive-block {
+  border-left: none;
+  border-right: 4px solid var(--celos-border);
+}
+
+html[dir="rtl"] .aep-card--book,
+html[dir="rtl"] .aep-card--course,
+html[dir="rtl"] .aep-card--project,
+html[dir="rtl"] .aep-card--lab,
+html[dir="rtl"] .aep-card--certification,
+html[dir="rtl"] .aep-card--career,
+html[dir="rtl"] .aep-card--knowledge,
+html[dir="rtl"] .aep-card--technology {
+  border-left: none;
+  border-right: 3px solid;
+}
+
+/* ============================================================
    Print Styles
    ============================================================ */
 @media print {
