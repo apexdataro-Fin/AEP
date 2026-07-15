@@ -1,0 +1,325 @@
+---
+id: helm-02
+title: "Chart Development"
+module: "11-helm"
+difficulty: 3
+estimatedMinutes: 60
+certifications: ["AZ-400"]
+technologies: ["Helm", "Kubernetes", "YAML", "Go Templates"]
+skills: ["chart-development", "helm-templates", "helm-hooks"]
+careerLevel: ["platform-engineer", "senior-cloud-engineer"]
+knowledgeNodes: ["helm-charts", "templating", "helm-hooks"]
+prerequisites: ["helm-01", "k8s-02"]
+learningObjectives:
+  - Create a Helm chart from scratch using `helm create`
+  - Write custom templates using Go template syntax and Sprig functions
+  - Implement helper templates and named templates for reusability
+  - Use Helm hooks for lifecycle management (pre-install, post-upgrade)
+  - Write and execute Helm chart tests
+  - Package and version charts correctly
+reviewSchedule: { initial: 1, interval: 3, maxInterval: 30 }
+aiPrompts:
+  - "Review my Helm chart template for a Python Flask app and suggest improvements for production readiness"
+  - "Generate a values.yaml schema validation file for my Helm chart"
+  - "Explain the difference between `include` and `template` in Helm — when should I use each?"
+interactiveBlocks:
+  - type: BestPractice
+    content: "Always include a NOTES.txt file in your chart's templates/ directory. It displays helpful information after `helm install` and dramatically improves the user experience."
+  - type: Tip
+    content: "Use `helm create mychart` to scaffold a best-practice chart structure, then modify it. Don't start from scratch — the scaffolded chart follows CNCF conventions."
+  - type: Warning
+    content: "Never hardcode secrets in values.yaml or templates. Use `helm-secrets` plugin with SOPS, or reference external secret stores like Azure Key Vault via the CSI driver."
+---
+
+## Building Production Charts
+
+### Simple
+
+A Helm chart is a directory with a predictable structure:
+
+```
+mychart/
+├── Chart.yaml          # Chart metadata (name, version, description)
+├── values.yaml         # Default configuration values
+├── charts/             # Sub-charts (dependencies)
+├── templates/          # Kubernetes manifest templates
+│   ├── NOTES.txt       # Post-install help text
+│   ├── _helpers.tpl    # Reusable template helpers
+│   ├── deployment.yaml
+│   ├── service.yaml
+│   ├── ingress.yaml
+│   ├── hpa.yaml
+│   └── tests/          # Helm test definitions
+│       └── test-connection.yaml
+└── .helmignore         # Files to exclude from packaging
+```
+
+Start with `helm create mychart` — it generates this structure following community best practices.
+
+### Core
+
+**The `_helpers.tpl` file** is your chart's shared template library. Define named templates once, reuse everywhere:
+
+```yaml
+{{/*
+Create a default fully qualified app name.
+*/}}
+{{- define "mychart.fullname" -}}
+{{- if .Values.fullnameOverride }}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+
+{{/*
+Common labels
+*/}}
+{{- define "mychart.labels" -}}
+helm.sh/chart: {{ include "mychart.chart" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+```
+
+Use named templates: `{{ include "mychart.fullname" . }}`
+
+### Professional
+
+**Conditional template blocks** using `if/else` with values:
+
+```yaml
+# templates/ingress.yaml
+{{- if .Values.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "mychart.fullname" . }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.ingress.tls }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host }}
+      secretName: {{ .Values.ingress.tlsSecretName }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "mychart.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+{{- end }}
+```
+
+**Range loops** for iterating over lists:
+
+```yaml
+# templates/configmap.yaml
+data:
+  {{- range .Values.env }}
+  {{ .name }}: {{ .value | quote }}
+  {{- end }}
+```
+
+**With blocks** for scoping contexts:
+
+```yaml
+{{- with .Values.resources }}
+resources:
+  {{- toYaml . | nindent 2 }}
+{{- end }}
+```
+
+### Production
+
+**Helm hooks** give you precise lifecycle control:
+
+| Hook | Execution Point |
+|------|----------------|
+| `pre-install` | After templates rendered, before resources created |
+| `post-install` | After all resources are loaded |
+| `pre-delete` | Before any resources are deleted |
+| `post-delete` | After all resources deleted |
+| `pre-upgrade` | After templates rendered, before upgrade |
+| `post-upgrade` | After all resources upgraded |
+| `pre-rollback` | Before rollback executes |
+| `post-rollback` | After rollback completes |
+| `test` | When `helm test` is invoked |
+
+Hooks are implemented by adding annotations to any Kubernetes resource:
+
+```yaml
+# templates/db-migration.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "mychart.fullname" . }}-db-migrate
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          command: ["python", "manage.py", "migrate"]
+```
+
+**Hook deletion policies:**
+- `before-hook-creation` — delete previous hook before running new one
+- `hook-succeeded` — delete after success
+- `hook-failed` — keep on failure for debugging
+
+### Architect
+
+**Chart dependencies** enable modular composition:
+
+```yaml
+# Chart.yaml
+dependencies:
+  - name: redis
+    version: "18.x.x"
+    repository: "oci://myregistry.azurecr.io/helm"
+    condition: redis.enabled
+  - name: postgresql
+    version: "15.x.x"
+    repository: "oci://myregistry.azurecr.io/helm"
+    condition: postgresql.enabled
+    tags:
+      - database
+```
+
+**Sub-chart values override** via the parent values.yaml:
+
+```yaml
+# Parent values.yaml
+redis:
+  enabled: true
+  architecture: replication
+  auth:
+    enabled: true
+    password: ""  # Set via external secret
+
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      size: 50Gi
+```
+
+---
+
+## CloudNova Scenario
+
+> **JIRA: CN-1203** — The Spring PetClinic app has been successfully deployed with the basic Helm chart. Now the team needs to add MySQL database migration hooks, configure autoscaling, and set up proper RBAC. SRE team also wants the chart to support both dev and production environments with different resource tiers.
+
+**Your task:** Create environment-specific values files (`values-dev.yaml`, `values-prod.yaml`) and add a database migration hook that runs `flyway migrate` during upgrades.
+
+---
+
+## Hands-On Exercise
+
+```bash
+# 1. Scaffold a new chart
+helm create flask-api
+
+# 2. Examine the structure
+tree flask-api/
+
+# 3. Customize values for your app
+# Edit flask-api/values.yaml
+# - Change image.repository to your container registry
+# - Set service.type to ClusterIP
+# - Enable ingress
+
+# 4. Add a ConfigMap template
+cat > flask-api/templates/configmap.yaml << 'EOF'
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "flask-api.fullname" . }}-config
+data:
+  FLASK_ENV: {{ .Values.environment | quote }}
+  LOG_LEVEL: {{ .Values.logLevel | default "INFO" | quote }}
+EOF
+
+# 5. Lint the chart
+helm lint flask-api/
+
+# 6. Dry-run to see rendered templates
+helm install --dry-run --debug test-release flask-api/
+
+# 7. Package the chart
+helm package flask-api/
+
+# 8. Create an index for a local repo
+helm repo index . --url https://charts.example.com
+```
+
+---
+
+## Active Recall
+
+1. What's the difference between `{{ include }}` and `{{ template }}` in Helm?
+2. How do Helm hooks control execution order? What's the `hook-weight` for?
+3. What file provides post-install guidance to the user?
+4. How do you conditionally include a resource in a Helm chart?
+5. What's the purpose of `.helmignore`?
+
+---
+
+## Feynman Exercise
+
+Explain Helm chart development to a backend developer who writes Kubernetes YAML by hand. Cover: why templates beat copy-paste, how values work like constructor parameters, and how hooks handle database migrations. Use a real example from your work.
+
+---
+
+## Flashcards
+
+**Q:** What command scaffolds a new Helm chart with best practices?
+**A:** `helm create <chart-name>`
+
+**Q:** What file holds reusable template functions shared across all templates?
+**A:** `templates/_helpers.tpl`
+
+**Q:** What annotation triggers a Helm hook?
+**A:** `"helm.sh/hook": post-install,post-upgrade`
+
+**Q:** How do you validate a chart without installing it?
+**A:** `helm lint <chart-dir>` and `helm install --dry-run --debug`
+
+---
+
+## Interview Questions
+
+1. **"How do you handle database schema migrations with Helm?"** — Discuss Helm hooks with Job resources, `pre-upgrade` vs `post-upgrade` timing, `helm.sh/hook-delete-policy`, and rollback considerations.
+
+2. **"What strategies do you use for multi-environment Helm deployments?"** — Cover values files per environment, `--set` for CI/CD overrides, umbrella charts, and environment-agnostic templates with conditional logic.
+
+3. **"How would you debug a Helm template that renders unexpected YAML?"** — Walk through `--dry-run --debug`, `helm get manifest`, `helm template` for offline rendering, and common pitfalls (whitespace issues with `{{-` and `-}}`).
+
+---
+
+## Related Content
+
+- [Helm Architecture →](./01-helm-architecture)
+- [Production Helm Patterns →](./03-production-helm)
+- [Docker in Production →](/alp-001/09-docker)
+- [Kubernetes Configuration →](/alp-001/10-kubernetes/lessons/04-configuration-secrets)
+
+---
+
+**Next Lesson:** [Production Helm Patterns →](./03-production-helm)
