@@ -66,7 +66,7 @@ function CTASection() {
           <Link className="button button--primary button--lg" to="/curriculum">
             Start Learning
           </Link>
-          <Link className="button button--secondary button--lg" to="/roadmap">
+          <Link className="button button--secondary button--lg" to="/reference/roadmap">
             View Roadmap
           </Link>
         </div>

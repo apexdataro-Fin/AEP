@@ -36,7 +36,7 @@ This platform is designed to be the **single source of truth** for learning clou
 |---|---|
 | **Beginners** | Start with the [Curriculum](/curriculum) fundamentals track |
 | **Developers** | Jump into [Projects](/projects) and [Labs](/labs) |
-| **DevOps Engineers** | Explore advanced [Architecture](/architecture/overview) topics |
+| **DevOps Engineers** | Explore advanced [Architecture](/architecture) topics |
 | **SREs** | Focus on reliability, monitoring, and incident response |
 | **Architects** | Dive deep into [System Design](/architecture/system-design) |
 
@@ -65,6 +65,6 @@ graph TD
 
 ## Get Started
 
-- [Architecture Overview](/architecture/overview) — Understand how the platform is built
-- [Development Guide](/development/overview) — Set up your local environment
+- [Architecture Overview](/architecture) — Understand how the platform is built
+- [Development Guide](/development) — Set up your local environment
 - [Curriculum](/curriculum) — Start learning cloud engineering

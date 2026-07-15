@@ -27,5 +27,5 @@ Every lesson follows a consistent structure:
 6. **Check Your Understanding** — Self-assessment questions
 
 :::tip Coming Soon
-Lesson content is being developed. See the [example lesson](/examples) for a preview of the format.
+Lesson content is being developed. See the lesson template for a preview of the format.
 :::

@@ -216,7 +216,7 @@ const config: Config = {
           items: [
             { label: "Career Paths", to: "/career" },
             { label: "Certifications", to: "/certifications" },
-            { label: "Knowledge Graph", to: "/knowledge-graph" },
+            { label: "Knowledge Graph", to: "/guides/knowledge-graph-guide" },
           ],
         },
         {
@@ -224,7 +224,7 @@ const config: Config = {
           items: [
             { label: "Architecture", to: "/architecture" },
             { label: "Development Guide", to: "/development" },
-            { label: "API Reference", to: "/api-reference" },
+            { label: "API Reference", to: "/reference/api-reference" },
           ],
         },
         {
