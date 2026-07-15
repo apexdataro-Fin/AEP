@@ -1,0 +1,296 @@
+---
+id: 07-security-ops-lab
+title: "Security Operations Lab"
+module: "04-security"
+lesson: 7
+difficulty: "professional"
+estimated_time: "75 minutes"
+technologies: ["Sentinel", "KQL", "Key Vault", "NSG", "Defender for Cloud"]
+skills: ["incident-response", "kql-hunting", "forensic-analysis", "playbook-automation", "security-hardening"]
+certifications: ["AZ-500", "SC-200"]
+knowledge_nodes: ["incident-response", "forensic-analysis", "security-hardening-lab"]
+prerequisites: ["04-security/lessons/05-security-monitoring", "04-security/lessons/06-compliance-governance"]
+status: "published"
+---
+
+import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+
+## Learning Objectives
+
+By the end of this lab, you will:
+- Investigate a real-world security incident end-to-end
+- Use KQL for forensic analysis of sign-in and activity logs
+- Harden an Azure environment based on attack findings
+- Create automated Sentinel playbooks for response
+- Present findings in a post-incident review format
+
+---
+
+## Lab Scenario: CloudNova Security Breach
+
+<ProductionNote title="INCIDENT #CN-SEC-2024-0042">
+**Initial Alert:** Sentinel detected "Impossible Travel" for user `ops-admin@cloudnova.com` — sign-in from Seattle at 08:15 AM and from Moscow at 08:23 AM. This is physically impossible.
+
+**Your Role:** Lead Security Engineer. You have full access to Sentinel, Log Analytics, and Azure Activity logs.
+
+**Timeline:** You have 60 minutes to investigate, contain, and report.
+</ProductionNote>
+
+---
+
+## Phase 1: Triage (15 minutes)
+
+### 1.1 Verify the Impossible Travel Alert
+
+<TerminalBlock>
+{`// KQL: Full sign-in timeline for compromised user
+SigninLogs
+| where UserPrincipalName == "ops-admin@cloudnova.com"
+| where TimeGenerated > ago(12h)
+| project TimeGenerated, Location, IPAddress, 
+    DeviceDetail = tostring(DeviceDetail.displayName),
+    ResultType, ResultDescription
+| order by TimeGenerated asc`}
+</TerminalBlock>
+
+| Time | Location | IP | Device | Result |
+|------|----------|-----|--------|--------|
+| 08:15 | Seattle, WA | 203.0.113.45 | CORP-LAPTOP-042 | ✅ Success (MFA) |
+| 08:23 | Moscow, RU | 185.220.101.34 | Unknown | ✅ Success (MFA?!) |
+| 08:27 | Moscow, RU | 185.220.101.34 | Unknown | ✅ Elevated to Global Admin |
+| 08:31 | (Azure) | — | ops-admin | 📝 Created 5 new subscriptions |
+
+<Warning>
+**This is bad.** The attacker not only signed in — they **passed MFA** and **elevated to Global Admin**. How? Possibly: MFA fatigue attack, SIM swap, or session token theft.
+</Warning>
+
+### 1.2 Check What the Attacker Did
+
+<TerminalBlock>
+{`// KQL: All Azure activity by the compromised user since 08:15
+AzureActivity
+| where Caller == "ops-admin@cloudnova.com"
+| where TimeGenerated > datetime(2024-01-15 08:15:00)
+| project TimeGenerated, OperationName, 
+    ResourceGroup, Resource, 
+    ResultType
+| order by TimeGenerated asc`}
+</TerminalBlock>
+
+**Findings:**
+1. **08:27** — Attacker added themselves to `Global Administrator` role
+2. **08:31-08:38** — Created 5 subscriptions in different regions
+3. **08:42** — Opened NSG rule allowing `0.0.0.0/0` to port 3389 on production VMs
+4. **08:45** — Downloaded Key Vault certificates
+
+---
+
+## Phase 2: Containment (20 minutes)
+
+### 2.1 Immediate Actions (Order Matters!)
+
+<TerminalBlock>
+{`# ACTION 1: Revoke all sessions for compromised user (force logout)
+# Portal: Azure AD → Users → ops-admin → "Revoke sessions"
+# CLI:
+az ad user update \\
+  --id ops-admin@cloudnova.com \\
+  --force-change-password-next-sign-in true
+
+# ACTION 2: Remove from Global Admin role
+az role assignment delete \\
+  --assignee ops-admin@cloudnova.com \\
+  --role "Global Administrator"
+
+# ACTION 3: Block the attacker's IP at the NSG level
+az network nsg rule create \\
+  --nsg-name prod-subnet-nsg \\
+  --name DENY-ATTACKER-IP \\
+  --priority 50 \\
+  --direction Inbound \\
+  --source-address-prefixes 185.220.101.34/32 \\
+  --access Deny \\
+  --protocol '*' \\
+  --destination-port-ranges '*'
+
+# ACTION 4: Delete the rogue subscriptions
+# Portal only — subscription deletion requires billing admin`}
+</TerminalBlock>
+
+<BestPractice>
+**Containment priority order:**
+1. **Credentials** — revoke sessions, reset passwords, revoke tokens
+2. **Privileges** — remove from admin roles
+3. **Network** — block attacker IPs, isolate compromised VMs
+4. **Persistence** — check for backdoors (new users, service principals, API keys)
+5. **Data** — assess what was accessed, trigger notification if PII breach
+</BestPractice>
+
+### 2.2 Check for Persistence Mechanisms
+
+<TerminalBlock>
+{`// KQL: Did the attacker create new accounts?
+AuditLogs
+| where InitiatedBy.user.userPrincipalName == "ops-admin@cloudnova.com"
+| where TimeGenerated > datetime(2024-01-15 08:15:00)
+| where OperationName contains "Add user" 
+    or OperationName contains "Add service principal"
+    or OperationName contains "Add application"
+| project TimeGenerated, OperationName, TargetResources
+
+// KQL: Any new API keys or service principals created?
+AzureActivity
+| where Caller == "ops-admin@cloudnova.com"
+| where OperationName contains "Create" or OperationName contains "Write"
+| where TimeGenerated > datetime(2024-01-15 08:15:00)`}
+</TerminalBlock>
+
+---
+
+## Phase 3: Forensic Analysis (20 minutes)
+
+### 3.1 Reconstruct the Attack Timeline
+
+```mermaid
+timeline
+    title CloudNova Security Incident #CN-SEC-2024-0042
+    08:15 : Legitimate sign-in (Seattle)
+    08:23 : Attacker sign-in (Moscow, MFA bypassed)
+    08:27 : Elevation to Global Admin
+    08:31 : Created rogue subscriptions
+    08:38 : 5 subscriptions active in 4 regions
+    08:42 : NSG rule opened RDP to 0.0.0.0/0
+    08:45 : Key Vault certificates downloaded
+    08:52 : Sentinel alert fires
+    08:55 : SOC analyst begins investigation
+    09:05 : Sessions revoked, admin role removed
+    09:12 : Attacker IP blocked at NSG
+    09:20 : Rogue subscriptions deleted
+    09:30 : All Key Vault keys and secrets rotated
+```
+
+### 3.2 Root Cause Analysis
+
+| Finding | Likely Cause | Remediation |
+|---------|-------------|-------------|
+| MFA bypassed | MFA fatigue attack (attacker spammed push notifications until user accepted) | Deploy passwordless auth (FIDO2), number-matching MFA |
+| Elevation to Global Admin | ops-admin had "Privileged Role Administrator" — could grant Global Admin to themselves | Remove standing privileged roles, use PIM with approval |
+| Rogue subscriptions | No subscription creation policy | Azure Policy: deny subscription creation except by billing team |
+| NSG opened | No Azure Policy blocking open NSG rules | Policy: deny NSG rules with source 0.0.0.0/0 to RDP/SSH |
+| Key Vault downloaded | Key Vault had no network restrictions | Private Link + firewall for all Key Vaults |
+
+---
+
+## Phase 4: Hardening (20 minutes)
+
+<ArchitectureNote title="Post-Incident Security Improvements">
+Based on the root cause analysis, CloudNova implemented these hardening measures.
+</ArchitectureNote>
+
+<TerminalBlock>
+{`# HARDENING 1: Block all inbound RDP/SSH from internet
+az policy definition create \\
+  --name deny-open-rdp-ssh \\
+  --rules '{
+    "if": {
+      "allOf": [
+        {"field": "type", "equals": "Microsoft.Network/networkSecurityGroups/securityRules"},
+        {"field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange", 
+         "in": ["22", "3389"]},
+        {"field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix", 
+         "equals": "0.0.0.0/0"}
+      ]
+    },
+    "then": {"effect": "deny"}
+  }'
+
+# HARDENING 2: Require PIM for all privileged roles
+# Portal: Azure AD → Privileged Identity Management →
+#   Role settings → Global Administrator →
+#   Require approval, MFA, justification, 2-hour max
+
+# HARDENING 3: Key Vault network isolation
+az keyvault update \\
+  --name cloudnova-prod-kv \\
+  --default-action Deny \\
+  --bypass AzureServices
+
+az keyvault network-rule add \\
+  --name cloudnova-prod-kv \\
+  --subnet /subscriptions/.../prod-subnet \\
+  --ip-address 10.0.0.0/8  # Internal only
+
+# HARDENING 4: Sentinel playbook for auto-remediation
+# Logic App: When Sentinel creates high-severity incident →
+#   1. Revoke user sessions
+#   2. Remove from all privileged roles
+#   3. Post to Teams channel`}
+</TerminalBlock>
+
+---
+
+## Phase 5: Post-Incident Report
+
+### Executive Summary
+
+**Incident:** Unauthorized Global Admin access via compromised credentials  
+**Impact:** Key Vault certificates exposed; no data exfiltration confirmed  
+**Detection:** Sentinel "Impossible Travel" analytics rule (8 minutes from compromise to alert)  
+**Containment:** Full containment in 35 minutes  
+**Root Cause:** MFA fatigue + standing privileged access  
+**Status:** ✅ Contained and remediated
+
+### Lessons Learned
+
+1. **MFA isn't enough** — deploy phishing-resistant MFA (FIDO2, certificate-based)
+2. **No standing privileged access** — PIM eliminates persistent escalation paths
+3. **Policy prevents panic** — Azure Policy blocks would have prevented NSG change and subscription creation
+4. **Sentinel playbooks save minutes** — automated containment for future incidents
+
+---
+
+## Your Turn: Hands-On Exercise
+
+<Exercise title="Respond to Your Own Incident" time="30 minutes">
+
+**Scenario:** A similar incident at CloudNova's dev subscription. Use these KQL queries to practice:
+
+**Task 1:** Write a KQL query to find all sign-ins from impossible locations in the last 7 days.
+
+**Task 2:** Create an Azure Policy that requires MFA for all users with write permissions.
+
+**Task 3:** Design a Sentinel playbook that automatically:
+- Revokes sessions for compromised user
+- Removes from all privileged roles
+- Creates a ServiceNow ticket
+
+**Task 4:** Write the post-incident report using the template above.
+
+<Quiz question="Which should you do FIRST during containment?">
+- *Revoke user sessions and reset credentials*
+- Block attacker IP
+- Delete compromised resources
+- Send email to the team
+</Quiz>
+
+</Exercise>
+
+---
+
+## Key Takeaways
+
+1. **Identity is the #1 attack vector** — protect it with PIM, MFA, and least privilege
+2. **Detection speed matters** — Sentinel caught this in 8 minutes; without it, the attacker has hours
+3. **Policy prevents mistakes** — the NSG and subscription issues would have been blocked by proper Azure Policy
+4. **Automate containment** — playbooks should handle the first 5 minutes of response automatically
+
+---
+
+## Related Content
+
+| Resource | Link |
+|----------|------|
+| Previous: Compliance & Governance | [Lesson 6](06-compliance-governance) |
+| Next module: Python for Cloud | [Module 05](../../05-python/index) |
+| AZ-500: Security Operations | [Certification](../../certifications/az-500) |
+| SC-200: Security Operations Analyst | [Certification](../../certifications/sc-200) |
