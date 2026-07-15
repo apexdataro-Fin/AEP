@@ -1,6 +1,6 @@
 /**
  * Cloud Engineering Learning OS — Learning Core Type Definitions
- * 
+ *
  * These types mirror the JSON schemas and metadata specifications.
  * Every future lesson, lab, project, and simulator uses these types.
  */
@@ -88,7 +88,8 @@ export interface ContentRef {
 // Certification
 // ============================================================
 
-export type CertificationCode = "AZ-900" | "AZ-104" | "AZ-400" | "AI-102" | "AZ-500" | "DP-900" | "SC-900";
+export type CertificationCode =
+  "AZ-900" | "AZ-104" | "AZ-400" | "AI-102" | "AZ-500" | "DP-900" | "SC-900";
 
 export interface CertificationMapping {
   code: CertificationCode;
@@ -170,14 +171,33 @@ export interface Skill {
 // ============================================================
 
 export type NodeType =
-  | "lesson" | "lab" | "project" | "simulator" | "skill"
-  | "technology" | "certification" | "career_role" | "concept"
-  | "interview_topic" | "architecture_pattern" | "incident_type" | "cloud_service";
+  | "lesson"
+  | "lab"
+  | "project"
+  | "simulator"
+  | "skill"
+  | "technology"
+  | "certification"
+  | "career_role"
+  | "concept"
+  | "interview_topic"
+  | "architecture_pattern"
+  | "incident_type"
+  | "cloud_service";
 
 export type RelationshipType =
-  | "prerequisite_of" | "teaches" | "tests" | "implements"
-  | "prepares_for" | "relates_to" | "part_of" | "maps_to"
-  | "required_for" | "uses" | "builds_on" | "similar_to";
+  | "prerequisite_of"
+  | "teaches"
+  | "tests"
+  | "implements"
+  | "prepares_for"
+  | "relates_to"
+  | "part_of"
+  | "maps_to"
+  | "required_for"
+  | "uses"
+  | "builds_on"
+  | "similar_to";
 
 export interface KnowledgeNode {
   id: string;
@@ -315,8 +335,14 @@ export interface GradingRubric {
 // ============================================================
 
 export type LabType =
-  | "guided" | "challenge" | "production" | "debugging"
-  | "architecture" | "security" | "cost_optimization" | "ai_lab";
+  | "guided"
+  | "challenge"
+  | "production"
+  | "debugging"
+  | "architecture"
+  | "security"
+  | "cost_optimization"
+  | "ai_lab";
 
 export interface LabScenario {
   context: string;
@@ -339,9 +365,18 @@ export interface LabTask {
 // ============================================================
 
 export type SimulatorType =
-  | "linux_terminal" | "azure_portal" | "terraform" | "docker"
-  | "kubernetes" | "networking" | "cidr" | "iam" | "monitoring"
-  | "cloud_cost" | "architecture_builder" | "incident_response";
+  | "linux_terminal"
+  | "azure_portal"
+  | "terraform"
+  | "docker"
+  | "kubernetes"
+  | "networking"
+  | "cidr"
+  | "iam"
+  | "monitoring"
+  | "cloud_cost"
+  | "architecture_builder"
+  | "incident_response";
 
 export interface SimulatorConfig {
   type: SimulatorType;
@@ -355,9 +390,16 @@ export interface SimulatorConfig {
 // ============================================================
 
 export type AIBlockType =
-  | "ai_summary" | "ai_explanation" | "ai_quiz" | "ai_flashcards"
-  | "ai_interview" | "ai_code_review" | "ai_architecture_review"
-  | "ai_recommendations" | "ai_revision" | "ai_difficulty_adaptation";
+  | "ai_summary"
+  | "ai_explanation"
+  | "ai_quiz"
+  | "ai_flashcards"
+  | "ai_interview"
+  | "ai_code_review"
+  | "ai_architecture_review"
+  | "ai_recommendations"
+  | "ai_revision"
+  | "ai_difficulty_adaptation";
 
 export interface AIBlockProps {
   type: AIBlockType;
@@ -373,10 +415,28 @@ export interface AIBlockProps {
 // ============================================================
 
 export type ComponentType =
-  | "Info" | "Warning" | "Tip" | "BestPractice"
-  | "ProductionNote" | "ArchitectureNote" | "SecurityNote" | "CostNote"
-  | "InterviewQuestion" | "Challenge" | "Exercise" | "Quiz"
-  | "Definition" | "Example" | "Analogy" | "CheatSheet"
-  | "CommonMistake" | "Debugging" | "DecisionPoint"
-  | "AIPrompt" | "AIExplanation" | "AIQuiz" | "AIFlashcards"
-  | "MermaidBlock" | "SimulatorPlaceholder";
+  | "Info"
+  | "Warning"
+  | "Tip"
+  | "BestPractice"
+  | "ProductionNote"
+  | "ArchitectureNote"
+  | "SecurityNote"
+  | "CostNote"
+  | "InterviewQuestion"
+  | "Challenge"
+  | "Exercise"
+  | "Quiz"
+  | "Definition"
+  | "Example"
+  | "Analogy"
+  | "CheatSheet"
+  | "CommonMistake"
+  | "Debugging"
+  | "DecisionPoint"
+  | "AIPrompt"
+  | "AIExplanation"
+  | "AIQuiz"
+  | "AIFlashcards"
+  | "MermaidBlock"
+  | "SimulatorPlaceholder";

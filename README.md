@@ -28,17 +28,17 @@ This is **not** a traditional book or course. This is the foundation of a **Clou
 
 This project is built on **[Docusaurus 3](https://docusaurus.io/)** — a modern static site generator optimized for documentation.
 
-| Layer | Technology |
-|---|---|
-| **Framework** | React 19 + TypeScript |
-| **SSG** | Docusaurus 3.10 |
-| **Markdown** | MDX 3 (Markdown + JSX) |
-| **Diagrams** | Mermaid.js |
-| **Search** | Local search (`@easyops-cn/docusaurus-search-local`) |
-| **PWA** | `@docusaurus/plugin-pwa` (offline mode, installable) |
-| **Styling** | CSS Custom Properties + Infima |
-| **Hosting** | GitHub Pages |
-| **CI/CD** | GitHub Actions |
+| Layer         | Technology                                           |
+| ------------- | ---------------------------------------------------- |
+| **Framework** | React 19 + TypeScript                                |
+| **SSG**       | Docusaurus 3.10                                      |
+| **Markdown**  | MDX 3 (Markdown + JSX)                               |
+| **Diagrams**  | Mermaid.js                                           |
+| **Search**    | Local search (`@easyops-cn/docusaurus-search-local`) |
+| **PWA**       | `@docusaurus/plugin-pwa` (offline mode, installable) |
+| **Styling**   | CSS Custom Properties + Infima                       |
+| **Hosting**   | GitHub Pages                                         |
+| **CI/CD**     | GitHub Actions                                       |
 
 ---
 

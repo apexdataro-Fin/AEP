@@ -4,12 +4,7 @@
   "title": "Lesson Schema",
   "description": "Schema for lesson content in the Cloud Engineering Learning OS",
   "type": "object",
-  "required": [
-    "title",
-    "slug",
-    "description",
-    "ai_metadata"
-  ],
+  "required": ["title", "slug", "description", "ai_metadata"],
   "properties": {
     "sidebar_position": {
       "type": "integer",

@@ -17,14 +17,14 @@ These standards ensure consistency, quality, and maintainability across the enti
 
 ## Standards Index
 
-| Standard | Purpose |
-|---|---|
-| [Style Guide](/standards/style-guide) | Code formatting and style rules |
-| [Naming Conventions](/standards/naming-conventions) | File, variable, and content naming |
-| [Code Quality](/standards/code-quality) | Quality gates and review criteria |
-| [Documentation Standards](/standards/documentation-standards) | How to write and structure docs |
-| [Content Standards](/standards/content-standards) | Educational content guidelines |
-| [Metadata Guide](/standards/metadata-guide) | AI-friendly metadata schema |
+| Standard                                                      | Purpose                            |
+| ------------------------------------------------------------- | ---------------------------------- |
+| [Style Guide](/standards/style-guide)                         | Code formatting and style rules    |
+| [Naming Conventions](/standards/naming-conventions)           | File, variable, and content naming |
+| [Code Quality](/standards/code-quality)                       | Quality gates and review criteria  |
+| [Documentation Standards](/standards/documentation-standards) | How to write and structure docs    |
+| [Content Standards](/standards/content-standards)             | Educational content guidelines     |
+| [Metadata Guide](/standards/metadata-guide)                   | AI-friendly metadata schema        |
 
 ## Why Standards Matter
 

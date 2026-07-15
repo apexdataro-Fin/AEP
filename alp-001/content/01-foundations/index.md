@@ -38,14 +38,14 @@ Every cloud, every tool, every technology will change. The engineering mindset d
 
 ## Module Structure
 
-| Topic | Type | Duration |
-|---|---|---|
-| The Engineering Mindset | Lesson | 2h |
-| Systems Thinking | Lesson | 3h |
-| Problem Decomposition | Lesson | 2h |
-| Technical Writing for Engineers | Lesson | 3h |
-| Learning How to Learn | Lesson | 2h |
-| Documentation Culture | Lesson | 3h |
+| Topic                           | Type   | Duration |
+| ------------------------------- | ------ | -------- |
+| The Engineering Mindset         | Lesson | 2h       |
+| Systems Thinking                | Lesson | 3h       |
+| Problem Decomposition           | Lesson | 2h       |
+| Technical Writing for Engineers | Lesson | 3h       |
+| Learning How to Learn           | Lesson | 2h       |
+| Documentation Culture           | Lesson | 3h       |
 
 ---
 

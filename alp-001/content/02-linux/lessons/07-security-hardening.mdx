@@ -47,7 +47,8 @@ active_recall:
     answer: "1. Disable password authentication (use keys only). 2. Disable root login. 3. Change the default SSH port (optional, reduces automated attacks)."
     difficulty: "easy"
 tags: [linux, security, hardening, ssh, firewall, fail2ban]
-search_keywords: [linux security hardening, SSH hardening, ufw firewall, fail2ban, production server security]
+search_keywords:
+  [linux security hardening, SSH hardening, ufw firewall, fail2ban, production server security]
 ---
 
 # Linux Security Hardening
@@ -174,7 +175,10 @@ echo "=== Hardening complete ==="
    - C) root login is slower
    - D) It's not necessary to disable
 
-   <details><summary>Answer</summary>**B.** "root" is the most attacked username on the internet. Disable it. SSH as your user, then use sudo for privileged commands.</details>
+   <details>
+     <summary>Answer</summary>**B.** "root" is the most attacked username on the internet. Disable
+     it. SSH as your user, then use sudo for privileged commands.
+   </details>
 
 ---
 

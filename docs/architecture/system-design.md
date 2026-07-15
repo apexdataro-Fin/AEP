@@ -57,6 +57,7 @@ graph LR
 ## Data Flow
 
 ### Build Time
+
 1. Docusaurus scans `docs/`, `curriculum/`, `lessons/`, etc.
 2. MDX files are parsed — frontmatter extracted, Markdown rendered
 3. React components are rendered to static HTML
@@ -66,6 +67,7 @@ graph LR
 7. Static assets are optimized and hashed
 
 ### Runtime (Client)
+
 1. Initial HTML loads (fast, SEO-friendly)
 2. React hydrates the page (interactive)
 3. Service worker caches assets for offline use

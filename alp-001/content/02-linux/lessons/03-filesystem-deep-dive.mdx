@@ -73,7 +73,7 @@ graph TD
     B --> F[Timestamps: created, modified, accessed]
     B --> G[Data Block Pointers]
     G --> H[Actual file data on disk]
-    
+
     style B fill:#0ea5e9,stroke:#0284c7,color:#fff
     style H fill:#10b981,stroke:#059669,color:#fff
 ```
@@ -104,13 +104,13 @@ df -i
 #                File type: - (regular file)
 ```
 
-| Octal | Symbolic | Permission |
-|---|---|---|
-| 7 | rwx | Read, write, execute |
-| 6 | rw- | Read, write |
-| 5 | r-x | Read, execute |
-| 4 | r-- | Read only |
-| 0 | --- | No permission |
+| Octal | Symbolic | Permission           |
+| ----- | -------- | -------------------- |
+| 7     | rwx      | Read, write, execute |
+| 6     | rw-      | Read, write          |
+| 5     | r-x      | Read, execute        |
+| 4     | r--      | Read only            |
+| 0     | ---      | No permission        |
 
 ```bash
 chmod 755 script.sh   # rwxr-xr-x (owner: all, others: read+execute)
@@ -120,12 +120,12 @@ chmod +x script.sh    # Add execute for everyone
 
 ### Symlinks vs Hard Links
 
-| Feature | Symlink (`ln -s`) | Hard Link (`ln`) |
-|---|---|---|
-| Points to | File path (name) | Inode (the file itself) |
-| Works across filesystems? | Yes | No |
-| Survives original deletion? | ❌ Broken link | ✅ Data persists |
-| Shows as different file? | Yes (starts with `l`) | No (shares inode) |
+| Feature                     | Symlink (`ln -s`)     | Hard Link (`ln`)        |
+| --------------------------- | --------------------- | ----------------------- |
+| Points to                   | File path (name)      | Inode (the file itself) |
+| Works across filesystems?   | Yes                   | No                      |
+| Survives original deletion? | ❌ Broken link        | ✅ Data persists        |
+| Shows as different file?    | Yes (starts with `l`) | No (shares inode)       |
 
 ---
 
@@ -165,7 +165,9 @@ find /tmp -type f -name "session_*" -delete
    - C) The hard link becomes a symlink
    - D) Nothing — you can't delete a file with hard links
 
-   <details><summary>Answer</summary>**B.** The data persists until the inode's link count reaches 0.</details>
+   <details>
+     <summary>Answer</summary>**B.** The data persists until the inode's link count reaches 0.
+   </details>
 
 ---
 

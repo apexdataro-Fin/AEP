@@ -48,11 +48,21 @@
     },
     "learning_objectives": [{ "id": "string", "description": "string" }],
     "deliverables": {
-      "required": [{ "id": "string", "description": "string", "artifact_type": "code | config | diagram | document | demo" }],
+      "required": [
+        {
+          "id": "string",
+          "description": "string",
+          "artifact_type": "code | config | diagram | document | demo"
+        }
+      ],
       "optional": [{ "id": "string", "description": "string", "artifact_type": "string" }]
     },
     "acceptance_criteria": [
-      { "id": "string", "criterion": "string", "verification_method": "manual | automated | peer_review" }
+      {
+        "id": "string",
+        "criterion": "string",
+        "verification_method": "manual | automated | peer_review"
+      }
     ],
     "portfolio_value": "low | medium | high | showcase",
     "certification_mapping": [{ "code": "string", "objective_id": "string" }],

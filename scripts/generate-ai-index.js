@@ -13,7 +13,15 @@ const fs = require("fs");
 const path = require("path");
 const matter = require("gray-matter");
 
-const CONTENT_DIRS = ["docs", "curriculum", "lessons", "projects", "labs", "career", "certifications"];
+const CONTENT_DIRS = [
+  "docs",
+  "curriculum",
+  "lessons",
+  "projects",
+  "labs",
+  "career",
+  "certifications",
+];
 const OUTPUT_FILE = path.join(__dirname, "..", "build", "ai-index.json");
 
 function extractMetadata(dir) {

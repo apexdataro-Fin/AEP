@@ -14,13 +14,13 @@ function HomepageHeader() {
         <div className={styles.heroContent}>
           <span className={styles.heroBadge}>🚀 ALP-001 — Cloud Engineering</span>
           <Heading as="h1" className={styles.heroTitle}>
-            The Operating System for<br />
+            The Operating System for
+            <br />
             <span className={styles.heroHighlight}>Your Cloud Engineering Career</span>
           </Heading>
           <p className={styles.heroSubtitle}>
-            From zero to production cloud engineer. An interactive, open-source
-            learning platform with 33 modules, 10 projects, 40 labs, and a
-            simulated career at CloudNova Technologies.
+            From zero to production cloud engineer. An interactive, open-source learning platform
+            with 33 modules, 10 projects, 40 labs, and a simulated career at CloudNova Technologies.
           </p>
           <div className={styles.heroActions}>
             <Link className="button button--primary button--lg" to="/curriculum">
@@ -56,7 +56,7 @@ function HomepageHeader() {
       </div>
       <div className={styles.heroVisual}>
         <pre className={styles.heroDiagram}>
-{`┌─────────────────────────────────────┐
+          {`┌─────────────────────────────────────┐
 │        CloudNova Platform            │
 │  ┌─────────┐  ┌─────────┐           │
 │  │  Azure   │  │   AKS   │           │
@@ -86,32 +86,38 @@ function FeatureGrid() {
     {
       icon: "📚",
       title: "Complete Learning Path",
-      description: "33 modules from Linux basics to AI infrastructure. Every lesson includes Active Recall, Feynman explanations, and hands-on exercises.",
+      description:
+        "33 modules from Linux basics to AI infrastructure. Every lesson includes Active Recall, Feynman explanations, and hands-on exercises.",
     },
     {
       icon: "🏗️",
       title: "10 Connected Projects",
-      description: "Build one production cloud platform across 10 cumulative projects — from a single Linux server to a full AI inference platform.",
+      description:
+        "Build one production cloud platform across 10 cumulative projects — from a single Linux server to a full AI inference platform.",
     },
     {
       icon: "🏢",
       title: "Career Mode at CloudNova",
-      description: "Work at a simulated cloud company. Handle tickets, lead incidents, get promoted from Junior to Principal Engineer.",
+      description:
+        "Work at a simulated cloud company. Handle tickets, lead incidents, get promoted from Junior to Principal Engineer.",
     },
     {
       icon: "🤖",
       title: "AI-Ready Learning",
-      description: "Every lesson integrates AI prompts for tutoring, quizzes, flashcards, code review, and mock interviews.",
+      description:
+        "Every lesson integrates AI prompts for tutoring, quizzes, flashcards, code review, and mock interviews.",
     },
     {
       icon: "🎓",
       title: "Certification Aligned",
-      description: "AZ-900, AZ-104, AZ-400, AI-102 — every lesson maps to specific certification objectives.",
+      description:
+        "AZ-900, AZ-104, AZ-400, AI-102 — every lesson maps to specific certification objectives.",
     },
     {
       icon: "🌙",
       title: "Beautiful Experience",
-      description: "Dark mode, RTL support, responsive design, focus mode, and accessibility built in from day one.",
+      description:
+        "Dark mode, RTL support, responsive design, focus mode, and accessibility built in from day one.",
     },
   ];
 
@@ -156,9 +162,7 @@ function LearningPathPreview() {
         <Heading as="h2" className={styles.sectionTitle}>
           Your Learning Journey
         </Heading>
-        <p className={styles.sectionSubtitle}>
-          Beginner to Principal — one connected path
-        </p>
+        <p className={styles.sectionSubtitle}>Beginner to Principal — one connected path</p>
         <div className={styles.pathList}>
           {modules.map((m, i) => (
             <div key={i} className={styles.pathItem}>
@@ -166,7 +170,9 @@ function LearningPathPreview() {
               <div className={styles.pathInfo}>
                 <span className={styles.pathName}>{m.name}</span>
                 <span className={styles.pathMeta}>
-                  <span className={`badge badge--${m.difficulty === 'beginner' ? 'success' : m.difficulty === 'intermediate' ? 'info' : m.difficulty === 'advanced' ? 'warning' : 'danger'}`}>
+                  <span
+                    className={`badge badge--${m.difficulty === "beginner" ? "success" : m.difficulty === "intermediate" ? "info" : m.difficulty === "advanced" ? "warning" : "danger"}`}
+                  >
                     {m.difficulty}
                   </span>
                   <span> · {m.hours}</span>
@@ -192,8 +198,7 @@ function CTASection() {
           Ready to Start Your Cloud Engineering Journey?
         </Heading>
         <p style={{ color: "rgba(255,255,255,0.8)", maxWidth: 500, margin: "0 auto 2rem" }}>
-          Join CloudNova Technologies as a Junior Cloud Engineer. Your first
-          server awaits.
+          Join CloudNova Technologies as a Junior Cloud Engineer. Your first server awaits.
         </p>
         <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
           <Link className="button button--secondary button--lg" to="/curriculum">

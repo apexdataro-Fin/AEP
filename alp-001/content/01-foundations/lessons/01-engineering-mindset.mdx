@@ -85,7 +85,14 @@ review_schedule:
   retention_target: 0.90
 
 tags: [engineering-mindset, systems-thinking, foundations, beginner]
-search_keywords: [how to think like an engineer, engineering mindset, systems thinking, first principles, problem solving]
+search_keywords:
+  [
+    how to think like an engineer,
+    engineering mindset,
+    systems thinking,
+    first principles,
+    problem solving,
+  ]
 ---
 
 # The Engineering Mindset
@@ -104,13 +111,13 @@ Imagine you're building a house. You could learn to use a hammer, a saw, and a d
 
 The engineering mindset is a way of thinking, not a set of tools. It's the difference between:
 
-| Tool Operator | Engineer |
-|---|---|
-| Knows `kubectl apply` | Understands the reconciliation loop |
-| Can follow a Terraform tutorial | Can design a multi-environment IaC strategy |
-| Fixes what's broken | Prevents things from breaking |
-| Copies solutions from Stack Overflow | Reasons from first principles |
-| Panics during incidents | Follows a systematic debugging process |
+| Tool Operator                        | Engineer                                    |
+| ------------------------------------ | ------------------------------------------- |
+| Knows `kubectl apply`                | Understands the reconciliation loop         |
+| Can follow a Terraform tutorial      | Can design a multi-environment IaC strategy |
+| Fixes what's broken                  | Prevents things from breaking               |
+| Copies solutions from Stack Overflow | Reasons from first principles               |
+| Panics during incidents              | Follows a systematic debugging process      |
 
 Tools change. Clouds evolve. Kubernetes will be replaced someday. **The engineering mindset is permanent.**
 
@@ -121,6 +128,7 @@ Tools change. Clouds evolve. Kubernetes will be replaced someday. **The engineer
 ## Learning Objectives
 
 After completing this lesson, you will be able to:
+
 - Define systems thinking and explain why it matters more than knowing any specific tool
 - Apply first-principles reasoning to decompose a complex technical problem
 - Identify the difference between knowing tools and thinking like an engineer
@@ -160,7 +168,8 @@ A systems thinker sees this diagram and immediately asks:
 A tool operator just sees "we need a load balancer and some servers."
 
 <Definition term="Systems Thinking">
-The ability to understand a system as an interconnected whole — seeing how components interact, what dependencies exist, and how changes in one component cascade through the entire system.
+  The ability to understand a system as an interconnected whole — seeing how components interact,
+  what dependencies exist, and how changes in one component cascade through the entire system.
 </Definition>
 
 ### First-Principles Reasoning
@@ -169,10 +178,10 @@ First-principles reasoning means breaking a problem down to its most fundamental
 
 **Example: "We need Kubernetes"**
 
-| Reasoning by Analogy | First-Principles Reasoning |
-|---|---|
-| "Everyone uses K8s, so should we." | "We need to run 50 containerized services with auto-scaling, self-healing, and declarative configs." |
-| Result: Adopt K8s because it's popular | Result: Evaluate K8s vs Nomad vs AWS ECS based on actual requirements |
+| Reasoning by Analogy                   | First-Principles Reasoning                                                                           |
+| -------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| "Everyone uses K8s, so should we."     | "We need to run 50 containerized services with auto-scaling, self-healing, and declarative configs." |
+| Result: Adopt K8s because it's popular | Result: Evaluate K8s vs Nomad vs AWS ECS based on actual requirements                                |
 
 <Example title="First-Principles in Practice">
 
@@ -181,6 +190,7 @@ First-principles reasoning means breaking a problem down to its most fundamental
 **Analogy approach:** "We should add more servers — that's what the last project did."
 
 **First-principles approach:**
+
 1. What does "slow" mean? (P95 latency > 500ms)
 2. Where is the bottleneck? (Database queries taking 200ms each)
 3. Why are queries slow? (Missing index on the `user_id` column)
@@ -199,6 +209,7 @@ This entire academy is built around that question.
 <BestPractice title="The Engineer's Mental Checklist">
 
 Before touching any system, ask:
+
 1. **What depends on this?** (Upstream and downstream)
 2. **What happens if I'm wrong?** (Blast radius)
 3. **How do I verify it worked?** (Observability)
@@ -227,7 +238,11 @@ Before touching any system, ask:
 
 <Debugging
   scenario="A developer at CloudNova reports: 'The API is down!'"
-  symptoms={["503 errors from the API gateway", "Database connection pool at 100%", "New microservice deployed 10 minutes ago"]}
+  symptoms={[
+    "503 errors from the API gateway",
+    "Database connection pool at 100%",
+    "New microservice deployed 10 minutes ago",
+  ]}
   diagnosis="1. Check the timeline — what changed? New service deployed. 2. Check the new service's database connection settings — it's not using connection pooling. 3. It's opening 50 connections per instance and never closing them."
   solution="Fix the new service to use connection pooling. Set max connections to 10 per instance. Add connection timeout of 30 seconds. The fix takes 5 minutes; the diagnosis is the skill."
 />
@@ -252,7 +267,10 @@ Before touching any system, ask:
    - C) Engineers write more code
    - D) Engineers don't use GUIs
 
-   <details><summary>Answer</summary>**B.** Engineers understand the principles behind the tools — why a load balancer exists, not just which button creates one.</details>
+   <details>
+     <summary>Answer</summary>**B.** Engineers understand the principles behind the tools — why a
+     load balancer exists, not just which button creates one.
+   </details>
 
 2. **You're debugging a slow application. Which is the first-principles approach?**
    - A) Add more CPU and memory
@@ -260,7 +278,10 @@ Before touching any system, ask:
    - C) Google "application slow fix"
    - D) Reboot the server
 
-   <details><summary>Answer</summary>**B.** First-principles debugging: measure first, identify the bottleneck, fix the root cause. Everything else is guessing.</details>
+   <details>
+     <summary>Answer</summary>**B.** First-principles debugging: measure first, identify the
+     bottleneck, fix the root cause. Everything else is guessing.
+   </details>
 
 3. **A new team member says "We should use Kubernetes because Google uses it." What's the problem?**
    - A) Google doesn't use Kubernetes
@@ -268,7 +289,11 @@ Before touching any system, ask:
    - C) Kubernetes is too expensive
    - D) The team member is wrong
 
-   <details><summary>Answer</summary>**B.** "X uses Y, so should we" is reasoning by analogy. The right question is: "What problem are we solving, and is Kubernetes the best solution for that problem?"</details>
+   <details>
+     <summary>Answer</summary>**B.** "X uses Y, so should we" is reasoning by analogy. The right
+     question is: "What problem are we solving, and is Kubernetes the best solution for that
+     problem?"
+   </details>
 
 ---
 

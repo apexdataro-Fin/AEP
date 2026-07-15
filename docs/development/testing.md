@@ -53,6 +53,7 @@ node scripts/validate-content.js
 ```
 
 Checks:
+
 - All MDX files have required frontmatter
 - Links are not broken
 - Images have alt text
@@ -66,6 +67,7 @@ npm run serve       # Serve and visually inspect
 ```
 
 The build will:
+
 - Catch broken links (`onBrokenLinks: "warn"`)
 - Validate Mermaid diagrams
 - Check TypeScript compilation
@@ -88,9 +90,9 @@ Before opening a PR:
 
 ## Future Test Infrastructure
 
-| Phase | Addition |
-|---|---|
+| Phase   | Addition                                    |
+| ------- | ------------------------------------------- |
 | Phase 2 | Jest + React Testing Library for unit tests |
-| Phase 3 | Playwright for E2E testing |
-| Phase 4 | Percy/Chromatic for visual regression |
-| Phase 5 | Load testing for interactive components |
+| Phase 3 | Playwright for E2E testing                  |
+| Phase 4 | Percy/Chromatic for visual regression       |
+| Phase 5 | Load testing for interactive components     |

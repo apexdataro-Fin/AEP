@@ -65,11 +65,7 @@ const config: Config = {
       "@docusaurus/plugin-pwa",
       {
         debug: false,
-        offlineModeActivationStrategies: [
-          "appInstalled",
-          "standalone",
-          "queryString",
-        ],
+        offlineModeActivationStrategies: ["appInstalled", "standalone", "queryString"],
         pwaHead: [
           {
             tagName: "link",
@@ -120,7 +116,11 @@ const config: Config = {
         content:
           "An interactive learning platform for mastering cloud engineering — from fundamentals to advanced cloud architecture, DevOps, and SRE.",
       },
-      { name: "keywords", content: "cloud engineering, devops, sre, learning, platform, aws, azure, gcp, kubernetes, terraform" },
+      {
+        name: "keywords",
+        content:
+          "cloud engineering, devops, sre, learning, platform, aws, azure, gcp, kubernetes, terraform",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

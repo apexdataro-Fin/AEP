@@ -20,7 +20,11 @@ const modeLabels: Record<LearningMode, string> = {
   mobile: "📱 Mobile",
 };
 
-export default function LearningModeWrapper({ mode, children, onModeChange }: LearningModeWrapperProps) {
+export default function LearningModeWrapper({
+  mode,
+  children,
+  onModeChange,
+}: LearningModeWrapperProps) {
   useEffect(() => {
     const cls = `aep-mode--${mode}`;
     document.body.classList.add(cls);
@@ -36,12 +40,20 @@ export default function LearningModeWrapper({ mode, children, onModeChange }: Le
   return (
     <div>
       {/* Learning Mode Bar */}
-      <div style={{
-        display: "flex", alignItems: "center", justifyContent: "space-between",
-        padding: "0.375rem var(--aep-space)", background: "var(--aep-surface-alt)",
-        borderBottom: "1px solid var(--aep-border)", fontSize: "var(--aep-font-size-xs)",
-        position: "sticky", top: 0, zIndex: 50,
-      }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0.375rem var(--aep-space)",
+          background: "var(--aep-surface-alt)",
+          borderBottom: "1px solid var(--aep-border)",
+          fontSize: "var(--aep-font-size-xs)",
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+        }}
+      >
         <span style={{ color: "var(--aep-text-muted)" }}>{modeLabels[mode]}</span>
         <div style={{ display: "flex", gap: "0.25rem" }}>
           {(["reading", "focus", "distraction-free", "study"] as LearningMode[]).map((m) => (
@@ -49,7 +61,10 @@ export default function LearningModeWrapper({ mode, children, onModeChange }: Le
               key={m}
               onClick={() => onModeChange?.(m)}
               className="aep-btn aep-btn--ghost aep-btn--sm"
-              style={{ fontWeight: mode === m ? 700 : 400, color: mode === m ? "var(--aep-primary)" : undefined }}
+              style={{
+                fontWeight: mode === m ? 700 : 400,
+                color: mode === m ? "var(--aep-primary)" : undefined,
+              }}
               aria-pressed={mode === m}
               title={modeLabels[m]}
             >

@@ -3,11 +3,28 @@
   "description": "Interactive Block Engine — reusable interactive content blocks: quizzes, exercises, decision trees, interactive tables, code blocks, terminal blocks, architecture blocks, expandable sections, flashcards, AI blocks, production notes, warnings, tips, callouts, knowledge links.",
   "block_categories": {
     "assessment": ["quiz", "exercise", "challenge", "exam-question"],
-    "interactive": ["decision-tree", "interactive-table", "code-block", "terminal-block", "architecture-block", "drag-drop", "sortable-list"],
+    "interactive": [
+      "decision-tree",
+      "interactive-table",
+      "code-block",
+      "terminal-block",
+      "architecture-block",
+      "drag-drop",
+      "sortable-list"
+    ],
     "presentation": ["expandable", "tabs", "accordion", "carousel", "timeline-interactive"],
     "study": ["flashcard", "active-recall", "feynman", "cheat-sheet"],
     "ai": ["ai-explain", "ai-quiz", "ai-flashcards", "ai-review", "ai-tutor"],
-    "callout": ["info", "warning", "tip", "best-practice", "production-note", "architecture-note", "security-note", "cost-note"],
+    "callout": [
+      "info",
+      "warning",
+      "tip",
+      "best-practice",
+      "production-note",
+      "architecture-note",
+      "security-note",
+      "cost-note"
+    ],
     "knowledge": ["knowledge-link", "skill-link", "concept-map", "prerequisite-chain"]
   },
   "block_schemas": {

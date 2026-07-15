@@ -42,7 +42,8 @@ active_recall:
 feynman_points:
   - "Explain why documentation matters using a restaurant kitchen analogy."
 tags: [technical-writing, documentation, runbooks, adr, postmortems]
-search_keywords: [how to write documentation, runbook template, ADR template, technical writing for engineers]
+search_keywords:
+  [how to write documentation, runbook template, ADR template, technical writing for engineers]
 ---
 
 # Technical Writing for Engineers
@@ -63,15 +64,16 @@ Now imagine you're a cloud engineer. The production database crashes at 3 AM. Th
 
 ## Why Engineers Avoid Writing (And Why They're Wrong)
 
-| Excuse | Reality |
-|---|---|
-| "The code is self-documenting" | The code tells you *what*. It doesn't tell you *why*. |
-| "I'll document it later" | You won't. And next week you won't remember the context. |
-| "Nobody reads documentation" | Nobody reads bad documentation. They absolutely read good documentation during incidents. |
-| "It takes too long" | A 15-minute runbook saves hours of incident response. Forever. |
+| Excuse                         | Reality                                                                                   |
+| ------------------------------ | ----------------------------------------------------------------------------------------- |
+| "The code is self-documenting" | The code tells you _what_. It doesn't tell you _why_.                                     |
+| "I'll document it later"       | You won't. And next week you won't remember the context.                                  |
+| "Nobody reads documentation"   | Nobody reads bad documentation. They absolutely read good documentation during incidents. |
+| "It takes too long"            | A 15-minute runbook saves hours of incident response. Forever.                            |
 
 <BestPractice title="The Rule of Documentation">
-If you got hit by a bus tomorrow, could someone else understand, operate, and troubleshoot your system? If the answer is no, you haven't documented enough.
+  If you got hit by a bus tomorrow, could someone else understand, operate, and troubleshoot your
+  system? If the answer is no, you haven't documented enough.
 </BestPractice>
 
 :::
@@ -89,7 +91,7 @@ graph TD
     B --> D[Architecture Decision Records]
     C --> E[Incident Postmortems]
     D --> E
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style C fill:#f59e0b,stroke:#d97706,color:#000
     style E fill:#ef4444,stroke:#dc2626,color:#fff
@@ -110,38 +112,46 @@ A runbook is a step-by-step guide for handling a specific operational scenario. 
 # Runbook: [Scenario Name]
 
 ## Symptoms
+
 - Alert: [Alert name]
 - User impact: [What users see]
 - Dashboard: [Link to relevant dashboard]
 
 ## Before You Start
+
 - Required permissions: [Role/permission set]
 - Blast radius: [What could go wrong]
 - Expected duration: [Time estimate]
 
 ## Steps
+
 ### Step 1: Verify the Problem
+
 `command to verify`
 **Expected output:** [What you should see]
 
 ### Step 2: Mitigate (Stop the Bleeding)
+
 `command to mitigate`
 **Verification:** `command to verify fix`
 
 ### Step 3: Root Cause (After Incident)
+
 - Check logs: [Log query]
 - Check recent changes: [Deployment history link]
 
 ## Rollback
+
 `command to undo`
 
 ## Escalation
+
 If steps don't work, escalate to: [Team/PagerDuty schedule]
 ```
 
 ### Architecture Decision Record (ADR)
 
-An ADR documents *why* you made a technical decision. Not what you did — why you did it.
+An ADR documents _why_ you made a technical decision. Not what you did — why you did it.
 
 <Example title="ADR: Use PostgreSQL instead of MongoDB for User Data">
 
@@ -149,23 +159,28 @@ An ADR documents *why* you made a technical decision. Not what you did — why y
 # ADR-004: Database Choice for User Service
 
 ## Status
+
 Accepted (2026-03-15)
 
 ## Context
+
 The user service needs to store structured user profiles with
 relationships (users → organizations → teams). Data integrity is
 critical. We evaluated PostgreSQL and MongoDB.
 
 ## Decision
+
 Use PostgreSQL with the `users` schema in the `platform` database.
 
 ## Alternatives Considered
+
 - **MongoDB**: Better for unstructured data, but user profiles are
   highly structured. No ACID guarantees across collections.
 - **DynamoDB**: Excellent scalability, but complex query patterns
   would require multiple tables and application-level joins.
 
 ## Consequences
+
 - Positive: ACID guarantees, strong schema enforcement, team
   already knows PostgreSQL.
 - Negative: Horizontal scaling requires more effort than MongoDB.

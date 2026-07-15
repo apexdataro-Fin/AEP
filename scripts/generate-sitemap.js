@@ -26,7 +26,10 @@ function getHtmlFiles(dir, baseDir = dir) {
       results = results.concat(getHtmlFiles(fullPath, baseDir));
     } else if (entry.name.endsWith(".html")) {
       const relativePath = path.relative(baseDir, fullPath);
-      const url = `${BASE_URL}/${relativePath.replace(/\\/g, "/").replace(/index\.html$/, "").replace(/\.html$/, "")}`;
+      const url = `${BASE_URL}/${relativePath
+        .replace(/\\/g, "/")
+        .replace(/index\.html$/, "")
+        .replace(/\.html$/, "")}`;
       const stat = fs.statSync(fullPath);
       results.push({ url, lastmod: stat.mtime.toISOString() });
     }
@@ -52,7 +55,7 @@ ${pages
     <lastmod>${page.lastmod}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
-  </url>`
+  </url>`,
   )
   .join("\n")}
 </urlset>`;

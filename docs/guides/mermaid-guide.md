@@ -108,6 +108,7 @@ erDiagram
 ## Best Practices
 
 ### Do
+
 - ✅ Keep diagrams focused on one concept
 - ✅ Use descriptive labels on nodes and edges
 - ✅ Add a caption above the diagram explaining what it shows
@@ -115,6 +116,7 @@ erDiagram
 - ✅ Add comments for complex diagrams
 
 ### Don't
+
 - ❌ Create diagrams with more than 15-20 nodes
 - ❌ Use Mermaid for simple lists (use Markdown lists instead)
 - ❌ Rely on color alone to convey meaning

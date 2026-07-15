@@ -5,7 +5,19 @@
   "search_scopes": {
     "global": {
       "description": "Search across all content in the platform",
-      "includes": ["books", "courses", "lessons", "projects", "labs", "questions", "glossary", "technologies", "skills", "knowledge_graph", "metadata"]
+      "includes": [
+        "books",
+        "courses",
+        "lessons",
+        "projects",
+        "labs",
+        "questions",
+        "glossary",
+        "technologies",
+        "skills",
+        "knowledge_graph",
+        "metadata"
+      ]
     },
     "book_scope": {
       "description": "Search within a specific book",
@@ -43,12 +55,18 @@
     "faceted": {
       "description": "Filter search results by metadata facets",
       "facets": [
-        { "name": "content_type", "values": ["lesson", "lab", "project", "quiz", "reference", "glossary"] },
+        {
+          "name": "content_type",
+          "values": ["lesson", "lab", "project", "quiz", "reference", "glossary"]
+        },
         { "name": "difficulty", "values": ["beginner", "intermediate", "advanced", "expert"] },
         { "name": "domain", "values": "string[]" },
         { "name": "technology", "values": "string[]" },
         { "name": "skill", "values": "string[]" },
-        { "name": "learning_level", "values": ["simple", "core", "professional", "production", "architect"] },
+        {
+          "name": "learning_level",
+          "values": ["simple", "core", "professional", "production", "architect"]
+        },
         { "name": "language", "values": "string[]" },
         { "name": "certification", "values": "string[]" },
         { "name": "career_level", "values": ["junior", "mid", "senior", "staff", "principal"] },
@@ -93,7 +111,15 @@
     },
     "search_preview": {
       "description": "Rich previews in search results",
-      "includes": ["title", "summary", "content_type_badge", "difficulty_badge", "relevance_score", "breadcrumb", "quick_actions"]
+      "includes": [
+        "title",
+        "summary",
+        "content_type_badge",
+        "difficulty_badge",
+        "relevance_score",
+        "breadcrumb",
+        "quick_actions"
+      ]
     },
     "search_suggestions": {
       "description": "Query suggestions and autocomplete",

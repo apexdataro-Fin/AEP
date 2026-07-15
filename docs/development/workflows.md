@@ -27,12 +27,12 @@ docs/zzz                                 ●──●──●
 
 ### Branch Types
 
-| Prefix | Purpose | Example |
-|---|---|---|
-| `feature/` | New features | `feature/add-search-filter` |
-| `fix/` | Bug fixes | `fix/broken-mermaid-diagram` |
-| `docs/` | Documentation | `docs/update-architecture` |
-| `chore/` | Maintenance | `chore/update-dependencies` |
+| Prefix      | Purpose          | Example                      |
+| ----------- | ---------------- | ---------------------------- |
+| `feature/`  | New features     | `feature/add-search-filter`  |
+| `fix/`      | Bug fixes        | `fix/broken-mermaid-diagram` |
+| `docs/`     | Documentation    | `docs/update-architecture`   |
+| `chore/`    | Maintenance      | `chore/update-dependencies`  |
 | `refactor/` | Code refactoring | `refactor/sidebar-component` |
 
 ## Creating a New Lesson
@@ -73,6 +73,7 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/):
 ```
 
 Examples:
+
 - `feat(lessons): add Kubernetes Pods introduction`
 - `fix(search): resolve broken search on mobile`
 - `docs(architecture): update system design diagram`

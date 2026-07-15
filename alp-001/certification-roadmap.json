@@ -34,7 +34,16 @@
       "level": "associate",
       "target_role": "Cloud Engineer",
       "when_to_take": "After Module 12 (Terraform)",
-      "modules_aligned": ["06-cloud-fundamentals", "07-azure-core", "03-networking", "04-security", "12-terraform", "20-monitoring", "23-identity", "22-finops"],
+      "modules_aligned": [
+        "06-cloud-fundamentals",
+        "07-azure-core",
+        "03-networking",
+        "04-security",
+        "12-terraform",
+        "20-monitoring",
+        "23-identity",
+        "22-finops"
+      ],
       "objective_coverage": {
         "az104-identity": {
           "weight": 20,
@@ -70,7 +79,16 @@
       "target_role": "Senior Cloud Engineer / DevOps Engineer",
       "when_to_take": "After Module 18 (GitOps)",
       "prerequisite_certs": ["AZ-104 (or AZ-204)"],
-      "modules_aligned": ["14-github", "15-cicd", "16-devops", "17-devsecops", "12-terraform", "18-gitops", "19-platform", "20-monitoring"],
+      "modules_aligned": [
+        "14-github",
+        "15-cicd",
+        "16-devops",
+        "17-devsecops",
+        "12-terraform",
+        "18-gitops",
+        "19-platform",
+        "20-monitoring"
+      ],
       "objective_coverage": {
         "az400-cicd": {
           "weight": 15,

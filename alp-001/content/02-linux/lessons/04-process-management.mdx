@@ -92,18 +92,18 @@ graph LR
     B -->|SIGTERM received| C[Clean shutdown]
     A -->|kill -KILL| B
     B -->|SIGKILL received| D[Immediate death]
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style C fill:#10b981,stroke:#059669,color:#fff
     style D fill:#ef4444,stroke:#dc2626,color:#fff
 ```
 
-| Signal | Number | Effect |
-|---|---|---|
-| SIGTERM | 15 | Polite shutdown request |
-| SIGKILL | 9 | Force kill (no cleanup) |
-| SIGHUP | 1 | Reload configuration |
-| SIGSTOP | 19 | Pause process |
+| Signal  | Number | Effect                  |
+| ------- | ------ | ----------------------- |
+| SIGTERM | 15     | Polite shutdown request |
+| SIGKILL | 9      | Force kill (no cleanup) |
+| SIGHUP  | 1      | Reload configuration    |
+| SIGSTOP | 19     | Pause process           |
 
 **Golden rule:** Always `kill -TERM` first. Only use `kill -KILL` if the process ignores SIGTERM.
 
@@ -177,7 +177,10 @@ At CloudNova, every service runs under systemd with `Restart=on-failure` and a `
    - C) Nothing — kill -9 is just a request
    - D) Database restarts automatically
 
-   <details><summary>Answer</summary>**B.** SIGKILL terminates immediately with no cleanup. The database cannot flush buffers, close connections, or release locks. Always try SIGTERM first.</details>
+   <details>
+     <summary>Answer</summary>**B.** SIGKILL terminates immediately with no cleanup. The database
+     cannot flush buffers, close connections, or release locks. Always try SIGTERM first.
+   </details>
 
 ---
 

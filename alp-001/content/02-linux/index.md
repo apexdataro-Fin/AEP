@@ -34,17 +34,17 @@ As a Junior Cloud Engineer, your first task is to provision and secure the compa
 
 ## Module Structure
 
-| Topic | Type | Duration |
-|---|---|---|
-| Linux Architecture & Philosophy | Lesson | 3h |
-| Shell & Command Line Mastery | Lesson | 4h |
-| File System Deep Dive | Lesson | 3h |
-| Process & Service Management | Lesson | 3h |
-| Bash Scripting | Lesson | 5h |
-| Linux Networking Stack | Lesson | 4h |
-| Security Hardening | Lesson | 3h |
-| Performance Tuning | Lesson | 4h |
-| Troubleshooting Methodology | Lesson | 3h |
+| Topic                           | Type   | Duration |
+| ------------------------------- | ------ | -------- |
+| Linux Architecture & Philosophy | Lesson | 3h       |
+| Shell & Command Line Mastery    | Lesson | 4h       |
+| File System Deep Dive           | Lesson | 3h       |
+| Process & Service Management    | Lesson | 3h       |
+| Bash Scripting                  | Lesson | 5h       |
+| Linux Networking Stack          | Lesson | 4h       |
+| Security Hardening              | Lesson | 3h       |
+| Performance Tuning              | Lesson | 4h       |
+| Troubleshooting Methodology     | Lesson | 3h       |
 
 ## Simulators
 

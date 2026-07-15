@@ -32,13 +32,13 @@ This platform is designed to be the **single source of truth** for learning clou
 
 ## Who This Is For
 
-| Role | Path |
-|---|---|
-| **Beginners** | Start with the [Curriculum](/curriculum) fundamentals track |
-| **Developers** | Jump into [Projects](/projects) and [Labs](/labs) |
-| **DevOps Engineers** | Explore advanced [Architecture](/architecture) topics |
-| **SREs** | Focus on reliability, monitoring, and incident response |
-| **Architects** | Dive deep into [System Design](/architecture/system-design) |
+| Role                 | Path                                                        |
+| -------------------- | ----------------------------------------------------------- |
+| **Beginners**        | Start with the [Curriculum](/curriculum) fundamentals track |
+| **Developers**       | Jump into [Projects](/projects) and [Labs](/labs)           |
+| **DevOps Engineers** | Explore advanced [Architecture](/architecture) topics       |
+| **SREs**             | Focus on reliability, monitoring, and incident response     |
+| **Architects**       | Dive deep into [System Design](/architecture/system-design) |
 
 ## How to Use This Platform
 

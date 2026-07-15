@@ -48,7 +48,12 @@
       "description": "AI reviews code/configuration submitted by learner and provides feedback.",
       "trigger": "on_submit",
       "inputs": ["code", "language", "task_description", "best_practices"],
-      "output": { "issues": [{ "line", "severity", "message", "suggestion" }], "summary": "string" }
+      "output": {
+        "issues": [
+          { "line": "integer", "severity": "string", "message": "string", "suggestion": "string" }
+        ],
+        "summary": "string"
+      }
     },
     "ai_architecture_review": {
       "id": "ai_architecture_review",
@@ -56,7 +61,12 @@
       "description": "AI reviews architecture diagram/description and provides feedback.",
       "trigger": "on_submit",
       "inputs": ["architecture_description", "constraints", "requirements"],
-      "output": { "strengths": ["string"], "concerns": ["string"], "suggestions": ["string"], "score": "number" }
+      "output": {
+        "strengths": ["string"],
+        "concerns": ["string"],
+        "suggestions": ["string"],
+        "score": "number"
+      }
     },
     "ai_recommendations": {
       "id": "ai_recommendations",
@@ -72,7 +82,9 @@
       "description": "AI identifies topics that need revision based on spaced repetition and performance.",
       "trigger": "periodic | on_demand",
       "inputs": ["review_schedule", "performance_data", "retention_data"],
-      "output": [{ "topic": "string", "slug": "string", "days_since_review": "number", "priority": "string" }]
+      "output": [
+        { "topic": "string", "slug": "string", "days_since_review": "number", "priority": "string" }
+      ]
     },
     "ai_difficulty_adaptation": {
       "id": "ai_difficulty_adaptation",

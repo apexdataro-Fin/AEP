@@ -28,23 +28,23 @@ A feature or piece of content is considered "done" when:
 
 ## Performance Budget
 
-| Metric | Target |
-|---|---|
-| **First Contentful Paint** | < 1.5s |
-| **Largest Contentful Paint** | < 2.5s |
-| **Time to Interactive** | < 3.0s |
-| **Total Bundle Size** | < 500 KB (gzipped) |
-| **Page Size (HTML)** | < 100 KB |
+| Metric                       | Target             |
+| ---------------------------- | ------------------ |
+| **First Contentful Paint**   | < 1.5s             |
+| **Largest Contentful Paint** | < 2.5s             |
+| **Time to Interactive**      | < 3.0s             |
+| **Total Bundle Size**        | < 500 KB (gzipped) |
+| **Page Size (HTML)**         | < 100 KB           |
 
 ## Content Quality Metrics
 
-| Metric | Target |
-|---|---|
+| Metric                    | Target            |
+| ------------------------- | ----------------- |
 | **Reading time accuracy** | ± 20% of estimate |
-| **Broken links** | 0 |
-| **Missing alt text** | 0 |
-| **Spelling errors** | 0 |
-| **Valid frontmatter** | 100% |
+| **Broken links**          | 0                 |
+| **Missing alt text**      | 0                 |
+| **Spelling errors**       | 0                 |
+| **Valid frontmatter**     | 100%              |
 
 ## Accessibility Requirements
 

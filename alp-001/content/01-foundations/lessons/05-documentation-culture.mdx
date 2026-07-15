@@ -69,13 +69,14 @@ graph LR
     B --> C[Review via Pull Request]
     C --> D[CI/CD Validates]
     D --> E[Auto-Deploy to Website]
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style C fill:#f59e0b,stroke:#d97706,color:#000
     style E fill:#10b981,stroke:#059669,color:#fff
 ```
 
 At CloudNova, every PR that changes infrastructure must either:
+
 - Include updated documentation, or
 - Explicitly state why docs don't need updating
 
@@ -86,10 +87,8 @@ This single rule eliminated 80% of stale documentation in 3 months.
 ---
 
 <BestPractice title="The Documentation PR Checklist">
-- [ ] Runbooks updated with new commands or procedures?
-- [ ] Architecture diagrams reflect the change?
-- [ ] README still accurate?
-- [ ] ADR created for significant decisions?
+  - [ ] Runbooks updated with new commands or procedures? - [ ] Architecture diagrams reflect the
+  change? - [ ] README still accurate? - [ ] ADR created for significant decisions?
 </BestPractice>
 
 ---

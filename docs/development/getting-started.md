@@ -88,9 +88,9 @@ Add to `.vscode/settings.json`:
 
 ## Common Issues
 
-| Issue | Solution |
-|---|---|
-| `node: command not found` | Install Node.js via nvm |
-| `npm install` fails | Delete `node_modules` and `package-lock.json`, retry |
-| Port 3000 in use | `npx kill-port 3000` then retry |
-| Build errors | Run `npm run clear` then `npm run build` |
+| Issue                     | Solution                                             |
+| ------------------------- | ---------------------------------------------------- |
+| `node: command not found` | Install Node.js via nvm                              |
+| `npm install` fails       | Delete `node_modules` and `package-lock.json`, retry |
+| Port 3000 in use          | `npx kill-port 3000` then retry                      |
+| Build errors              | Run `npm run clear` then `npm run build`             |

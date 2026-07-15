@@ -74,6 +74,7 @@ search_keywords: [linux architecture, kernel vs user space, FHS, unix philosophy
 **Linux is the invisible engine that runs the cloud.** Every time you open a website, check your email, or stream a video, Linux servers are doing the work behind the scenes.
 
 Think of Linux like a car:
+
 - **The Kernel** is the engine — it makes everything go.
 - **The Shell** is the steering wheel and pedals — how you control it.
 - **Programs** (nginx, docker, python) are the seats, radio, and GPS — what makes the car useful.
@@ -93,7 +94,7 @@ graph TD
         B[Programs: nginx, docker, python]
         C[GNU Core Utils: ls, grep, cat]
     end
-    
+
     subgraph "Kernel Space"
         D[Process Management]
         E[Memory Management]
@@ -101,14 +102,14 @@ graph TD
         G[Network Stack]
         H[Device Drivers]
     end
-    
+
     subgraph "Hardware"
         I[CPU]
         J[RAM]
         K[Disk]
         L[Network Card]
     end
-    
+
     A --> D
     B --> D
     C --> D
@@ -118,7 +119,7 @@ graph TD
     G --> L
     H --> I
     H --> L
-    
+
     style D fill:#0ea5e9,stroke:#0284c7,color:#fff
     style E fill:#0ea5e9,stroke:#0284c7,color:#fff
     style F fill:#0ea5e9,stroke:#0284c7,color:#fff
@@ -148,6 +149,7 @@ sysctl -a | grep net.ipv4
 ```
 
 The kernel handles:
+
 - **Process scheduling** — which program runs on which CPU core, and for how long
 - **Memory management** — virtual memory, page tables, swap
 - **File system abstraction** — VFS layer makes ext4, xfs, and nfs look the same to programs
@@ -167,7 +169,7 @@ graph LR
     C -->|stdout| D[sort]
     D -->|stdout| E[uniq -c]
     E -->|stdout| F[sort -rn]
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style F fill:#10b981,stroke:#059669,color:#fff
 ```
@@ -230,15 +232,15 @@ The Unix philosophy makes this possible. Every command is a building block that 
 
 <BestPractice title="The Filesystem Hierarchy Standard (FHS) Quick Reference">
 
-| Directory | Purpose | Cloud Relevance |
-|---|---|---|
-| `/etc/` | Configuration files | nginx.conf, ssh/sshd_config, systemd units |
-| `/var/log/` | Log files | Application logs, system logs, audit logs |
-| `/opt/` | Optional/third-party software | Custom monitoring agents, vendor tools |
-| `/tmp/` | Temporary files (cleared on reboot) | Build artifacts, session data |
-| `/home/` | User home directories | SSH keys in ~/.ssh/, personal scripts |
-| `/usr/bin/` | User binaries | Most commands you type (nginx, python3, docker) |
-| `/usr/lib/` | Libraries | Shared libraries (.so files) programs depend on |
+| Directory   | Purpose                             | Cloud Relevance                                 |
+| ----------- | ----------------------------------- | ----------------------------------------------- |
+| `/etc/`     | Configuration files                 | nginx.conf, ssh/sshd_config, systemd units      |
+| `/var/log/` | Log files                           | Application logs, system logs, audit logs       |
+| `/opt/`     | Optional/third-party software       | Custom monitoring agents, vendor tools          |
+| `/tmp/`     | Temporary files (cleared on reboot) | Build artifacts, session data                   |
+| `/home/`    | User home directories               | SSH keys in ~/.ssh/, personal scripts           |
+| `/usr/bin/` | User binaries                       | Most commands you type (nginx, python3, docker) |
+| `/usr/lib/` | Libraries                           | Shared libraries (.so files) programs depend on |
 
 </BestPractice>
 
@@ -304,7 +306,10 @@ fi
    - C) Process scheduler
    - D) grep command
 
-   <details><summary>Answer</summary>**C.** The process scheduler is part of the kernel. Everything else runs in user space.</details>
+   <details>
+     <summary>Answer</summary>**C.** The process scheduler is part of the kernel. Everything else
+     runs in user space.
+   </details>
 
 2. **Why should you never run production services as root?**
    - A) It's slower
@@ -312,14 +317,19 @@ fi
    - C) Root can't access the network
    - D) It's too complicated
 
-   <details><summary>Answer</summary>**B.** Root has unlimited power. A compromised or buggy process running as root can delete everything, modify any file, or install malware. Always use the least-privileged user possible.</details>
+   <details>
+     <summary>Answer</summary>**B.** Root has unlimited power. A compromised or buggy process
+     running as root can delete everything, modify any file, or install malware. Always use the
+     least-privileged user possible.
+   </details>
 
 ---
 
 ## Hands-On
 
-<Exercise title="Explore Your Linux System"
-instructions="1. Run `uname -a` — what kernel version are you on?&#10;2. Run `ls /etc/` — how many config files do you see?&#10;3. Run `df -h` — what filesystems are mounted?&#10;4. Run `ps aux | wc -l` — how many processes are running?&#10;5. Run `dmesg | tail -20` — any interesting kernel messages?"
+<Exercise
+  title="Explore Your Linux System"
+  instructions="1. Run `uname -a` — what kernel version are you on?&#10;2. Run `ls /etc/` — how many config files do you see?&#10;3. Run `df -h` — what filesystems are mounted?&#10;4. Run `ps aux | wc -l` — how many processes are running?&#10;5. Run `dmesg | tail -20` — any interesting kernel messages?"
 />
 
 ## Career at CloudNova

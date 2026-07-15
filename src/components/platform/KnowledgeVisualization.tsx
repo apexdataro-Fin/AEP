@@ -46,21 +46,35 @@ export function SkillTree({ skills, title = "Skill Tree" }: SkillTreeProps) {
       <div
         onClick={() => node.children && toggle(node.id)}
         style={{
-          display: "flex", alignItems: "center", gap: "0.5rem",
-          padding: "0.375rem 0.5rem", borderRadius: "var(--aep-radius-sm)",
+          display: "flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          padding: "0.375rem 0.5rem",
+          borderRadius: "var(--aep-radius-sm)",
           cursor: node.children ? "pointer" : "default",
-          background: "var(--aep-surface-alt)", marginBottom: "0.25rem",
+          background: "var(--aep-surface-alt)",
+          marginBottom: "0.25rem",
           borderLeft: `3px solid ${proficiencyColors[node.proficiency]}`,
           transition: "background var(--aep-transition)",
         }}
       >
-        {node.children && <span style={{ width: 16, textAlign: "center" }}>{expanded.has(node.id) ? "▾" : "▸"}</span>}
+        {node.children && (
+          <span style={{ width: 16, textAlign: "center" }}>
+            {expanded.has(node.id) ? "▾" : "▸"}
+          </span>
+        )}
         <span style={{ flex: 1, fontWeight: 500, fontSize: "0.875rem" }}>{node.name}</span>
-        <span style={{
-          fontSize: "0.7rem", padding: "0.125rem 0.5rem", borderRadius: "var(--aep-radius-full)",
-          background: `${proficiencyColors[node.proficiency]}20`, color: proficiencyColors[node.proficiency],
-          fontWeight: 600, textTransform: "capitalize",
-        }}>
+        <span
+          style={{
+            fontSize: "0.7rem",
+            padding: "0.125rem 0.5rem",
+            borderRadius: "var(--aep-radius-full)",
+            background: `${proficiencyColors[node.proficiency]}20`,
+            color: proficiencyColors[node.proficiency],
+            fontWeight: 600,
+            textTransform: "capitalize",
+          }}
+        >
           {node.proficiency}
         </span>
       </div>
@@ -115,10 +129,21 @@ export function RelationshipExplorer({ title, items }: RelationshipExplorerProps
       <h3 style={{ marginBottom: "var(--aep-space-sm)" }}>{title}</h3>
       <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {items.map((item, i) => (
-          <div key={i} style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem" }}>
+          <div
+            key={i}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem", fontSize: "0.875rem" }}
+          >
             <span style={{ fontWeight: 600 }}>{item.from}</span>
-            <span className="aep-badge aep-badge--info" style={{ fontSize: "0.65rem" }}>{item.relationship}</span>
-            {item.toHref ? <Link to={item.toHref} style={{ color: "var(--aep-primary)" }}>{item.to}</Link> : <span>{item.to}</span>}
+            <span className="aep-badge aep-badge--info" style={{ fontSize: "0.65rem" }}>
+              {item.relationship}
+            </span>
+            {item.toHref ? (
+              <Link to={item.toHref} style={{ color: "var(--aep-primary)" }}>
+                {item.to}
+              </Link>
+            ) : (
+              <span>{item.to}</span>
+            )}
           </div>
         ))}
       </div>
@@ -148,25 +173,37 @@ export function CareerGraph({ roles }: CareerGraphProps) {
         {roles.map((role, i) => (
           <React.Fragment key={role.id}>
             <div style={{ display: "flex", alignItems: "center", gap: "var(--aep-space)" }}>
-              <div style={{
-                width: 40, height: 40, borderRadius: "50%",
-                background: role.current ? "var(--aep-primary)" : "var(--aep-surface-hover)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: role.current ? "#fff" : "var(--aep-text-muted)",
-                fontWeight: 700, fontSize: "0.75rem", flexShrink: 0,
-              }}>
+              <div
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: "50%",
+                  background: role.current ? "var(--aep-primary)" : "var(--aep-surface-hover)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  color: role.current ? "#fff" : "var(--aep-text-muted)",
+                  fontWeight: 700,
+                  fontSize: "0.75rem",
+                  flexShrink: 0,
+                }}
+              >
                 {i + 1}
               </div>
               <div style={{ flex: 1 }}>
                 <div style={{ fontWeight: 600, fontSize: "0.875rem" }}>{role.title}</div>
-                <div style={{ fontSize: "0.75rem", color: "var(--aep-text-muted)" }}>{role.level}</div>
+                <div style={{ fontSize: "0.75rem", color: "var(--aep-text-muted)" }}>
+                  {role.level}
+                </div>
                 <div className="aep-progress" style={{ marginTop: "0.25rem", height: 3 }}>
                   <div className="aep-progress-bar" style={{ width: `${role.progressPercent}%` }} />
                 </div>
               </div>
             </div>
             {i < roles.length - 1 && (
-              <div style={{ width: 2, height: 12, background: "var(--aep-border)", marginLeft: 19 }} />
+              <div
+                style={{ width: 2, height: 12, background: "var(--aep-border)", marginLeft: 19 }}
+              />
             )}
           </React.Fragment>
         ))}

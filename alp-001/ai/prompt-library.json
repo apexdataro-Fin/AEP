@@ -10,15 +10,36 @@
     "No API keys required: prompts are used by the learner, not auto-executed by the platform"
   ],
   "prompt_categories": {
-    "tutor": { "description": "AI acts as a patient, knowledgeable tutor explaining concepts", "icon": "🧑‍🏫" },
-    "quiz_master": { "description": "AI generates and grades quizzes on specific topics", "icon": "📝" },
-    "code_reviewer": { "description": "AI reviews code, configs, and manifests for best practices", "icon": "🔍" },
-    "architect_reviewer": { "description": "AI reviews architecture designs and suggests improvements", "icon": "🏗️" },
-    "interviewer": { "description": "AI conducts mock technical and behavioral interviews", "icon": "🎤" },
+    "tutor": {
+      "description": "AI acts as a patient, knowledgeable tutor explaining concepts",
+      "icon": "🧑‍🏫"
+    },
+    "quiz_master": {
+      "description": "AI generates and grades quizzes on specific topics",
+      "icon": "📝"
+    },
+    "code_reviewer": {
+      "description": "AI reviews code, configs, and manifests for best practices",
+      "icon": "🔍"
+    },
+    "architect_reviewer": {
+      "description": "AI reviews architecture designs and suggests improvements",
+      "icon": "🏗️"
+    },
+    "interviewer": {
+      "description": "AI conducts mock technical and behavioral interviews",
+      "icon": "🎤"
+    },
     "debugger": { "description": "AI helps debug production issues step by step", "icon": "🐛" },
-    "flashcard_generator": { "description": "AI generates flashcard decks from lesson content", "icon": "🃏" },
+    "flashcard_generator": {
+      "description": "AI generates flashcard decks from lesson content",
+      "icon": "🃏"
+    },
     "study_planner": { "description": "AI creates personalized study plans", "icon": "📅" },
-    "career_coach": { "description": "AI provides career guidance and mentoring advice", "icon": "🚀" },
+    "career_coach": {
+      "description": "AI provides career guidance and mentoring advice",
+      "icon": "🚀"
+    },
     "explainer": { "description": "AI explains complex topics in simple terms", "icon": "💡" }
   },
   "prompts": [

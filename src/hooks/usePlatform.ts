@@ -1,6 +1,6 @@
 /**
  * ARES EDU PLATFORM — Platform Hooks
- * 
+ *
  * Custom React hooks for platform state management.
  * Uses localStorage for persistence (Phase 3). Future: Convex (Phase 4+).
  */
@@ -32,7 +32,10 @@ import type {
 // Generic localStorage hook
 // ============================================================
 
-function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
+function useLocalStorage<T>(
+  key: string,
+  initialValue: T,
+): [T, (value: T | ((prev: T) => T)) => void] {
   const [stored, setStored] = useState<T>(() => {
     try {
       const item = typeof window !== "undefined" ? localStorage.getItem(`aep:${key}`) : null;
@@ -50,11 +53,13 @@ function useLocalStorage<T>(key: string, initialValue: T): [T, (value: T | ((pre
           if (typeof window !== "undefined") {
             localStorage.setItem(`aep:${key}`, JSON.stringify(next));
           }
-        } catch { /* quota exceeded */ }
+        } catch {
+          /* quota exceeded */
+        }
         return next;
       });
     },
-    [key]
+    [key],
   );
 
   return [stored, setValue];
@@ -75,8 +80,23 @@ export function usePreferences() {
     highContrast: false,
     dyslexiaFriendlyFont: false,
     learningMode: "self-paced",
-    aiPreferences: { enabled: true, autoSuggest: true, difficultyAdaptation: true, model: "default", maxTokens: 2000 },
-    notificationPreferences: { reviewReminders: true, streakAlerts: true, achievementAlerts: true, recommendationAlerts: true, dailyGoalReminders: true, weeklyReport: true, emailDigest: false, pushNotifications: false },
+    aiPreferences: {
+      enabled: true,
+      autoSuggest: true,
+      difficultyAdaptation: true,
+      model: "default",
+      maxTokens: 2000,
+    },
+    notificationPreferences: {
+      reviewReminders: true,
+      streakAlerts: true,
+      achievementAlerts: true,
+      recommendationAlerts: true,
+      dailyGoalReminders: true,
+      weeklyReport: true,
+      emailDigest: false,
+      pushNotifications: false,
+    },
   };
   return useLocalStorage<UserPreferences>("preferences", defaults);
 }
@@ -95,13 +115,16 @@ export function useFavorites() {
 
 export function useRecentlyVisited() {
   const [items, setItems] = useLocalStorage<RecentlyVisitedItem[]>("recently-visited", []);
-  
-  const addVisit = useCallback((visit: Omit<RecentlyVisitedItem, "visitedAt">) => {
-    setItems((prev) => {
-      const filtered = prev.filter((v) => v.href !== visit.href);
-      return [{ ...visit, visitedAt: new Date().toISOString() }, ...filtered].slice(0, 20);
-    });
-  }, [setItems]);
+
+  const addVisit = useCallback(
+    (visit: Omit<RecentlyVisitedItem, "visitedAt">) => {
+      setItems((prev) => {
+        const filtered = prev.filter((v) => v.href !== visit.href);
+        return [{ ...visit, visitedAt: new Date().toISOString() }, ...filtered].slice(0, 20);
+      });
+    },
+    [setItems],
+  );
 
   return { items, addVisit };
 }
@@ -158,7 +181,11 @@ export function useLearningProgress() {
 
 export function useStreak() {
   const [streak, setStreak] = useLocalStorage<StreakData>("streak", {
-    current: 0, longest: 0, thisWeek: [0, 0, 0, 0, 0, 0, 0], lastActiveDate: "", atRisk: false,
+    current: 0,
+    longest: 0,
+    thisWeek: [0, 0, 0, 0, 0, 0, 0],
+    lastActiveDate: "",
+    atRisk: false,
   });
 
   const checkIn = useCallback(() => {
@@ -167,7 +194,13 @@ export function useStreak() {
       if (prev.lastActiveDate === today) return prev;
       const yesterday = new Date(Date.now() - 86400000).toISOString().split("T")[0];
       const current = prev.lastActiveDate === yesterday ? prev.current + 1 : 1;
-      return { ...prev, current, longest: Math.max(prev.longest, current), lastActiveDate: today, atRisk: current === 1 };
+      return {
+        ...prev,
+        current,
+        longest: Math.max(prev.longest, current),
+        lastActiveDate: today,
+        atRisk: current === 1,
+      };
     });
   }, [setStreak]);
 
@@ -180,8 +213,14 @@ export function useStreak() {
 
 export function useXP() {
   return useLocalStorage<XPSystem>("xp", {
-    totalXP: 0, currentLevel: 1, levelTitle: "Novice Learner",
-    xpToNextLevel: 100, xpForCurrentLevel: 0, achievements: [], badges: [], milestones: [],
+    totalXP: 0,
+    currentLevel: 1,
+    levelTitle: "Novice Learner",
+    xpToNextLevel: 100,
+    xpForCurrentLevel: 0,
+    achievements: [],
+    badges: [],
+    milestones: [],
   });
 }
 
@@ -260,18 +299,33 @@ export function useDashboard() {
   const [dailyMissions] = useDailyMissions();
   const [weeklyMissions] = useWeeklyMissions();
 
-  return useMemo(() => ({
-    continueLearning: continueLearning.slice(0, 5),
-    recentActivity: recentlyVisited.slice(0, 10),
-    bookmarks: bookmarks.slice(0, 5),
-    progress,
-    streak,
-    xp,
-    achievements: achievements.filter((a) => a.earned),
-    badges: badges.filter((b) => b.earned),
-    recentItems: recentlyVisited.slice(0, 5),
-    reviews: reviews.filter((r) => r.dueInDays <= 3),
-    dailyMissions,
-    weeklyMissions,
-  }), [continueLearning, recentlyVisited, bookmarks, progress, streak, xp, achievements, badges, reviews, dailyMissions, weeklyMissions]);
+  return useMemo(
+    () => ({
+      continueLearning: continueLearning.slice(0, 5),
+      recentActivity: recentlyVisited.slice(0, 10),
+      bookmarks: bookmarks.slice(0, 5),
+      progress,
+      streak,
+      xp,
+      achievements: achievements.filter((a) => a.earned),
+      badges: badges.filter((b) => b.earned),
+      recentItems: recentlyVisited.slice(0, 5),
+      reviews: reviews.filter((r) => r.dueInDays <= 3),
+      dailyMissions,
+      weeklyMissions,
+    }),
+    [
+      continueLearning,
+      recentlyVisited,
+      bookmarks,
+      progress,
+      streak,
+      xp,
+      achievements,
+      badges,
+      reviews,
+      dailyMissions,
+      weeklyMissions,
+    ],
+  );
 }

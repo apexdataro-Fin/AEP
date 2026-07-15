@@ -7,15 +7,30 @@
       "name": "AI Tutor",
       "description": "Context-aware AI assistant that explains concepts, answers questions, and guides learning",
       "available_in": "all_modules",
-      "capabilities": ["concept-explanation", "question-answering", "guided-walkthrough", "alternative-explanations"],
-      "context_sources": ["current-lesson-content", "learner-knowledge-graph", "learning-history", "certification-progress"]
+      "capabilities": [
+        "concept-explanation",
+        "question-answering",
+        "guided-walkthrough",
+        "alternative-explanations"
+      ],
+      "context_sources": [
+        "current-lesson-content",
+        "learner-knowledge-graph",
+        "learning-history",
+        "certification-progress"
+      ]
     },
     "ai_explain": {
       "name": "AI Explain",
       "description": "Deep-dive explanation of complex topics with adjustable detail levels",
       "available_in": "all_modules",
       "levels": ["simple", "core", "professional", "production", "architect"],
-      "capabilities": ["diagram-explanation", "code-explanation", "architecture-explanation", "concept-breakdown"]
+      "capabilities": [
+        "diagram-explanation",
+        "code-explanation",
+        "architecture-explanation",
+        "concept-breakdown"
+      ]
     },
     "ai_summarize": {
       "name": "AI Summarize",
@@ -29,68 +44,137 @@
       "description": "Generate practice quizzes tailored to the learner's weak areas",
       "available_in": "all_modules",
       "question_types": ["multiple-choice", "scenario", "fill-in-blank", "ordering"],
-      "capabilities": ["adaptive-difficulty", "certification-aligned", "gap-focused", "explanations-for-wrong-answers"]
+      "capabilities": [
+        "adaptive-difficulty",
+        "certification-aligned",
+        "gap-focused",
+        "explanations-for-wrong-answers"
+      ]
     },
     "ai_flashcards": {
       "name": "AI Flashcard Generator",
       "description": "Generate flashcard decks from lesson content for spaced repetition",
       "available_in": "all_modules",
-      "capabilities": ["auto-generation", "concept-extraction", "definition-cards", "diagram-to-card", "review-scheduling"]
+      "capabilities": [
+        "auto-generation",
+        "concept-extraction",
+        "definition-cards",
+        "diagram-to-card",
+        "review-scheduling"
+      ]
     },
     "ai_code_review": {
       "name": "AI Code Review",
       "description": "Review Terraform, Python, Dockerfile, Kubernetes manifests, and CI/CD configs",
       "available_in": ["05-python", "09-docker", "10-kubernetes", "12-terraform", "15-cicd"],
-      "capabilities": ["best-practices-check", "security-scan", "optimization-suggestions", "style-compliance"]
+      "capabilities": [
+        "best-practices-check",
+        "security-scan",
+        "optimization-suggestions",
+        "style-compliance"
+      ]
     },
     "ai_architecture_review": {
       "name": "AI Architecture Review",
       "description": "Review architecture diagrams and designs against best practices",
       "available_in": ["07-azure-core", "10-kubernetes", "19-platform", "30-ai-infra"],
-      "capabilities": ["well-architected-framework-check", "cost-optimization-review", "security-review", "alternative-architecture-suggestions"]
+      "capabilities": [
+        "well-architected-framework-check",
+        "cost-optimization-review",
+        "security-review",
+        "alternative-architecture-suggestions"
+      ]
     },
     "ai_interview": {
       "name": "AI Mock Interviewer",
       "description": "Conduct mock technical and behavioral interviews",
       "available_in": ["32-interview"],
-      "capabilities": ["system-design-interview", "cloud-scenario-questions", "behavioral-star-method", "real-time-feedback", "answer-scoring"]
+      "capabilities": [
+        "system-design-interview",
+        "cloud-scenario-questions",
+        "behavioral-star-method",
+        "real-time-feedback",
+        "answer-scoring"
+      ]
     },
     "ai_study_planner": {
       "name": "AI Study Planner",
       "description": "Create personalized study plans based on goals, timeline, and current knowledge",
       "available_in": "all_modules",
-      "capabilities": ["goal-based-planning", "time-estimation", "certification-timeline", "daily-goals", "adaptive-rescheduling"]
+      "capabilities": [
+        "goal-based-planning",
+        "time-estimation",
+        "certification-timeline",
+        "daily-goals",
+        "adaptive-rescheduling"
+      ]
     },
     "ai_career_advisor": {
       "name": "AI Career Advisor",
       "description": "Personalized career guidance based on skills, goals, and market data",
       "available_in": ["33-career"],
-      "capabilities": ["skill-gap-analysis", "role-recommendation", "salary-benchmarking", "career-path-visualization"]
+      "capabilities": [
+        "skill-gap-analysis",
+        "role-recommendation",
+        "salary-benchmarking",
+        "career-path-visualization"
+      ]
     },
     "ai_recommendation": {
       "name": "AI Learning Recommendations",
       "description": "Recommend next lessons, projects, and resources based on learning patterns",
       "available_in": "all_modules",
-      "capabilities": ["next-best-lesson", "weak-area-remediation", "challenge-recommendation", "related-content-discovery"]
+      "capabilities": [
+        "next-best-lesson",
+        "weak-area-remediation",
+        "challenge-recommendation",
+        "related-content-discovery"
+      ]
     },
     "ai_difficulty_adaptation": {
       "name": "AI Difficulty Adaptation",
       "description": "Adjust lesson difficulty based on learner performance",
       "available_in": "all_modules",
-      "capabilities": ["performance-based-adjustment", "prerequisite-verification", "challenge-upscaling", "remediation-downscaling"]
+      "capabilities": [
+        "performance-based-adjustment",
+        "prerequisite-verification",
+        "challenge-upscaling",
+        "remediation-downscaling"
+      ]
     }
   },
   "module_ai_mapping": {
     "01-foundations": ["ai_tutor", "ai_explain", "ai_summarize", "ai_study_planner"],
-    "02-linux": ["ai_tutor", "ai_explain", "ai_summarize", "ai_quiz", "ai_flashcards", "ai_cmd_explain"],
+    "02-linux": [
+      "ai_tutor",
+      "ai_explain",
+      "ai_summarize",
+      "ai_quiz",
+      "ai_flashcards",
+      "ai_cmd_explain"
+    ],
     "03-networking": ["ai_tutor", "ai_explain", "ai_summarize", "ai_quiz", "ai_flashcards"],
     "04-security": ["ai_tutor", "ai_explain", "ai_summarize", "ai_quiz", "ai_architecture_review"],
     "05-python": ["ai_tutor", "ai_explain", "ai_summarize", "ai_code_review", "ai_quiz"],
     "06-cloud-fundamentals": ["ai_tutor", "ai_explain", "ai_summarize", "ai_quiz", "ai_flashcards"],
-    "07-azure-core": ["ai_tutor", "ai_explain", "ai_summarize", "ai_quiz", "ai_architecture_review"],
+    "07-azure-core": [
+      "ai_tutor",
+      "ai_explain",
+      "ai_summarize",
+      "ai_quiz",
+      "ai_architecture_review"
+    ],
     "08-containers": ["ai_tutor", "ai_explain", "ai_summarize", "ai_flashcards"],
     "09-docker": ["ai_tutor", "ai_explain", "ai_summarize", "ai_code_review", "ai_quiz"],
-    "10-kubernetes": ["ai_tutor", "ai_explain", "ai_summarize", "ai_code_review", "ai_architecture_review", "ai_quiz", "ai_flashcards"],
+    "10-kubernetes": [
+      "ai_tutor",
+      "ai_explain",
+      "ai_summarize",
+      "ai_code_review",
+      "ai_architecture_review",
+      "ai_quiz",
+      "ai_flashcards"
+    ],
     "11-helm": ["ai_tutor", "ai_explain", "ai_summarize", "ai_code_review"],
     "12-terraform": ["ai_tutor", "ai_explain", "ai_summarize", "ai_code_review", "ai_quiz"],
     "13-git": ["ai_tutor", "ai_explain", "ai_summarize"],

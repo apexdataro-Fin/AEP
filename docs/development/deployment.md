@@ -58,10 +58,10 @@ GIT_USER=<your-github-username> npm run deploy
 The deployment uses these settings from `docusaurus.config.ts`:
 
 ```typescript
-url: "https://apexdataro-fin.github.io"
-baseUrl: "/AEP/"
-organizationName: "apexdataro-Fin"
-projectName: "AEP"
+url: "https://apexdataro-fin.github.io";
+baseUrl: "/AEP/";
+organizationName: "apexdataro-Fin";
+projectName: "AEP";
 ```
 
 ## Build Output

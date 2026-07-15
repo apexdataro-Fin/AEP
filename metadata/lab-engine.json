@@ -82,15 +82,17 @@
       "configuration": "object (environment-specific config)",
       "cleanup_instructions": "string"
     },
-    "tasks": [{
-      "id": "string",
-      "title": "string",
-      "description": "string",
-      "time_estimate_minutes": "number",
-      "hints": [{ "trigger": "string", "hint": "string" }],
-      "verification": { "method": "string", "expected_output": "string" },
-      "solution": "string (only shown after completion)"
-    }],
+    "tasks": [
+      {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "time_estimate_minutes": "number",
+        "hints": [{ "trigger": "string", "hint": "string" }],
+        "verification": { "method": "string", "expected_output": "string" },
+        "solution": "string (only shown after completion)"
+      }
+    ],
     "troubleshooting": [{ "problem": "string", "solution": "string" }],
     "check_your_understanding": [{ "question": "string", "answer": "string" }],
     "cost_estimate": { "free_tier_safe": "boolean", "max_cost": "string" }

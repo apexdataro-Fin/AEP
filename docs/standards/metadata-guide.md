@@ -21,16 +21,16 @@ Every content file in the platform includes **structured frontmatter** that make
 
 ```yaml
 ---
-sidebar_position: number       # Position in sidebar navigation
-title: string                  # Display title (H1)
-slug: string                   # URL path (unique)
-description: string            # SEO description and AI summary (≤ 160 chars)
+sidebar_position: number # Position in sidebar navigation
+title: string # Display title (H1)
+slug: string # URL path (unique)
+description: string # SEO description and AI summary (≤ 160 chars)
 ai_metadata:
-  category: string             # Content category
-  difficulty: string           # beginner | intermediate | advanced
+  category: string # Content category
+  difficulty: string # beginner | intermediate | advanced
   estimated_time_minutes: number # Time to complete
-  prerequisites: string[]      # Slugs of prerequisite content
-  tags: string[]               # Search and classification tags
+  prerequisites: string[] # Slugs of prerequisite content
+  tags: string[] # Search and classification tags
 ---
 ```
 
@@ -38,14 +38,14 @@ ai_metadata:
 
 ```yaml
 ---
-keywords: string[]             # Additional SEO keywords
-image: string                  # Social card image path
+keywords: string[] # Additional SEO keywords
+image: string # Social card image path
 ai_metadata:
   learning_objectives: string[] # Measurable learning goals
-  related_content: string[]    # Related content slugs
-  version: string              # Content version (semver)
-  last_validated: string        # ISO date of last accuracy review
-  author: string               # Content author
+  related_content: string[] # Related content slugs
+  version: string # Content version (semver)
+  last_validated: string # ISO date of last accuracy review
+  author: string # Content author
 ---
 ```
 
@@ -55,20 +55,20 @@ ai_metadata:
 category:
   # Getting started
   - getting_started
-  
+
   # Architecture
   - architecture
-  
+
   # Development
   - development
-  
+
   # Standards & Guides
   - standards
   - guides
-  
+
   # Reference
   - reference
-  
+
   # Cloud Domains
   - compute
   - networking
@@ -81,7 +81,7 @@ category:
   - ci_cd
   - observability
   - iac
-  
+
   # Career
   - career
   - certifications
@@ -90,6 +90,7 @@ category:
 ## Tag Guidelines
 
 Tags should be:
+
 - **Lowercase** with underscores for spaces
 - **Singular** (use `container`, not `containers`)
 - **Specific** (use `aws_lambda`, not just `aws`)
@@ -116,6 +117,7 @@ node scripts/validate-content.js
 ```
 
 This validates:
+
 - All required fields are present
 - `difficulty` is a valid value
 - `estimated_time_minutes` is a positive number

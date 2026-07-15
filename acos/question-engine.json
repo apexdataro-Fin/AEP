@@ -28,7 +28,10 @@
       "description": "Complete the sentence or code block",
       "schema": {
         "template": { "type": "string", "required": true },
-        "blanks": { "type": "array", "items": { "answer": "string | string[]", "caseSensitive": "boolean" } },
+        "blanks": {
+          "type": "array",
+          "items": { "answer": "string | string[]", "caseSensitive": "boolean" }
+        },
         "acceptable_variations": { "type": "boolean", "default": true }
       }
     },
@@ -96,7 +99,10 @@
       "description": "Multi-step scenario-based question",
       "schema": {
         "context": { "type": "string", "required": true },
-        "steps": { "type": "array", "items": { "question": "string", "type": "string", "answer": "any" } },
+        "steps": {
+          "type": "array",
+          "items": { "question": "string", "type": "string", "answer": "any" }
+        },
         "decision_points": { "type": "array", "optional": true }
       }
     },
@@ -116,7 +122,10 @@
       "description": "Branching decision tree with consequences",
       "schema": {
         "context": { "type": "string", "required": true },
-        "options": { "type": "array", "items": { "label": "string", "outcome": "string", "score": "number" } },
+        "options": {
+          "type": "array",
+          "items": { "label": "string", "outcome": "string", "score": "number" }
+        },
         "branches": { "type": "array", "optional": true }
       }
     }
@@ -260,7 +269,10 @@
     "rubric_based": {
       "description": "Scored against predefined rubric criteria",
       "config": {
-        "criteria": { "type": "array", "items": { "name": "string", "max_points": "number", "descriptors": "object" } }
+        "criteria": {
+          "type": "array",
+          "items": { "name": "string", "max_points": "number", "descriptors": "object" }
+        }
       }
     },
     "adaptive": {
@@ -283,7 +295,11 @@
     "holistic": {
       "description": "Single overall score with level descriptors",
       "levels": [
-        { "score": 4, "label": "Expert", "description": "Demonstrates comprehensive understanding" },
+        {
+          "score": 4,
+          "label": "Expert",
+          "description": "Demonstrates comprehensive understanding"
+        },
         { "score": 3, "label": "Proficient", "description": "Demonstrates solid understanding" },
         { "score": 2, "label": "Developing", "description": "Demonstrates partial understanding" },
         { "score": 1, "label": "Beginning", "description": "Demonstrates minimal understanding" }
@@ -301,15 +317,39 @@
   "certificates": {
     "completion": {
       "description": "Certificate for completing a course or learning path",
-      "fields": ["learner_name", "course_name", "completion_date", "skills_acquired", "hours_completed", "issuer", "verification_code"]
+      "fields": [
+        "learner_name",
+        "course_name",
+        "completion_date",
+        "skills_acquired",
+        "hours_completed",
+        "issuer",
+        "verification_code"
+      ]
     },
     "certification": {
       "description": "Certificate for passing a certification exam",
-      "fields": ["candidate_name", "certification_name", "exam_date", "score", "pass_score", "valid_until", "credential_id", "issuing_body"]
+      "fields": [
+        "candidate_name",
+        "certification_name",
+        "exam_date",
+        "score",
+        "pass_score",
+        "valid_until",
+        "credential_id",
+        "issuing_body"
+      ]
     },
     "achievement": {
       "description": "Certificate for milestone achievements",
-      "fields": ["learner_name", "achievement_name", "date_earned", "description", "xp_awarded", "badge_id"]
+      "fields": [
+        "learner_name",
+        "achievement_name",
+        "date_earned",
+        "description",
+        "xp_awarded",
+        "badge_id"
+      ]
     }
   },
   "ai_integration": {

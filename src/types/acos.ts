@@ -74,8 +74,21 @@ export type ALPDomain =
   | "custom";
 
 export type LanguageCode =
-  | "ar" | "en" | "fi" | "ku" | "es" | "fr" | "de" | "zh"
-  | "ja" | "ko" | "pt" | "ru" | "hi" | "tr" | "it";
+  | "ar"
+  | "en"
+  | "fi"
+  | "ku"
+  | "es"
+  | "fr"
+  | "de"
+  | "zh"
+  | "ja"
+  | "ko"
+  | "pt"
+  | "ru"
+  | "hi"
+  | "tr"
+  | "it";
 
 export interface ALPDependency {
   alp_id: string;
@@ -136,11 +149,7 @@ export interface OrganizationRef {
 }
 
 export type OrganizationType =
-  | "academy"
-  | "publisher"
-  | "company"
-  | "community"
-  | "certification_body";
+  "academy" | "publisher" | "company" | "community" | "certification_body";
 
 export type ContentLicense =
   | "CC BY 4.0"
@@ -154,12 +163,7 @@ export type ContentLicense =
   | "All Rights Reserved"
   | "Custom";
 
-export type ContentStatus =
-  | "draft"
-  | "review"
-  | "published"
-  | "archived"
-  | "deprecated";
+export type ContentStatus = "draft" | "review" | "published" | "archived" | "deprecated";
 
 // =============================================================================
 // Book Engine
@@ -263,14 +267,7 @@ export interface Reference {
 }
 
 export type ReferenceType =
-  | "book"
-  | "article"
-  | "website"
-  | "documentation"
-  | "whitepaper"
-  | "rfc"
-  | "video"
-  | "course";
+  "book" | "article" | "website" | "documentation" | "whitepaper" | "rfc" | "video" | "course";
 
 export interface IndexEntry {
   term: string;
@@ -292,11 +289,7 @@ export interface TranslationRef {
   url?: string;
 }
 
-export type DifficultyLevel =
-  | "beginner"
-  | "intermediate"
-  | "advanced"
-  | "expert";
+export type DifficultyLevel = "beginner" | "intermediate" | "advanced" | "expert";
 
 // =============================================================================
 // Course Engine
@@ -361,13 +354,7 @@ export interface AssessmentRef {
   required: boolean;
 }
 
-export type AssessmentType =
-  | "quiz"
-  | "assignment"
-  | "project"
-  | "lab"
-  | "exam"
-  | "final_exam";
+export type AssessmentType = "quiz" | "assignment" | "project" | "lab" | "exam" | "final_exam";
 
 export interface CertificateTemplate {
   id: string;
@@ -477,15 +464,7 @@ export interface MediaAsset {
 }
 
 export type MediaType =
-  | "image"
-  | "svg"
-  | "icon"
-  | "mermaid"
-  | "video"
-  | "audio"
-  | "pdf"
-  | "download"
-  | "interactive";
+  "image" | "svg" | "icon" | "mermaid" | "video" | "audio" | "pdf" | "download" | "interactive";
 
 export interface MediaVariant {
   id: string;
@@ -659,12 +638,7 @@ export interface InterviewQuestionBank {
   };
 }
 
-export type CareerLevel =
-  | "junior"
-  | "mid"
-  | "senior"
-  | "staff"
-  | "principal";
+export type CareerLevel = "junior" | "mid" | "senior" | "staff" | "principal";
 
 // =============================================================================
 // Assessment Engine
@@ -809,12 +783,7 @@ export interface SearchQuery {
 }
 
 export type SearchScope =
-  | "global"
-  | "book_scope"
-  | "course_scope"
-  | "knowledge_scope"
-  | "question_scope"
-  | "career_scope";
+  "global" | "book_scope" | "course_scope" | "knowledge_scope" | "question_scope" | "career_scope";
 
 export interface SearchFacet {
   name: string;

@@ -21,7 +21,8 @@ skills:
 prerequisites: ["01-engineering-mindset", "02-problem-decomposition"]
 related_lessons: []
 certifications: []
-knowledge_nodes: ["systems-thinking", "feedback-loops", "emergent-behavior", "failure-mode-analysis"]
+knowledge_nodes:
+  ["systems-thinking", "feedback-loops", "emergent-behavior", "failure-mode-analysis"]
 learning_objectives:
   - id: "obj-1"
     description: "Identify reinforcing and balancing feedback loops in a cloud architecture"
@@ -63,11 +64,11 @@ graph TD
     B -->|Balancing| C[Latency Decreases]
     C -->|Reinforcing| D[More Users Join]
     D --> A
-    
+
     B -->|Side Effect| E[Cost Increases]
     E -->|Balancing| F[Budget Alert Fires]
     F -->|Limits| A
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style E fill:#f59e0b,stroke:#d97706,color:#000
     style F fill:#10b981,stroke:#059669,color:#fff
@@ -91,12 +92,13 @@ graph TD
     DB --> DR[Database Replica]
     S1 --> C1[Cache]
     S2 --> C1
-    
+
     style DB fill:#ef4444,stroke:#dc2626,color:#fff
     style DR fill:#f59e0b,stroke:#d97706,color:#000
 ```
 
 If the Database Primary (red) fails:
+
 - Web servers can't write data → read-only mode
 - Cache still serves stale data → users see old information
 - Replica can be promoted → but takes 2 minutes
@@ -107,7 +109,8 @@ Systems thinkers map this **before** the failure happens.
 ---
 
 <BestPractice title="Failure Mode Questions">
-For every component, ask: "If this fails, what breaks? How do we detect it? How do we recover? How long does recovery take?"
+  For every component, ask: "If this fails, what breaks? How do we detect it? How do we recover? How
+  long does recovery take?"
 </BestPractice>
 
 ---

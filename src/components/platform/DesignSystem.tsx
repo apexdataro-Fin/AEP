@@ -14,16 +14,37 @@ interface CardProps {
   title: string;
   subtitle?: string;
   href?: string;
-  variant?: "default" | "featured" | "book" | "course" | "project" | "lab" | "certification" | "career" | "knowledge" | "technology";
+  variant?:
+    | "default"
+    | "featured"
+    | "book"
+    | "course"
+    | "project"
+    | "lab"
+    | "certification"
+    | "career"
+    | "knowledge"
+    | "technology";
   meta?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
   className?: string;
 }
 
-export function Card({ title, subtitle, href, variant = "default", meta, children, footer, className = "" }: CardProps) {
+export function Card({
+  title,
+  subtitle,
+  href,
+  variant = "default",
+  meta,
+  children,
+  footer,
+  className = "",
+}: CardProps) {
   const content = (
-    <div className={`aep-card aep-card--${variant} ${href ? "aep-card--interactive" : ""} ${className}`}>
+    <div
+      className={`aep-card aep-card--${variant} ${href ? "aep-card--interactive" : ""} ${className}`}
+    >
       <div className="aep-card-header">
         <h3 className="aep-card-title">{title}</h3>
         {meta && <div className="aep-card-meta">{meta}</div>}
@@ -33,7 +54,13 @@ export function Card({ title, subtitle, href, variant = "default", meta, childre
       {footer && <div className="aep-card-footer">{footer}</div>}
     </div>
   );
-  return href ? <Link to={href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>{content}</Link> : content;
+  return href ? (
+    <Link to={href} style={{ textDecoration: "none", color: "inherit", display: "block" }}>
+      {content}
+    </Link>
+  ) : (
+    content
+  );
 }
 
 // ============================================================
@@ -47,7 +74,13 @@ interface BadgeProps {
 }
 
 export function Badge({ label, variant = "primary", icon }: BadgeProps) {
-  return <span className={`aep-badge aep-badge--${variant}`}>{icon}{icon && " "}{label}</span>;
+  return (
+    <span className={`aep-badge aep-badge--${variant}`}>
+      {icon}
+      {icon && " "}
+      {label}
+    </span>
+  );
 }
 
 export function Tag({ label }: { label: string }) {
@@ -66,13 +99,37 @@ interface ProgressBarProps {
   size?: "sm" | "md";
 }
 
-export function ProgressBar({ value, max = 100, variant = "primary", showLabel = true, size = "md" }: ProgressBarProps) {
+export function ProgressBar({
+  value,
+  max = 100,
+  variant = "primary",
+  showLabel = true,
+  size = "md",
+}: ProgressBarProps) {
   const pct = Math.min(Math.round((value / max) * 100), 100);
   return (
     <div>
-      {showLabel && <div style={{ display: "flex", justifyContent: "space-between", fontSize: "var(--aep-font-size-xs)", marginBottom: "0.25rem" }}><span>{pct}%</span></div>}
+      {showLabel && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            fontSize: "var(--aep-font-size-xs)",
+            marginBottom: "0.25rem",
+          }}
+        >
+          <span>{pct}%</span>
+        </div>
+      )}
       <div className={`aep-progress`} style={size === "sm" ? { height: 4 } : undefined}>
-        <div className={`aep-progress-bar aep-progress-bar--${variant}`} style={{ width: `${pct}%` }} role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} />
+        <div
+          className={`aep-progress-bar aep-progress-bar--${variant}`}
+          style={{ width: `${pct}%` }}
+          role="progressbar"
+          aria-valuenow={pct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+        />
       </div>
     </div>
   );
@@ -93,8 +150,12 @@ export function StreakDisplay({ current, longest, atRisk }: StreakDisplayProps) 
     <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
       <span style={{ fontSize: "1.5rem" }}>🔥</span>
       <div>
-        <strong>{current} day{current !== 1 ? "s" : ""}</strong>
-        <div className="aep-text-xs aep-text-muted">Longest: {longest} | {atRisk ? "⚠️ At risk!" : "✅ Safe"}</div>
+        <strong>
+          {current} day{current !== 1 ? "s" : ""}
+        </strong>
+        <div className="aep-text-xs aep-text-muted">
+          Longest: {longest} | {atRisk ? "⚠️ At risk!" : "✅ Safe"}
+        </div>
       </div>
     </div>
   );
@@ -114,14 +175,18 @@ interface XPDisplayProps {
 export function XPDisplay({ level, title, xp, xpToNext }: XPDisplayProps) {
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}>
+      <div
+        style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.25rem" }}
+      >
         <span style={{ fontSize: "1.5rem" }}>⭐</span>
         <div>
           <strong>Level {level}</strong> — {title}
         </div>
       </div>
       <ProgressBar value={xp} max={xp + xpToNext} variant="primary" showLabel={false} size="sm" />
-      <div className="aep-text-xs aep-text-muted" style={{ marginTop: "0.25rem" }}>{xp} / {xp + xpToNext} XP</div>
+      <div className="aep-text-xs aep-text-muted" style={{ marginTop: "0.25rem" }}>
+        {xp} / {xp + xpToNext} XP
+      </div>
     </div>
   );
 }
@@ -138,7 +203,10 @@ export function Timeline({ items }: TimelineProps) {
   return (
     <div className="aep-timeline">
       {items.map((item, i) => (
-        <div key={i} className={`aep-timeline-item ${item.completed ? "aep-timeline-item--completed" : ""}`}>
+        <div
+          key={i}
+          className={`aep-timeline-item ${item.completed ? "aep-timeline-item--completed" : ""}`}
+        >
           <div style={{ fontWeight: 600, fontSize: "var(--aep-font-size-sm)" }}>{item.title}</div>
           <div className="aep-text-sm aep-text-muted">{item.description}</div>
           <div className="aep-text-xs aep-text-muted">{item.timestamp}</div>
@@ -161,9 +229,26 @@ interface AchievementCardProps {
   xpReward: number;
 }
 
-export function AchievementCard({ name, description, icon, earned, rarity, xpReward }: AchievementCardProps) {
+export function AchievementCard({
+  name,
+  description,
+  icon,
+  earned,
+  rarity,
+  xpReward,
+}: AchievementCardProps) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "var(--aep-space)", padding: "var(--aep-space)", background: earned ? "var(--aep-surface-raised)" : "var(--aep-surface-alt)", borderRadius: "var(--aep-radius)", opacity: earned ? 1 : 0.5 }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "var(--aep-space)",
+        padding: "var(--aep-space)",
+        background: earned ? "var(--aep-surface-raised)" : "var(--aep-surface-alt)",
+        borderRadius: "var(--aep-radius)",
+        opacity: earned ? 1 : 0.5,
+      }}
+    >
       <span style={{ fontSize: "2rem" }}>{icon}</span>
       <div>
         <div style={{ fontWeight: 600, fontSize: "var(--aep-font-size-sm)" }}>{name}</div>
@@ -188,13 +273,36 @@ interface DailyMissionCardProps {
   completed: boolean;
 }
 
-export function DailyMissionCard({ title, description, xpReward, completed }: DailyMissionCardProps) {
+export function DailyMissionCard({
+  title,
+  description,
+  xpReward,
+  completed,
+}: DailyMissionCardProps) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "var(--aep-space-sm) var(--aep-space)", background: completed ? "rgba(16,185,129,0.08)" : "var(--aep-surface-alt)", borderRadius: "var(--aep-radius)", border: completed ? "1px solid var(--aep-accent)" : "1px solid transparent" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        padding: "var(--aep-space-sm) var(--aep-space)",
+        background: completed ? "rgba(16,185,129,0.08)" : "var(--aep-surface-alt)",
+        borderRadius: "var(--aep-radius)",
+        border: completed ? "1px solid var(--aep-accent)" : "1px solid transparent",
+      }}
+    >
       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
         <span>{completed ? "✅" : "⬜"}</span>
         <div>
-          <div style={{ fontWeight: 500, fontSize: "var(--aep-font-size-sm)", textDecoration: completed ? "line-through" : "none" }}>{title}</div>
+          <div
+            style={{
+              fontWeight: 500,
+              fontSize: "var(--aep-font-size-sm)",
+              textDecoration: completed ? "line-through" : "none",
+            }}
+          >
+            {title}
+          </div>
           <div className="aep-text-xs aep-text-muted">{description}</div>
         </div>
       </div>
@@ -214,9 +322,20 @@ interface SectionHeaderProps {
 
 export function SectionHeader({ title, action }: SectionHeaderProps) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "var(--aep-space)" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: "var(--aep-space)",
+      }}
+    >
       <h2 style={{ margin: 0, fontSize: "var(--aep-font-size-xl)", fontWeight: 700 }}>{title}</h2>
-      {action && <Link to={action.href} className="aep-btn aep-btn--ghost aep-btn--sm">{action.label} →</Link>}
+      {action && (
+        <Link to={action.href} className="aep-btn aep-btn--ghost aep-btn--sm">
+          {action.label} →
+        </Link>
+      )}
     </div>
   );
 }

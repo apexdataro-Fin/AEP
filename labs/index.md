@@ -17,10 +17,10 @@ Hands-on cloud labs. Practice in safe, sandboxed environments without worrying a
 
 ## Lab Types
 
-| Type | Duration | Description |
-|---|---|---|
-| **Quick Lab** | 15-30 min | Single-task exercises |
-| **Guided Lab** | 60-90 min | Step-by-step scenario |
+| Type              | Duration   | Description                |
+| ----------------- | ---------- | -------------------------- |
+| **Quick Lab**     | 15-30 min  | Single-task exercises      |
+| **Guided Lab**    | 60-90 min  | Step-by-step scenario      |
 | **Challenge Lab** | 90-180 min | Open-ended problem solving |
 
 :::tip Coming Soon

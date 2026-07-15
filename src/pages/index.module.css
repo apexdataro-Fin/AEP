@@ -172,7 +172,9 @@
   border-radius: 0.75rem;
   border: 1px solid var(--celos-border);
   background: var(--celos-surface);
-  transition: box-shadow 0.2s, transform 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s;
 }
 
 .featureCard:hover {

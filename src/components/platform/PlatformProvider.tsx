@@ -59,11 +59,17 @@ interface PlatformContextValue {
   highlights: UserHighlight[];
   setHighlights: (h: UserHighlight[] | ((prev: UserHighlight[]) => UserHighlight[])) => void;
   readingHistory: ReadingHistoryItem[];
-  setReadingHistory: (h: ReadingHistoryItem[] | ((prev: ReadingHistoryItem[]) => ReadingHistoryItem[])) => void;
+  setReadingHistory: (
+    h: ReadingHistoryItem[] | ((prev: ReadingHistoryItem[]) => ReadingHistoryItem[]),
+  ) => void;
   continueLearning: ContinueLearningItem[];
-  setContinueLearning: (c: ContinueLearningItem[] | ((prev: ContinueLearningItem[]) => ContinueLearningItem[])) => void;
+  setContinueLearning: (
+    c: ContinueLearningItem[] | ((prev: ContinueLearningItem[]) => ContinueLearningItem[]),
+  ) => void;
   learningProgress: LearningProgress;
-  setLearningProgress: (p: LearningProgress | ((prev: LearningProgress) => LearningProgress)) => void;
+  setLearningProgress: (
+    p: LearningProgress | ((prev: LearningProgress) => LearningProgress),
+  ) => void;
   streak: StreakData;
   checkIn: () => void;
   xp: XPSystem;
@@ -118,25 +124,44 @@ export function PlatformProvider({ children }: { children: ReactNode }) {
   return (
     <PlatformContext.Provider
       value={{
-        preferences, setPreferences,
-        bookmarks, setBookmarks,
-        favorites, setFavorites,
-        recentlyVisited, addRecentVisit,
-        notes, setNotes,
-        highlights, setHighlights,
-        readingHistory, setReadingHistory,
-        continueLearning, setContinueLearning,
-        learningProgress, setLearningProgress,
-        streak, checkIn,
-        xp, setXP,
-        achievements, setAchievements,
-        badges, setBadges,
-        dailyMissions, setDailyMissions,
-        weeklyMissions, setWeeklyMissions,
-        reviews, setReviews,
-        searchHistory, setSearchHistory,
-        aiSessions, setAISessions,
-        learningMode, setLearningMode,
+        preferences,
+        setPreferences,
+        bookmarks,
+        setBookmarks,
+        favorites,
+        setFavorites,
+        recentlyVisited,
+        addRecentVisit,
+        notes,
+        setNotes,
+        highlights,
+        setHighlights,
+        readingHistory,
+        setReadingHistory,
+        continueLearning,
+        setContinueLearning,
+        learningProgress,
+        setLearningProgress,
+        streak,
+        checkIn,
+        xp,
+        setXP,
+        achievements,
+        setAchievements,
+        badges,
+        setBadges,
+        dailyMissions,
+        setDailyMissions,
+        weeklyMissions,
+        setWeeklyMissions,
+        reviews,
+        setReviews,
+        searchHistory,
+        setSearchHistory,
+        aiSessions,
+        setAISessions,
+        learningMode,
+        setLearningMode,
       }}
     >
       {children}

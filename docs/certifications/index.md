@@ -42,12 +42,12 @@ graph TB
 
 ## Available Certifications
 
-| Provider | Associate | Professional | Specialty |
-|---|---|---|---|
-| **AWS** | Solutions Architect, Developer, SysOps | Solutions Architect, DevOps | Security, Networking, ML |
-| **Azure** | AZ-104 Administrator, AZ-204 Developer | AZ-305 Architect, AZ-400 DevOps | Security, Data, AI |
-| **GCP** | Associate Cloud Engineer | Cloud Architect, Data Engineer | Security, ML, Networking |
-| **CNCF** | CKA, CKAD | CKS | — |
+| Provider  | Associate                              | Professional                    | Specialty                |
+| --------- | -------------------------------------- | ------------------------------- | ------------------------ |
+| **AWS**   | Solutions Architect, Developer, SysOps | Solutions Architect, DevOps     | Security, Networking, ML |
+| **Azure** | AZ-104 Administrator, AZ-204 Developer | AZ-305 Architect, AZ-400 DevOps | Security, Data, AI       |
+| **GCP**   | Associate Cloud Engineer               | Cloud Architect, Data Engineer  | Security, ML, Networking |
+| **CNCF**  | CKA, CKAD                              | CKS                             | —                        |
 
 :::tip Coming Soon
 Certification preparation guides are being developed. Check the [Roadmap](/reference/roadmap) for timeline.

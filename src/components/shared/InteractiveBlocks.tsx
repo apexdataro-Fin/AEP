@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback } from "react";
 
 // =============================================================================
 // Utility Types
@@ -107,8 +107,12 @@ export function CommonMistake({ mistake, correction }: { mistake: string; correc
     <div className="interactive-block common-mistake-block">
       <span className="block-icon">❌</span>
       <div className="block-content">
-        <p><strong>Common Mistake:</strong> {mistake}</p>
-        <p><strong>✅ Correct Approach:</strong> {correction}</p>
+        <p>
+          <strong>Common Mistake:</strong> {mistake}
+        </p>
+        <p>
+          <strong>✅ Correct Approach:</strong> {correction}
+        </p>
       </div>
     </div>
   );
@@ -117,7 +121,12 @@ export function CommonMistake({ mistake, correction }: { mistake: string; correc
 // =============================================================================
 // Debugging — Debugging scenario with diagnosis and solution
 // =============================================================================
-export function Debugging({ scenario, symptoms, diagnosis, solution }: {
+export function Debugging({
+  scenario,
+  symptoms,
+  diagnosis,
+  solution,
+}: {
   scenario: string;
   symptoms: string[];
   diagnosis: string;
@@ -127,11 +136,23 @@ export function Debugging({ scenario, symptoms, diagnosis, solution }: {
     <div className="interactive-block debugging-block">
       <span className="block-icon">🐛</span>
       <div className="block-content">
-        <p><strong>Scenario:</strong> {scenario}</p>
-        <p><strong>Symptoms:</strong></p>
-        <ul>{symptoms.map((s, i) => <li key={i}>{s}</li>)}</ul>
-        <p><strong>Diagnosis:</strong> {diagnosis}</p>
-        <p><strong>✅ Solution:</strong> {solution}</p>
+        <p>
+          <strong>Scenario:</strong> {scenario}
+        </p>
+        <p>
+          <strong>Symptoms:</strong>
+        </p>
+        <ul>
+          {symptoms.map((s, i) => (
+            <li key={i}>{s}</li>
+          ))}
+        </ul>
+        <p>
+          <strong>Diagnosis:</strong> {diagnosis}
+        </p>
+        <p>
+          <strong>✅ Solution:</strong> {solution}
+        </p>
       </div>
     </div>
   );
@@ -155,7 +176,11 @@ export function Exercise({ title, instructions }: { title: string; instructions:
 // =============================================================================
 // Challenge — Harder challenge
 // =============================================================================
-export function Challenge({ title, description, timeEstimate }: {
+export function Challenge({
+  title,
+  description,
+  timeEstimate,
+}: {
   title: string;
   description: string;
   timeEstimate?: string;
@@ -180,7 +205,7 @@ export function Quiz({ questions }: { questions: QuizQuestion[] }) {
   const [selected, setSelected] = useState<Record<number, number>>({});
 
   const toggleReveal = useCallback((idx: number) => {
-    setRevealed(prev => {
+    setRevealed((prev) => {
       const next = new Set(prev);
       next.has(idx) ? next.delete(idx) : next.add(idx);
       return next;
@@ -194,24 +219,30 @@ export function Quiz({ questions }: { questions: QuizQuestion[] }) {
         <strong className="block-title">Check Your Understanding</strong>
         {questions.map((q, qi) => (
           <div key={qi} className="quiz-question">
-            <p><strong>{qi + 1}. {q.question}</strong></p>
+            <p>
+              <strong>
+                {qi + 1}. {q.question}
+              </strong>
+            </p>
             <ol type="A">
               {q.options.map((opt, oi) => (
                 <li
                   key={oi}
-                  className={`quiz-option ${selected[qi] === oi ? 'selected' : ''} ${revealed.has(qi) && oi === q.correct ? 'correct' : ''}`}
-                  onClick={() => !revealed.has(qi) && setSelected(s => ({ ...s, [qi]: oi }))}
+                  className={`quiz-option ${selected[qi] === oi ? "selected" : ""} ${revealed.has(qi) && oi === q.correct ? "correct" : ""}`}
+                  onClick={() => !revealed.has(qi) && setSelected((s) => ({ ...s, [qi]: oi }))}
                 >
                   {opt}
                 </li>
               ))}
             </ol>
             <button className="quiz-reveal-btn" onClick={() => toggleReveal(qi)}>
-              {revealed.has(qi) ? 'Hide Answer' : 'Show Answer'}
+              {revealed.has(qi) ? "Hide Answer" : "Show Answer"}
             </button>
             {revealed.has(qi) && (
               <div className="quiz-answer">
-                <strong>✅ Correct: {String.fromCharCode(65 + q.correct)} — {q.options[q.correct]}</strong>
+                <strong>
+                  ✅ Correct: {String.fromCharCode(65 + q.correct)} — {q.options[q.correct]}
+                </strong>
                 {q.explanation && <p>{q.explanation}</p>}
               </div>
             )}
@@ -229,7 +260,9 @@ export function CodeBlock({ language, children }: { language?: string; children:
   return (
     <div className="interactive-block code-block-wrapper">
       {language && <span className="code-lang-tag">{language}</span>}
-      <pre className="code-block"><code className={language ? `language-${language}` : ''}>{children}</code></pre>
+      <pre className="code-block">
+        <code className={language ? `language-${language}` : ""}>{children}</code>
+      </pre>
     </div>
   );
 }
@@ -238,7 +271,7 @@ export function CodeBlock({ language, children }: { language?: string; children:
 // TerminalBlock — Terminal-style command block
 // =============================================================================
 export function TerminalBlock({ children }: { children: string }) {
-  const lines = children.trim().split('\n');
+  const lines = children.trim().split("\n");
   return (
     <div className="interactive-block terminal-block">
       <div className="terminal-header">
@@ -250,7 +283,7 @@ export function TerminalBlock({ children }: { children: string }) {
       <pre className="terminal-content">
         {lines.map((line, i) => (
           <div key={i} className="terminal-line">
-            {line.startsWith('$ ') || line.startsWith('# ') ? (
+            {line.startsWith("$ ") || line.startsWith("# ") ? (
               <>
                 <span className="terminal-prompt">{line.substring(0, 2)}</span>
                 <span>{line.substring(2)}</span>
@@ -271,7 +304,10 @@ export function TerminalBlock({ children }: { children: string }) {
 export function Flashcard({ front, back, hint }: { front: string; back: string; hint?: string }) {
   const [flipped, setFlipped] = useState(false);
   return (
-    <div className={`interactive-block flashcard ${flipped ? 'flipped' : ''}`} onClick={() => setFlipped(f => !f)}>
+    <div
+      className={`interactive-block flashcard ${flipped ? "flipped" : ""}`}
+      onClick={() => setFlipped((f) => !f)}
+    >
       <div className="flashcard-inner">
         <div className="flashcard-front">
           <span className="flashcard-label">Q:</span> {front}
@@ -349,7 +385,12 @@ export function CostNote({ children }: { children: React.ReactNode }) {
 // =============================================================================
 // InterviewQuestion — Interview preparation
 // =============================================================================
-export function InterviewQuestion({ question, expectedTopics, difficulty, careerLevel }: {
+export function InterviewQuestion({
+  question,
+  expectedTopics,
+  difficulty,
+  careerLevel,
+}: {
   question: string;
   expectedTopics: string[];
   difficulty: string;
@@ -360,9 +401,15 @@ export function InterviewQuestion({ question, expectedTopics, difficulty, career
       <span className="block-icon">🎤</span>
       <div className="block-content">
         <strong className="block-title">Interview Question</strong>
-        <span className="interview-meta">{difficulty} · {careerLevel}</span>
-        <p className="interview-question"><strong>Q:</strong> {question}</p>
-        <p><strong>Expected Topics:</strong> {expectedTopics.join(', ')}</p>
+        <span className="interview-meta">
+          {difficulty} · {careerLevel}
+        </span>
+        <p className="interview-question">
+          <strong>Q:</strong> {question}
+        </p>
+        <p>
+          <strong>Expected Topics:</strong> {expectedTopics.join(", ")}
+        </p>
       </div>
     </div>
   );
@@ -377,7 +424,11 @@ export function CheatSheet({ title, items }: { title: string; items: string[] })
       <span className="block-icon">📄</span>
       <div className="block-content">
         <strong className="block-title">{title}</strong>
-        <ul>{items.map((item, i) => <li key={i}>{item}</li>)}</ul>
+        <ul>
+          {items.map((item, i) => (
+            <li key={i}>{item}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );
@@ -386,7 +437,11 @@ export function CheatSheet({ title, items }: { title: string; items: string[] })
 // =============================================================================
 // DecisionPoint — Architecture decision helper
 // =============================================================================
-export function DecisionPoint({ options, criteria, recommendation }: {
+export function DecisionPoint({
+  options,
+  criteria,
+  recommendation,
+}: {
   options: string[];
   criteria: string[];
   recommendation: string;
@@ -396,9 +451,15 @@ export function DecisionPoint({ options, criteria, recommendation }: {
       <span className="block-icon">🤔</span>
       <div className="block-content">
         <strong className="block-title">Architecture Decision</strong>
-        <p><strong>Options:</strong> {options.join(' vs ')}</p>
-        <p><strong>Criteria:</strong> {criteria.join(', ')}</p>
-        <p><strong>✅ Recommendation:</strong> {recommendation}</p>
+        <p>
+          <strong>Options:</strong> {options.join(" vs ")}
+        </p>
+        <p>
+          <strong>Criteria:</strong> {criteria.join(", ")}
+        </p>
+        <p>
+          <strong>✅ Recommendation:</strong> {recommendation}
+        </p>
       </div>
     </div>
   );
@@ -429,21 +490,40 @@ export function AIExplanation({ topic, level }: { topic: string; level?: string 
       <span className="block-icon">🤖</span>
       <div className="block-content">
         <strong className="block-title">AI-Powered Explanation</strong>
-        <p>Use an AI assistant to get a {level || 'custom'} explanation of: <strong>{topic}</strong></p>
-        <p className="ai-block-hint">Copy the prompt from the <a href="/cloud-engineering/ai/prompt-library">AI Prompt Library</a>.</p>
+        <p>
+          Use an AI assistant to get a {level || "custom"} explanation of: <strong>{topic}</strong>
+        </p>
+        <p className="ai-block-hint">
+          Copy the prompt from the{" "}
+          <a href="/cloud-engineering/ai/prompt-library">AI Prompt Library</a>.
+        </p>
       </div>
     </div>
   );
 }
 
-export function AIQuiz({ topic, count, difficulty }: { topic: string; count?: number; difficulty?: string }) {
+export function AIQuiz({
+  topic,
+  count,
+  difficulty,
+}: {
+  topic: string;
+  count?: number;
+  difficulty?: string;
+}) {
   return (
     <div className="interactive-block ai-block">
       <span className="block-icon">🤖</span>
       <div className="block-content">
         <strong className="block-title">AI-Generated Quiz</strong>
-        <p>Generate {count || 5} {difficulty || 'adaptive'} quiz questions on: <strong>{topic}</strong></p>
-        <p className="ai-block-hint">Use the Quiz Master prompt from the <a href="/cloud-engineering/ai/prompt-library">AI Prompt Library</a>.</p>
+        <p>
+          Generate {count || 5} {difficulty || "adaptive"} quiz questions on:{" "}
+          <strong>{topic}</strong>
+        </p>
+        <p className="ai-block-hint">
+          Use the Quiz Master prompt from the{" "}
+          <a href="/cloud-engineering/ai/prompt-library">AI Prompt Library</a>.
+        </p>
       </div>
     </div>
   );
@@ -455,8 +535,13 @@ export function AIFlashcards({ topic, count }: { topic: string; count?: number }
       <span className="block-icon">🤖</span>
       <div className="block-content">
         <strong className="block-title">AI-Generated Flashcards</strong>
-        <p>Generate {count || 10} flashcards on: <strong>{topic}</strong></p>
-        <p className="ai-block-hint">Use the Flashcard Generator prompt from the <a href="/cloud-engineering/ai/prompt-library">AI Prompt Library</a>.</p>
+        <p>
+          Generate {count || 10} flashcards on: <strong>{topic}</strong>
+        </p>
+        <p className="ai-block-hint">
+          Use the Flashcard Generator prompt from the{" "}
+          <a href="/cloud-engineering/ai/prompt-library">AI Prompt Library</a>.
+        </p>
       </div>
     </div>
   );

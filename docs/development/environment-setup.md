@@ -15,11 +15,11 @@ ai_metadata:
 
 ## Recommended Tools
 
-| Tool | Purpose | Install |
-|---|---|---|
-| **VS Code** | Code editor | [code.visualstudio.com](https://code.visualstudio.com/) |
-| **nvm** | Node version manager | `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh \| bash` |
-| **GitHub CLI** | PR management | `brew install gh` (macOS) or [cli.github.com](https://cli.github.com/) |
+| Tool           | Purpose              | Install                                                                            |
+| -------------- | -------------------- | ---------------------------------------------------------------------------------- |
+| **VS Code**    | Code editor          | [code.visualstudio.com](https://code.visualstudio.com/)                            |
+| **nvm**        | Node version manager | `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh \| bash` |
+| **GitHub CLI** | PR management        | `brew install gh` (macOS) or [cli.github.com](https://cli.github.com/)             |
 
 ## VS Code Configuration
 

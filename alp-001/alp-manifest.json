@@ -12,7 +12,13 @@
     "subtitle": "From Zero to Production Cloud Engineer — A Complete Academy",
     "description": "The first official ARES Learning Package. A complete, production-grade Cloud Engineering academy covering Linux, Networking, Python, Azure, Docker, Kubernetes, Terraform, CI/CD, DevOps, GitOps, Platform Engineering, AI Infrastructure, and career preparation. Every lesson is interconnected through a knowledge graph, skill tree, and simulated career at CloudNova.",
     "domain": "cloud_engineering",
-    "domains": ["cloud_engineering", "devops", "platform_engineering", "ai_engineering", "cybersecurity"],
+    "domains": [
+      "cloud_engineering",
+      "devops",
+      "platform_engineering",
+      "ai_engineering",
+      "cybersecurity"
+    ],
     "language": "en",
     "languages": ["en"],
     "direction": "ltr",
@@ -20,11 +26,32 @@
     "estimated_hours": 600,
     "prerequisites": [],
     "keywords": [
-      "cloud", "azure", "kubernetes", "terraform", "docker", "devops", "linux",
-      "networking", "python", "gitops", "ai", "mlops", "sre", "platform-engineering",
-      "certification", "career"
+      "cloud",
+      "azure",
+      "kubernetes",
+      "terraform",
+      "docker",
+      "devops",
+      "linux",
+      "networking",
+      "python",
+      "gitops",
+      "ai",
+      "mlops",
+      "sre",
+      "platform-engineering",
+      "certification",
+      "career"
     ],
-    "tags": ["cloud-engineering", "azure", "devops", "kubernetes", "terraform", "career-ready", "certification-aligned"]
+    "tags": [
+      "cloud-engineering",
+      "azure",
+      "devops",
+      "kubernetes",
+      "terraform",
+      "career-ready",
+      "certification-aligned"
+    ]
   },
   "content": {
     "structure": {
@@ -34,47 +61,255 @@
       "total_projects": 10,
       "total_labs": 40,
       "modules": [
-        { "id": "01-foundations", "name": "Engineering Foundations", "path": "content/01-foundations", "lessons": 0, "order": 1 },
-        { "id": "02-linux", "name": "Linux Mastery", "path": "content/02-linux", "lessons": 0, "order": 2 },
-        { "id": "03-networking", "name": "Networking Deep Dive", "path": "content/03-networking", "lessons": 0, "order": 3 },
-        { "id": "04-security", "name": "Security & IAM", "path": "content/04-security", "lessons": 0, "order": 4 },
-        { "id": "05-python", "name": "Python for Cloud", "path": "content/05-python", "lessons": 0, "order": 5 },
-        { "id": "06-cloud-fundamentals", "name": "Cloud Fundamentals", "path": "content/06-cloud-fundamentals", "lessons": 0, "order": 6 },
-        { "id": "07-azure-core", "name": "Azure Core Services", "path": "content/07-azure-core", "lessons": 0, "order": 7 },
-        { "id": "08-containers", "name": "Container Fundamentals", "path": "content/08-containers", "lessons": 0, "order": 8 },
-        { "id": "09-docker", "name": "Docker in Production", "path": "content/09-docker", "lessons": 0, "order": 9 },
-        { "id": "10-kubernetes", "name": "Kubernetes Mastery", "path": "content/10-kubernetes", "lessons": 0, "order": 10 },
-        { "id": "11-helm", "name": "Helm & Package Management", "path": "content/11-helm", "lessons": 0, "order": 11 },
-        { "id": "12-terraform", "name": "Terraform & IaC", "path": "content/12-terraform", "lessons": 0, "order": 12 },
-        { "id": "13-git", "name": "Git Professional", "path": "content/13-git", "lessons": 0, "order": 13 },
-        { "id": "14-github", "name": "GitHub & Collaboration", "path": "content/14-github", "lessons": 0, "order": 14 },
-        { "id": "15-cicd", "name": "CI/CD Pipelines", "path": "content/15-cicd", "lessons": 0, "order": 15 },
-        { "id": "16-devops", "name": "DevOps Engineering", "path": "content/16-devops", "lessons": 0, "order": 16 },
-        { "id": "17-devsecops", "name": "DevSecOps", "path": "content/17-devsecops", "lessons": 0, "order": 17 },
-        { "id": "18-gitops", "name": "GitOps & ArgoCD", "path": "content/18-gitops", "lessons": 0, "order": 18 },
-        { "id": "19-platform", "name": "Platform Engineering", "path": "content/19-platform", "lessons": 0, "order": 19 },
-        { "id": "20-monitoring", "name": "Monitoring & Alerting", "path": "content/20-monitoring", "lessons": 0, "order": 20 },
-        { "id": "21-observability", "name": "Observability", "path": "content/21-observability", "lessons": 0, "order": 21 },
-        { "id": "22-finops", "name": "FinOps & Cost Optimization", "path": "content/22-finops", "lessons": 0, "order": 22 },
-        { "id": "23-identity", "name": "Identity & Access Management", "path": "content/23-identity", "lessons": 0, "order": 23 },
-        { "id": "24-azure-ai", "name": "Azure AI Services", "path": "content/24-azure-ai", "lessons": 0, "order": 24 },
-        { "id": "25-vector-db", "name": "Vector Databases", "path": "content/25-vector-db", "lessons": 0, "order": 25 },
-        { "id": "26-rag", "name": "Retrieval-Augmented Generation", "path": "content/26-rag", "lessons": 0, "order": 26 },
-        { "id": "27-ai-agents", "name": "AI Agents & Orchestration", "path": "content/27-ai-agents", "lessons": 0, "order": 27 },
-        { "id": "28-mlops", "name": "MLOps Fundamentals", "path": "content/28-mlops", "lessons": 0, "order": 28 },
-        { "id": "29-llmops", "name": "LLMOps", "path": "content/29-llmops", "lessons": 0, "order": 29 },
-        { "id": "30-ai-infra", "name": "AI Infrastructure", "path": "content/30-ai-infra", "lessons": 0, "order": 30 },
-        { "id": "31-portfolio", "name": "Portfolio Engineering", "path": "content/31-portfolio", "lessons": 0, "order": 31 },
-        { "id": "32-interview", "name": "Interview Preparation", "path": "content/32-interview", "lessons": 0, "order": 32 },
-        { "id": "33-career", "name": "Career Launch", "path": "content/33-career", "lessons": 0, "order": 33 }
+        {
+          "id": "01-foundations",
+          "name": "Engineering Foundations",
+          "path": "content/01-foundations",
+          "lessons": 0,
+          "order": 1
+        },
+        {
+          "id": "02-linux",
+          "name": "Linux Mastery",
+          "path": "content/02-linux",
+          "lessons": 0,
+          "order": 2
+        },
+        {
+          "id": "03-networking",
+          "name": "Networking Deep Dive",
+          "path": "content/03-networking",
+          "lessons": 0,
+          "order": 3
+        },
+        {
+          "id": "04-security",
+          "name": "Security & IAM",
+          "path": "content/04-security",
+          "lessons": 0,
+          "order": 4
+        },
+        {
+          "id": "05-python",
+          "name": "Python for Cloud",
+          "path": "content/05-python",
+          "lessons": 0,
+          "order": 5
+        },
+        {
+          "id": "06-cloud-fundamentals",
+          "name": "Cloud Fundamentals",
+          "path": "content/06-cloud-fundamentals",
+          "lessons": 0,
+          "order": 6
+        },
+        {
+          "id": "07-azure-core",
+          "name": "Azure Core Services",
+          "path": "content/07-azure-core",
+          "lessons": 0,
+          "order": 7
+        },
+        {
+          "id": "08-containers",
+          "name": "Container Fundamentals",
+          "path": "content/08-containers",
+          "lessons": 0,
+          "order": 8
+        },
+        {
+          "id": "09-docker",
+          "name": "Docker in Production",
+          "path": "content/09-docker",
+          "lessons": 0,
+          "order": 9
+        },
+        {
+          "id": "10-kubernetes",
+          "name": "Kubernetes Mastery",
+          "path": "content/10-kubernetes",
+          "lessons": 0,
+          "order": 10
+        },
+        {
+          "id": "11-helm",
+          "name": "Helm & Package Management",
+          "path": "content/11-helm",
+          "lessons": 0,
+          "order": 11
+        },
+        {
+          "id": "12-terraform",
+          "name": "Terraform & IaC",
+          "path": "content/12-terraform",
+          "lessons": 0,
+          "order": 12
+        },
+        {
+          "id": "13-git",
+          "name": "Git Professional",
+          "path": "content/13-git",
+          "lessons": 0,
+          "order": 13
+        },
+        {
+          "id": "14-github",
+          "name": "GitHub & Collaboration",
+          "path": "content/14-github",
+          "lessons": 0,
+          "order": 14
+        },
+        {
+          "id": "15-cicd",
+          "name": "CI/CD Pipelines",
+          "path": "content/15-cicd",
+          "lessons": 0,
+          "order": 15
+        },
+        {
+          "id": "16-devops",
+          "name": "DevOps Engineering",
+          "path": "content/16-devops",
+          "lessons": 0,
+          "order": 16
+        },
+        {
+          "id": "17-devsecops",
+          "name": "DevSecOps",
+          "path": "content/17-devsecops",
+          "lessons": 0,
+          "order": 17
+        },
+        {
+          "id": "18-gitops",
+          "name": "GitOps & ArgoCD",
+          "path": "content/18-gitops",
+          "lessons": 0,
+          "order": 18
+        },
+        {
+          "id": "19-platform",
+          "name": "Platform Engineering",
+          "path": "content/19-platform",
+          "lessons": 0,
+          "order": 19
+        },
+        {
+          "id": "20-monitoring",
+          "name": "Monitoring & Alerting",
+          "path": "content/20-monitoring",
+          "lessons": 0,
+          "order": 20
+        },
+        {
+          "id": "21-observability",
+          "name": "Observability",
+          "path": "content/21-observability",
+          "lessons": 0,
+          "order": 21
+        },
+        {
+          "id": "22-finops",
+          "name": "FinOps & Cost Optimization",
+          "path": "content/22-finops",
+          "lessons": 0,
+          "order": 22
+        },
+        {
+          "id": "23-identity",
+          "name": "Identity & Access Management",
+          "path": "content/23-identity",
+          "lessons": 0,
+          "order": 23
+        },
+        {
+          "id": "24-azure-ai",
+          "name": "Azure AI Services",
+          "path": "content/24-azure-ai",
+          "lessons": 0,
+          "order": 24
+        },
+        {
+          "id": "25-vector-db",
+          "name": "Vector Databases",
+          "path": "content/25-vector-db",
+          "lessons": 0,
+          "order": 25
+        },
+        {
+          "id": "26-rag",
+          "name": "Retrieval-Augmented Generation",
+          "path": "content/26-rag",
+          "lessons": 0,
+          "order": 26
+        },
+        {
+          "id": "27-ai-agents",
+          "name": "AI Agents & Orchestration",
+          "path": "content/27-ai-agents",
+          "lessons": 0,
+          "order": 27
+        },
+        {
+          "id": "28-mlops",
+          "name": "MLOps Fundamentals",
+          "path": "content/28-mlops",
+          "lessons": 0,
+          "order": 28
+        },
+        {
+          "id": "29-llmops",
+          "name": "LLMOps",
+          "path": "content/29-llmops",
+          "lessons": 0,
+          "order": 29
+        },
+        {
+          "id": "30-ai-infra",
+          "name": "AI Infrastructure",
+          "path": "content/30-ai-infra",
+          "lessons": 0,
+          "order": 30
+        },
+        {
+          "id": "31-portfolio",
+          "name": "Portfolio Engineering",
+          "path": "content/31-portfolio",
+          "lessons": 0,
+          "order": 31
+        },
+        {
+          "id": "32-interview",
+          "name": "Interview Preparation",
+          "path": "content/32-interview",
+          "lessons": 0,
+          "order": 32
+        },
+        {
+          "id": "33-career",
+          "name": "Career Launch",
+          "path": "content/33-career",
+          "lessons": 0,
+          "order": 33
+        }
       ]
     },
-    "assets": { "images": "assets/img/", "diagrams": "assets/diagrams/", "downloads": "assets/downloads/" },
+    "assets": {
+      "images": "assets/img/",
+      "diagrams": "assets/diagrams/",
+      "downloads": "assets/downloads/"
+    },
     "questions": { "source": "questions/", "bank_type": "question_bank" },
     "assessments": { "source": "assessments/", "types": ["quiz", "project", "exam", "lab"] }
   },
   "authors": [
-    { "id": "apexdataro-fin", "name": "Apex Data & AI", "roles": ["author", "instructor"], "organization": "Apex Data & AI", "url": "https://github.com/apexdataro-fin" }
+    {
+      "id": "apexdataro-fin",
+      "name": "Apex Data & AI",
+      "roles": ["author", "instructor"],
+      "organization": "Apex Data & AI",
+      "url": "https://github.com/apexdataro-fin"
+    }
   ],
   "config": {
     "theme": {
@@ -107,7 +342,12 @@
   "publishing": {
     "status": "draft",
     "version_history": [
-      { "version": "1.0.0", "date": "2026-07-15", "changes": "Initial ALP-001 architecture: 33 modules, knowledge graph, skill tree, project roadmap, career mode, AI integration", "author": "apexdataro-fin" }
+      {
+        "version": "1.0.0",
+        "date": "2026-07-15",
+        "changes": "Initial ALP-001 architecture: 33 modules, knowledge graph, skill tree, project roadmap, career mode, AI integration",
+        "author": "apexdataro-fin"
+      }
     ],
     "created_at": "2026-07-15T00:00:00Z",
     "updated_at": "2026-07-15T00:00:00Z",

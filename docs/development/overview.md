@@ -48,18 +48,18 @@ graph LR
 
 ## Available Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start development server |
-| `npm run build` | Build for production |
-| `npm run serve` | Serve production build locally |
-| `npm run typecheck` | Run TypeScript type checking |
-| `npm run lint` | Run ESLint |
-| `npm run lint:fix` | Auto-fix lint issues |
-| `npm run format` | Format code with Prettier |
-| `npm run format:check` | Check formatting |
-| `npm run validate` | Typecheck + format check |
-| `npm run clear` | Clear Docusaurus cache |
+| Command                | Description                    |
+| ---------------------- | ------------------------------ |
+| `npm run dev`          | Start development server       |
+| `npm run build`        | Build for production           |
+| `npm run serve`        | Serve production build locally |
+| `npm run typecheck`    | Run TypeScript type checking   |
+| `npm run lint`         | Run ESLint                     |
+| `npm run lint:fix`     | Auto-fix lint issues           |
+| `npm run format`       | Format code with Prettier      |
+| `npm run format:check` | Check formatting               |
+| `npm run validate`     | Typecheck + format check       |
+| `npm run clear`        | Clear Docusaurus cache         |
 
 ## Next Steps
 

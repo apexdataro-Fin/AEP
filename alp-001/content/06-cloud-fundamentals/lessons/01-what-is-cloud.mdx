@@ -75,7 +75,14 @@ review_schedule:
   retention_target: 0.90
 
 tags: [cloud-fundamentals, AZ-900, beginner, cloud-computing]
-search_keywords: [what is cloud computing, NIST cloud definition, cloud vs on-premises, cloud characteristics, AZ-900 fundamentals]
+search_keywords:
+  [
+    what is cloud computing,
+    NIST cloud definition,
+    cloud vs on-premises,
+    cloud characteristics,
+    AZ-900 fundamentals,
+  ]
 ---
 
 import Definition from "@site/src/components/Definition";
@@ -98,16 +105,19 @@ Before cloud, every company had to buy their own servers. Need more capacity? Bu
 
 The National Institute of Standards and Technology (NIST) defines cloud computing with 5 essential characteristics:
 
-| Characteristic | What It Means |
-|---|---|
-| **On-demand self-service** | Provision resources without human interaction with the provider |
-| **Broad network access** | Accessible over the internet from any device (laptop, phone, tablet) |
-| **Resource pooling** | Provider's resources are pooled to serve multiple customers (multi-tenant) |
-| **Rapid elasticity** | Scale up and down quickly — appear to have unlimited resources |
-| **Measured service** | Pay only for what you use; usage is metered, monitored, and reported |
+| Characteristic             | What It Means                                                              |
+| -------------------------- | -------------------------------------------------------------------------- |
+| **On-demand self-service** | Provision resources without human interaction with the provider            |
+| **Broad network access**   | Accessible over the internet from any device (laptop, phone, tablet)       |
+| **Resource pooling**       | Provider's resources are pooled to serve multiple customers (multi-tenant) |
+| **Rapid elasticity**       | Scale up and down quickly — appear to have unlimited resources             |
+| **Measured service**       | Pay only for what you use; usage is metered, monitored, and reported       |
 
 <Definition term="Cloud Computing">
-A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of configurable computing resources (networks, servers, storage, applications, and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction. — NIST SP 800-145
+  A model for enabling ubiquitous, convenient, on-demand network access to a shared pool of
+  configurable computing resources (networks, servers, storage, applications, and services) that can
+  be rapidly provisioned and released with minimal management effort or service provider
+  interaction. — NIST SP 800-145
 </Definition>
 
 :::
@@ -124,14 +134,14 @@ graph LR
         C --> D[Maintain: staff, power, cooling]
         D --> E[Depreciate over 3-5 years]
     end
-    
+
     subgraph "Cloud (OpEx)"
         F[Provision VMs: $0.10/hr] --> G[Running in 5 minutes]
         G --> H[Scale with demand]
         H --> I[Pay only for usage]
         I --> J[Zero depreciation]
     end
-    
+
     style A fill:#ef4444,stroke:#dc2626,color:#fff
     style F fill:#10b981,stroke:#059669,color:#fff
 ```
@@ -144,13 +154,13 @@ Cloud shifts IT spending from CapEx to OpEx — this is the fundamental economic
 
 ### Real Numbers: CloudNova's Migration
 
-| | On-Premises (Before) | Cloud (After) |
-|---|---|---|
-| Upfront cost | $850,000 | $0 |
-| Monthly cost | $12,000 (power, staffing, colo) | $8,400 (compute + storage + networking) |
-| Provisioning time | 4-8 weeks | 5 minutes |
-| Utilization | 22% | 65% (with auto-scaling) |
-| Disaster recovery | Manual, 48-hour RTO | Automated, 4-hour RTO |
+|                   | On-Premises (Before)            | Cloud (After)                           |
+| ----------------- | ------------------------------- | --------------------------------------- |
+| Upfront cost      | $850,000                        | $0                                      |
+| Monthly cost      | $12,000 (power, staffing, colo) | $8,400 (compute + storage + networking) |
+| Provisioning time | 4-8 weeks                       | 5 minutes                               |
+| Utilization       | 22%                             | 65% (with auto-scaling)                 |
+| Disaster recovery | Manual, 48-hour RTO             | Automated, 4-hour RTO                   |
 
 :::
 
@@ -192,29 +202,29 @@ graph TD
         B[Shared infrastructure]
         C[Pay-as-you-go]
     end
-    
+
     subgraph "Private Cloud"
         D[Your own datacenter]
         E[Dedicated infrastructure]
         F[Full control]
     end
-    
+
     subgraph "Hybrid Cloud"
         G[Public + Private]
         H[Best of both]
         I[Common in enterprise]
     end
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style D fill:#8b5cf6,stroke:#7c3aed,color:#fff
     style G fill:#10b981,stroke:#059669,color:#fff
 ```
 
-| Model | Who Uses It | Typical Use Case |
-|---|---|---|
-| **Public Cloud** | Startups, scale-ups, most companies | Web apps, SaaS platforms, data analytics |
-| **Private Cloud** | Regulated industries, government | Financial services, healthcare data |
-| **Hybrid Cloud** | Large enterprises | Keep sensitive data on-prem, burst to cloud for scale |
+| Model             | Who Uses It                         | Typical Use Case                                      |
+| ----------------- | ----------------------------------- | ----------------------------------------------------- |
+| **Public Cloud**  | Startups, scale-ups, most companies | Web apps, SaaS platforms, data analytics              |
+| **Private Cloud** | Regulated industries, government    | Financial services, healthcare data                   |
+| **Hybrid Cloud**  | Large enterprises                   | Keep sensitive data on-prem, burst to cloud for scale |
 
 CloudNova uses **public cloud** (Azure) — the right choice for a fast-growing SaaS company that needs to scale quickly without managing hardware.
 
@@ -256,7 +266,10 @@ Ask yourself these 5 questions before any cloud decision:
    - C) Physical hardware ownership
    - D) Measured service
 
-   <details><summary>Answer</summary>**C.** Cloud computing means you DON'T own the physical hardware — that's the point. The provider owns and manages it.</details>
+   <details>
+     <summary>Answer</summary>**C.** Cloud computing means you DON'T own the physical hardware —
+     that's the point. The provider owns and manages it.
+   </details>
 
 2. **A company buys servers for $200,000. Is this CapEx or OpEx?**
    - A) CapEx
@@ -264,7 +277,10 @@ Ask yourself these 5 questions before any cloud decision:
    - C) Neither
    - D) Both
 
-   <details><summary>Answer</summary>**A.** CapEx — capital expenditure. Upfront investment in physical assets. Cloud shifts this to OpEx — paying monthly for what you use.</details>
+   <details>
+     <summary>Answer</summary>**A.** CapEx — capital expenditure. Upfront investment in physical
+     assets. Cloud shifts this to OpEx — paying monthly for what you use.
+   </details>
 
 3. **CloudNova handles GDPR data. Should they use public or private cloud?**
    - A) Only private cloud — GDPR requires it
@@ -272,7 +288,11 @@ Ask yourself these 5 questions before any cloud decision:
    - C) Hybrid is always the answer
    - D) GDPR doesn't apply to cloud
 
-   <details><summary>Answer</summary>**B.** All major cloud providers are GDPR compliant. You still need to configure services correctly (encryption, data residency, access controls), but public cloud is absolutely viable for regulated workloads.</details>
+   <details>
+     <summary>Answer</summary>**B.** All major cloud providers are GDPR compliant. You still need to
+     configure services correctly (encryption, data residency, access controls), but public cloud is
+     absolutely viable for regulated workloads.
+   </details>
 
 ---
 

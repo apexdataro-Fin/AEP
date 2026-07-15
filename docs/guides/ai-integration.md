@@ -72,6 +72,7 @@ ai_metadata:
 ### Taxonomy
 
 The platform uses a controlled taxonomy (`metadata/taxonomy.json`) that defines:
+
 - All valid categories
 - All valid tags with descriptions
 - Difficulty level definitions
@@ -125,12 +126,12 @@ The AI tutor will consume:
 
 ## Data Formats
 
-| Format | Location | Purpose |
-|---|---|---|
-| **Frontmatter YAML** | Every MDX file | Inline content metadata |
-| **JSON Schema** | `schemas/` | Validation schemas |
-| **JSON Taxonomy** | `metadata/` | Controlled vocabularies |
-| **JSON Knowledge Graph** | `knowledge-graph/` | Concept relationships |
+| Format                   | Location           | Purpose                 |
+| ------------------------ | ------------------ | ----------------------- |
+| **Frontmatter YAML**     | Every MDX file     | Inline content metadata |
+| **JSON Schema**          | `schemas/`         | Validation schemas      |
+| **JSON Taxonomy**        | `metadata/`        | Controlled vocabularies |
+| **JSON Knowledge Graph** | `knowledge-graph/` | Concept relationships   |
 
 ## Consuming as an AI System
 

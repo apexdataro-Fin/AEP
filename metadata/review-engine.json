@@ -3,7 +3,14 @@
   "description": "Review Engine — active recall, spaced repetition, review scheduling, daily revision, weak topic detection, progress tracking, and adaptive learning.",
   "active_recall": {
     "description": "Active recall questions embedded in content. Learner actively retrieves knowledge rather than passively re-reading.",
-    "question_types": ["multiple_choice", "fill_in_blank", "short_answer", "diagram_labeling", "code_completion", "scenario_analysis"],
+    "question_types": [
+      "multiple_choice",
+      "fill_in_blank",
+      "short_answer",
+      "diagram_labeling",
+      "code_completion",
+      "scenario_analysis"
+    ],
     "delivery": "end_of_lesson | end_of_section | flashcard_deck",
     "scoring": { "correct": "moves to next interval", "incorrect": "resets interval to 1 day" }
   },
@@ -58,7 +65,18 @@
     "description": "Future: adapts content difficulty, pace, and recommendations based on learner performance.",
     "phase": "Phase 4",
     "model": "Bayesian Knowledge Tracing",
-    "inputs": ["quiz_scores", "completion_times", "hint_usage", "review_accuracy", "learning_style_preferences"],
-    "outputs": ["difficulty_adjustment", "content_recommendation", "pace_adjustment", "learning_path_update"]
+    "inputs": [
+      "quiz_scores",
+      "completion_times",
+      "hint_usage",
+      "review_accuracy",
+      "learning_style_preferences"
+    ],
+    "outputs": [
+      "difficulty_adjustment",
+      "content_recommendation",
+      "pace_adjustment",
+      "learning_path_update"
+    ]
   }
 }

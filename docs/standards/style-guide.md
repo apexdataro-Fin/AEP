@@ -39,7 +39,7 @@ function formatDuration(minutes: number): string {
 
 // ❌ Bad: Implicit types, abbreviations, magic values
 function fmt(m) {
-  return m >= 60 ? `${m/60}h` : `${m}m`;
+  return m >= 60 ? `${m / 60}h` : `${m}m`;
 }
 ```
 

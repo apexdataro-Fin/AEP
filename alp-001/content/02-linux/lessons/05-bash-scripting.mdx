@@ -42,7 +42,8 @@ active_recall:
     answer: "`set -e`: Exit immediately if any command fails. `set -u`: Treat unset variables as errors. `set -o pipefail`: A pipeline fails if any command in it fails (not just the last one)."
     difficulty: "medium"
 tags: [bash, scripting, automation, linux]
-search_keywords: [bash scripting tutorial, shell script automation, bash error handling, production scripts]
+search_keywords:
+  [bash scripting tutorial, shell script automation, bash error handling, production scripts]
 ---
 
 # Bash Scripting for Automation
@@ -97,12 +98,12 @@ log "Backup completed successfully."
 
 ### Key Patterns
 
-| Pattern | Code | Why |
-|---|---|---|
-| Fail fast | `set -euo pipefail` | Stop on first error |
-| Logging function | `log() { echo "[$(date)] $*"; }` | Timestamped, consistent logs |
-| Cleanup trap | `trap cleanup ERR` | Clean up even on failure |
-| Config at top | Variables at top of file | Easy to change, no magic numbers |
+| Pattern          | Code                             | Why                              |
+| ---------------- | -------------------------------- | -------------------------------- |
+| Fail fast        | `set -euo pipefail`              | Stop on first error              |
+| Logging function | `log() { echo "[$(date)] $*"; }` | Timestamped, consistent logs     |
+| Cleanup trap     | `trap cleanup ERR`               | Clean up even on failure         |
+| Config at top    | Variables at top of file         | Easy to change, no magic numbers |
 
 :::
 
@@ -138,7 +139,10 @@ done
    - C) The script sends an email
    - D) Nothing — bash scripts can't fail
 
-   <details><summary>Answer</summary>**B.** Without `set -e`, bash continues executing even after failures. This can cause catastrophic cascading errors. Always use `set -euo pipefail`.</details>
+   <details>
+     <summary>Answer</summary>**B.** Without `set -e`, bash continues executing even after failures.
+     This can cause catastrophic cascading errors. Always use `set -euo pipefail`.
+   </details>
 
 ---
 

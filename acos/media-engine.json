@@ -4,7 +4,10 @@
   "media_types": {
     "images": {
       "formats": ["png", "jpg", "jpeg", "webp", "avif", "svg", "gif"],
-      "responsive": { "breakpoints": [640, 768, 1024, 1400, 1920], "format": "automatically select best format" },
+      "responsive": {
+        "breakpoints": [640, 768, 1024, 1400, 1920],
+        "format": "automatically select best format"
+      },
       "lazy_loading": true,
       "alt_text_required": true,
       "captions": "optional markdown caption",
@@ -19,12 +22,32 @@
     "icons": {
       "description": "Icon system for the platform",
       "format": "SVG sprite or individual SVG files",
-      "categories": ["navigation", "content_types", "actions", "status", "domains", "certifications", "skills", "social"],
+      "categories": [
+        "navigation",
+        "content_types",
+        "actions",
+        "status",
+        "domains",
+        "certifications",
+        "skills",
+        "social"
+      ],
       "size": "24x24 default"
     },
     "mermaid": {
       "description": "Interactive diagrams rendered at build time",
-      "supported_types": ["flowchart", "sequence", "class", "state", "er", "gantt", "pie", "git", "mindmap", "timeline"],
+      "supported_types": [
+        "flowchart",
+        "sequence",
+        "class",
+        "state",
+        "er",
+        "gantt",
+        "pie",
+        "git",
+        "mindmap",
+        "timeline"
+      ],
       "dark_mode": "automatic theme switching",
       "interactive": "clickable nodes, zoom, pan (future)"
     },
@@ -42,7 +65,11 @@
     "interactive_diagrams": {
       "description": "Interactive, clickable diagrams for exploration",
       "technology": "Mermaid with click handlers or custom SVG/Canvas",
-      "examples": ["network topology explorer", "architecture decision tree", "concept relationship map"]
+      "examples": [
+        "network topology explorer",
+        "architecture decision tree",
+        "concept relationship map"
+      ]
     },
     "animations": {
       "description": "Animated explanations of complex concepts",
@@ -62,7 +89,13 @@
     "external_references": {
       "description": "Links to external resources",
       "types": ["documentation", "article", "video", "tool", "community"],
-      "metadata": { "url": "string", "title": "string", "source": "string", "access_date": "ISO date", "requires_account": "boolean" }
+      "metadata": {
+        "url": "string",
+        "title": "string",
+        "source": "string",
+        "access_date": "ISO date",
+        "requires_account": "boolean"
+      }
     }
   },
   "asset_management": {

@@ -13,31 +13,59 @@ interface NavigationBarProps {
 }
 
 const navItems: NavigationItem[] = [
-  { id: "learn", label: "Learn", href: "/curriculum", icon: "📚", children: [
-    { id: "books", label: "Books", href: "/books", icon: "📖" },
-    { id: "courses", label: "Courses", href: "/courses", icon: "🎓" },
-    { id: "paths", label: "Learning Paths", href: "/paths", icon: "🗺️" },
-    { id: "bootcamps", label: "Bootcamps", href: "/bootcamps", icon: "🚀" },
-  ]},
-  { id: "practice", label: "Practice", href: "/labs", icon: "🧪", children: [
-    { id: "labs", label: "Labs", href: "/labs", icon: "🧪" },
-    { id: "projects", label: "Projects", href: "/projects", icon: "🛠️" },
-    { id: "simulators", label: "Simulators", href: "/simulators", icon: "⚡" },
-  ]},
-  { id: "grow", label: "Grow", href: "/career", icon: "📈", children: [
-    { id: "career", label: "Career Tracks", href: "/career", icon: "👔" },
-    { id: "certifications", label: "Certifications", href: "/certifications", icon: "📜" },
-    { id: "skills", label: "Skill Tree", href: "/skills", icon: "🎯" },
-  ]},
-  { id: "reference", label: "Reference", href: "/reference", icon: "📖", children: [
-    { id: "glossary", label: "Glossary", href: "/glossary", icon: "📕" },
-    { id: "technologies", label: "Technologies", href: "/technologies", icon: "💻" },
-    { id: "kb", label: "Knowledge Base", href: "/knowledge-base", icon: "🧠" },
-  ]},
+  {
+    id: "learn",
+    label: "Learn",
+    href: "/curriculum",
+    icon: "📚",
+    children: [
+      { id: "books", label: "Books", href: "/books", icon: "📖" },
+      { id: "courses", label: "Courses", href: "/courses", icon: "🎓" },
+      { id: "paths", label: "Learning Paths", href: "/paths", icon: "🗺️" },
+      { id: "bootcamps", label: "Bootcamps", href: "/bootcamps", icon: "🚀" },
+    ],
+  },
+  {
+    id: "practice",
+    label: "Practice",
+    href: "/labs",
+    icon: "🧪",
+    children: [
+      { id: "labs", label: "Labs", href: "/labs", icon: "🧪" },
+      { id: "projects", label: "Projects", href: "/projects", icon: "🛠️" },
+      { id: "simulators", label: "Simulators", href: "/simulators", icon: "⚡" },
+    ],
+  },
+  {
+    id: "grow",
+    label: "Grow",
+    href: "/career",
+    icon: "📈",
+    children: [
+      { id: "career", label: "Career Tracks", href: "/career", icon: "👔" },
+      { id: "certifications", label: "Certifications", href: "/certifications", icon: "📜" },
+      { id: "skills", label: "Skill Tree", href: "/skills", icon: "🎯" },
+    ],
+  },
+  {
+    id: "reference",
+    label: "Reference",
+    href: "/reference",
+    icon: "📖",
+    children: [
+      { id: "glossary", label: "Glossary", href: "/glossary", icon: "📕" },
+      { id: "technologies", label: "Technologies", href: "/technologies", icon: "💻" },
+      { id: "kb", label: "Knowledge Base", href: "/knowledge-base", icon: "🧠" },
+    ],
+  },
   { id: "docs", label: "Docs", href: "/architecture", icon: "📋" },
 ];
 
-export default function NavigationBar({ breadcrumbs, recentItems, onSearchOpen }: NavigationBarProps) {
+export default function NavigationBar({
+  breadcrumbs,
+  recentItems,
+  onSearchOpen,
+}: NavigationBarProps) {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const handleMouseEnter = useCallback((id: string) => setOpenDropdown(id), []);
@@ -49,14 +77,31 @@ export default function NavigationBar({ breadcrumbs, recentItems, onSearchOpen }
         {/* Breadcrumbs */}
         {breadcrumbs && breadcrumbs.length > 0 && (
           <nav aria-label="Breadcrumb" className="aep-breadcrumbs">
-            <ol style={{ display: "flex", listStyle: "none", padding: 0, margin: 0, gap: "0.5rem", flexWrap: "wrap", fontSize: "0.8rem" }}>
+            <ol
+              style={{
+                display: "flex",
+                listStyle: "none",
+                padding: 0,
+                margin: 0,
+                gap: "0.5rem",
+                flexWrap: "wrap",
+                fontSize: "0.8rem",
+              }}
+            >
               {breadcrumbs.map((crumb, i) => (
-                <li key={crumb.href} style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <li
+                  key={crumb.href}
+                  style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+                >
                   {i > 0 && <span style={{ color: "var(--aep-text-muted)" }}>/</span>}
                   {crumb.isCurrent ? (
-                    <span style={{ color: "var(--aep-text-primary)", fontWeight: 600 }}>{crumb.label}</span>
+                    <span style={{ color: "var(--aep-text-primary)", fontWeight: 600 }}>
+                      {crumb.label}
+                    </span>
                   ) : (
-                    <Link to={crumb.href} style={{ color: "var(--aep-text-secondary)" }}>{crumb.label}</Link>
+                    <Link to={crumb.href} style={{ color: "var(--aep-text-secondary)" }}>
+                      {crumb.label}
+                    </Link>
                   )}
                 </li>
               ))}
@@ -87,7 +132,12 @@ export default function NavigationBar({ breadcrumbs, recentItems, onSearchOpen }
               {item.children && openDropdown === item.id && (
                 <div className="aep-nav-dropdown" role="menu">
                   {item.children.map((child) => (
-                    <Link key={child.id} to={child.href} className="aep-nav-dropdown-item" role="menuitem">
+                    <Link
+                      key={child.id}
+                      to={child.href}
+                      className="aep-nav-dropdown-item"
+                      role="menuitem"
+                    >
                       <span>{child.icon}</span>
                       <span>{child.label}</span>
                     </Link>
@@ -108,7 +158,11 @@ export default function NavigationBar({ breadcrumbs, recentItems, onSearchOpen }
           >
             🔍
           </button>
-          <Link to="/dashboard" className="aep-btn aep-btn--ghost aep-btn--icon" aria-label="Dashboard">
+          <Link
+            to="/dashboard"
+            className="aep-btn aep-btn--ghost aep-btn--icon"
+            aria-label="Dashboard"
+          >
             📊
           </Link>
         </div>

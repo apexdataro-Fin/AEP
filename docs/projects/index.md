@@ -17,13 +17,13 @@ Real-world cloud engineering projects. Build, deploy, and learn by doing.
 
 ## Project Categories
 
-| Category | Example Projects |
-|---|---|
-| **Web Applications** | Deploy a full-stack app, set up CI/CD |
+| Category             | Example Projects                          |
+| -------------------- | ----------------------------------------- |
+| **Web Applications** | Deploy a full-stack app, set up CI/CD     |
 | **Data Engineering** | Build a data pipeline, set up a data lake |
-| **Infrastructure** | Design a multi-region VPC, set up VPN |
-| **Security** | Implement IAM policies, set up WAF |
-| **Observability** | Build a monitoring stack, set up alerting |
+| **Infrastructure**   | Design a multi-region VPC, set up VPN     |
+| **Security**         | Implement IAM policies, set up WAF        |
+| **Observability**    | Build a monitoring stack, set up alerting |
 
 :::tip Coming Soon
 Project content is being developed. Check the [Roadmap](/reference/roadmap) for timeline.

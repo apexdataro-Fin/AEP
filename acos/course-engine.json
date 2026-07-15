@@ -3,7 +3,16 @@
   "description": "Course Engine — complete course architecture: modules, units, lessons, projects, labs, assignments, assessments, exams, certificates, prerequisites, completion tracking.",
   "course_structure": {
     "hierarchy": ["course", "module", "unit", "lesson"],
-    "components": ["introduction", "lessons", "projects", "labs", "assignments", "quizzes", "exams", "certificate"]
+    "components": [
+      "introduction",
+      "lessons",
+      "projects",
+      "labs",
+      "assignments",
+      "quizzes",
+      "exams",
+      "certificate"
+    ]
   },
   "course_schema": {
     "id": "string (alp-course-*)",
@@ -77,9 +86,7 @@
           "title": "string",
           "after_module": "string (module id)",
           "type": "written | code | project | presentation",
-          "rubric": [
-            { "criterion": "string", "max_points": "number" }
-          ]
+          "rubric": [{ "criterion": "string", "max_points": "number" }]
         }
       ],
       "exams": {
@@ -136,7 +143,12 @@
     "id": "string (alp-collection-*)",
     "title": "string",
     "items": [
-      { "id": "string", "type": "course | book | micro-course", "order": "integer", "required": "boolean" }
+      {
+        "id": "string",
+        "type": "course | book | micro-course",
+        "order": "integer",
+        "required": "boolean"
+      }
     ],
     "completion_criteria": { "required_items": "integer", "optional_items": "integer" }
   }

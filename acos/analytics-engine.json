@@ -9,7 +9,10 @@
         "views": { "type": "counter", "description": "Total page views" },
         "unique_visitors": { "type": "counter", "description": "Distinct learner views" },
         "avg_time_on_page": { "type": "gauge", "description": "Average time spent per page" },
-        "bounce_rate": { "type": "percentage", "description": "Percentage of single-page sessions" },
+        "bounce_rate": {
+          "type": "percentage",
+          "description": "Percentage of single-page sessions"
+        },
         "scroll_depth": { "type": "percentage", "description": "How far learners scroll" },
         "return_rate": { "type": "percentage", "description": "Learners who return to content" },
         "shares": { "type": "counter", "description": "Content shares and referrals" },
@@ -21,8 +24,14 @@
     "completion": {
       "description": "Content completion and progress tracking",
       "metrics": {
-        "completion_rate": { "type": "percentage", "description": "Percentage of learners who complete" },
-        "completion_time": { "type": "distribution", "description": "Time distribution to complete" },
+        "completion_rate": {
+          "type": "percentage",
+          "description": "Percentage of learners who complete"
+        },
+        "completion_time": {
+          "type": "distribution",
+          "description": "Time distribution to complete"
+        },
         "drop_off_point": { "type": "string", "description": "Where learners tend to stop" },
         "skip_rate": { "type": "percentage", "description": "Sections frequently skipped" },
         "revisit_rate": { "type": "percentage", "description": "Sections frequently revisited" }
@@ -58,16 +67,31 @@
         "zero_result_searches": { "type": "counter", "description": "Searches with no results" },
         "click_through_rate": { "type": "percentage", "description": "Search result CTR" },
         "avg_position": { "type": "number", "description": "Average search result position" },
-        "query_to_content": { "type": "mapping", "description": "Which queries lead to which content" }
+        "query_to_content": {
+          "type": "mapping",
+          "description": "Which queries lead to which content"
+        }
       }
     },
     "question_analytics": {
       "description": "Question and assessment analytics",
       "metrics": {
-        "question_difficulty_index": { "type": "number", "description": "Measured question difficulty" },
-        "discrimination_index": { "type": "number", "description": "How well question distinguishes ability" },
-        "distractor_analysis": { "type": "distribution", "description": "Which wrong answers are chosen" },
-        "time_to_answer": { "type": "distribution", "description": "Time distribution per question" },
+        "question_difficulty_index": {
+          "type": "number",
+          "description": "Measured question difficulty"
+        },
+        "discrimination_index": {
+          "type": "number",
+          "description": "How well question distinguishes ability"
+        },
+        "distractor_analysis": {
+          "type": "distribution",
+          "description": "Which wrong answers are chosen"
+        },
+        "time_to_answer": {
+          "type": "distribution",
+          "description": "Time distribution per question"
+        },
         "skip_rate": { "type": "percentage", "description": "How often question is skipped" },
         "common_mistakes": { "type": "ranking", "description": "Most frequent wrong answers" }
       }

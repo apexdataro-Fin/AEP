@@ -1,6 +1,6 @@
 /**
  * ARES EDU PLATFORM (AEP) — Platform Experience Types
- * 
+ *
  * Domain-agnostic types for the reusable Learning Operating System.
  * No subject-specific types. Supports any educational domain.
  */
@@ -10,19 +10,44 @@
 // ============================================================
 
 export type EducationDomain =
-  | "cloud-engineering" | "cybersecurity" | "software-engineering"
-  | "ai-engineering" | "data-engineering" | "platform-engineering"
-  | "networking" | "linux" | "python" | "web-development"
-  | "mobile-development" | "game-development" | "electronics"
-  | "embedded-systems" | "robotics" | "digital-marketing"
-  | "business" | "languages" | "mathematics" | "science"
+  | "cloud-engineering"
+  | "cybersecurity"
+  | "software-engineering"
+  | "ai-engineering"
+  | "data-engineering"
+  | "platform-engineering"
+  | "networking"
+  | "linux"
+  | "python"
+  | "web-development"
+  | "mobile-development"
+  | "game-development"
+  | "electronics"
+  | "embedded-systems"
+  | "robotics"
+  | "digital-marketing"
+  | "business"
+  | "languages"
+  | "mathematics"
+  | "science"
   | string; // extensible
 
 export type ContentCategory =
-  | "book" | "course" | "learning-path" | "bootcamp"
-  | "documentation" | "reference-library" | "interactive-lab"
-  | "certification" | "career-track" | "knowledge-base"
-  | "university" | "training-program" | "professional-academy";
+  | "book"
+  | "course"
+  | "learning-path"
+  | "bootcamp"
+  | "documentation"
+  | "reference-library"
+  | "interactive-lab"
+  | "certification"
+  | "career-track"
+  | "knowledge-base"
+  | "university"
+  | "training-program"
+  | "professional-academy"
+  | "project"
+  | "lab";
 
 export type ContentStatus = "draft" | "review" | "published" | "deprecated" | "archived";
 
@@ -39,7 +64,21 @@ export interface UserProfile {
   joinedAt: string;
   preferences: UserPreferences;
   learningGoals: LearningGoal[];
-  enrolledContent: string[]; // content IDs
+  enrolledContent: string[];
+}
+
+export interface LearningGoal {
+  id: string;
+  title: string;
+  description?: string;
+  targetDate?: string;
+  progress: number;
+  completed: boolean;
+  category: "certification" | "skill" | "project" | "career" | "custom";
+}
+
+export interface UserPreferences {
+  // content IDs
 }
 
 export interface UserPreferences {
@@ -244,7 +283,14 @@ export interface ContinueLearningItem {
 
 export interface ActivityItem {
   id: string;
-  type: "lesson_completed" | "project_completed" | "lab_completed" | "achievement_earned" | "course_enrolled" | "bookmark_added" | "note_created";
+  type:
+    | "lesson_completed"
+    | "project_completed"
+    | "lab_completed"
+    | "achievement_earned"
+    | "course_enrolled"
+    | "bookmark_added"
+    | "note_created";
   title: string;
   description?: string;
   timestamp: string;

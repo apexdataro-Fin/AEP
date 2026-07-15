@@ -6,13 +6,23 @@
     "author": {
       "id": "author",
       "description": "Primary content creator",
-      "permissions": ["create_content", "edit_own_content", "submit_for_review", "view_own_analytics"],
+      "permissions": [
+        "create_content",
+        "edit_own_content",
+        "submit_for_review",
+        "view_own_analytics"
+      ],
       "metadata": {
         "name": "string",
         "bio": "string",
         "avatar": "string",
         "website": "string",
-        "social": { "github": "string", "linkedin": "string", "twitter": "string", "blog": "string" },
+        "social": {
+          "github": "string",
+          "linkedin": "string",
+          "twitter": "string",
+          "blog": "string"
+        },
         "expertise": "string[]",
         "certifications": "string[]",
         "years_experience": "number",
@@ -29,7 +39,13 @@
     "editor": {
       "id": "editor",
       "description": "Reviews and improves content quality",
-      "permissions": ["review_content", "edit_any_content", "approve_content", "reject_content", "assign_reviewers"],
+      "permissions": [
+        "review_content",
+        "edit_any_content",
+        "approve_content",
+        "reject_content",
+        "assign_reviewers"
+      ],
       "metadata": {
         "name": "string",
         "bio": "string",
@@ -40,7 +56,12 @@
     "reviewer": {
       "id": "reviewer",
       "description": "Technical or subject matter reviewer",
-      "permissions": ["review_assigned_content", "leave_feedback", "approve_assigned", "reject_assigned"],
+      "permissions": [
+        "review_assigned_content",
+        "leave_feedback",
+        "approve_assigned",
+        "reject_assigned"
+      ],
       "metadata": {
         "name": "string",
         "expertise": "string[]",
@@ -186,8 +207,16 @@
         { "step": "draft", "actor": "author", "description": "Initial content creation" },
         { "step": "self_review", "actor": "author", "description": "Author reviews own content" },
         { "step": "submit", "actor": "author", "description": "Submit for review" },
-        { "step": "editor_review", "actor": "editor", "description": "Editor reviews content quality" },
-        { "step": "technical_review", "actor": "reviewer", "description": "Technical accuracy check" },
+        {
+          "step": "editor_review",
+          "actor": "editor",
+          "description": "Editor reviews content quality"
+        },
+        {
+          "step": "technical_review",
+          "actor": "reviewer",
+          "description": "Technical accuracy check"
+        },
         { "step": "revision", "actor": "author", "description": "Address review feedback" },
         { "step": "final_approval", "actor": "editor", "description": "Final sign-off" },
         { "step": "publish", "actor": "editor", "description": "Content goes live" }
@@ -204,7 +233,11 @@
     },
     "update_workflow": {
       "steps": [
-        { "step": "detect_outdated", "actor": "system", "description": "System flags outdated content" },
+        {
+          "step": "detect_outdated",
+          "actor": "system",
+          "description": "System flags outdated content"
+        },
         { "step": "assign_update", "actor": "maintainer", "description": "Assign for update" },
         { "step": "update", "actor": "author", "description": "Update content" },
         { "step": "review_update", "actor": "reviewer", "description": "Review changes" },
@@ -216,7 +249,11 @@
         { "step": "flag", "actor": "any", "description": "Flag content for deprecation" },
         { "step": "review", "actor": "editor", "description": "Review deprecation request" },
         { "step": "notify", "actor": "system", "description": "Notify affected learners" },
-        { "step": "redirect", "actor": "editor", "description": "Set up redirects to replacement content" },
+        {
+          "step": "redirect",
+          "actor": "editor",
+          "description": "Set up redirects to replacement content"
+        },
         { "step": "deprecate", "actor": "maintainer", "description": "Mark as deprecated" },
         { "step": "archive", "actor": "system", "description": "Auto-archive after grace period" }
       ]

@@ -20,7 +20,6 @@ This module is part of the [ALP-001 Cloud Engineering Foundation](../../alp-mani
 
 Content for this module will be created in subsequent phases. See the [learning path specification](../../learning-path.json) for the complete module description and learning objectives.
 
-
 ---
 
 **Previous:** [Module 08 — Containers](../08-containers)

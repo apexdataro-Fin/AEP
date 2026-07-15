@@ -3,7 +3,15 @@
   "description": "Book Engine — complete book architecture supporting volumes, parts, chapters, sections, lessons, appendices, glossary, references, indexes, version history, authors, contributors, translations, book metadata, themes, assets, search, and analytics.",
   "book_structure": {
     "hierarchy": ["book", "volume", "part", "chapter", "section", "lesson", "page"],
-    "supplementary": ["preface", "introduction", "appendices", "glossary", "references", "index", "colophon"]
+    "supplementary": [
+      "preface",
+      "introduction",
+      "appendices",
+      "glossary",
+      "references",
+      "index",
+      "colophon"
+    ]
   },
   "book_schema": {
     "id": "string (kebab-case, alp-book-*)",
@@ -92,8 +100,20 @@
     }
   },
   "book_metadata": {
-    "title_page": { "title": "string", "subtitle": "string", "authors": "string", "edition": "string", "publisher": "string", "year": "integer" },
-    "copyright_page": { "copyright": "string", "license": "string", "isbn": "string", "disclaimer": "string" },
+    "title_page": {
+      "title": "string",
+      "subtitle": "string",
+      "authors": "string",
+      "edition": "string",
+      "publisher": "string",
+      "year": "integer"
+    },
+    "copyright_page": {
+      "copyright": "string",
+      "license": "string",
+      "isbn": "string",
+      "disclaimer": "string"
+    },
     "dedication": "string",
     "acknowledgments": "string",
     "about_authors": [{ "name": "string", "bio": "string", "photo": "string", "social": {} }]
@@ -143,9 +163,15 @@
   },
   "analytics": {
     "metrics": [
-      "total_readers", "completion_rate", "average_reading_time",
-      "most_read_chapter", "most_skipped_chapter", "search_frequency",
-      "rating", "review_count", "difficulty_rating"
+      "total_readers",
+      "completion_rate",
+      "average_reading_time",
+      "most_read_chapter",
+      "most_skipped_chapter",
+      "search_frequency",
+      "rating",
+      "review_count",
+      "difficulty_rating"
     ]
   }
 }

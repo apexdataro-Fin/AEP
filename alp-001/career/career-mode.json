@@ -64,11 +64,41 @@
       }
     },
     "colleagues": [
-      { "name": "David Kim", "role": "Senior Cloud Engineer", "team": "infrastructure", "personality": "Patient mentor, loves diagrams, always asks 'why?'", "mentor_for": "junior" },
-      { "name": "Emma Wilson", "role": "Cloud Engineer", "team": "infrastructure", "personality": "Automation enthusiast, writes Terraform in her sleep", "mentor_for": "junior" },
-      { "name": "James Okafor", "role": "Staff SRE", "team": "sre", "personality": "Calm under pressure, incident commander, runs blameless postmortems", "mentor_for": "senior" },
-      { "name": "Lena Bergström", "role": "Platform Engineer", "team": "developer_experience", "personality": "Backstage expert, golden-paths advocate, developer empathy", "mentor_for": "cloud_engineer" },
-      { "name": "Raj Mehta", "role": "Cloud AI Architect", "team": "ai_platform", "personality": "AI whisperer, loves vector search, always pushing the platform forward", "mentor_for": "principal" }
+      {
+        "name": "David Kim",
+        "role": "Senior Cloud Engineer",
+        "team": "infrastructure",
+        "personality": "Patient mentor, loves diagrams, always asks 'why?'",
+        "mentor_for": "junior"
+      },
+      {
+        "name": "Emma Wilson",
+        "role": "Cloud Engineer",
+        "team": "infrastructure",
+        "personality": "Automation enthusiast, writes Terraform in her sleep",
+        "mentor_for": "junior"
+      },
+      {
+        "name": "James Okafor",
+        "role": "Staff SRE",
+        "team": "sre",
+        "personality": "Calm under pressure, incident commander, runs blameless postmortems",
+        "mentor_for": "senior"
+      },
+      {
+        "name": "Lena Bergström",
+        "role": "Platform Engineer",
+        "team": "developer_experience",
+        "personality": "Backstage expert, golden-paths advocate, developer empathy",
+        "mentor_for": "cloud_engineer"
+      },
+      {
+        "name": "Raj Mehta",
+        "role": "Cloud AI Architect",
+        "team": "ai_platform",
+        "personality": "AI whisperer, loves vector search, always pushing the platform forward",
+        "mentor_for": "principal"
+      }
     ]
   },
   "career_progression": [
@@ -88,10 +118,30 @@
         "Participate in on-call shadowing"
       ],
       "tickets": [
-        { "id": "ticket-001", "title": "Provision a new development VM", "priority": "P3", "module": "07-azure-core" },
-        { "id": "ticket-002", "title": "Rotate expired TLS certificates", "priority": "P2", "module": "03-networking" },
-        { "id": "ticket-003", "title": "Add monitoring to the inventory service", "priority": "P3", "module": "20-monitoring" },
-        { "id": "ticket-004", "title": "Fix broken CI pipeline for auth-service", "priority": "P3", "module": "15-cicd" }
+        {
+          "id": "ticket-001",
+          "title": "Provision a new development VM",
+          "priority": "P3",
+          "module": "07-azure-core"
+        },
+        {
+          "id": "ticket-002",
+          "title": "Rotate expired TLS certificates",
+          "priority": "P2",
+          "module": "03-networking"
+        },
+        {
+          "id": "ticket-003",
+          "title": "Add monitoring to the inventory service",
+          "priority": "P3",
+          "module": "20-monitoring"
+        },
+        {
+          "id": "ticket-004",
+          "title": "Fix broken CI pipeline for auth-service",
+          "priority": "P3",
+          "module": "15-cicd"
+        }
       ],
       "promotion_criteria": "Complete AZ-900 certification and Project 003 (CloudNova Automation Engine)"
     },
@@ -111,9 +161,24 @@
         "Lead small infrastructure projects"
       ],
       "tickets": [
-        { "id": "ticket-005", "title": "Containerize the billing service", "priority": "P2", "module": "09-docker" },
-        { "id": "ticket-006", "title": "Build a Terraform module for AKS", "priority": "P2", "module": "12-terraform" },
-        { "id": "ticket-007", "title": "Investigate slow deployment times", "priority": "P2", "module": "15-cicd" }
+        {
+          "id": "ticket-005",
+          "title": "Containerize the billing service",
+          "priority": "P2",
+          "module": "09-docker"
+        },
+        {
+          "id": "ticket-006",
+          "title": "Build a Terraform module for AKS",
+          "priority": "P2",
+          "module": "12-terraform"
+        },
+        {
+          "id": "ticket-007",
+          "title": "Investigate slow deployment times",
+          "priority": "P2",
+          "module": "15-cicd"
+        }
       ],
       "promotion_criteria": "Complete AZ-104 certification and Project 006 (CloudNova Kubernetes Production Cluster)"
     },
@@ -134,10 +199,30 @@
         "Write architecture decision records (ADRs)"
       ],
       "tickets": [
-        { "id": "ticket-008", "title": "Design GitOps migration strategy", "priority": "P1", "module": "18-gitops" },
-        { "id": "ticket-009", "title": "Lead SEV2 incident: API gateway latency spike", "priority": "P1", "module": "21-observability" },
-        { "id": "ticket-010", "title": "Reduce cloud spend by 20% this quarter", "priority": "P1", "module": "22-finops" },
-        { "id": "ticket-011", "title": "Architecture review for new multi-region deployment", "priority": "P2", "module": "19-platform" }
+        {
+          "id": "ticket-008",
+          "title": "Design GitOps migration strategy",
+          "priority": "P1",
+          "module": "18-gitops"
+        },
+        {
+          "id": "ticket-009",
+          "title": "Lead SEV2 incident: API gateway latency spike",
+          "priority": "P1",
+          "module": "21-observability"
+        },
+        {
+          "id": "ticket-010",
+          "title": "Reduce cloud spend by 20% this quarter",
+          "priority": "P1",
+          "module": "22-finops"
+        },
+        {
+          "id": "ticket-011",
+          "title": "Architecture review for new multi-region deployment",
+          "priority": "P2",
+          "module": "19-platform"
+        }
       ],
       "promotion_criteria": "Complete AZ-400 certification and Project 008 (CloudNova Observability Platform)"
     },
@@ -158,9 +243,24 @@
         "Set engineering standards across the organization"
       ],
       "tickets": [
-        { "id": "ticket-012", "title": "Architect the AI inference platform", "priority": "P1", "module": "30-ai-infra" },
-        { "id": "ticket-013", "title": "Design zero-trust identity model", "priority": "P1", "module": "23-identity" },
-        { "id": "ticket-014", "title": "Evaluate LLM deployment options (Azure OpenAI vs self-hosted)", "priority": "P2", "module": "29-llmops" }
+        {
+          "id": "ticket-012",
+          "title": "Architect the AI inference platform",
+          "priority": "P1",
+          "module": "30-ai-infra"
+        },
+        {
+          "id": "ticket-013",
+          "title": "Design zero-trust identity model",
+          "priority": "P1",
+          "module": "23-identity"
+        },
+        {
+          "id": "ticket-014",
+          "title": "Evaluate LLM deployment options (Azure OpenAI vs self-hosted)",
+          "priority": "P2",
+          "module": "29-llmops"
+        }
       ],
       "promotion_criteria": "Complete AI-102 certification and Project 009 (CloudNova AI Inference Platform)"
     },
@@ -180,8 +280,18 @@
         "Shape the engineering culture and values"
       ],
       "tickets": [
-        { "id": "ticket-015", "title": "Define 3-year cloud platform strategy", "priority": "P1", "module": "33-career" },
-        { "id": "ticket-016", "title": "Present CloudNova platform at KubeCon", "priority": "P2", "module": "31-portfolio" }
+        {
+          "id": "ticket-015",
+          "title": "Define 3-year cloud platform strategy",
+          "priority": "P1",
+          "module": "33-career"
+        },
+        {
+          "id": "ticket-016",
+          "title": "Present CloudNova platform at KubeCon",
+          "priority": "P2",
+          "module": "31-portfolio"
+        }
       ],
       "promotion_criteria": "Complete Project 010 (CloudNova Production Platform capstone)"
     }
@@ -195,7 +305,11 @@
       "affected_services": ["logistics-api", "order-service", "postgres-primary"],
       "carer_level": "cloud_engineer",
       "module": "10-kubernetes",
-      "key_skills": ["kubernetes-troubleshooting", "database-connection-management", "on-call-response"]
+      "key_skills": [
+        "kubernetes-troubleshooting",
+        "database-connection-management",
+        "on-call-response"
+      ]
     },
     {
       "id": "incident-002",
@@ -212,10 +326,19 @@
       "title": "CI/CD Pipeline Secret Leak",
       "severity": "SEV1",
       "scenario": "A developer accidentally committed an Azure service principal secret to a public GitHub repo. Security detects it within 4 minutes. Immediate key rotation and investigation required.",
-      "affected_services": ["github-actions", "azure-key-vault", "all-services-using-that-principal"],
+      "affected_services": [
+        "github-actions",
+        "azure-key-vault",
+        "all-services-using-that-principal"
+      ],
       "carer_level": "senior",
       "module": "17-devsecops",
-      "key_skills": ["secret-management", "incident-response", "security-investigation", "key-rotation"]
+      "key_skills": [
+        "secret-management",
+        "incident-response",
+        "security-investigation",
+        "key-rotation"
+      ]
     },
     {
       "id": "incident-004",
@@ -225,7 +348,11 @@
       "affected_services": ["ml-inference-service", "vector-search-api", "aks-node-pool-02"],
       "carer_level": "senior",
       "module": "30-ai-infra",
-      "key_skills": ["kubernetes-resource-management", "capacity-planning", "incident-troubleshooting"]
+      "key_skills": [
+        "kubernetes-resource-management",
+        "capacity-planning",
+        "incident-troubleshooting"
+      ]
     },
     {
       "id": "incident-005",
@@ -235,7 +362,12 @@
       "affected_services": ["api-gateway", "public-website", "all-customer-facing-services"],
       "carer_level": "architect",
       "module": "04-security",
-      "key_skills": ["ddos-mitigation", "crisis-management", "cross-team-coordination", "post-incident-hardening"]
+      "key_skills": [
+        "ddos-mitigation",
+        "crisis-management",
+        "cross-team-coordination",
+        "post-incident-hardening"
+      ]
     }
   ]
 }

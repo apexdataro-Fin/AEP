@@ -15,9 +15,9 @@ ai_metadata:
 
 Practical guides for working with the platform.
 
-| Guide | Purpose |
-|---|---|
-| [Mermaid Guide](/guides/mermaid-guide) | Create diagrams using Mermaid syntax |
-| [AI Integration Guide](/guides/ai-integration) | How AI systems consume this platform's content |
-| [Contributing Guide](/guides/contributing) | How to contribute to the project |
-| [Knowledge Graph Guide](/guides/knowledge-graph-guide) | Understanding the concept relationship model |
+| Guide                                                  | Purpose                                        |
+| ------------------------------------------------------ | ---------------------------------------------- |
+| [Mermaid Guide](/guides/mermaid-guide)                 | Create diagrams using Mermaid syntax           |
+| [AI Integration Guide](/guides/ai-integration)         | How AI systems consume this platform's content |
+| [Contributing Guide](/guides/contributing)             | How to contribute to the project               |
+| [Knowledge Graph Guide](/guides/knowledge-graph-guide) | Understanding the concept relationship model   |

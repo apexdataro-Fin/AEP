@@ -16,7 +16,15 @@ const fs = require("fs");
 const path = require("path");
 const matter = require("gray-matter");
 
-const CONTENT_DIRS = ["docs", "curriculum", "lessons", "projects", "labs", "career", "certifications"];
+const CONTENT_DIRS = [
+  "docs",
+  "curriculum",
+  "lessons",
+  "projects",
+  "labs",
+  "career",
+  "certifications",
+];
 const VALID_DIFFICULTY = ["beginner", "intermediate", "advanced"];
 const REQUIRED_FIELDS = ["title", "slug", "description"];
 
@@ -41,7 +49,7 @@ function validateFile(filePath) {
     if (frontmatter.slug) {
       if (slugs.has(frontmatter.slug)) {
         console.error(
-          `❌ ${filePath}: Duplicate slug "${frontmatter.slug}" (also in ${slugs.get(frontmatter.slug)})`
+          `❌ ${filePath}: Duplicate slug "${frontmatter.slug}" (also in ${slugs.get(frontmatter.slug)})`,
         );
         errors++;
       } else {
@@ -55,9 +63,7 @@ function validateFile(filePath) {
         frontmatter.ai_metadata.difficulty &&
         !VALID_DIFFICULTY.includes(frontmatter.ai_metadata.difficulty)
       ) {
-        console.error(
-          `❌ ${filePath}: Invalid difficulty "${frontmatter.ai_metadata.difficulty}"`
-        );
+        console.error(`❌ ${filePath}: Invalid difficulty "${frontmatter.ai_metadata.difficulty}"`);
         errors++;
       }
     } else {

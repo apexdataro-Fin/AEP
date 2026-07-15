@@ -75,7 +75,7 @@ graph LR
     A[Keyboard / File] -->|stdin (0)| B[Command]
     B -->|stdout (1)| C[Terminal / File]
     B -->|stderr (2)| D[Terminal / File]
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style B fill:#8b5cf6,stroke:#7c3aed,color:#fff
     style C fill:#10b981,stroke:#059669,color:#fff
@@ -83,6 +83,7 @@ graph LR
 ```
 
 Every Linux command has three standard streams:
+
 - **stdin (0):** Where input comes from (keyboard or file or another command)
 - **stdout (1):** Where normal output goes (terminal or file or another command)
 - **stderr (2):** Where error messages go
@@ -91,14 +92,14 @@ Every Linux command has three standard streams:
 
 ## Essential Commands
 
-| Command | Purpose | CloudNova Use Case |
-|---|---|---|
-| `grep` | Search text | Find errors in logs |
-| `find` | Find files | Locate config files |
-| `awk` | Process columns | Extract IPs from logs |
-| `sed` | Stream edit | Replace text in configs |
-| `curl` | HTTP client | Test API endpoints |
-| `jq` | JSON processor | Parse API responses |
+| Command | Purpose         | CloudNova Use Case      |
+| ------- | --------------- | ----------------------- |
+| `grep`  | Search text     | Find errors in logs     |
+| `find`  | Find files      | Locate config files     |
+| `awk`   | Process columns | Extract IPs from logs   |
+| `sed`   | Stream edit     | Replace text in configs |
+| `curl`  | HTTP client     | Test API endpoints      |
+| `jq`    | JSON processor  | Parse API responses     |
 
 ### Pipes: The Unix Superpower
 

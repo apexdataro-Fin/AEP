@@ -4,57 +4,60 @@
 
 ## Overall Completion: ~88%
 
-| Phase | Status | Progress |
-|---|---|---|
-| **Phase 1 — Foundation** | ✅ Complete | 100% |
-| **Phase 2 — Learning Core** | ✅ Complete | 100% |
-| **Phase 3 — Platform Experience** | ✅ Complete | 100% |
-| **Phase 4 — ARES Content Operating System (ACOS)** | ✅ Complete | 100% |
-| **Phase 5 — ALP-001: Cloud Engineering Foundation** | ✅ Complete | 100% |
-| **Phase 5b — Review & Enhancement** | ✅ Complete | 100% |
-| **Phase 6 — Content Creation & Components** | 🔄 In Progress | ~30% |
+| Phase                                               | Status         | Progress |
+| --------------------------------------------------- | -------------- | -------- |
+| **Phase 1 — Foundation**                            | ✅ Complete    | 100%     |
+| **Phase 2 — Learning Core**                         | ✅ Complete    | 100%     |
+| **Phase 3 — Platform Experience**                   | ✅ Complete    | 100%     |
+| **Phase 4 — ARES Content Operating System (ACOS)**  | ✅ Complete    | 100%     |
+| **Phase 5 — ALP-001: Cloud Engineering Foundation** | ✅ Complete    | 100%     |
+| **Phase 5b — Review & Enhancement**                 | ✅ Complete    | 100%     |
+| **Phase 6 — Content Creation & Components**         | 🔄 In Progress | ~30%     |
 
 ---
 
 ## Phase 6 — Content Creation & UX Enhancement 🔄
 
 ### UX Improvements ✅
-| Enhancement | Description |
-|---|---|
-| RTL Support | Full Arabic/Kurdish right-to-left support in custom.css + platform.css |
-| Homepage Redesign | Modern hero with stats, feature grid (6 cards), learning path preview (8 modules), enhanced CTA |
-| Reading Experience | Better typography, spacing, dark mode polish, interactive block styling |
+
+| Enhancement        | Description                                                                                     |
+| ------------------ | ----------------------------------------------------------------------------------------------- |
+| RTL Support        | Full Arabic/Kurdish right-to-left support in custom.css + platform.css                          |
+| Homepage Redesign  | Modern hero with stats, feature grid (6 cards), learning path preview (8 modules), enhanced CTA |
+| Reading Experience | Better typography, spacing, dark mode polish, interactive block styling                         |
 
 ### Lessons Written (16 total)
 
-| Module | Lessons | Status |
-|---|---|---|
-| 01 — Engineering Foundations | 6 lessons | ✅ Complete |
-| 02 — Linux Mastery | 8 lessons | ✅ Complete |
-| 06 — Cloud Fundamentals (AZ-900) | 2 of 8 | 🔄 In Progress |
+| Module                           | Lessons   | Status         |
+| -------------------------------- | --------- | -------------- |
+| 01 — Engineering Foundations     | 6 lessons | ✅ Complete    |
+| 02 — Linux Mastery               | 8 lessons | ✅ Complete    |
+| 06 — Cloud Fundamentals (AZ-900) | 2 of 8    | 🔄 In Progress |
 
 ### Interactive Block Components ✅
 
 Built 26 reusable MDX components for all lessons:
 
-| Category | Components |
-|---|---|
-| **Callouts** | Info, Warning, Tip, BestPractice |
-| **Learning** | Definition, Example, Analogy, CommonMistake |
-| **Practice** | Quiz (interactive), Exercise, Challenge, Debugging |
-| **Domain Notes** | ProductionNote, ArchitectureNote, SecurityNote, CostNote |
-| **Career** | InterviewQuestion, DecisionPoint, CheatSheet |
-| **Code** | CodeBlock (syntax), TerminalBlock (terminal UI) |
-| **AI** | AIExplanation, AIQuiz, AIFlashcards, Flashcard (flip card) |
-| **Future** | Simulator (placeholder) |
+| Category         | Components                                                 |
+| ---------------- | ---------------------------------------------------------- |
+| **Callouts**     | Info, Warning, Tip, BestPractice                           |
+| **Learning**     | Definition, Example, Analogy, CommonMistake                |
+| **Practice**     | Quiz (interactive), Exercise, Challenge, Debugging         |
+| **Domain Notes** | ProductionNote, ArchitectureNote, SecurityNote, CostNote   |
+| **Career**       | InterviewQuestion, DecisionPoint, CheatSheet               |
+| **Code**         | CodeBlock (syntax), TerminalBlock (terminal UI)            |
+| **AI**           | AIExplanation, AIQuiz, AIFlashcards, Flashcard (flip card) |
+| **Future**       | Simulator (placeholder)                                    |
 
 **File:** `src/components/shared/InteractiveBlocks.tsx` + CSS in `src/css/platform.css`
 
 ### Lesson Outlines
+
 - Modules 03-12: Full outlines with lesson titles, focus areas, and Mermaid diagram concepts (72+ planned lessons)
 - **File:** `alp-001/lesson-outlines.json`
 
 ### UX & Platform
+
 - RTL support for Arabic and Kurdish
 - Modern homepage with hero stats, feature grid, learning path preview
 - 28 interactive block React components with full CSS

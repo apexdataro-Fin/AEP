@@ -36,13 +36,24 @@
         "Fail2ban configured and running",
         "Server documentation is clear and complete"
       ],
-      "skills": ["linux-administration", "ssh-configuration", "firewall-management", "server-hardening", "technical-documentation"],
+      "skills": [
+        "linux-administration",
+        "ssh-configuration",
+        "firewall-management",
+        "server-hardening",
+        "technical-documentation"
+      ],
       "technologies": ["linux", "bash", "ssh", "iptables", "fail2ban"],
       "certifications": [],
       "portfolio_value": "medium",
       "career_level": "junior",
       "related_modules": ["02-linux", "04-security"],
-      "knowledge_nodes": ["server-provisioning", "ssh-hardening", "firewall-configuration", "security-baseline"]
+      "knowledge_nodes": [
+        "server-provisioning",
+        "ssh-hardening",
+        "firewall-configuration",
+        "security-baseline"
+      ]
     },
     {
       "id": "proj-002",
@@ -78,13 +89,25 @@
         "HTTPS terminates with valid TLS certificate",
         "Network diagram is accurate and clear"
       ],
-      "skills": ["vnet-design", "subnetting", "dns-configuration", "nsg-management", "load-balancing", "tls-certificates"],
+      "skills": [
+        "vnet-design",
+        "subnetting",
+        "dns-configuration",
+        "nsg-management",
+        "load-balancing",
+        "tls-certificates"
+      ],
       "technologies": ["azure-vnet", "dns", "nsg", "azure-load-balancer", "tls", "letsencrypt"],
       "certifications": ["AZ-104 (networking domain)"],
       "portfolio_value": "medium",
       "career_level": "junior",
       "related_modules": ["03-networking", "07-azure-core", "04-security"],
-      "knowledge_nodes": ["network-topology", "subnet-design", "defense-in-depth", "load-balancing-patterns"]
+      "knowledge_nodes": [
+        "network-topology",
+        "subnet-design",
+        "defense-in-depth",
+        "load-balancing-patterns"
+      ]
     },
     {
       "id": "proj-003",
@@ -119,7 +142,13 @@
         "Test coverage exceeds 80%",
         "Code follows PEP 8 style guide"
       ],
-      "skills": ["python-scripting", "api-integration", "cli-development", "testing", "error-handling"],
+      "skills": [
+        "python-scripting",
+        "api-integration",
+        "cli-development",
+        "testing",
+        "error-handling"
+      ],
       "technologies": ["python", "pytest", "click", "requests", "azure-sdk"],
       "certifications": [],
       "portfolio_value": "high",
@@ -160,7 +189,13 @@
         "Cost estimation runs on every PR",
         "Modules are reusable and documented"
       ],
-      "skills": ["terraform-modules", "state-management", "iac-cicd", "cost-modeling", "module-design"],
+      "skills": [
+        "terraform-modules",
+        "state-management",
+        "iac-cicd",
+        "cost-modeling",
+        "module-design"
+      ],
       "technologies": ["terraform", "azure", "github-actions", "infracost", "checkov"],
       "certifications": ["AZ-104", "HashiCorp Terraform Associate"],
       "portfolio_value": "high",
@@ -200,13 +235,23 @@
         "Logs stream to Azure Monitor",
         "Health probes configured for all containers"
       ],
-      "skills": ["dockerfile-authoring", "multi-stage-builds", "image-scanning", "container-deployment"],
+      "skills": [
+        "dockerfile-authoring",
+        "multi-stage-builds",
+        "image-scanning",
+        "container-deployment"
+      ],
       "technologies": ["docker", "azure-container-registry", "azure-container-instances", "trivy"],
       "certifications": ["AZ-104 (compute domain)"],
       "portfolio_value": "high",
       "career_level": "cloud_engineer",
       "related_modules": ["09-docker", "07-azure-core", "20-monitoring"],
-      "knowledge_nodes": ["containerization", "image-optimization", "container-security", "registry-management"]
+      "knowledge_nodes": [
+        "containerization",
+        "image-optimization",
+        "container-security",
+        "registry-management"
+      ]
     },
     {
       "id": "proj-006",
@@ -243,13 +288,31 @@
         "HPA scales based on CPU/memory metrics",
         "Cluster passes CIS benchmark scan"
       ],
-      "skills": ["aks-administration", "k8s-networking", "rbac-design", "ingress-management", "autoscaling"],
-      "technologies": ["azure-aks", "kubernetes", "terraform", "cert-manager", "nginx-ingress", "network-policies"],
+      "skills": [
+        "aks-administration",
+        "k8s-networking",
+        "rbac-design",
+        "ingress-management",
+        "autoscaling"
+      ],
+      "technologies": [
+        "azure-aks",
+        "kubernetes",
+        "terraform",
+        "cert-manager",
+        "nginx-ingress",
+        "network-policies"
+      ],
       "certifications": ["CKA", "CKAD"],
       "portfolio_value": "very-high",
       "career_level": "senior",
       "related_modules": ["10-kubernetes", "12-terraform", "04-security", "03-networking"],
-      "knowledge_nodes": ["kubernetes-architecture", "cluster-security", "service-mesh-readiness", "production-k8s"]
+      "knowledge_nodes": [
+        "kubernetes-architecture",
+        "cluster-security",
+        "service-mesh-readiness",
+        "production-k8s"
+      ]
     },
     {
       "id": "proj-007",
@@ -283,13 +346,23 @@
         "Secrets are never stored in plain text in Git",
         "Rollback is as simple as git revert"
       ],
-      "skills": ["gitops-patterns", "argocd-administration", "secret-management", "progressive-delivery"],
+      "skills": [
+        "gitops-patterns",
+        "argocd-administration",
+        "secret-management",
+        "progressive-delivery"
+      ],
       "technologies": ["argocd", "sealed-secrets", "external-secrets-operator", "argo-rollouts"],
       "certifications": [],
       "portfolio_value": "very-high",
       "career_level": "senior",
       "related_modules": ["18-gitops", "10-kubernetes", "14-github", "15-cicd"],
-      "knowledge_nodes": ["gitops-pipelines", "reconciliation-loop", "app-of-apps", "secret-management"]
+      "knowledge_nodes": [
+        "gitops-pipelines",
+        "reconciliation-loop",
+        "app-of-apps",
+        "secret-management"
+      ]
     },
     {
       "id": "proj-008",
@@ -325,13 +398,24 @@
         "Alerts fire within SLA and route to correct team",
         "SLOs are tracked with burn rate alerts"
       ],
-      "skills": ["prometheus-querying", "grafana-dashboards", "logging-pipelines", "distributed-tracing", "slo-culture"],
+      "skills": [
+        "prometheus-querying",
+        "grafana-dashboards",
+        "logging-pipelines",
+        "distributed-tracing",
+        "slo-culture"
+      ],
       "technologies": ["prometheus", "grafana", "loki", "tempo", "opentelemetry", "alertmanager"],
       "certifications": ["AZ-400 (instrumentation domain)"],
       "portfolio_value": "very-high",
       "career_level": "senior",
       "related_modules": ["20-monitoring", "21-observability", "18-gitops"],
-      "knowledge_nodes": ["observability-stack", "metrics-pipelines", "slo-engineering", "incident-response"]
+      "knowledge_nodes": [
+        "observability-stack",
+        "metrics-pipelines",
+        "slo-engineering",
+        "incident-response"
+      ]
     },
     {
       "id": "proj-009",
@@ -366,13 +450,31 @@
         "Content safety blocks harmful inputs/outputs",
         "GPU utilization is monitored and optimized"
       ],
-      "skills": ["llm-deployment", "vector-search", "rag-architecture", "gpu-orchestration", "ai-safety"],
-      "technologies": ["azure-openai", "qdrant", "langchain", "kubernetes", "nvidia-gpu-operator", "guardrails-ai"],
+      "skills": [
+        "llm-deployment",
+        "vector-search",
+        "rag-architecture",
+        "gpu-orchestration",
+        "ai-safety"
+      ],
+      "technologies": [
+        "azure-openai",
+        "qdrant",
+        "langchain",
+        "kubernetes",
+        "nvidia-gpu-operator",
+        "guardrails-ai"
+      ],
       "certifications": ["AI-102"],
       "portfolio_value": "very-high",
       "career_level": "principal",
       "related_modules": ["30-ai-infra", "25-vector-db", "26-rag", "10-kubernetes"],
-      "knowledge_nodes": ["ai-inference-platform", "vector-search-scale", "rag-production", "ai-observability"]
+      "knowledge_nodes": [
+        "ai-inference-platform",
+        "vector-search-scale",
+        "rag-production",
+        "ai-observability"
+      ]
     },
     {
       "id": "proj-010",
@@ -410,13 +512,24 @@
         "Case study demonstrates business value and technical decisions",
         "Portfolio README is interview-ready"
       ],
-      "skills": ["platform-engineering", "architecture-design", "technical-communication", "portfolio-building", "systems-integration"],
+      "skills": [
+        "platform-engineering",
+        "architecture-design",
+        "technical-communication",
+        "portfolio-building",
+        "systems-integration"
+      ],
       "technologies": ["all-previous-technologies"],
       "certifications": ["AZ-104", "AZ-400", "AI-102 (combined readiness)"],
       "portfolio_value": "very-high",
       "career_level": "all",
       "related_modules": ["31-portfolio", "32-interview", "33-career"],
-      "knowledge_nodes": ["platform-engineering", "unified-architecture", "production-readiness", "portfolio-excellence"]
+      "knowledge_nodes": [
+        "platform-engineering",
+        "unified-architecture",
+        "production-readiness",
+        "portfolio-excellence"
+      ]
     }
   ]
 }

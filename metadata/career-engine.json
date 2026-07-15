@@ -14,7 +14,12 @@
         "compute-concepts": "basic",
         "networking-concepts": "awareness"
       },
-      "daily_activities": ["ticket_triage", "documentation_updates", "pairing_with_seniors", "training"],
+      "daily_activities": [
+        "ticket_triage",
+        "documentation_updates",
+        "pairing_with_seniors",
+        "training"
+      ],
       "ticket_types": ["simple_provisioning", "access_requests", "minor_configuration_changes"]
     },
     "cloud_engineer": {
@@ -29,7 +34,12 @@
         "networking-concepts": "basic",
         "iac-terraform": "intermediate"
       },
-      "daily_activities": ["infrastructure_automation", "ci_cd_maintenance", "on_call_rotation", "code_reviews"],
+      "daily_activities": [
+        "infrastructure_automation",
+        "ci_cd_maintenance",
+        "on_call_rotation",
+        "code_reviews"
+      ],
       "ticket_types": ["infrastructure_changes", "deployment_issues", "performance_degradation"]
     },
     "senior": {
@@ -44,7 +54,12 @@
         "iac-terraform": "advanced",
         "kubernetes": "intermediate"
       },
-      "daily_activities": ["architecture_reviews", "incident_leadership", "mentoring", "capacity_planning"],
+      "daily_activities": [
+        "architecture_reviews",
+        "incident_leadership",
+        "mentoring",
+        "capacity_planning"
+      ],
       "ticket_types": ["major_incidents", "architecture_decisions", "security_incidents"]
     },
     "architect": {
@@ -59,7 +74,12 @@
         "kubernetes": "advanced",
         "architecture": "expert"
       },
-      "daily_activities": ["architecture_decision_records", "stakeholder_meetings", "cost_optimization", "technology_strategy"],
+      "daily_activities": [
+        "architecture_decision_records",
+        "stakeholder_meetings",
+        "cost_optimization",
+        "technology_strategy"
+      ],
       "ticket_types": ["system_design_reviews", "cost_optimization", "compliance_reviews"]
     },
     "principal": {
@@ -70,14 +90,27 @@
       "salary_benchmark": "$220K–$300K+",
       "certifications": [],
       "expected_skills": {},
-      "daily_activities": ["engineering_strategy", "cross_team_architecture", "hiring", "industry_engagement"],
+      "daily_activities": [
+        "engineering_strategy",
+        "cross_team_architecture",
+        "hiring",
+        "industry_engagement"
+      ],
       "ticket_types": []
     }
   },
   "career_activities": {
     "tickets": {
       "description": "Simulated tickets that engineers encounter daily",
-      "categories": ["provisioning", "configuration", "incident", "access", "deployment", "security", "cost"],
+      "categories": [
+        "provisioning",
+        "configuration",
+        "incident",
+        "access",
+        "deployment",
+        "security",
+        "cost"
+      ],
       "schema": {
         "id": "string",
         "title": "string",

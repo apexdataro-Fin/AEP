@@ -17,15 +17,15 @@ Thank you for your interest in contributing! 🎉
 
 ## Ways to Contribute
 
-| Contribution | Effort | Impact |
-|---|---|---|
-| **Fix a typo** | 5 min | High |
-| **Improve documentation** | 30 min | High |
-| **Add a lesson** | 2-4 hours | High |
-| **Add a project** | 4-8 hours | Very High |
-| **Build a simulator** | 8-16 hours | Very High |
-| **Fix a bug** | 1-4 hours | Medium |
-| **Add a feature** | 4-16 hours | Medium |
+| Contribution              | Effort     | Impact    |
+| ------------------------- | ---------- | --------- |
+| **Fix a typo**            | 5 min      | High      |
+| **Improve documentation** | 30 min     | High      |
+| **Add a lesson**          | 2-4 hours  | High      |
+| **Add a project**         | 4-8 hours  | Very High |
+| **Build a simulator**     | 8-16 hours | Very High |
+| **Fix a bug**             | 1-4 hours  | Medium    |
+| **Add a feature**         | 4-16 hours | Medium    |
 
 ## Contribution Workflow
 

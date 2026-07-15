@@ -22,10 +22,20 @@
   "domains": [
     { "id": "cloud-engineering", "label": "Cloud Engineering", "icon": "☁️", "enabled": true },
     { "id": "cybersecurity", "label": "Cybersecurity", "icon": "🔒", "enabled": false },
-    { "id": "software-engineering", "label": "Software Engineering", "icon": "💻", "enabled": false },
+    {
+      "id": "software-engineering",
+      "label": "Software Engineering",
+      "icon": "💻",
+      "enabled": false
+    },
     { "id": "ai-engineering", "label": "AI Engineering", "icon": "🤖", "enabled": false },
     { "id": "data-engineering", "label": "Data Engineering", "icon": "📊", "enabled": false },
-    { "id": "platform-engineering", "label": "Platform Engineering", "icon": "🏗️", "enabled": false },
+    {
+      "id": "platform-engineering",
+      "label": "Platform Engineering",
+      "icon": "🏗️",
+      "enabled": false
+    },
     { "id": "networking", "label": "Networking", "icon": "🌐", "enabled": false },
     { "id": "linux", "label": "Linux", "icon": "🐧", "enabled": false },
     { "id": "python", "label": "Python", "icon": "🐍", "enabled": false },
@@ -58,10 +68,22 @@
   ],
   "extensibility": {
     "future_modules": [
-      "marketplace", "community", "discussion", "exams", "certificates",
-      "payments", "subscriptions", "organizations", "classrooms", "teams",
-      "teacher-portal", "student-portal", "offline-packages",
-      "desktop-app", "mobile-app", "api-integrations"
+      "marketplace",
+      "community",
+      "discussion",
+      "exams",
+      "certificates",
+      "payments",
+      "subscriptions",
+      "organizations",
+      "classrooms",
+      "teams",
+      "teacher-portal",
+      "student-portal",
+      "offline-packages",
+      "desktop-app",
+      "mobile-app",
+      "api-integrations"
     ],
     "plugin_system": {
       "description": "Plugins are self-contained modules that can be enabled/disabled per domain or globally.",

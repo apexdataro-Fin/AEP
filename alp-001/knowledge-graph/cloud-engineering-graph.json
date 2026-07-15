@@ -3,89 +3,552 @@
   "alp_id": "alp-001",
   "description": "Cloud Engineering Knowledge Graph — all skills, technologies, architecture patterns, security concepts, cost topics, and AI topics interconnected. Every relationship is bidirectional and traceable.",
   "nodes": {
-    "skills": ["linux-administration", "bash-scripting", "tcpip-fundamentals", "dns-management", "subnet-design", "load-balancing", "iam-design", "encryption", "threat-modeling", "python-scripting", "cloud-service-models", "azure-compute", "azure-storage", "azure-networking", "azure-databases", "container-internals", "dockerfile-authoring", "kubernetes-architecture", "workload-management", "helm-charting", "terraform-modules", "state-management", "git-advanced", "github-workflows", "pipeline-design", "deployment-strategies", "devops-culture", "sast-dast", "gitops-patterns", "platform-design", "prometheus-querying", "opentelemetry", "cost-modeling", "entra-id-design", "azure-ai-services", "vector-search", "rag-architecture", "agent-architecture", "ml-lifecycle", "llm-deployment", "gpu-infrastructure", "portfolio-design", "system-design", "career-strategy"],
-    "technologies": ["linux", "bash", "systemd", "ssh", "tcp/ip", "dns", "http/https", "tls", "nginx", "azure-portal", "azure-cli", "azure-vm", "azure-storage", "azure-vnet", "azure-sql", "azure-aks", "containerd", "docker", "docker-compose", "azure-container-registry", "kubernetes", "kubectl", "helm", "terraform", "opentofu", "terragrunt", "git", "github", "github-actions", "azure-devops", "argocd", "flux", "prometheus", "grafana", "loki", "tempo", "opentelemetry", "azure-monitor", "infracost", "azure-ad", "entra-id", "key-vault", "managed-identities", "azure-openai", "azure-ai-search", "pgvector", "qdrant", "langchain", "semantic-kernel", "langgraph", "autogen", "mlflow", "azure-ml", "kubeflow", "nvidia-gpu-operator", "ray", "backstage", "crossplane"],
-    "architecture_patterns": ["well-architected-framework", "microservices", "event-driven", "caching-strategies", "circuit-breaker", "bulkhead", "cqrs", "event-sourcing", "saga-pattern", "strangler-fig", "sidecar", "ambassador", "adapter", "anti-corruption-layer", "api-gateway", "service-mesh", "zero-trust", "defense-in-depth", "least-privilege", "just-in-time-access", "immutable-infrastructure", "cattle-not-pets", "blue-green-deployment", "canary-deployment", "rolling-deployment", "feature-flags", "dark-launching", "trunk-based-development", "gitops", "everything-as-code"],
-    "security_concepts": ["defense-in-depth", "zero-trust", "least-privilege", "encryption-at-rest", "encryption-in-transit", "key-management", "secrets-management", "certificate-lifecycle", "supply-chain-security", "sbom", "vulnerability-management", "penetration-testing", "threat-modeling", "stride", "ddos-protection", "waf", "network-segmentation", "micro-segmentation", "pim-pam", "conditional-access", "identity-federation", "compliance-as-code", "policy-as-code"],
-    "cost_topics": ["finops-lifecycle", "cloud-pricing-models", "reserved-instances", "savings-plans", "spot-instances", "right-sizing", "waste-elimination", "tagging-strategy", "chargeback-models", "showback-models", "cost-anomaly-detection", "budget-alerts", "tco-analysis", "migration-cost-modeling"],
-    "ai_topics": ["llm-architecture", "embeddings", "vector-similarity", "approximate-nearest-neighbor", "hnsw-index", "chunking-strategies", "retrieval-pipelines", "re-ranking", "hybrid-search", "prompt-engineering", "function-calling", "agentic-workflows", "multi-agent-systems", "tool-use-patterns", "agent-memory", "model-registry", "feature-stores", "drift-detection", "a-b-testing-ml", "guardrails", "content-safety", "responsible-ai", "gpu-scheduling", "distributed-training", "inference-optimization", "model-parallelism", "data-parallelism", "pipeline-parallelism"]
+    "skills": [
+      "linux-administration",
+      "bash-scripting",
+      "tcpip-fundamentals",
+      "dns-management",
+      "subnet-design",
+      "load-balancing",
+      "iam-design",
+      "encryption",
+      "threat-modeling",
+      "python-scripting",
+      "cloud-service-models",
+      "azure-compute",
+      "azure-storage",
+      "azure-networking",
+      "azure-databases",
+      "container-internals",
+      "dockerfile-authoring",
+      "kubernetes-architecture",
+      "workload-management",
+      "helm-charting",
+      "terraform-modules",
+      "state-management",
+      "git-advanced",
+      "github-workflows",
+      "pipeline-design",
+      "deployment-strategies",
+      "devops-culture",
+      "sast-dast",
+      "gitops-patterns",
+      "platform-design",
+      "prometheus-querying",
+      "opentelemetry",
+      "cost-modeling",
+      "entra-id-design",
+      "azure-ai-services",
+      "vector-search",
+      "rag-architecture",
+      "agent-architecture",
+      "ml-lifecycle",
+      "llm-deployment",
+      "gpu-infrastructure",
+      "portfolio-design",
+      "system-design",
+      "career-strategy"
+    ],
+    "technologies": [
+      "linux",
+      "bash",
+      "systemd",
+      "ssh",
+      "tcp/ip",
+      "dns",
+      "http/https",
+      "tls",
+      "nginx",
+      "azure-portal",
+      "azure-cli",
+      "azure-vm",
+      "azure-storage",
+      "azure-vnet",
+      "azure-sql",
+      "azure-aks",
+      "containerd",
+      "docker",
+      "docker-compose",
+      "azure-container-registry",
+      "kubernetes",
+      "kubectl",
+      "helm",
+      "terraform",
+      "opentofu",
+      "terragrunt",
+      "git",
+      "github",
+      "github-actions",
+      "azure-devops",
+      "argocd",
+      "flux",
+      "prometheus",
+      "grafana",
+      "loki",
+      "tempo",
+      "opentelemetry",
+      "azure-monitor",
+      "infracost",
+      "azure-ad",
+      "entra-id",
+      "key-vault",
+      "managed-identities",
+      "azure-openai",
+      "azure-ai-search",
+      "pgvector",
+      "qdrant",
+      "langchain",
+      "semantic-kernel",
+      "langgraph",
+      "autogen",
+      "mlflow",
+      "azure-ml",
+      "kubeflow",
+      "nvidia-gpu-operator",
+      "ray",
+      "backstage",
+      "crossplane"
+    ],
+    "architecture_patterns": [
+      "well-architected-framework",
+      "microservices",
+      "event-driven",
+      "caching-strategies",
+      "circuit-breaker",
+      "bulkhead",
+      "cqrs",
+      "event-sourcing",
+      "saga-pattern",
+      "strangler-fig",
+      "sidecar",
+      "ambassador",
+      "adapter",
+      "anti-corruption-layer",
+      "api-gateway",
+      "service-mesh",
+      "zero-trust",
+      "defense-in-depth",
+      "least-privilege",
+      "just-in-time-access",
+      "immutable-infrastructure",
+      "cattle-not-pets",
+      "blue-green-deployment",
+      "canary-deployment",
+      "rolling-deployment",
+      "feature-flags",
+      "dark-launching",
+      "trunk-based-development",
+      "gitops",
+      "everything-as-code"
+    ],
+    "security_concepts": [
+      "defense-in-depth",
+      "zero-trust",
+      "least-privilege",
+      "encryption-at-rest",
+      "encryption-in-transit",
+      "key-management",
+      "secrets-management",
+      "certificate-lifecycle",
+      "supply-chain-security",
+      "sbom",
+      "vulnerability-management",
+      "penetration-testing",
+      "threat-modeling",
+      "stride",
+      "ddos-protection",
+      "waf",
+      "network-segmentation",
+      "micro-segmentation",
+      "pim-pam",
+      "conditional-access",
+      "identity-federation",
+      "compliance-as-code",
+      "policy-as-code"
+    ],
+    "cost_topics": [
+      "finops-lifecycle",
+      "cloud-pricing-models",
+      "reserved-instances",
+      "savings-plans",
+      "spot-instances",
+      "right-sizing",
+      "waste-elimination",
+      "tagging-strategy",
+      "chargeback-models",
+      "showback-models",
+      "cost-anomaly-detection",
+      "budget-alerts",
+      "tco-analysis",
+      "migration-cost-modeling"
+    ],
+    "ai_topics": [
+      "llm-architecture",
+      "embeddings",
+      "vector-similarity",
+      "approximate-nearest-neighbor",
+      "hnsw-index",
+      "chunking-strategies",
+      "retrieval-pipelines",
+      "re-ranking",
+      "hybrid-search",
+      "prompt-engineering",
+      "function-calling",
+      "agentic-workflows",
+      "multi-agent-systems",
+      "tool-use-patterns",
+      "agent-memory",
+      "model-registry",
+      "feature-stores",
+      "drift-detection",
+      "a-b-testing-ml",
+      "guardrails",
+      "content-safety",
+      "responsible-ai",
+      "gpu-scheduling",
+      "distributed-training",
+      "inference-optimization",
+      "model-parallelism",
+      "data-parallelism",
+      "pipeline-parallelism"
+    ]
   },
   "relationships": [
-    { "source": "linux-administration", "target": "container-internals", "type": "prerequisite", "strength": "strong" },
-    { "source": "linux-administration", "target": "azure-compute", "type": "foundation", "strength": "strong" },
-    { "source": "tcpip-fundamentals", "target": "azure-networking", "type": "prerequisite", "strength": "strong" },
-    { "source": "tcpip-fundamentals", "target": "dns-management", "type": "component", "strength": "medium" },
-    { "source": "dns-management", "target": "azure-networking", "type": "implementation", "strength": "strong" },
-    { "source": "iam-design", "target": "entra-id-design", "type": "implementation", "strength": "strong" },
+    {
+      "source": "linux-administration",
+      "target": "container-internals",
+      "type": "prerequisite",
+      "strength": "strong"
+    },
+    {
+      "source": "linux-administration",
+      "target": "azure-compute",
+      "type": "foundation",
+      "strength": "strong"
+    },
+    {
+      "source": "tcpip-fundamentals",
+      "target": "azure-networking",
+      "type": "prerequisite",
+      "strength": "strong"
+    },
+    {
+      "source": "tcpip-fundamentals",
+      "target": "dns-management",
+      "type": "component",
+      "strength": "medium"
+    },
+    {
+      "source": "dns-management",
+      "target": "azure-networking",
+      "type": "implementation",
+      "strength": "strong"
+    },
+    {
+      "source": "iam-design",
+      "target": "entra-id-design",
+      "type": "implementation",
+      "strength": "strong"
+    },
     { "source": "encryption", "target": "tls", "type": "implementation", "strength": "strong" },
     { "source": "encryption", "target": "key-vault", "type": "tool", "strength": "medium" },
-    { "source": "threat-modeling", "target": "sast-dast", "type": "application", "strength": "medium" },
+    {
+      "source": "threat-modeling",
+      "target": "sast-dast",
+      "type": "application",
+      "strength": "medium"
+    },
     { "source": "python-scripting", "target": "azure-sdk", "type": "tool", "strength": "medium" },
-    { "source": "cloud-service-models", "target": "well-architected-framework", "type": "concept", "strength": "strong" },
-    { "source": "cloud-service-models", "target": "azure-compute", "type": "implementation", "strength": "strong" },
+    {
+      "source": "cloud-service-models",
+      "target": "well-architected-framework",
+      "type": "concept",
+      "strength": "strong"
+    },
+    {
+      "source": "cloud-service-models",
+      "target": "azure-compute",
+      "type": "implementation",
+      "strength": "strong"
+    },
     { "source": "azure-compute", "target": "azure-vm", "type": "service", "strength": "strong" },
     { "source": "azure-compute", "target": "azure-aks", "type": "service", "strength": "strong" },
-    { "source": "azure-storage", "target": "azure-blob-storage", "type": "service", "strength": "strong" },
-    { "source": "azure-networking", "target": "azure-vnet", "type": "service", "strength": "strong" },
+    {
+      "source": "azure-storage",
+      "target": "azure-blob-storage",
+      "type": "service",
+      "strength": "strong"
+    },
+    {
+      "source": "azure-networking",
+      "target": "azure-vnet",
+      "type": "service",
+      "strength": "strong"
+    },
     { "source": "azure-databases", "target": "azure-sql", "type": "service", "strength": "strong" },
-    { "source": "container-internals", "target": "docker", "type": "prerequisite", "strength": "strong" },
-    { "source": "dockerfile-authoring", "target": "docker", "type": "skill-in-tool", "strength": "strong" },
+    {
+      "source": "container-internals",
+      "target": "docker",
+      "type": "prerequisite",
+      "strength": "strong"
+    },
+    {
+      "source": "dockerfile-authoring",
+      "target": "docker",
+      "type": "skill-in-tool",
+      "strength": "strong"
+    },
     { "source": "docker", "target": "kubernetes", "type": "prerequisite", "strength": "strong" },
-    { "source": "kubernetes-architecture", "target": "azure-aks", "type": "implementation", "strength": "strong" },
-    { "source": "kubernetes-architecture", "target": "helm-charting", "type": "tool", "strength": "medium" },
-    { "source": "kubernetes-architecture", "target": "argocd", "type": "gitops-tool", "strength": "strong" },
-    { "source": "terraform-modules", "target": "terraform", "type": "skill-in-tool", "strength": "strong" },
-    { "source": "terraform", "target": "azure-compute", "type": "provisioning", "strength": "strong" },
+    {
+      "source": "kubernetes-architecture",
+      "target": "azure-aks",
+      "type": "implementation",
+      "strength": "strong"
+    },
+    {
+      "source": "kubernetes-architecture",
+      "target": "helm-charting",
+      "type": "tool",
+      "strength": "medium"
+    },
+    {
+      "source": "kubernetes-architecture",
+      "target": "argocd",
+      "type": "gitops-tool",
+      "strength": "strong"
+    },
+    {
+      "source": "terraform-modules",
+      "target": "terraform",
+      "type": "skill-in-tool",
+      "strength": "strong"
+    },
+    {
+      "source": "terraform",
+      "target": "azure-compute",
+      "type": "provisioning",
+      "strength": "strong"
+    },
     { "source": "git-advanced", "target": "github", "type": "tool", "strength": "strong" },
     { "source": "github", "target": "github-actions", "type": "platform", "strength": "strong" },
-    { "source": "github-actions", "target": "pipeline-design", "type": "implementation", "strength": "strong" },
-    { "source": "pipeline-design", "target": "deployment-strategies", "type": "component", "strength": "strong" },
-    { "source": "deployment-strategies", "target": "blue-green-deployment", "type": "pattern", "strength": "strong" },
-    { "source": "deployment-strategies", "target": "canary-deployment", "type": "pattern", "strength": "strong" },
-    { "source": "devops-culture", "target": "pipeline-design", "type": "enables", "strength": "strong" },
-    { "source": "sast-dast", "target": "pipeline-design", "type": "security-gate", "strength": "medium" },
-    { "source": "sast-dast", "target": "supply-chain-security", "type": "implements", "strength": "strong" },
-    { "source": "gitops-patterns", "target": "argocd", "type": "implementation", "strength": "strong" },
-    { "source": "gitops-patterns", "target": "kubernetes-architecture", "type": "applied-to", "strength": "strong" },
-    { "source": "platform-design", "target": "kubernetes-architecture", "type": "builds-on", "strength": "strong" },
+    {
+      "source": "github-actions",
+      "target": "pipeline-design",
+      "type": "implementation",
+      "strength": "strong"
+    },
+    {
+      "source": "pipeline-design",
+      "target": "deployment-strategies",
+      "type": "component",
+      "strength": "strong"
+    },
+    {
+      "source": "deployment-strategies",
+      "target": "blue-green-deployment",
+      "type": "pattern",
+      "strength": "strong"
+    },
+    {
+      "source": "deployment-strategies",
+      "target": "canary-deployment",
+      "type": "pattern",
+      "strength": "strong"
+    },
+    {
+      "source": "devops-culture",
+      "target": "pipeline-design",
+      "type": "enables",
+      "strength": "strong"
+    },
+    {
+      "source": "sast-dast",
+      "target": "pipeline-design",
+      "type": "security-gate",
+      "strength": "medium"
+    },
+    {
+      "source": "sast-dast",
+      "target": "supply-chain-security",
+      "type": "implements",
+      "strength": "strong"
+    },
+    {
+      "source": "gitops-patterns",
+      "target": "argocd",
+      "type": "implementation",
+      "strength": "strong"
+    },
+    {
+      "source": "gitops-patterns",
+      "target": "kubernetes-architecture",
+      "type": "applied-to",
+      "strength": "strong"
+    },
+    {
+      "source": "platform-design",
+      "target": "kubernetes-architecture",
+      "type": "builds-on",
+      "strength": "strong"
+    },
     { "source": "platform-design", "target": "backstage", "type": "tool", "strength": "medium" },
-    { "source": "prometheus-querying", "target": "prometheus", "type": "skill-in-tool", "strength": "strong" },
+    {
+      "source": "prometheus-querying",
+      "target": "prometheus",
+      "type": "skill-in-tool",
+      "strength": "strong"
+    },
     { "source": "prometheus", "target": "grafana", "type": "paired-tool", "strength": "strong" },
     { "source": "opentelemetry", "target": "tempo", "type": "protocol", "strength": "medium" },
-    { "source": "cost-modeling", "target": "finops-lifecycle", "type": "implements", "strength": "strong" },
+    {
+      "source": "cost-modeling",
+      "target": "finops-lifecycle",
+      "type": "implements",
+      "strength": "strong"
+    },
     { "source": "cost-modeling", "target": "infracost", "type": "tool", "strength": "medium" },
     { "source": "entra-id-design", "target": "azure-ad", "type": "service", "strength": "strong" },
-    { "source": "entra-id-design", "target": "zero-trust", "type": "implements", "strength": "strong" },
-    { "source": "azure-ai-services", "target": "azure-openai", "type": "service", "strength": "strong" },
-    { "source": "azure-ai-services", "target": "azure-ai-search", "type": "service", "strength": "medium" },
+    {
+      "source": "entra-id-design",
+      "target": "zero-trust",
+      "type": "implements",
+      "strength": "strong"
+    },
+    {
+      "source": "azure-ai-services",
+      "target": "azure-openai",
+      "type": "service",
+      "strength": "strong"
+    },
+    {
+      "source": "azure-ai-services",
+      "target": "azure-ai-search",
+      "type": "service",
+      "strength": "medium"
+    },
     { "source": "vector-search", "target": "embeddings", "type": "requires", "strength": "strong" },
     { "source": "vector-search", "target": "qdrant", "type": "tool", "strength": "medium" },
     { "source": "vector-search", "target": "pgvector", "type": "tool", "strength": "medium" },
-    { "source": "rag-architecture", "target": "vector-search", "type": "requires", "strength": "strong" },
-    { "source": "rag-architecture", "target": "chunking-strategies", "type": "component", "strength": "strong" },
+    {
+      "source": "rag-architecture",
+      "target": "vector-search",
+      "type": "requires",
+      "strength": "strong"
+    },
+    {
+      "source": "rag-architecture",
+      "target": "chunking-strategies",
+      "type": "component",
+      "strength": "strong"
+    },
     { "source": "rag-architecture", "target": "langchain", "type": "tool", "strength": "medium" },
-    { "source": "agent-architecture", "target": "rag-architecture", "type": "builds-on", "strength": "medium" },
+    {
+      "source": "agent-architecture",
+      "target": "rag-architecture",
+      "type": "builds-on",
+      "strength": "medium"
+    },
     { "source": "agent-architecture", "target": "langgraph", "type": "tool", "strength": "medium" },
     { "source": "agent-architecture", "target": "autogen", "type": "tool", "strength": "medium" },
     { "source": "ml-lifecycle", "target": "mlflow", "type": "tool", "strength": "medium" },
     { "source": "ml-lifecycle", "target": "kubeflow", "type": "tool", "strength": "medium" },
-    { "source": "llm-deployment", "target": "azure-openai", "type": "platform", "strength": "strong" },
-    { "source": "llm-deployment", "target": "gpu-infrastructure", "type": "requires", "strength": "strong" },
-    { "source": "gpu-infrastructure", "target": "nvidia-gpu-operator", "type": "tool", "strength": "strong" },
-    { "source": "gpu-infrastructure", "target": "kubernetes-architecture", "type": "platform", "strength": "strong" },
-    { "source": "system-design", "target": "well-architected-framework", "type": "applies", "strength": "strong" },
+    {
+      "source": "llm-deployment",
+      "target": "azure-openai",
+      "type": "platform",
+      "strength": "strong"
+    },
+    {
+      "source": "llm-deployment",
+      "target": "gpu-infrastructure",
+      "type": "requires",
+      "strength": "strong"
+    },
+    {
+      "source": "gpu-infrastructure",
+      "target": "nvidia-gpu-operator",
+      "type": "tool",
+      "strength": "strong"
+    },
+    {
+      "source": "gpu-infrastructure",
+      "target": "kubernetes-architecture",
+      "type": "platform",
+      "strength": "strong"
+    },
+    {
+      "source": "system-design",
+      "target": "well-architected-framework",
+      "type": "applies",
+      "strength": "strong"
+    },
     { "source": "portfolio-design", "target": "github", "type": "platform", "strength": "strong" },
-    { "source": "career-strategy", "target": "portfolio-design", "type": "requires", "strength": "medium" },
-    { "source": "zero-trust", "target": "entra-id-design", "type": "implemented-by", "strength": "strong" },
-    { "source": "zero-trust", "target": "network-segmentation", "type": "requires", "strength": "strong" },
-    { "source": "finops-lifecycle", "target": "cost-modeling", "type": "framework", "strength": "strong" },
-    { "source": "finops-lifecycle", "target": "waste-elimination", "type": "goal", "strength": "strong" },
+    {
+      "source": "career-strategy",
+      "target": "portfolio-design",
+      "type": "requires",
+      "strength": "medium"
+    },
+    {
+      "source": "zero-trust",
+      "target": "entra-id-design",
+      "type": "implemented-by",
+      "strength": "strong"
+    },
+    {
+      "source": "zero-trust",
+      "target": "network-segmentation",
+      "type": "requires",
+      "strength": "strong"
+    },
+    {
+      "source": "finops-lifecycle",
+      "target": "cost-modeling",
+      "type": "framework",
+      "strength": "strong"
+    },
+    {
+      "source": "finops-lifecycle",
+      "target": "waste-elimination",
+      "type": "goal",
+      "strength": "strong"
+    },
     { "source": "gitops", "target": "gitops-patterns", "type": "concept", "strength": "strong" },
-    { "source": "gitops", "target": "immutable-infrastructure", "type": "principle", "strength": "strong" },
-    { "source": "everything-as-code", "target": "terraform-modules", "type": "applies", "strength": "medium" },
-    { "source": "everything-as-code", "target": "pipeline-design", "type": "applies", "strength": "medium" },
-    { "source": "responsible-ai", "target": "azure-ai-services", "type": "applied-to", "strength": "strong" },
-    { "source": "responsible-ai", "target": "guardrails", "type": "implements", "strength": "strong" },
-    { "source": "inference-optimization", "target": "gpu-infrastructure", "type": "optimizes", "strength": "strong" }
+    {
+      "source": "gitops",
+      "target": "immutable-infrastructure",
+      "type": "principle",
+      "strength": "strong"
+    },
+    {
+      "source": "everything-as-code",
+      "target": "terraform-modules",
+      "type": "applies",
+      "strength": "medium"
+    },
+    {
+      "source": "everything-as-code",
+      "target": "pipeline-design",
+      "type": "applies",
+      "strength": "medium"
+    },
+    {
+      "source": "responsible-ai",
+      "target": "azure-ai-services",
+      "type": "applied-to",
+      "strength": "strong"
+    },
+    {
+      "source": "responsible-ai",
+      "target": "guardrails",
+      "type": "implements",
+      "strength": "strong"
+    },
+    {
+      "source": "inference-optimization",
+      "target": "gpu-infrastructure",
+      "type": "optimizes",
+      "strength": "strong"
+    }
   ]
 }

@@ -94,7 +94,12 @@
       ],
       "reviewers": ["string"],
       "review_comments": [
-        { "reviewer": "string", "comment": "string", "timestamp": "ISO date-time", "resolved": "boolean" }
+        {
+          "reviewer": "string",
+          "comment": "string",
+          "timestamp": "ISO date-time",
+          "resolved": "boolean"
+        }
       ]
     }
   },

@@ -11,7 +11,10 @@
       { "id": "author-id", "name": "Author Name", "role": "author", "email": "author@example.com" }
     ],
     "organization": {
-      "id": "org-id", "name": "Organization Name", "type": "academy", "url": "https://example.com"
+      "id": "org-id",
+      "name": "Organization Name",
+      "type": "academy",
+      "url": "https://example.com"
     },
     "license": "CC BY-SA 4.0",
     "languages": ["en"],

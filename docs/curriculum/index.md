@@ -27,12 +27,12 @@ graph LR
 
 ## Learning Paths
 
-| Path | Duration | Target Role |
-|---|---|---|
-| **Cloud Foundations** | 4 weeks | Junior Cloud Engineer |
-| **Core Services** | 8 weeks | Cloud Engineer |
-| **Advanced Topics** | 12 weeks | Senior Cloud Engineer |
-| **Specializations** | 8-12 weeks each | Solutions Architect, Security Engineer, SRE |
+| Path                  | Duration        | Target Role                                 |
+| --------------------- | --------------- | ------------------------------------------- |
+| **Cloud Foundations** | 4 weeks         | Junior Cloud Engineer                       |
+| **Core Services**     | 8 weeks         | Cloud Engineer                              |
+| **Advanced Topics**   | 12 weeks        | Senior Cloud Engineer                       |
+| **Specializations**   | 8-12 weeks each | Solutions Architect, Security Engineer, SRE |
 
 :::tip Coming Soon
 Full curriculum content is being developed. Check the [Roadmap](/reference/roadmap) for timeline.

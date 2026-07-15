@@ -7,126 +7,456 @@
       "module": "03-networking",
       "name": "Networking Deep Dive",
       "lessons": [
-        { "id": "net-01", "title": "TCP/IP Demystified", "focus": "Packet structure, 3-way handshake, OSI model with cloud context", "diagrams": ["tcp-handshake-sequence", "osi-model-overlay"] },
-        { "id": "net-02", "title": "DNS: The Internet's Phonebook", "focus": "Resolution chain, record types, TTL, DNS in cloud (Azure DNS, Route 53)", "diagrams": ["dns-resolution-flowchart"] },
-        { "id": "net-03", "title": "HTTP/HTTPS & TLS Deep Dive", "focus": "Request/response, status codes, TLS handshake, certificates, mTLS", "diagrams": ["tls-handshake-sequence", "certificate-chain"] },
-        { "id": "net-04", "title": "Subnetting & CIDR Mastery", "focus": "CIDR notation, subnet calculation, VNet design patterns", "diagrams": ["cidr-address-space", "subnet-allocation-map"] },
-        { "id": "net-05", "title": "Load Balancing Patterns", "focus": "L4 vs L7, algorithms, health probes, session affinity", "diagrams": ["lb-architecture", "health-probe-flow"] },
-        { "id": "net-06", "title": "Network Security & Firewalls", "focus": "NSGs, ASGs, Azure Firewall, WAF, DDoS protection", "diagrams": ["nsg-rule-evaluation", "defense-in-depth-layers"] },
-        { "id": "net-07", "title": "Hybrid & Multi-Cloud Networking", "focus": "VPN, ExpressRoute, VNet peering, hub-spoke topology", "diagrams": ["hub-spoke-topology", "expressroute-architecture"] },
-        { "id": "net-08", "title": "Network Troubleshooting Lab", "focus": "tcpdump, Wireshark, Azure Network Watcher, connection issues", "diagrams": ["troubleshooting-decision-tree"] }
+        {
+          "id": "net-01",
+          "title": "TCP/IP Demystified",
+          "focus": "Packet structure, 3-way handshake, OSI model with cloud context",
+          "diagrams": ["tcp-handshake-sequence", "osi-model-overlay"]
+        },
+        {
+          "id": "net-02",
+          "title": "DNS: The Internet's Phonebook",
+          "focus": "Resolution chain, record types, TTL, DNS in cloud (Azure DNS, Route 53)",
+          "diagrams": ["dns-resolution-flowchart"]
+        },
+        {
+          "id": "net-03",
+          "title": "HTTP/HTTPS & TLS Deep Dive",
+          "focus": "Request/response, status codes, TLS handshake, certificates, mTLS",
+          "diagrams": ["tls-handshake-sequence", "certificate-chain"]
+        },
+        {
+          "id": "net-04",
+          "title": "Subnetting & CIDR Mastery",
+          "focus": "CIDR notation, subnet calculation, VNet design patterns",
+          "diagrams": ["cidr-address-space", "subnet-allocation-map"]
+        },
+        {
+          "id": "net-05",
+          "title": "Load Balancing Patterns",
+          "focus": "L4 vs L7, algorithms, health probes, session affinity",
+          "diagrams": ["lb-architecture", "health-probe-flow"]
+        },
+        {
+          "id": "net-06",
+          "title": "Network Security & Firewalls",
+          "focus": "NSGs, ASGs, Azure Firewall, WAF, DDoS protection",
+          "diagrams": ["nsg-rule-evaluation", "defense-in-depth-layers"]
+        },
+        {
+          "id": "net-07",
+          "title": "Hybrid & Multi-Cloud Networking",
+          "focus": "VPN, ExpressRoute, VNet peering, hub-spoke topology",
+          "diagrams": ["hub-spoke-topology", "expressroute-architecture"]
+        },
+        {
+          "id": "net-08",
+          "title": "Network Troubleshooting Lab",
+          "focus": "tcpdump, Wireshark, Azure Network Watcher, connection issues",
+          "diagrams": ["troubleshooting-decision-tree"]
+        }
       ]
     },
     {
       "module": "04-security",
       "name": "Security & IAM",
       "lessons": [
-        { "id": "sec-01", "title": "Security Fundamentals & Zero Trust", "focus": "CIA triad, defense in depth, Zero Trust architecture", "diagrams": ["zero-trust-model", "defense-in-depth-layers"] },
-        { "id": "sec-02", "title": "IAM Design Patterns", "focus": "Users, groups, roles, service principals, managed identities", "diagrams": ["iam-relationship-model", "rbac-inheritance"] },
-        { "id": "sec-03", "title": "Encryption Everywhere", "focus": "At-rest, in-transit, key management, HSM, TLS everywhere", "diagrams": ["encryption-layers", "key-rotation-lifecycle"] },
-        { "id": "sec-04", "title": "Secrets Management", "focus": "Key Vault, environment variables, secret rotation, workload identity", "diagrams": ["secret-lifecycle", "key-vault-access-patterns"] },
-        { "id": "sec-05", "title": "Threat Modeling", "focus": "STRIDE, attack trees, threat modeling in design phase", "diagrams": ["stride-framework", "threat-model-example"] },
-        { "id": "sec-06", "title": "Network Security Operations", "focus": "NSG design, microsegmentation, DDoS response, WAF tuning", "diagrams": ["microsegmentation-model"] },
-        { "id": "sec-07", "title": "Compliance & Governance", "focus": "Azure Policy, regulatory compliance, audit logging, SOC2/ISO", "diagrams": ["compliance-mapping", "policy-inheritance"] }
+        {
+          "id": "sec-01",
+          "title": "Security Fundamentals & Zero Trust",
+          "focus": "CIA triad, defense in depth, Zero Trust architecture",
+          "diagrams": ["zero-trust-model", "defense-in-depth-layers"]
+        },
+        {
+          "id": "sec-02",
+          "title": "IAM Design Patterns",
+          "focus": "Users, groups, roles, service principals, managed identities",
+          "diagrams": ["iam-relationship-model", "rbac-inheritance"]
+        },
+        {
+          "id": "sec-03",
+          "title": "Encryption Everywhere",
+          "focus": "At-rest, in-transit, key management, HSM, TLS everywhere",
+          "diagrams": ["encryption-layers", "key-rotation-lifecycle"]
+        },
+        {
+          "id": "sec-04",
+          "title": "Secrets Management",
+          "focus": "Key Vault, environment variables, secret rotation, workload identity",
+          "diagrams": ["secret-lifecycle", "key-vault-access-patterns"]
+        },
+        {
+          "id": "sec-05",
+          "title": "Threat Modeling",
+          "focus": "STRIDE, attack trees, threat modeling in design phase",
+          "diagrams": ["stride-framework", "threat-model-example"]
+        },
+        {
+          "id": "sec-06",
+          "title": "Network Security Operations",
+          "focus": "NSG design, microsegmentation, DDoS response, WAF tuning",
+          "diagrams": ["microsegmentation-model"]
+        },
+        {
+          "id": "sec-07",
+          "title": "Compliance & Governance",
+          "focus": "Azure Policy, regulatory compliance, audit logging, SOC2/ISO",
+          "diagrams": ["compliance-mapping", "policy-inheritance"]
+        }
       ]
     },
     {
       "module": "05-python",
       "name": "Python for Cloud",
       "lessons": [
-        { "id": "py-01", "title": "Python Essentials for Cloud Engineers", "focus": "Virtual environments, pip, key libraries (requests, json, os)", "diagrams": ["python-ecosystem-map"] },
-        { "id": "py-02", "title": "Working with Cloud SDKs", "focus": "Azure SDK, boto3, authentication patterns, async operations", "diagrams": ["sdk-authentication-flow"] },
-        { "id": "py-03", "title": "API Integration Patterns", "focus": "REST, pagination, rate limiting, retry logic, error handling", "diagrams": ["api-retry-pattern"] },
-        { "id": "py-04", "title": "Infrastructure Automation Scripts", "focus": "Provisioning, health checks, backup automation, reporting", "diagrams": ["automation-workflow"] },
-        { "id": "py-05", "title": "Testing Cloud Code", "focus": "pytest, mocking cloud services, integration tests, test fixtures", "diagrams": ["testing-pyramid-cloud"] },
-        { "id": "py-06", "title": "Building CLI Tools", "focus": "Click/argparse, configuration management, output formatting", "diagrams": ["cli-architecture"] }
+        {
+          "id": "py-01",
+          "title": "Python Essentials for Cloud Engineers",
+          "focus": "Virtual environments, pip, key libraries (requests, json, os)",
+          "diagrams": ["python-ecosystem-map"]
+        },
+        {
+          "id": "py-02",
+          "title": "Working with Cloud SDKs",
+          "focus": "Azure SDK, boto3, authentication patterns, async operations",
+          "diagrams": ["sdk-authentication-flow"]
+        },
+        {
+          "id": "py-03",
+          "title": "API Integration Patterns",
+          "focus": "REST, pagination, rate limiting, retry logic, error handling",
+          "diagrams": ["api-retry-pattern"]
+        },
+        {
+          "id": "py-04",
+          "title": "Infrastructure Automation Scripts",
+          "focus": "Provisioning, health checks, backup automation, reporting",
+          "diagrams": ["automation-workflow"]
+        },
+        {
+          "id": "py-05",
+          "title": "Testing Cloud Code",
+          "focus": "pytest, mocking cloud services, integration tests, test fixtures",
+          "diagrams": ["testing-pyramid-cloud"]
+        },
+        {
+          "id": "py-06",
+          "title": "Building CLI Tools",
+          "focus": "Click/argparse, configuration management, output formatting",
+          "diagrams": ["cli-architecture"]
+        }
       ]
     },
     {
       "module": "06-cloud-fundamentals",
       "name": "Cloud Fundamentals",
       "lessons": [
-        { "id": "cld-01", "title": "What Is Cloud Computing?", "focus": "Definition, history, why cloud, cloud vs on-premises economics", "diagrams": ["cloud-evolution-timeline"] },
-        { "id": "cld-02", "title": "IaaS, PaaS, SaaS, FaaS Explained", "focus": "Service models with real Azure examples, shared responsibility for each", "diagrams": ["service-model-comparison", "shared-responsibility-matrix"] },
-        { "id": "cld-03", "title": "Cloud Economics & Business Case", "focus": "CapEx vs OpEx, TCO analysis, economies of scale", "diagrams": ["capex-vs-opex", "tco-comparison-chart"] },
-        { "id": "cld-04", "title": "Regions, Zones & Global Infrastructure", "focus": "Region pairs, availability zones, edge locations, latency considerations", "diagrams": ["global-region-map", "region-pair-architecture"] },
-        { "id": "cld-05", "title": "Resource Organization & Management", "focus": "Subscriptions, resource groups, management groups, tagging", "diagrams": ["management-group-hierarchy"] },
-        { "id": "cld-06", "title": "Well-Architected Framework", "focus": "5 pillars: Operational Excellence, Security, Reliability, Performance, Cost", "diagrams": ["well-architected-pillars"] },
-        { "id": "cld-07", "title": "Azure Portal & CLI Walkthrough", "focus": "Portal navigation, Cloud Shell, az CLI basics, resource creation", "diagrams": ["portal-navigation-map"] },
-        { "id": "cld-08", "title": "AZ-900 Practice & Review", "focus": "Exam format, key topics review, practice questions, test-taking strategy", "diagrams": ["az900-domain-weight-chart"] }
+        {
+          "id": "cld-01",
+          "title": "What Is Cloud Computing?",
+          "focus": "Definition, history, why cloud, cloud vs on-premises economics",
+          "diagrams": ["cloud-evolution-timeline"]
+        },
+        {
+          "id": "cld-02",
+          "title": "IaaS, PaaS, SaaS, FaaS Explained",
+          "focus": "Service models with real Azure examples, shared responsibility for each",
+          "diagrams": ["service-model-comparison", "shared-responsibility-matrix"]
+        },
+        {
+          "id": "cld-03",
+          "title": "Cloud Economics & Business Case",
+          "focus": "CapEx vs OpEx, TCO analysis, economies of scale",
+          "diagrams": ["capex-vs-opex", "tco-comparison-chart"]
+        },
+        {
+          "id": "cld-04",
+          "title": "Regions, Zones & Global Infrastructure",
+          "focus": "Region pairs, availability zones, edge locations, latency considerations",
+          "diagrams": ["global-region-map", "region-pair-architecture"]
+        },
+        {
+          "id": "cld-05",
+          "title": "Resource Organization & Management",
+          "focus": "Subscriptions, resource groups, management groups, tagging",
+          "diagrams": ["management-group-hierarchy"]
+        },
+        {
+          "id": "cld-06",
+          "title": "Well-Architected Framework",
+          "focus": "5 pillars: Operational Excellence, Security, Reliability, Performance, Cost",
+          "diagrams": ["well-architected-pillars"]
+        },
+        {
+          "id": "cld-07",
+          "title": "Azure Portal & CLI Walkthrough",
+          "focus": "Portal navigation, Cloud Shell, az CLI basics, resource creation",
+          "diagrams": ["portal-navigation-map"]
+        },
+        {
+          "id": "cld-08",
+          "title": "AZ-900 Practice & Review",
+          "focus": "Exam format, key topics review, practice questions, test-taking strategy",
+          "diagrams": ["az900-domain-weight-chart"]
+        }
       ]
     },
     {
       "module": "07-azure-core",
       "name": "Azure Core Services",
       "lessons": [
-        { "id": "az-01", "title": "Azure Compute Deep Dive", "focus": "VMs, VMSS, availability sets/zones, dedicated hosts", "diagrams": ["vm-architecture", "vmss-scaling"] },
-        { "id": "az-02", "title": "Azure App Service & Serverless", "focus": "Web Apps, Functions, Logic Apps, deployment slots", "diagrams": ["app-service-architecture", "function-triggers"] },
-        { "id": "az-03", "title": "Azure Storage Services", "focus": "Blob, Files, Queues, Tables — access tiers, lifecycle management", "diagrams": ["storage-account-architecture", "blob-tier-lifecycle"] },
-        { "id": "az-04", "title": "Azure Virtual Networks", "focus": "VNet peering, service endpoints, private endpoints, NSGs", "diagrams": ["vnet-design-patterns", "private-endpoint-flow"] },
-        { "id": "az-05", "title": "Azure Load Balancing", "focus": "Load Balancer, App Gateway, Front Door, Traffic Manager", "diagrams": ["load-balancing-decision-tree"] },
-        { "id": "az-06", "title": "Azure Databases", "focus": "SQL Database, CosmosDB, MySQL/PostgreSQL flexible server", "diagrams": ["database-selection-guide"] },
-        { "id": "az-07", "title": "Azure Monitoring & Backup", "focus": "Monitor, Log Analytics, Application Insights, Backup, Site Recovery", "diagrams": ["monitoring-architecture", "backup-strategy"] },
-        { "id": "az-08", "title": "ARM Templates & Bicep", "focus": "Declarative Azure deployment, Bicep syntax, modules", "diagrams": ["arm-deployment-flow"] },
-        { "id": "az-09", "title": "Azure Governance", "focus": "Policy, Blueprints, locks, cost management, advisor", "diagrams": ["governance-framework"] },
-        { "id": "az-10", "title": "AZ-104 Practice & Review", "focus": "All 5 domains, scenario questions, hands-on labs review", "diagrams": ["az104-domain-weight-chart"] }
+        {
+          "id": "az-01",
+          "title": "Azure Compute Deep Dive",
+          "focus": "VMs, VMSS, availability sets/zones, dedicated hosts",
+          "diagrams": ["vm-architecture", "vmss-scaling"]
+        },
+        {
+          "id": "az-02",
+          "title": "Azure App Service & Serverless",
+          "focus": "Web Apps, Functions, Logic Apps, deployment slots",
+          "diagrams": ["app-service-architecture", "function-triggers"]
+        },
+        {
+          "id": "az-03",
+          "title": "Azure Storage Services",
+          "focus": "Blob, Files, Queues, Tables — access tiers, lifecycle management",
+          "diagrams": ["storage-account-architecture", "blob-tier-lifecycle"]
+        },
+        {
+          "id": "az-04",
+          "title": "Azure Virtual Networks",
+          "focus": "VNet peering, service endpoints, private endpoints, NSGs",
+          "diagrams": ["vnet-design-patterns", "private-endpoint-flow"]
+        },
+        {
+          "id": "az-05",
+          "title": "Azure Load Balancing",
+          "focus": "Load Balancer, App Gateway, Front Door, Traffic Manager",
+          "diagrams": ["load-balancing-decision-tree"]
+        },
+        {
+          "id": "az-06",
+          "title": "Azure Databases",
+          "focus": "SQL Database, CosmosDB, MySQL/PostgreSQL flexible server",
+          "diagrams": ["database-selection-guide"]
+        },
+        {
+          "id": "az-07",
+          "title": "Azure Monitoring & Backup",
+          "focus": "Monitor, Log Analytics, Application Insights, Backup, Site Recovery",
+          "diagrams": ["monitoring-architecture", "backup-strategy"]
+        },
+        {
+          "id": "az-08",
+          "title": "ARM Templates & Bicep",
+          "focus": "Declarative Azure deployment, Bicep syntax, modules",
+          "diagrams": ["arm-deployment-flow"]
+        },
+        {
+          "id": "az-09",
+          "title": "Azure Governance",
+          "focus": "Policy, Blueprints, locks, cost management, advisor",
+          "diagrams": ["governance-framework"]
+        },
+        {
+          "id": "az-10",
+          "title": "AZ-104 Practice & Review",
+          "focus": "All 5 domains, scenario questions, hands-on labs review",
+          "diagrams": ["az104-domain-weight-chart"]
+        }
       ]
     },
     {
       "module": "08-containers",
       "name": "Container Fundamentals",
       "lessons": [
-        { "id": "cont-01", "title": "What Are Containers Really?", "focus": "Process isolation, not light VMs; Linux primitives", "diagrams": ["container-vs-vm", "namespace-isolation"] },
-        { "id": "cont-02", "title": "Namespaces & Cgroups Deep Dive", "focus": "PID, net, mount, user namespaces; CPU/memory cgroups", "diagrams": ["namespace-types", "cgroup-hierarchy"] },
-        { "id": "cont-03", "title": "OCI Specification & Runtimes", "focus": "OCI image spec, runtime spec, runc, containerd, CRI-O", "diagrams": ["oci-ecosystem", "runtime-comparison"] }
+        {
+          "id": "cont-01",
+          "title": "What Are Containers Really?",
+          "focus": "Process isolation, not light VMs; Linux primitives",
+          "diagrams": ["container-vs-vm", "namespace-isolation"]
+        },
+        {
+          "id": "cont-02",
+          "title": "Namespaces & Cgroups Deep Dive",
+          "focus": "PID, net, mount, user namespaces; CPU/memory cgroups",
+          "diagrams": ["namespace-types", "cgroup-hierarchy"]
+        },
+        {
+          "id": "cont-03",
+          "title": "OCI Specification & Runtimes",
+          "focus": "OCI image spec, runtime spec, runc, containerd, CRI-O",
+          "diagrams": ["oci-ecosystem", "runtime-comparison"]
+        }
       ]
     },
     {
       "module": "09-docker",
       "name": "Docker in Production",
       "lessons": [
-        { "id": "dkr-01", "title": "Dockerfile Best Practices", "focus": "Layer caching, multi-stage builds, .dockerignore, non-root", "diagrams": ["dockerfile-layer-caching", "multi-stage-build"] },
-        { "id": "dkr-02", "title": "Image Optimization & Security", "focus": "Size reduction, vulnerability scanning, distroless, SBOM", "diagrams": ["image-optimization-pipeline"] },
-        { "id": "dkr-03", "title": "Docker Compose in Development", "focus": "Multi-service local dev, networking, volumes, profiles", "diagrams": ["compose-networking"] },
-        { "id": "dkr-04", "title": "Container Registries & CI/CD", "focus": "ACR, tagging strategy, image promotion, scanning in CI", "diagrams": ["image-promotion-flow"] },
-        { "id": "dkr-05", "title": "Docker Networking Deep Dive", "focus": "Bridge, host, overlay networks; DNS; published ports", "diagrams": ["docker-network-modes"] }
+        {
+          "id": "dkr-01",
+          "title": "Dockerfile Best Practices",
+          "focus": "Layer caching, multi-stage builds, .dockerignore, non-root",
+          "diagrams": ["dockerfile-layer-caching", "multi-stage-build"]
+        },
+        {
+          "id": "dkr-02",
+          "title": "Image Optimization & Security",
+          "focus": "Size reduction, vulnerability scanning, distroless, SBOM",
+          "diagrams": ["image-optimization-pipeline"]
+        },
+        {
+          "id": "dkr-03",
+          "title": "Docker Compose in Development",
+          "focus": "Multi-service local dev, networking, volumes, profiles",
+          "diagrams": ["compose-networking"]
+        },
+        {
+          "id": "dkr-04",
+          "title": "Container Registries & CI/CD",
+          "focus": "ACR, tagging strategy, image promotion, scanning in CI",
+          "diagrams": ["image-promotion-flow"]
+        },
+        {
+          "id": "dkr-05",
+          "title": "Docker Networking Deep Dive",
+          "focus": "Bridge, host, overlay networks; DNS; published ports",
+          "diagrams": ["docker-network-modes"]
+        }
       ]
     },
     {
       "module": "10-kubernetes",
       "name": "Kubernetes Mastery",
       "lessons": [
-        { "id": "k8s-01", "title": "Kubernetes Architecture", "focus": "Control plane, etcd, kubelet, controllers, reconciliation loop", "diagrams": ["k8s-architecture-diagram", "reconciliation-loop"] },
-        { "id": "k8s-02", "title": "Pods & Workloads", "focus": "Pod lifecycle, Deployments, ReplicaSets, StatefulSets, DaemonSets", "diagrams": ["pod-lifecycle", "deployment-rollout"] },
-        { "id": "k8s-03", "title": "Services & Networking", "focus": "ClusterIP, NodePort, LoadBalancer, Ingress, NetworkPolicies", "diagrams": ["k8s-networking-model", "ingress-flow"] },
-        { "id": "k8s-04", "title": "Configuration & Secrets", "focus": "ConfigMaps, Secrets, environment variables, CSI secrets", "diagrams": ["config-propagation"] },
-        { "id": "k8s-05", "title": "Storage in Kubernetes", "focus": "PV, PVC, StorageClasses, CSI drivers, Azure Disk/Files", "diagrams": ["pv-lifecycle"] },
-        { "id": "k8s-06", "title": "RBAC & Security", "focus": "Roles, ClusterRoles, bindings, service accounts, PodSecurity", "diagrams": ["rbac-model"] },
-        { "id": "k8s-07", "title": "Resource Management & Autoscaling", "focus": "Requests/limits, QoS, HPA, VPA, cluster autoscaler", "diagrams": ["hpa-scaling-flow"] },
-        { "id": "k8s-08", "title": "Observability on K8s", "focus": "Metrics-server, Prometheus, Grafana, logging architecture", "diagrams": ["k8s-observability-stack"] },
-        { "id": "k8s-09", "title": "Operators & CRDs", "focus": "Custom Resources, operator pattern, writing a simple operator", "diagrams": ["operator-pattern"] },
-        { "id": "k8s-10", "title": "CKA/CKAD Preparation", "focus": "Exam format, hands-on practice, time management, key scenarios", "diagrams": ["cka-exam-domains"] }
+        {
+          "id": "k8s-01",
+          "title": "Kubernetes Architecture",
+          "focus": "Control plane, etcd, kubelet, controllers, reconciliation loop",
+          "diagrams": ["k8s-architecture-diagram", "reconciliation-loop"]
+        },
+        {
+          "id": "k8s-02",
+          "title": "Pods & Workloads",
+          "focus": "Pod lifecycle, Deployments, ReplicaSets, StatefulSets, DaemonSets",
+          "diagrams": ["pod-lifecycle", "deployment-rollout"]
+        },
+        {
+          "id": "k8s-03",
+          "title": "Services & Networking",
+          "focus": "ClusterIP, NodePort, LoadBalancer, Ingress, NetworkPolicies",
+          "diagrams": ["k8s-networking-model", "ingress-flow"]
+        },
+        {
+          "id": "k8s-04",
+          "title": "Configuration & Secrets",
+          "focus": "ConfigMaps, Secrets, environment variables, CSI secrets",
+          "diagrams": ["config-propagation"]
+        },
+        {
+          "id": "k8s-05",
+          "title": "Storage in Kubernetes",
+          "focus": "PV, PVC, StorageClasses, CSI drivers, Azure Disk/Files",
+          "diagrams": ["pv-lifecycle"]
+        },
+        {
+          "id": "k8s-06",
+          "title": "RBAC & Security",
+          "focus": "Roles, ClusterRoles, bindings, service accounts, PodSecurity",
+          "diagrams": ["rbac-model"]
+        },
+        {
+          "id": "k8s-07",
+          "title": "Resource Management & Autoscaling",
+          "focus": "Requests/limits, QoS, HPA, VPA, cluster autoscaler",
+          "diagrams": ["hpa-scaling-flow"]
+        },
+        {
+          "id": "k8s-08",
+          "title": "Observability on K8s",
+          "focus": "Metrics-server, Prometheus, Grafana, logging architecture",
+          "diagrams": ["k8s-observability-stack"]
+        },
+        {
+          "id": "k8s-09",
+          "title": "Operators & CRDs",
+          "focus": "Custom Resources, operator pattern, writing a simple operator",
+          "diagrams": ["operator-pattern"]
+        },
+        {
+          "id": "k8s-10",
+          "title": "CKA/CKAD Preparation",
+          "focus": "Exam format, hands-on practice, time management, key scenarios",
+          "diagrams": ["cka-exam-domains"]
+        }
       ]
     },
     {
       "module": "11-helm",
       "name": "Helm & Package Management",
       "lessons": [
-        { "id": "hlm-01", "title": "Helm Architecture & Concepts", "focus": "Charts, releases, repositories, values, templates", "diagrams": ["helm-architecture"] },
-        { "id": "hlm-02", "title": "Chart Development", "focus": "Chart structure, helpers, hooks, tests, dependencies", "diagrams": ["chart-structure"] },
-        { "id": "hlm-03", "title": "Production Helm Patterns", "focus": "OCI registries, Helmfile, GitOps with Helm, secrets", "diagrams": ["helm-gitops-flow"] }
+        {
+          "id": "hlm-01",
+          "title": "Helm Architecture & Concepts",
+          "focus": "Charts, releases, repositories, values, templates",
+          "diagrams": ["helm-architecture"]
+        },
+        {
+          "id": "hlm-02",
+          "title": "Chart Development",
+          "focus": "Chart structure, helpers, hooks, tests, dependencies",
+          "diagrams": ["chart-structure"]
+        },
+        {
+          "id": "hlm-03",
+          "title": "Production Helm Patterns",
+          "focus": "OCI registries, Helmfile, GitOps with Helm, secrets",
+          "diagrams": ["helm-gitops-flow"]
+        }
       ]
     },
     {
       "module": "12-terraform",
       "name": "Terraform & IaC",
       "lessons": [
-        { "id": "tf-01", "title": "Terraform Fundamentals", "focus": "HCL, providers, resources, data sources, plan/apply workflow", "diagrams": ["terraform-workflow", "resource-graph"] },
-        { "id": "tf-02", "title": "State Management", "focus": "Local vs remote, locking, workspaces, state migration", "diagrams": ["state-lifecycle", "remote-state-architecture"] },
-        { "id": "tf-03", "title": "Modules & Composition", "focus": "Module design, registry, versioning, composition patterns", "diagrams": ["module-composition"] },
-        { "id": "tf-04", "title": "Terraform in CI/CD", "focus": "GitHub Actions, Atlantis, plan on PR, apply on merge", "diagrams": ["terraform-cicd-flow"] },
-        { "id": "tf-05", "title": "Policy as Code", "focus": "Sentinel, OPA, Checkov, Infracost, compliance automation", "diagrams": ["policy-as-code-pipeline"] },
-        { "id": "tf-06", "title": "Multi-Cloud & Advanced Patterns", "focus": "Multi-provider, data-only modules, terragrunt, drift detection", "diagrams": ["multi-cloud-architecture"] }
+        {
+          "id": "tf-01",
+          "title": "Terraform Fundamentals",
+          "focus": "HCL, providers, resources, data sources, plan/apply workflow",
+          "diagrams": ["terraform-workflow", "resource-graph"]
+        },
+        {
+          "id": "tf-02",
+          "title": "State Management",
+          "focus": "Local vs remote, locking, workspaces, state migration",
+          "diagrams": ["state-lifecycle", "remote-state-architecture"]
+        },
+        {
+          "id": "tf-03",
+          "title": "Modules & Composition",
+          "focus": "Module design, registry, versioning, composition patterns",
+          "diagrams": ["module-composition"]
+        },
+        {
+          "id": "tf-04",
+          "title": "Terraform in CI/CD",
+          "focus": "GitHub Actions, Atlantis, plan on PR, apply on merge",
+          "diagrams": ["terraform-cicd-flow"]
+        },
+        {
+          "id": "tf-05",
+          "title": "Policy as Code",
+          "focus": "Sentinel, OPA, Checkov, Infracost, compliance automation",
+          "diagrams": ["policy-as-code-pipeline"]
+        },
+        {
+          "id": "tf-06",
+          "title": "Multi-Cloud & Advanced Patterns",
+          "focus": "Multi-provider, data-only modules, terragrunt, drift detection",
+          "diagrams": ["multi-cloud-architecture"]
+        }
       ]
     }
   ]

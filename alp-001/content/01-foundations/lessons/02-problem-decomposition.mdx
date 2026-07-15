@@ -103,7 +103,7 @@ graph LR
     A[1. Define] --> B[2. Decompose]
     B --> C[3. Map Dependencies]
     C --> D[4. Solve Sequentially]
-    
+
     style A fill:#0ea5e9,stroke:#0284c7,color:#fff
     style B fill:#8b5cf6,stroke:#7c3aed,color:#fff
     style C fill:#f59e0b,stroke:#d97706,color:#000
@@ -128,7 +128,7 @@ graph TD
     P --> E[Cut over traffic]
     P --> F[Decommission old infra]
     P --> G[Document everything]
-    
+
     style P fill:#0ea5e9,stroke:#0284c7,color:#fff
 ```
 
@@ -146,7 +146,7 @@ graph TD
     E --> F
     F --> G[Decommission Old]
     G --> H[Document]
-    
+
     style A fill:#10b981,stroke:#059669,color:#fff
     style B fill:#10b981,stroke:#059669,color:#fff
     style C fill:#f59e0b,stroke:#d97706,color:#000
@@ -154,7 +154,8 @@ graph TD
 ```
 
 <BestPractice title="Dependency Mapping Rule">
-Green nodes = can be done in parallel. Yellow = depends on green. Purple = depends on everything before it. This is your execution order.
+  Green nodes = can be done in parallel. Yellow = depends on green. Purple = depends on everything
+  before it. This is your execution order.
 </BestPractice>
 
 ### The 5 Whys Technique
@@ -176,6 +177,7 @@ When something breaks, don't fix the symptom — find the root cause:
 **Ticket:** "Login page takes 15 seconds to load."
 
 **5 Whys analysis:**
+
 1. Why? → Login API call takes 15 seconds.
 2. Why? → It queries the user database with `SELECT * FROM users`.
 3. Why? → No index on the `email` column used in WHERE clause.
@@ -216,7 +218,10 @@ When something breaks, don't fix the symptom — find the root cause:
    - C) Decompose → Define → Solve
    - D) Map Dependencies → Define → Solve
 
-   <details><summary>Answer</summary>**B.** Always define the problem first, then break it down, map what depends on what, then solve.</details>
+   <details>
+     <summary>Answer</summary>**B.** Always define the problem first, then break it down, map what
+     depends on what, then solve.
+   </details>
 
 2. **A deployment fails. The 5 Whys lead you to "no code review checklist." What's the real fix?**
    - A) Blame the developer
@@ -224,7 +229,10 @@ When something breaks, don't fix the symptom — find the root cause:
    - C) Add to the code review checklist so this entire class of bugs is prevented
    - D) Write a postmortem
 
-   <details><summary>Answer</summary>**C.** The 5 Whys leads to process fixes, not blame. Adding to the checklist prevents this class of bug forever.</details>
+   <details>
+     <summary>Answer</summary>**C.** The 5 Whys leads to process fixes, not blame. Adding to the
+     checklist prevents this class of bug forever.
+   </details>
 
 ---
 

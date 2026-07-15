@@ -43,18 +43,21 @@ Deeper detail.
 ## Writing Guidelines
 
 ### Be Concise
+
 - Use short sentences (≤ 25 words)
 - Use short paragraphs (≤ 5 sentences)
 - Use bullet points for lists of 3+ items
 - Delete unnecessary words
 
 ### Be Clear
+
 - Define acronyms on first use: "Site Reliability Engineering (SRE)"
 - Use consistent terminology throughout
 - Avoid jargon without explanation
 - Use concrete examples over abstract descriptions
 
 ### Be Structured
+
 - One H1 per document
 - Use H2 for major sections, H3 for sub-sections
 - Never skip heading levels (don't go from H2 to H4)
@@ -99,8 +102,8 @@ Something that could cause problems if not followed.
 
 ```markdown
 | Header 1 | Header 2 | Header 3 |
-|---|---|---|
-| Value | Value | Value |
+| -------- | -------- | -------- |
+| Value    | Value    | Value    |
 ```
 
 ### Links

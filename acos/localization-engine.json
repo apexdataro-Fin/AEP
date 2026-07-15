@@ -3,10 +3,34 @@
   "description": "Localization Engine — multilingual content support, RTL/LTR layouts, multilingual metadata, translation management. Supported languages: Arabic, English, Finnish, Kurdish, and extensible to any language.",
   "languages": {
     "supported": [
-      { "code": "en", "name": "English", "direction": "ltr", "native_name": "English", "enabled": true },
-      { "code": "ar", "name": "Arabic", "direction": "rtl", "native_name": "العربية", "enabled": false },
-      { "code": "fi", "name": "Finnish", "direction": "ltr", "native_name": "Suomi", "enabled": false },
-      { "code": "ku", "name": "Kurdish", "direction": "rtl", "native_name": "کوردی", "enabled": false }
+      {
+        "code": "en",
+        "name": "English",
+        "direction": "ltr",
+        "native_name": "English",
+        "enabled": true
+      },
+      {
+        "code": "ar",
+        "name": "Arabic",
+        "direction": "rtl",
+        "native_name": "العربية",
+        "enabled": false
+      },
+      {
+        "code": "fi",
+        "name": "Finnish",
+        "direction": "ltr",
+        "native_name": "Suomi",
+        "enabled": false
+      },
+      {
+        "code": "ku",
+        "name": "Kurdish",
+        "direction": "rtl",
+        "native_name": "کوردی",
+        "enabled": false
+      }
     ],
     "extensibility": {
       "description": "Any ISO 639-1 language can be added",
@@ -23,7 +47,13 @@
       "description": "Right-to-left layout for Arabic, Kurdish, Persian, Hebrew, Urdu, etc.",
       "activation": "automatically based on language.direction or user preferences",
       "css": "dir='rtl' on html element; CSS logical properties (margin-inline-start, padding-inline-end, etc.)",
-      "mirrored_components": ["navigation", "sidebar", "timeline", "progress indicators", "breadcrumbs"],
+      "mirrored_components": [
+        "navigation",
+        "sidebar",
+        "timeline",
+        "progress indicators",
+        "breadcrumbs"
+      ],
       "non_mirrored": ["icons", "code blocks", "numbers", "URLs", "Mermaid diagrams"]
     },
     "multilingual_urls": {
@@ -48,9 +78,7 @@
       "description": "string",
       "content": "string (path to translated MDX)",
       "metadata_keywords": ["string"],
-      "glossary_terms": [
-        { "source": "string", "translation": "string" }
-      ]
+      "glossary_terms": [{ "source": "string", "translation": "string" }]
     }
   },
   "multilingual_metadata": {

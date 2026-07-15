@@ -33,8 +33,9 @@ graph LR
 
 ```typescript
 // ❌ Fails typecheck
-function getLesson(id) {          // Implicit 'any'
-  return lessons.find(l => l.id = id);  // Assignment, not comparison
+function getLesson(id) {
+  // Implicit 'any'
+  return lessons.find((l) => (l.id = id)); // Assignment, not comparison
 }
 
 // ✅ Passes typecheck
@@ -46,6 +47,7 @@ function getLesson(id: string): Lesson | undefined {
 ### ESLint (`npm run lint`)
 
 Enforces:
+
 - No unused variables
 - No implicit `any` types
 - Consistent import ordering
@@ -55,6 +57,7 @@ Enforces:
 ### Content Validation (`node scripts/validate-content.js`)
 
 Checks:
+
 - Required frontmatter fields present
 - Valid difficulty levels
 - Unique slugs
@@ -76,11 +79,11 @@ Reviewers must verify:
 
 ## Complexity Guidelines
 
-| Metric | Limit |
-|---|---|
-| **Function length** | ≤ 50 lines |
-| **Component length** | ≤ 200 lines |
-| **File length** | ≤ 500 lines |
-| **Cyclomatic complexity** | ≤ 10 |
-| **Nesting depth** | ≤ 4 levels |
-| **Parameters per function** | ≤ 4 |
+| Metric                      | Limit       |
+| --------------------------- | ----------- |
+| **Function length**         | ≤ 50 lines  |
+| **Component length**        | ≤ 200 lines |
+| **File length**             | ≤ 500 lines |
+| **Cyclomatic complexity**   | ≤ 10        |
+| **Nesting depth**           | ≤ 4 levels  |
+| **Parameters per function** | ≤ 4         |

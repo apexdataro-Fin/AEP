@@ -62,22 +62,22 @@ graph TB
 
 ## Node Types
 
-| Type | Example | Description |
-|---|---|---|
-| `concept` | "Load Balancing" | Abstract idea or principle |
-| `technology` | "AWS ELB" | Specific tool or service |
-| `skill` | "Configure an ALB" | Practical ability |
-| `certification` | "AWS Solutions Architect" | Certification exam |
+| Type            | Example                   | Description                |
+| --------------- | ------------------------- | -------------------------- |
+| `concept`       | "Load Balancing"          | Abstract idea or principle |
+| `technology`    | "AWS ELB"                 | Specific tool or service   |
+| `skill`         | "Configure an ALB"        | Practical ability          |
+| `certification` | "AWS Solutions Architect" | Certification exam         |
 
 ## Relationship Types
 
-| Relationship | Direction | Example |
-|---|---|---|
-| `prerequisite_of` | A → B | Networking → VPC Design |
-| `implemented_by` | Concept → Tech | Containers → Docker |
-| `part_of` | Part → Whole | EC2 → AWS Compute |
-| `related_to` | A ↔ B | Observability ↔ Monitoring |
-| `certified_by` | Skill → Cert | Cloud Skills → AWS SA |
+| Relationship      | Direction      | Example                    |
+| ----------------- | -------------- | -------------------------- |
+| `prerequisite_of` | A → B          | Networking → VPC Design    |
+| `implemented_by`  | Concept → Tech | Containers → Docker        |
+| `part_of`         | Part → Whole   | EC2 → AWS Compute          |
+| `related_to`      | A ↔ B          | Observability ↔ Monitoring |
+| `certified_by`    | Skill → Cert   | Cloud Skills → AWS SA      |
 
 ## Adding to the Graph
 
@@ -114,6 +114,7 @@ node scripts/validate-kg.js
 ```
 
 Checks:
+
 - All referenced node IDs exist
 - No orphaned edges
 - Relationship types are valid
