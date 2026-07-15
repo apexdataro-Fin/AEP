@@ -1,339 +1,239 @@
-# Project Status — Cloud Engineering Learning OS
+# Project Status — ARES EDU PLATFORM (AEP)
 
 > Last updated: 2026-07-15
 
-## Overall Completion: ~25%
+## Overall Completion: ~45%
 
 | Phase | Status | Progress |
 |---|---|---|
 | **Phase 1 — Foundation** | ✅ Complete | 100% |
 | **Phase 2 — Learning Core** | ✅ Complete | 100% |
-| **Phase 3 — Interactive Learning** | 🔜 Next | 0% |
-| **Phase 4 — AI Integration** | 📋 Planned | 0% |
-| **Phase 5 — Platform Ecosystem** | 📋 Planned | 0% |
-| **Phase 6 — Advanced** | 📋 Planned | 0% |
+| **Phase 3 — Platform Experience** | ✅ Complete | 100% |
+| **Phase 4 — Interactive Learning** | 🔜 Next | 0% |
+| **Phase 5 — AI Integration (Backend)** | 📋 Planned | 0% |
+| **Phase 6 — Platform Ecosystem** | 📋 Planned | 0% |
 
 ---
 
-## Phase 1 — Foundation ✅
+## Phase 3 — Platform Experience ✅
 
-### Completed
-- Docusaurus 3.10 project scaffold with TypeScript
-- Professional dark/light theme (sky-blue/slate palette)
-- PWA support (offline mode, service worker, installable)
-- Local full-text search
-- Mermaid diagram rendering (light/dark themes)
-- GitHub Pages deployment via GitHub Actions
-- PR validation CI workflow
-- Responsive design (mobile, tablet, desktop)
-- Print styles
-- Complete documentation foundation (~35 .md/.mdx files)
-- Architecture, Development, Standards, Guides, Reference docs
-- Content module landing pages (Curriculum, Lessons, Projects, Labs, Career, Certifications)
+Transformed the project from Cloud Engineering documentation into the **ARES EDU PLATFORM** — a domain-agnostic, reusable Learning Operating System. Cloud Engineering is now just the first content domain.
 
-### Files Created
-- `docusaurus.config.ts`, `sidebars.ts`, `tsconfig.json`, `package.json`
-- `src/css/custom.css`, `src/pages/index.tsx`, `src/components/HomepageFeatures/`
-- `static/img/logo.svg`, `static/img/logo-dark.svg`, `static/img/favicon.svg`
-- `public/manifest.json`, `public/robots.txt`
-- `.github/workflows/deploy.yml`, `.github/workflows/validate.yml`
-- `.prettierrc`, `.eslintrc.json`
-- ~35 documentation files under `docs/`
-- Content module `_category_.json` files and `index.md` pages
+### What was built
+
+#### Platform Architecture
+- ✅ **Multi-Domain Support** — 20 domains defined (cloud, cybersecurity, AI, software, networking, Linux, Python, business, math, etc.)
+- ✅ **Multi-Content Architecture** — 13 content categories (books, courses, bootcamps, labs, certifications, career tracks, etc.)
+- ✅ **Multi-Provider Support** — authors, instructors, organizations, academies, universities
+- ✅ **Extensibility Layer** — plugin system interface for future modules (marketplace, payments, classrooms, etc.)
+- ✅ **Domain-Agnostic Design** — Nothing assumes Cloud Engineering. Any domain works.
+
+#### Design System
+- ✅ Complete CSS design system (`src/css/platform.css`)
+  - Custom properties (60+ tokens)
+  - Cards (8 variants: book, course, project, lab, certification, career, knowledge, technology)
+  - Buttons (primary, secondary, ghost, icon variants, 3 sizes)
+  - Badges (5 color variants), Tags, Progress bars (4 variants)
+  - Timeline component, Grid layouts (2/3/4 column, auto-fill)
+  - Dark mode support, Reduced motion, High contrast
+  - Responsive breakpoints, Print styles
+  - Focus-visible accessibility
+
+#### Global Navigation
+- ✅ Multi-level navigation bar with dropdowns (`NavigationBar.tsx`)
+  - 5 main sections: Learn, Practice, Grow, Reference, Docs
+  - Keyboard-accessible dropdowns with animated transitions
+  - Breadcrumb navigation
+  - Search trigger button
+  - Mobile responsive
+
+#### Platform Dashboard
+- ✅ Complete dashboard component (`Dashboard.tsx`)
+  - Continue Learning with progress bars
+  - Streak display with at-risk warning
+  - XP & Level display
+  - Learning progress stats
+  - Daily & Weekly missions
+  - Achievement grid
+  - Upcoming reviews with retention estimates
+  - Recent activity timeline
+
+#### Smart Search
+- ✅ Search overlay (`SmartSearch.tsx`)
+  - ⌘K keyboard shortcut
+  - Domain, content type, difficulty filters
+  - Search history
+  - Quick search buttons
+  - Modal overlay with backdrop
+
+#### Content Hub
+- ✅ Content hub system (`ContentHub.tsx`)
+  - Books Library, Courses Library, Projects Library, Labs Library
+  - Knowledge Base, Career Center, Certification Center
+  - Category grid with counts
+  - Featured and recent items
+  - Hub card with domain/difficulty/progress metadata
+
+#### Learning Experience
+- ✅ Learning modes (`LearningModes.tsx`)
+  - Focus Mode (no navbar, footer, sidebar)
+  - Reading Mode (enhanced typography)
+  - Study Mode
+  - Distraction Free Mode
+  - Mode toggle bar with 1-click switching
+  - Print-optimized mode
+
+#### Knowledge Visualization
+- ✅ Knowledge visualization components (`KnowledgeVisualization.tsx`)
+  - Skill Tree with expandable nodes and proficiency colors
+  - Dependency Graph (Mermaid rendering)
+  - Relationship Explorer
+  - Career Progression Graph
+
+#### AI Experience
+- ✅ AI interface components (`AIExperience.tsx`)
+  - AI Tutor chat panel with context awareness
+  - Quick-action buttons (Explain, Summarize, Quiz, Flashcards, Review)
+  - Suggested questions
+  - AI Action Bar for content pages
+  - Flashcard Deck with flip animation
+
+#### XP & Gamification
+- ✅ XP system with levels and titles
+- ✅ Achievement system (5 rarities, 5 categories)
+- ✅ Badge system (5 tiers)
+- ✅ Daily & Weekly missions
+- ✅ Streak tracking with check-in
+- ✅ Progress bars, level indicators
+
+#### Platform Settings
+- ✅ Complete settings panel (`PlatformSettings.tsx`)
+  - Theme (system/light/dark)
+  - Font size (4 options)
+  - Reading width (4 options)
+  - Reduce motion toggle
+  - High contrast toggle
+  - Dyslexia-friendly font toggle
+  - Learning mode selector
+  - AI preferences (enable, auto-suggest, difficulty adaptation)
+  - Notification preferences (7 toggles)
+
+#### State Management
+- ✅ React Context provider (`PlatformProvider.tsx`)
+- ✅ 17 custom hooks (`usePlatform.ts`)
+  - usePreferences, useBookmarks, useFavorites, useRecentlyVisited
+  - useNotes, useHighlights, useReadingHistory
+  - useContinueLearning, useLearningProgress
+  - useStreak, useXP, useAchievements, useBadges
+  - useDailyMissions, useWeeklyMissions, useUpcomingReviews
+  - useSearchHistory, useAITutorSessions, useLearningMode
+  - useDashboard (aggregated hook)
+- ✅ All state persisted to localStorage with `aep:` prefix
+
+#### TypeScript Types
+- ✅ Complete platform types (`src/types/platform.ts`)
+  - 40+ interfaces covering all platform features
+  - Domain-agnostic: no Cloud Engineering assumptions
+  - UserProfile, UserPreferences, PlatformConfig
+  - NavigationItem, BreadcrumbItem, BookmarkItem
+  - DashboardData, ContinueLearningItem, ActivityItem
+  - LearningProgress, StreakData, GoalProgress
+  - XPSystem, Achievement, Badge, Milestone
+  - SearchResult, SearchFilters, AITutorSession
+  - LearningModeConfig, PlatformSettings
+
+#### Metadata & Configuration
+- ✅ Platform configuration (`metadata/platform-config.json`)
+  - 20 domains, 13 content categories
+  - Feature flags, plugin interface
+  - Extensibility specifications
+- ✅ Course management (`metadata/course-management.json`)
+  - Provider registry (authors, instructors, orgs, academies, universities)
+  - Book and course registry schemas
+  - Multi-content coexistence example
 
 ---
 
-## Phase 2 — Learning Core ✅
+### Files Created (Phase 3)
 
-### Learning Engine
-Created the complete reusable lesson architecture supporting:
-- ✅ 5 explanation layers (Simple, Core, Professional, Production, Architect)
-- ✅ Complete metadata system (40+ fields, AI-friendly)
-- ✅ Learning objectives with Bloom's taxonomy
-- ✅ Prerequisites and dependency chains
-- ✅ Skill requirements and proficiency levels
-- ✅ Estimated duration with minutes/hours/display formats
-- ✅ Technology and tool mappings
-- ✅ Career relevance scoring
-- ✅ Certification objective mapping (AZ-900, AZ-104, AZ-400, AI-102)
-- ✅ Knowledge graph node connections
-- ✅ Mermaid diagram support
-- ✅ Interactive block support
-- ✅ AI block support
-- ✅ Flashcard integration
-- ✅ Active recall questions
-- ✅ Feynman technique points
-- ✅ Common mistakes
-- ✅ Debugging notes
-- ✅ Production notes
-- ✅ Architecture notes
-- ✅ Interview preparation
-- ✅ Review scheduling with spaced repetition
+```
+src/
+├── types/
+│   └── platform.ts                          # 40+ platform types
+├── hooks/
+│   └── usePlatform.ts                       # 17 custom hooks + localStorage
+├── css/
+│   └── platform.css                         # Complete design system (60+ tokens)
+├── components/
+│   └── platform/
+│       ├── PlatformProvider.tsx              # React Context provider
+│       ├── NavigationBar.tsx                 # Multi-level global nav
+│       ├── DesignSystem.tsx                  # Card, Badge, Progress, Timeline, etc.
+│       ├── Dashboard.tsx                     # Full learning dashboard
+│       ├── SmartSearch.tsx                   # Search overlay with filters
+│       ├── ContentHub.tsx                    # Libraries for all content types
+│       ├── AIExperience.tsx                  # AI Tutor, Flashcards, Action Bar
+│       ├── LearningModes.tsx                 # Focus/Reading/Study/DistractionFree
+│       ├── KnowledgeVisualization.tsx        # SkillTree, DependencyGraph, CareerGraph
+│       └── PlatformSettings.tsx              # Full settings panel
+metadata/
+├── platform-config.json                      # 20 domains, 13 categories, extensibility
+└── course-management.json                    # Providers, book/course registries
+```
 
-### Learning Levels
-Created the five explanation layer system:
-1. **Simple** — Plain language, everyday analogies, zero prerequisites
-2. **Core** — Standard technical explanation, default level
-3. **Professional** — Deep configuration, CLI examples, practical trade-offs
-4. **Production** — War stories, incident reports, monitoring patterns
-5. **Architect** — System-level thinking, organizational impact, 5-year horizon
-
-### Templates Created (16)
-| Template | File |
+### Reusable UI Components
+| Component | File |
 |---|---|
-| Master Lesson | `templates/lesson.mdx` |
-| Mini Lesson | `templates/mini-lesson.mdx` |
-| Lab | `templates/lab.mdx` |
-| Project | `templates/project.mdx` |
-| Simulator | `templates/simulator.mdx` |
-| Certification Lesson | `templates/certification-lesson.mdx` |
-| Career Lesson | `templates/career-lesson.mdx` |
-| Interview Lesson | `templates/interview-lesson.mdx` |
-| Architecture Review | `templates/architecture-review.mdx` |
-| Production Incident | `templates/production-incident.mdx` |
-| Decision Lab | `templates/decision-lab.mdx` |
-| Troubleshooting Guide | `templates/troubleshooting-guide.mdx` |
-| Reference Page | `templates/reference-page.mdx` |
-| Glossary Entry | `templates/glossary-entry.mdx` |
-| Cheat Sheet | `templates/cheat-sheet.mdx` |
-| Technology Overview | `templates/technology-overview.mdx` |
+| Card (8 variants) | DesignSystem.tsx |
+| Badge (5 variants) | DesignSystem.tsx |
+| Tag | DesignSystem.tsx |
+| ProgressBar (4 variants) | DesignSystem.tsx |
+| StreakDisplay | DesignSystem.tsx |
+| XPDisplay | DesignSystem.tsx |
+| Timeline | DesignSystem.tsx |
+| AchievementCard | DesignSystem.tsx |
+| DailyMissionCard | DesignSystem.tsx |
+| SectionHeader | DesignSystem.tsx |
+| NavigationBar | NavigationBar.tsx |
+| Dashboard | Dashboard.tsx |
+| SmartSearch | SmartSearch.tsx |
+| ContentHub (7 libraries) | ContentHub.tsx |
+| AITutor (chat panel) | AIExperience.tsx |
+| AIActionBar | AIExperience.tsx |
+| FlashcardDeck | AIExperience.tsx |
+| LearningModeWrapper | LearningModes.tsx |
+| SkillTree | KnowledgeVisualization.tsx |
+| DependencyGraph | KnowledgeVisualization.tsx |
+| RelationshipExplorer | KnowledgeVisualization.tsx |
+| CareerGraph | KnowledgeVisualization.tsx |
+| PlatformSettings | PlatformSettings.tsx |
+| PlatformProvider | PlatformProvider.tsx |
 
-### Metadata System
-✅ Complete schema at `schemas/extended-metadata.schema.json`:
-- 40+ metadata fields
-- AI-friendly structured data
-- JSON Schema validation
-- TypeScript type definitions in `src/types/learning-core.ts`
-
-### Knowledge Graph
-✅ Extended knowledge graph at `knowledge-graph/extended-graph.json`:
-- 12 node types (lesson, lab, project, simulator, skill, technology, etc.)
-- 12 relationship types (prerequisite_of, teaches, tests, implements, etc.)
-- Domain grouping (AWS, Azure, GCP, cloud-agnostic)
-- Visualization configuration
-
-### Skill Tree
-✅ Complete skill tree at `metadata/skill-tree.json`:
-- 14 skill categories
-- 5 proficiency levels (awareness → expert)
-- Skill dependencies (parent/child/unlocked)
-- Career mapping (junior → principal)
-- Certification mapping (AZ-900, AZ-104, AZ-400, CKA, CKS)
-- Technology mapping
-
-### Career Engine
-✅ Career engine at `metadata/career-engine.json`:
-- 5 career levels (Junior → Principal Engineer)
-- Salary benchmarks
-- Daily activity definitions
-- Ticket types per level
-- Incident schema
-- Project schema
-- Architecture review schema
-- Performance review schema
-
-### Project Engine
-✅ Project framework at `metadata/project-engine.json`:
-- 4 project types (guided, challenge, capstone, production)
-- Complete project schema with deliverables
-- Acceptance criteria with verification methods
-- Portfolio value scoring
-- Grading rubric
-- Certification mapping
-- Extension suggestions
-
-### Lab Engine
-✅ Lab system at `metadata/lab-engine.json`:
-- 8 lab types (guided, challenge, production, debugging, architecture, security, cost, AI)
-- Scenario-based with role assignment
-- Task management with hints
-- Troubleshooting guidance
-- Check-your-understanding questions
-- Cost estimation
-
-### Simulator Engine
-✅ Simulator architecture at `metadata/simulator-engine.json`:
-- 12 simulator types (terminal, Azure portal, Terraform, Docker, K8s, networking, CIDR, IAM, monitoring, cost, architecture builder, incident response)
-- Lifecycle interface (init, start, pause, reset, complete)
-- Event system
-- AI integration
-- Phased implementation plan (Phases 3-6)
-
-### AI Integration
-✅ AI specification at `metadata/ai-integration.json`:
-- 10 AI block types (summary, explanation, quiz, flashcards, interview, code review, architecture review, recommendations, revision, difficulty adaptation)
-- MDX embedding syntax
-- API interface definition
-- Future features roadmap
-
-### Review Engine
-✅ Review system at `metadata/review-engine.json`:
-- Active recall question types (6 types)
-- Spaced repetition (SM-2 algorithm)
-- Review scheduling with daily limits
-- Weak topic detection (5 signals)
-- Progress tracking (11 metrics)
-- Adaptive learning (Bayesian Knowledge Tracing — Phase 4)
-
-### Certification Engine
-✅ Certification system at `metadata/certification-engine.json`:
-- 4 certifications fully defined (AZ-900, AZ-104, AZ-400, AI-102)
-- Complete domain and objective mapping
-- Exam details (duration, cost, passing score)
-- Frontmatter integration example
-
-### Component Library
-✅ Component specification at `metadata/component-library.json`:
-- 8 callout blocks (Info, Warning, Tip, BestPractice, ProductionNote, ArchitectureNote, SecurityNote, CostNote)
-- 11 interactive blocks (InterviewQuestion, Challenge, Exercise, Quiz, Definition, Example, Analogy, CheatSheet, CommonMistake, Debugging, DecisionPoint)
-- 4 AI blocks (AIPrompt, AIExplanation, AIQuiz, AIFlashcards)
-- 2 diagram/simulator blocks
-- Phase planning for implementation
-
-### TypeScript Types
-✅ Complete type definitions at `src/types/learning-core.ts`:
-- All content types, difficulty levels, proficiency levels
-- Learning level types
-- Technology/skill/content reference types
-- Certification types with full certification data
-- Career role and relevance types
-- Skill tree types
-- Knowledge graph node/edge/relationship types
-- Learning objective types (Bloom's taxonomy)
-- Active recall and review types
-- Progress tracking types
-- Complete ContentMetadata interface
-- Project/Lab/Simulator engine types
-- AI integration types
-- Component library types
+### Future Extension Points
+- **Plugin System** — Plugins register via `register(components, routes, settings)`
+- **Backend Migration** — localStorage → Convex (Phase 4)
+- **AI Backend** — UI components ready; API integration in Phase 4
+- **Community Features** — Discussion, reviews, mentorship hooks defined
+- **Marketplace** — Content purchasing interface hooks defined
+- **Certification Issuance** — Exam and certificate hooks defined
+- **Multi-Language** — i18n-ready architecture
+- **Offline Packages** — PWA service worker, localStorage persistence
+- **Desktop/Mobile Apps** — Platform state is serializable JSON; easy migration
 
 ---
 
-## Architecture Decisions
+## Architecture Decisions (Phase 3)
 
-1. **Content lives in MDX files** — Portable, version-controlled, AI-consumable
-2. **Metadata in frontmatter** — Every file is self-describing, no external database
-3. **Learning levels are layers, not separate content** — One lesson, multiple depths
-4. **JSON schemas for validation** — Content validation is automated and strict
-5. **Knowledge graph is JSON-first** — Simple, portable, future Neo4j migration path
-6. **Engines are specifications, not implementations** — Phase 2 defines the "what"; Phase 3+ builds the "how"
-7. **Templates over generators** — Contributors copy templates; no code generation needed
-8. **Components as MDX custom elements** — React components embedded directly in content
-
----
-
-## Folder Structure
-
-```
-AEP/
-├── docs/                        # Docusaurus documentation
-│   ├── architecture/            # 5 docs
-│   ├── development/             # 7 docs
-│   ├── standards/               # 7 docs
-│   ├── guides/                  # 5 docs
-│   ├── reference/               # 6 docs
-│   ├── curriculum/              # Landing page
-│   ├── lessons/                 # Landing page
-│   ├── projects/                # Landing page
-│   ├── labs/                    # Landing page
-│   ├── career/                  # Landing page
-│   ├── certifications/          # Landing page
-│   └── simulators/              # Category file
-├── metadata/                    # PHASE 2 — Engine specifications
-│   ├── learning-levels.json     # 5 explanation layers
-│   ├── skill-tree.json          # Complete skill tree
-│   ├── career-engine.json       # Career paths & progression
-│   ├── project-engine.json      # Project framework
-│   ├── lab-engine.json          # Lab system
-│   ├── simulator-engine.json    # 12 simulator architectures
-│   ├── ai-integration.json      # 10 AI block types
-│   ├── review-engine.json       # Spaced repetition & tracking
-│   ├── certification-engine.json # 4 certifications defined
-│   ├── component-library.json   # 25+ component specs
-│   ├── taxonomy.json            # Content taxonomy
-│   └── content-schema.json      # Content type definitions
-├── schemas/                     # JSON Schema validators
-│   ├── extended-metadata.schema.json  # 40+ field metadata schema
-│   ├── lesson.schema.json
-│   ├── project.schema.json
-│   ├── lab.schema.json
-│   └── metadata.schema.json
-├── templates/                   # MDX templates (16)
-│   ├── lesson.mdx
-│   ├── mini-lesson.mdx
-│   ├── lab.mdx
-│   ├── project.mdx
-│   ├── simulator.mdx
-│   ├── certification-lesson.mdx
-│   ├── career-lesson.mdx
-│   ├── interview-lesson.mdx
-│   ├── architecture-review.mdx
-│   ├── production-incident.mdx
-│   ├── decision-lab.mdx
-│   ├── troubleshooting-guide.mdx
-│   ├── reference-page.mdx
-│   ├── glossary-entry.mdx
-│   ├── cheat-sheet.mdx
-│   ├── technology-overview.mdx
-│   ├── lesson-template.mdx (legacy)
-│   ├── project-template.mdx (legacy)
-│   ├── lab-template.mdx (legacy)
-│   └── concept-template.mdx (legacy)
-├── knowledge-graph/
-│   ├── graph.json               # Phase 1 base graph
-│   └── extended-graph.json      # Phase 2 extended graph
-├── src/
-│   ├── types/
-│   │   └── learning-core.ts     # Complete TypeScript types
-│   ├── components/
-│   │   └── HomepageFeatures/
-│   ├── css/
-│   │   └── custom.css
-│   └── pages/
-│       ├── index.tsx
-│       └── index.module.css
-└── .github/workflows/
-    ├── deploy.yml
-    └── validate.yml
-```
-
----
-
-## Remaining Phases
-
-### Phase 3 — Interactive Learning (Next)
-- Implement React components for all 25+ component library blocks
-- Interactive cloud labs (WebAssembly)
-- Cloud simulator foundation
-- Quiz and assessment engine
-- Learning progress dashboard (localStorage)
-- Bookmarking and notes
-- Mobile app (PWA enhancements)
-
-### Phase 4 — AI Integration
-- AI tutor (contextual Q&A via API)
-- Personalized learning paths
-- Content gap analysis
-- Automated content suggestions
-- Answer evaluation for exercises
-- RAG-powered search
-
-### Phase 5 — Platform Ecosystem
-- Certification exam simulator
-- Career path tracker
-- Job board integration
-- Mentor matching
-- Team/enterprise features
-- API for third-party integrations
-
-### Phase 6 — Advanced
-- Real cloud lab provisioning (AWS/Azure/GCP)
-- Peer collaboration features
-- Live workshops
-- Certification issuance
+1. **Domain-Agnostic by Design** — No file or component assumes Cloud Engineering. Every type, component, and hook works with any domain.
+2. **localStorage as Phase 3 State Backend** — Simple, no external dependencies. Migratable to Convex in Phase 4.
+3. **React Context + Custom Hooks** — Global state via PlatformProvider, granular access via individual hooks.
+4. **CSS Custom Properties for Theming** — 60+ design tokens enable complete re-theming without touching components.
+5. **Components Over Templates** — Platform experience is built as React components, not MDX-only. Components render in docs, pages, and standalone.
+6. **UI-First AI Integration** — AI components are fully functional UI shells. Backend integration in Phase 4 replaces mock handlers.
+7. **Extensibility as First Principle** — Plugin interface, hook system, and configuration-driven design allow adding features without architectural changes.
 
 ---
 
 ## Next Recommended Implementation
 
-**Phase 3 — Interactive Learning:** Implement React components for the component library, build the quiz engine, and create the Linux terminal simulator (WebAssembly-based) as the first working simulator.
+**Phase 4 — Interactive Learning:** Implement the React component library for all 25+ MDX content blocks (Info, Warning, Tip, BestPractice, etc.), build the quiz engine, and create the Linux Terminal simulator (WebAssembly).

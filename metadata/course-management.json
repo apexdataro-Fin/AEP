@@ -1,0 +1,101 @@
+{
+  "version": "1.0.0",
+  "description": "Course Management — multi-book, multi-course, multi-author, multi-organization, multi-domain. Supports unlimited future content without depending on any specific subject.",
+  "providers": {
+    "authors": [],
+    "instructors": [],
+    "organizations": [],
+    "academies": [],
+    "universities": []
+  },
+  "content_registry": {
+    "books": [],
+    "courses": [],
+    "learning_paths": [],
+    "bootcamps": [],
+    "reference_libraries": [],
+    "knowledge_bases": []
+  },
+  "provider_schema": {
+    "id": "string (kebab-case)",
+    "name": "string",
+    "type": "author | instructor | organization | academy | university",
+    "description": "string",
+    "logo": "string (URL)",
+    "website": "string (URL)",
+    "contentIds": ["string array"],
+    "rating": "number (0-5)",
+    "learnerCount": "number",
+    "verified": "boolean"
+  },
+  "book_registry_schema": {
+    "id": "string (kebab-case)",
+    "title": "string",
+    "subtitle": "string",
+    "authors": ["provider_id array"],
+    "publisher": "provider_id",
+    "edition": "string",
+    "isbn": "string",
+    "coverImage": "string (URL)",
+    "domain": "domain_id",
+    "categories": ["content_category_id array"],
+    "difficulty": "beginner | intermediate | advanced | expert | master",
+    "estimatedHours": "number",
+    "chapters": "number",
+    "publishedAt": "ISO date",
+    "updatedAt": "ISO date",
+    "version": "semver",
+    "language": "string (ISO 639-1)",
+    "tags": ["string array"],
+    "rating": "number (0-5)",
+    "reviewCount": "number",
+    "status": "draft | review | published | deprecated | archived"
+  },
+  "course_registry_schema": {
+    "id": "string (kebab-case)",
+    "title": "string",
+    "subtitle": "string",
+    "instructors": ["provider_id array"],
+    "organization": "provider_id",
+    "domain": "domain_id",
+    "categories": ["content_category_id array"],
+    "difficulty": "beginner | intermediate | advanced | expert | master",
+    "estimatedHours": "number",
+    "modules": "number",
+    "lessons": "number",
+    "projects": "number",
+    "certification": "certification_code (optional)",
+    "prerequisites": ["content_id array"],
+    "publishedAt": "ISO date",
+    "updatedAt": "ISO date",
+    "language": "string (ISO 639-1)",
+    "tags": ["string array"],
+    "rating": "number (0-5)",
+    "learnerCount": "number",
+    "status": "draft | review | published | deprecated | archived"
+  },
+  "multi_content_example": {
+    "description": "How multiple courses coexist in the same platform",
+    "cloud_engineering_book": {
+      "id": "cloud-engineering-fundamentals",
+      "title": "Cloud Engineering Fundamentals",
+      "domain": "cloud-engineering",
+      "type": "book",
+      "category": "book"
+    },
+    "cybersecurity_course": {
+      "id": "cybersecurity-essentials",
+      "title": "Cybersecurity Essentials",
+      "domain": "cybersecurity",
+      "type": "course", 
+      "category": "course"
+    },
+    "python_bootcamp": {
+      "id": "python-mastery",
+      "title": "Python Mastery Bootcamp",
+      "domain": "python",
+      "type": "bootcamp",
+      "category": "bootcamp"
+    }
+  }
+}

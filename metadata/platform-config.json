@@ -1,0 +1,75 @@
+{
+  "platform": {
+    "name": "ARES EDU PLATFORM",
+    "shortName": "AEP",
+    "version": "0.3.0",
+    "tagline": "The Reusable Learning Operating System",
+    "description": "Domain-agnostic educational platform supporting any subject, any format, any scale. Cloud Engineering is just the first course.",
+    "features": {
+      "multi_content": true,
+      "multi_domain": true,
+      "multi_author": true,
+      "multi_organization": true,
+      "multi_language": true,
+      "gamification": true,
+      "ai_integration": true,
+      "offline_mode": true,
+      "pwa": true,
+      "accessibility": true,
+      "extensibility": true
+    }
+  },
+  "domains": [
+    { "id": "cloud-engineering", "label": "Cloud Engineering", "icon": "☁️", "enabled": true },
+    { "id": "cybersecurity", "label": "Cybersecurity", "icon": "🔒", "enabled": false },
+    { "id": "software-engineering", "label": "Software Engineering", "icon": "💻", "enabled": false },
+    { "id": "ai-engineering", "label": "AI Engineering", "icon": "🤖", "enabled": false },
+    { "id": "data-engineering", "label": "Data Engineering", "icon": "📊", "enabled": false },
+    { "id": "platform-engineering", "label": "Platform Engineering", "icon": "🏗️", "enabled": false },
+    { "id": "networking", "label": "Networking", "icon": "🌐", "enabled": false },
+    { "id": "linux", "label": "Linux", "icon": "🐧", "enabled": false },
+    { "id": "python", "label": "Python", "icon": "🐍", "enabled": false },
+    { "id": "web-development", "label": "Web Development", "icon": "🌍", "enabled": false },
+    { "id": "mobile-development", "label": "Mobile Development", "icon": "📱", "enabled": false },
+    { "id": "game-development", "label": "Game Development", "icon": "🎮", "enabled": false },
+    { "id": "electronics", "label": "Electronics", "icon": "⚡", "enabled": false },
+    { "id": "embedded-systems", "label": "Embedded Systems", "icon": "🔌", "enabled": false },
+    { "id": "robotics", "label": "Robotics", "icon": "🤖", "enabled": false },
+    { "id": "digital-marketing", "label": "Digital Marketing", "icon": "📈", "enabled": false },
+    { "id": "business", "label": "Business", "icon": "💼", "enabled": false },
+    { "id": "languages", "label": "Languages", "icon": "🗣️", "enabled": false },
+    { "id": "mathematics", "label": "Mathematics", "icon": "🔢", "enabled": false },
+    { "id": "science", "label": "Science", "icon": "🔬", "enabled": false }
+  ],
+  "content_categories": [
+    { "id": "book", "label": "Books", "icon": "📖" },
+    { "id": "course", "label": "Courses", "icon": "🎓" },
+    { "id": "learning-path", "label": "Learning Paths", "icon": "🗺️" },
+    { "id": "bootcamp", "label": "Bootcamps", "icon": "🚀" },
+    { "id": "documentation", "label": "Documentation", "icon": "📋" },
+    { "id": "reference-library", "label": "Reference Library", "icon": "📕" },
+    { "id": "interactive-lab", "label": "Interactive Labs", "icon": "🧪" },
+    { "id": "certification", "label": "Certifications", "icon": "📜" },
+    { "id": "career-track", "label": "Career Tracks", "icon": "👔" },
+    { "id": "knowledge-base", "label": "Knowledge Base", "icon": "🧠" },
+    { "id": "university", "label": "Universities", "icon": "🏛️" },
+    { "id": "training-program", "label": "Training Programs", "icon": "📚" },
+    { "id": "professional-academy", "label": "Academies", "icon": "🏫" }
+  ],
+  "extensibility": {
+    "future_modules": [
+      "marketplace", "community", "discussion", "exams", "certificates",
+      "payments", "subscriptions", "organizations", "classrooms", "teams",
+      "teacher-portal", "student-portal", "offline-packages",
+      "desktop-app", "mobile-app", "api-integrations"
+    ],
+    "plugin_system": {
+      "description": "Plugins are self-contained modules that can be enabled/disabled per domain or globally.",
+      "interface": {
+        "register": "Function to register plugin components, routes, and settings",
+        "lifecycle": ["onInit", "onEnable", "onDisable", "onUpdate"],
+        "hooks": ["navigation", "search", "dashboard", "analytics", "content"]
+      }
+    }
+  }
+}

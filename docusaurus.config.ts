@@ -3,8 +3,8 @@ import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
-  title: "Cloud Engineering Learning OS",
-  tagline: "The Operating System for Your Cloud Engineering Career",
+  title: "ARES EDU PLATFORM",
+  tagline: "The Reusable Learning Operating System",
   favicon: "img/favicon.svg",
 
   future: {
@@ -54,7 +54,7 @@ const config: Config = {
           path: "src/pages",
         },
         theme: {
-          customCss: "./src/css/custom.css",
+          customCss: ["./src/css/custom.css", "./src/css/platform.css"],
         },
       } satisfies Preset.Options,
     ],
@@ -147,9 +147,9 @@ const config: Config = {
     },
 
     navbar: {
-      title: "Cloud Engineering OS",
+      title: "ARES EDU",
       logo: {
-        alt: "Cloud Engineering Learning OS",
+        alt: "ARES EDU PLATFORM",
         src: "img/logo.svg",
         srcDark: "img/logo-dark.svg",
       },
@@ -237,7 +237,7 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Cloud Engineering Learning OS. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} ARES EDU PLATFORM. Built with Docusaurus.`,
     },
 
     prism: {

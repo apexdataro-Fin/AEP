@@ -1,0 +1,462 @@
+/**
+ * ARES EDU PLATFORM — Design System
+ * Domain-agnostic design tokens and reusable component styles.
+ * Supports light/dark mode, responsive, print, and accessibility.
+ */
+
+/* ============================================================
+   CSS Custom Properties — Design Tokens
+   ============================================================ */
+:root {
+  /* Brand */
+  --aep-primary: #6366f1;        /* Indigo */
+  --aep-primary-hover: #4f46e5;
+  --aep-primary-light: #818cf8;
+  --aep-primary-bg: rgba(99, 102, 241, 0.08);
+  
+  --aep-secondary: #0ea5e9;      /* Sky */
+  --aep-accent: #10b981;         /* Emerald — success */
+  --aep-warning: #f59e0b;        /* Amber */
+  --aep-danger: #ef4444;         /* Red */
+  --aep-info: #3b82f6;           /* Blue */
+
+  /* Surfaces */
+  --aep-surface: #ffffff;
+  --aep-surface-alt: #f8fafc;
+  --aep-surface-raised: #f1f5f9;
+  --aep-surface-hover: #e2e8f0;
+  --aep-border: #e2e8f0;
+  --aep-border-light: #f1f5f9;
+
+  /* Text */
+  --aep-text-primary: #0f172a;
+  --aep-text-secondary: #475569;
+  --aep-text-muted: #94a3b8;
+  --aep-text-inverse: #ffffff;
+
+  /* Shadows */
+  --aep-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --aep-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --aep-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.12);
+  --aep-shadow-xl: 0 20px 48px rgba(0, 0, 0, 0.16);
+
+  /* Radius */
+  --aep-radius-sm: 0.375rem;
+  --aep-radius: 0.5rem;
+  --aep-radius-lg: 0.75rem;
+  --aep-radius-xl: 1rem;
+  --aep-radius-full: 9999px;
+
+  /* Spacing */
+  --aep-space-xs: 0.25rem;
+  --aep-space-sm: 0.5rem;
+  --aep-space: 1rem;
+  --aep-space-lg: 1.5rem;
+  --aep-space-xl: 2rem;
+  --aep-space-2xl: 3rem;
+
+  /* Typography */
+  --aep-font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --aep-font-mono: "JetBrains Mono", "Fira Code", monospace;
+  --aep-font-size-xs: 0.75rem;
+  --aep-font-size-sm: 0.875rem;
+  --aep-font-size: 1rem;
+  --aep-font-size-lg: 1.125rem;
+  --aep-font-size-xl: 1.25rem;
+  --aep-font-size-2xl: 1.5rem;
+  --aep-font-size-3xl: 1.875rem;
+  --aep-line-height: 1.75;
+
+  /* Transitions */
+  --aep-transition: 0.2s ease;
+  --aep-transition-slow: 0.35s ease;
+
+  /* Layout */
+  --aep-navbar-height: 56px;
+  --aep-sidebar-width: 280px;
+  --aep-content-max: 900px;
+  --aep-content-wide: 1100px;
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --aep-surface: #0f172a;
+  --aep-surface-alt: #1e293b;
+  --aep-surface-raised: #334155;
+  --aep-surface-hover: #475569;
+  --aep-border: #334155;
+  --aep-border-light: #1e293b;
+  --aep-text-primary: #f1f5f9;
+  --aep-text-secondary: #94a3b8;
+  --aep-text-muted: #64748b;
+  --aep-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --aep-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --aep-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================================
+   Global Reset
+   ============================================================ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.aep-platform {
+  font-family: var(--aep-font-sans);
+  color: var(--aep-text-primary);
+  background: var(--aep-surface);
+  margin: 0;
+  line-height: var(--aep-line-height);
+}
+
+/* ============================================================
+   Design System — Cards
+   ============================================================ */
+
+.aep-card {
+  background: var(--aep-surface);
+  border: 1px solid var(--aep-border);
+  border-radius: var(--aep-radius-lg);
+  padding: var(--aep-space-lg);
+  transition: box-shadow var(--aep-transition), transform var(--aep-transition);
+}
+
+.aep-card:hover {
+  box-shadow: var(--aep-shadow-md);
+  transform: translateY(-2px);
+}
+
+.aep-card--interactive {
+  cursor: pointer;
+}
+
+.aep-card--featured {
+  border-color: var(--aep-primary-light);
+  background: var(--aep-primary-bg);
+}
+
+.aep-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--aep-space);
+}
+
+.aep-card-title {
+  font-size: var(--aep-font-size-lg);
+  font-weight: 700;
+  color: var(--aep-text-primary);
+  margin: 0;
+}
+
+.aep-card-meta {
+  font-size: var(--aep-font-size-sm);
+  color: var(--aep-text-muted);
+}
+
+.aep-card-body {
+  color: var(--aep-text-secondary);
+  font-size: var(--aep-font-size-sm);
+  line-height: 1.6;
+}
+
+.aep-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--aep-space);
+  padding-top: var(--aep-space);
+  border-top: 1px solid var(--aep-border-light);
+}
+
+/* Domain/category card variants */
+.aep-card--book { border-left: 3px solid #6366f1; }
+.aep-card--course { border-left: 3px solid #0ea5e9; }
+.aep-card--project { border-left: 3px solid #f59e0b; }
+.aep-card--lab { border-left: 3px solid #10b981; }
+.aep-card--certification { border-left: 3px solid #ec4899; }
+.aep-card--career { border-left: 3px solid #14b8a6; }
+.aep-card--knowledge { border-left: 3px solid #8b5cf6; }
+.aep-card--technology { border-left: 3px solid #f97316; }
+
+/* ============================================================
+   Design System — Buttons
+   ============================================================ */
+
+.aep-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--aep-space-sm);
+  padding: 0.625rem 1.25rem;
+  font-size: var(--aep-font-size-sm);
+  font-weight: 600;
+  border: none;
+  border-radius: var(--aep-radius);
+  cursor: pointer;
+  transition: all var(--aep-transition);
+  text-decoration: none;
+  line-height: 1;
+}
+
+.aep-btn--primary {
+  background: var(--aep-primary);
+  color: #fff;
+}
+.aep-btn--primary:hover { background: var(--aep-primary-hover); }
+
+.aep-btn--secondary {
+  background: var(--aep-surface-alt);
+  color: var(--aep-text-primary);
+  border: 1px solid var(--aep-border);
+}
+.aep-btn--secondary:hover { background: var(--aep-surface-hover); }
+
+.aep-btn--ghost {
+  background: transparent;
+  color: var(--aep-text-secondary);
+}
+.aep-btn--ghost:hover { background: var(--aep-surface-hover); }
+
+.aep-btn--sm { padding: 0.375rem 0.75rem; font-size: var(--aep-font-size-xs); }
+.aep-btn--lg { padding: 0.75rem 1.5rem; font-size: var(--aep-font-size); }
+.aep-btn--icon { padding: 0.5rem; border-radius: var(--aep-radius-full); }
+
+/* ============================================================
+   Design System — Badges & Tags
+   ============================================================ */
+
+.aep-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.125rem 0.625rem;
+  font-size: var(--aep-font-size-xs);
+  font-weight: 600;
+  border-radius: var(--aep-radius-full);
+  white-space: nowrap;
+}
+
+.aep-badge--primary { background: var(--aep-primary-bg); color: var(--aep-primary); }
+.aep-badge--success { background: rgba(16, 185, 129, 0.1); color: var(--aep-accent); }
+.aep-badge--warning { background: rgba(245, 158, 11, 0.1); color: var(--aep-warning); }
+.aep-badge--danger { background: rgba(239, 68, 68, 0.1); color: var(--aep-danger); }
+.aep-badge--info { background: rgba(59, 130, 246, 0.1); color: var(--aep-info); }
+
+.aep-tag {
+  display: inline-flex;
+  padding: 0.125rem 0.5rem;
+  font-size: var(--aep-font-size-xs);
+  background: var(--aep-surface-alt);
+  border: 1px solid var(--aep-border);
+  border-radius: var(--aep-radius-sm);
+  color: var(--aep-text-secondary);
+}
+
+.aep-tag:hover {
+  border-color: var(--aep-primary);
+  color: var(--aep-primary);
+}
+
+/* ============================================================
+   Design System — Progress Indicators
+   ============================================================ */
+
+.aep-progress {
+  height: 6px;
+  background: var(--aep-surface-hover);
+  border-radius: var(--aep-radius-full);
+  overflow: hidden;
+}
+
+.aep-progress-bar {
+  height: 100%;
+  background: var(--aep-primary);
+  border-radius: var(--aep-radius-full);
+  transition: width var(--aep-transition-slow);
+}
+
+.aep-progress-bar--success { background: var(--aep-accent); }
+.aep-progress-bar--warning { background: var(--aep-warning); }
+.aep-progress-bar--danger { background: var(--aep-danger); }
+
+.aep-progress-circle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.aep-progress-circle svg {
+  transform: rotate(-90deg);
+}
+
+/* ============================================================
+   Design System — Timeline
+   ============================================================ */
+
+.aep-timeline {
+  position: relative;
+  padding-left: var(--aep-space-xl);
+}
+
+.aep-timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--aep-border);
+}
+
+.aep-timeline-item {
+  position: relative;
+  padding-bottom: var(--aep-space-lg);
+}
+
+.aep-timeline-item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1 * var(--aep-space-xl) + 5px);
+  top: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--aep-primary);
+  border: 2px solid var(--aep-surface);
+}
+
+.aep-timeline-item--completed::before { background: var(--aep-accent); }
+
+/* ============================================================
+   Design System — Grid Layouts
+   ============================================================ */
+
+.aep-grid {
+  display: grid;
+  gap: var(--aep-space-lg);
+}
+
+.aep-grid--2 { grid-template-columns: repeat(2, 1fr); }
+.aep-grid--3 { grid-template-columns: repeat(3, 1fr); }
+.aep-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.aep-grid--auto { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+
+/* ============================================================
+   Learning Modes
+   ============================================================ */
+
+.aep-mode--focus .navbar,
+.aep-mode--focus .footer,
+.aep-mode--focus .theme-doc-sidebar-menu { display: none; }
+
+.aep-mode--focus main {
+  max-width: var(--aep-content-max);
+  margin: 0 auto;
+  padding: var(--aep-space-2xl);
+}
+
+.aep-mode--reading {
+  font-size: 1.125rem;
+  line-height: 1.85;
+}
+
+.aep-mode--distraction-free .navbar,
+.aep-mode--distraction-free .footer,
+.aep-mode--distraction-free .pagination-nav,
+.aep-mode--distraction-free .table-of-contents { display: none; }
+
+/* ============================================================
+   Print Styles
+   ============================================================ */
+
+@media print {
+  .navbar, .footer, .aep-sidebar, .aep-search-bar,
+  .pagination-nav, .table-of-contents, .aep-ai-panel { display: none !important; }
+  body { color: #000; background: #fff; font-size: 12pt; }
+  a { color: #000; text-decoration: underline; }
+  .aep-card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; }
+}
+
+/* ============================================================
+   Accessibility
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.aep-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 2px solid var(--aep-primary);
+  outline-offset: 2px;
+}
+
+.aep-high-contrast {
+  --aep-text-primary: #000;
+  --aep-text-secondary: #333;
+}
+
+[data-theme="dark"] .aep-high-contrast {
+  --aep-text-primary: #fff;
+  --aep-text-secondary: #ddd;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 1200px) {
+  .aep-grid--4 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 996px) {
+  .aep-grid--3, .aep-grid--4 { grid-template-columns: repeat(2, 1fr); }
+  :root { --aep-content-max: 100%; }
+}
+
+@media (max-width: 640px) {
+  .aep-grid--2, .aep-grid--3, .aep-grid--4 { grid-template-columns: 1fr; }
+  .aep-grid--auto { grid-template-columns: 1fr; }
+  .aep-card { padding: var(--aep-space); }
+}
+
+/* ============================================================
+   Utility Classes
+   ============================================================ */
+
+.aep-flex { display: flex; }
+.aep-flex-col { flex-direction: column; }
+.aep-flex-wrap { flex-wrap: wrap; }
+.aep-items-center { align-items: center; }
+.aep-justify-between { justify-content: space-between; }
+.aep-gap-sm { gap: var(--aep-space-sm); }
+.aep-gap { gap: var(--aep-space); }
+.aep-gap-lg { gap: var(--aep-space-lg); }
+.aep-text-sm { font-size: var(--aep-font-size-sm); }
+.aep-text-xs { font-size: var(--aep-font-size-xs); }
+.aep-text-muted { color: var(--aep-text-muted); }
+.aep-text-center { text-align: center; }
+.aep-mt { margin-top: var(--aep-space); }
+.aep-mt-lg { margin-top: var(--aep-space-lg); }
+.aep-mb { margin-bottom: var(--aep-space); }
+.aep-p { padding: var(--aep-space); }
+.aep-p-lg { padding: var(--aep-space-lg); }
