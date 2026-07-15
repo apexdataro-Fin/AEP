@@ -1,0 +1,177 @@
+---
+id: platform-02
+title: "Service Catalog & Developer Self-Service"
+slug: service-catalog-scaffolding
+module: 19-platform
+difficulty: advanced
+estimated_time: 45
+technologies: [backstage, platform-engineering]
+skills: [service-catalog, scaffolding, self-service]
+certifications: []
+prerequisites: [platform-01]
+career_level: senior
+status: published
+version: "1.0.0"
+last_updated: "2026-07-15"
+learningObjectives:
+  - Design a service catalog that provides real operational value
+  - Build software templates for self-service scaffolding
+  - Measure platform adoption and developer satisfaction
+knowledgeNodes: [service-catalog, scaffolding, developer-self-service]
+tags: [platform, backstage, catalog, scaffolding]
+---
+
+import {
+  Info, Warning, Tip, BestPractice, Definition,
+  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
+  ProductionNote, ArchitectureNote, InterviewQuestion
+} from '@site/src/components/shared/InteractiveBlocks';
+
+# Service Catalog & Developer Self-Service
+
+<Definition>
+
+The **Service Catalog** is the heart of an Internal Developer Platform — a unified registry of every service, who owns it, its dependencies, and its operational status. **Scaffolding** lets developers create new services with best practices baked into templates.
+
+</Definition>
+
+---
+
+## 🎯 Learning Objectives
+
+- Design a service catalog that teams actually use (not abandon)
+- Build Backstage software templates for self-service
+- Measure platform adoption with developer experience metrics
+
+---
+
+## 🔥 Core Explanation
+
+### What Makes a Good Service Catalog?
+
+| Must Have | Why |
+|-----------|-----|
+| **Ownership** | Who's on-call at 3 AM? |
+| **Dependencies** | If Database-A goes down, what breaks? |
+| **API docs** | How do I call this service? |
+| **CI/CD status** | Is the latest build green? |
+| **Deployment info** | What version is in production? |
+| **Runbooks** | How do I respond to its alerts? |
+
+<BestPractice>
+
+**A catalog that relies on manual updates is a dead catalog.** CloudNova's catalog auto-discovers services from GitHub repos (looking for `catalog-info.yaml`), auto-updates CI/CD status from pipelines, and auto-links documentation from the repo. Zero manual maintenance.
+
+</BestPractice>
+
+---
+
+## 🏗️ Professional Explanation
+
+### Software Templates — Scaffolding Done Right
+
+<CodeBlock language="yaml" title="Backstage Template: New Microservice">
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: cloudnova-microservice
+  title: Create a CloudNova Microservice
+spec:
+  owner: platform-team
+  type: service
+  parameters:
+    - title: Service Details
+      required: [name, owner, language]
+      properties:
+        name:
+          title: Service Name
+          type: string
+        owner:
+          title: Owning Team
+          type: string
+          ui:field: OwnerPicker
+        language:
+          title: Language
+          type: string
+          enum: [python, go, typescript]
+  steps:
+    - action: fetch:template
+      input:
+        url: ./skeleton
+    - action: publish:github
+      input:
+        repoUrl: github.com?owner=apexdataro-Fin&repo={{name}}
+    - action: catalog:register
+      input:
+        repoContentsUrl: '{{steps.publish.output.repoContentsUrl}}'
+</CodeBlock>
+
+<ProductionNote>
+
+**CloudNova's template produces a fully operational service in 5 minutes.** Developer fills in name, team, and language. The template generates: repo with CI/CD, Dockerfile, Kubernetes manifests, monitoring dashboards, and a Slack channel. Previously, this took 2 days of setup across 4 different tools.
+
+</ProductionNote>
+
+---
+
+## 🏭 Measuring Platform Success
+
+| Metric | Target |
+|--------|--------|
+| **Time to First Commit** | < 10 minutes from template |
+| **Time to Production** | < 1 day for new services |
+| **Platform NPS** | > 50 (developers recommend it) |
+| **Template Usage** | > 80% of new services use templates |
+| **Support Tickets** | Decreasing week-over-week |
+
+---
+
+## 🧪 Active Recall
+
+<Flashcard
+  front="What's the most important field in a service catalog entry?"
+  back="**Ownership** — who owns this service, who's on-call for it. Without clear ownership, a catalog is just a pretty list. With ownership, it's an operational tool."
+/>
+
+<Flashcard
+  front="Why is auto-discovery critical for a service catalog?"
+  back="Manual updates don't happen. Teams forget. The catalog becomes stale and untrusted. Auto-discovery from Git repos, CI/CD, and monitoring ensures the catalog reflects reality — not what someone remembered to update."
+/>
+
+---
+
+## 📝 Quiz
+
+<Quiz>
+  <Question
+    question="What does a Backstage software template produce?"
+    options={[
+      "Just a GitHub repo",
+      "A fully operational service: repo + CI/CD + Kubernetes manifests + monitoring + docs",
+      "Only documentation",
+      "A Dockerfile"
+    ]}
+    correct={1}
+  />
+  
+  <Question
+    question="Why do manually-maintained service catalogs fail?"
+    options={[
+      "They're too expensive",
+      "They become stale because humans don't update them reliably",
+      "They're technically impossible",
+      "Developers refuse to use them"
+    ]}
+    correct={1}
+  />
+</Quiz>
+
+---
+
+## 📋 Summary
+
+| Component | Purpose |
+|-----------|---------|
+| **Service Catalog** | Unified registry — auto-discovered, always fresh |
+| **Software Templates** | 5-minute service creation with best practices |
+| **Platform Metrics** | Measure time-to-production, NPS, adoption |

@@ -1,0 +1,195 @@
+---
+id: interview-01
+title: "Cloud Engineering Interview Preparation"
+slug: interview-preparation
+module: 32-interview
+difficulty: intermediate
+estimated_time: 45
+technologies: [interview, career, system-design, behavioral]
+skills: [system-design, technical-interview, behavioral-interview, star-method]
+certifications: []
+prerequisites: []
+career_level: mid
+status: published
+version: "1.0.0"
+last_updated: "2026-07-15"
+learningObjectives:
+  - Prepare for cloud engineering system design interviews
+  - Apply the STAR method to behavioral questions
+  - Navigate technical deep-dives on Kubernetes, Terraform, and Azure
+knowledgeNodes: [system-design-interview, behavioral-interview, star-method]
+tags: [interview, career, system-design, preparation]
+---
+
+import {
+  Info, Warning, Tip, BestPractice, Definition,
+  Exercise, Challenge, Quiz, Flashcard,
+  InterviewQuestion, ProductionNote
+} from '@site/src/components/shared/InteractiveBlocks';
+
+# Cloud Engineering Interview Preparation
+
+<Definition>
+
+A **cloud engineering interview** tests three things: system design (can you architect?), technical depth (do you understand the tools?), and behavioral fit (can you work on a team?). Preparation for each requires different strategies.
+
+</Definition>
+
+---
+
+## 🎯 Learning Objectives
+
+- Master the cloud system design interview framework
+- Apply the STAR method to behavioral questions
+- Navigate deep technical interviews on Kubernetes, Terraform, and Azure
+
+---
+
+## 🔥 Core Explanation
+
+### The Three Interview Types
+
+| Type | What They Test | Cloud Engineering Example |
+|------|---------------|--------------------------|
+| **System Design** | Can you architect? | "Design a multi-region deployment on Azure" |
+| **Technical Deep Dive** | Do you understand? | "Walk me through Kubernetes pod networking" |
+| **Behavioral** | Can you work with others? | "Tell me about a production incident you handled" |
+
+---
+
+## 🏗️ Professional Explanation
+
+### Cloud System Design Framework
+
+<BestPractice title="The CARDS Framework">
+
+1. **C**larify — Ask about scale, constraints, requirements
+2. **A**rchitecture — Draw the high-level design (Mermaid in your mind)
+3. **R**ationale — Explain WHY each choice (not just what)
+4. **D**eep Dive — Go deeper into 2-3 components when asked
+5. **S**cale — Discuss how it handles growth, failure, cost
+
+</BestPractice>
+
+<CodeBlock language="text" title="System Design: Multi-Region AKS">
+Clarify: "How many users? HA requirements? Latency targets?"
+
+Architecture:
+- Azure Front Door for global routing
+- AKS in East US + West Europe (active-active)
+- Cosmos DB multi-region writes
+- Azure Traffic Manager for failover
+- Terraform for IaC, Flux for GitOps
+
+Rationale:
+- AKS over VMs: container orchestration, auto-scaling
+- Cosmos DB over SQL: global distribution, low latency
+- Active-active over active-passive: no failover downtime
+
+Deep Dive:
+- "Let me walk you through how Front Door routes traffic..."
+- "Here's how Cosmos DB handles conflict resolution..."
+
+Scale:
+- "At 10x traffic, we'd add regions, partition data..."
+</CodeBlock>
+
+---
+
+## 🏭 Behavioral Interview: STAR Method
+
+| Element | Meaning | Example |
+|---------|---------|---------|
+| **S**ituation | Set the context | "Our Terraform deploys were taking 45 minutes..." |
+| **T**ask | What was your role? | "I was the lead engineer responsible for optimizing the pipeline" |
+| **A**ction | What did YOU do? | "I parallelized the plan stages, implemented module caching, and shifted linting to pre-commit hooks" |
+| **R**esult | What was the outcome? | "Deployment time dropped to 12 minutes — a 73% improvement — and our team ships 3x more frequently" |
+
+<ProductionNote>
+
+**The interviewer cares about YOUR contribution.** Don't say "we" — say "I." Don't just describe the situation — describe YOUR actions. The STAR method ensures you structure answers to highlight your personal impact.
+
+</ProductionNote>
+
+---
+
+## 🎤 Common Interview Questions
+
+<InterviewQuestion level="mid" topic="System Design">
+
+**Q:** "Design a CI/CD pipeline for a team deploying infrastructure and applications."
+
+**Approach:** Clarify (monolith or microservices? what environments?), then walk through: PR triggers validation → merge triggers deploy to dev → integration tests → staging → production with approval gate. Mention: Terraform for infra, Docker for apps, GitHub Actions for CI/CD, ArgoCD for GitOps.
+
+</InterviewQuestion>
+
+<InterviewQuestion level="mid" topic="Kubernetes">
+
+**Q:** "How does a Kubernetes pod get an IP address and communicate with another pod on a different node?"
+
+**Approach:** Walk through CNI plugin assigns IP from pod CIDR, kube-proxy manages iptables rules for Services, overlay network (Azure CNI, Calico) routes between nodes, CoreDNS resolves Service names. Mention NetworkPolicies for security.
+
+</InterviewQuestion>
+
+<InterviewQuestion level="senior" topic="Incident Response">
+
+**Q:** "Tell me about a production incident you handled."
+
+**Approach (STAR):** Situation — "Our payment API started returning 500 errors during peak traffic." Task — "I was on-call, responsible for restoring service." Action — "I checked monitoring, identified a database connection pool exhaustion, increased pool size via ConfigMap, rolled out the fix, then wrote a postmortem." Result — "Service restored in 8 minutes. Postmortem led to connection pool monitoring alerts preventing recurrence."
+
+</InterviewQuestion>
+
+---
+
+## 🧪 Active Recall
+
+<Flashcard
+  front="What does STAR stand for in behavioral interviews?"
+  back="**S**ituation — context
+**T**ask — your role
+**A**ction — what YOU did (not 'we')
+**R**esult — measurable outcome"
+/>
+
+<Flashcard
+  front="What's the most common mistake in system design interviews?"
+  back="Jumping into the solution without **clarifying requirements first**. Always ask: scale (how many users?), constraints (latency, budget?), priorities (HA vs cost?). Five minutes of clarification prevents 40 minutes of wrong design."
+/>
+
+---
+
+## 📝 Quiz
+
+<Quiz>
+  <Question
+    question="What should you do FIRST in a system design interview?"
+    options={[
+      "Start drawing the architecture immediately",
+      "Clarify requirements: scale, constraints, priorities",
+      "List all Azure services you know",
+      "Ask about salary"
+    ]}
+    correct={1}
+  />
+  
+  <Question
+    question="In the STAR method, what does 'Action' mean?"
+    options={[
+      "What the team did collectively",
+      "What YOU personally did — your individual contribution",
+      "The result of the project",
+      "The situation background"
+    ]}
+    correct={1}
+  />
+</Quiz>
+
+---
+
+## 📋 Summary
+
+| Interview Type | Key Strategy |
+|---------------|-------------|
+| **System Design** | Clarify → Architect → Rationale → Deep Dive → Scale |
+| **Technical** | Deep knowledge of your tools, explain internals |
+| **Behavioral** | STAR method: YOUR actions, YOUR impact |

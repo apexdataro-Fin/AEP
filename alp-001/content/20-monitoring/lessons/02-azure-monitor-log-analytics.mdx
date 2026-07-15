@@ -1,0 +1,165 @@
+---
+id: monitoring-02
+title: "Azure Monitor & Log Analytics"
+slug: azure-monitor-log-analytics
+module: 20-monitoring
+difficulty: intermediate
+estimated_time: 60
+technologies: [azure-monitor, log-analytics, kql]
+skills: [azure-monitor, kql, alert-rules]
+certifications: [az-104]
+prerequisites: [monitoring-01]
+career_level: mid
+status: published
+version: "1.0.0"
+last_updated: "2026-07-15"
+learningObjectives:
+  - Query logs with Kusto Query Language (KQL)
+  - Create actionable alert rules in Azure Monitor
+  - Build dashboards that tell operational stories
+knowledgeNodes: [azure-monitor, kql, alert-rules, dashboards]
+tags: [azure, monitoring, kql, dashboards]
+---
+
+import {
+  Info, Warning, Tip, BestPractice, Definition,
+  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
+  ProductionNote, InterviewQuestion
+} from '@site/src/components/shared/InteractiveBlocks';
+
+# Azure Monitor & Log Analytics
+
+<Definition>
+
+**Azure Monitor** is Microsoft's unified monitoring solution. **Log Analytics** is its log query engine using Kusto Query Language (KQL). Together, they provide metrics, logs, alerts, and dashboards for your entire Azure estate.
+
+</Definition>
+
+---
+
+## 🎯 Learning Objectives
+
+- Write KQL queries to extract operational insights
+- Create alert rules that catch real problems
+- Build dashboards that tell a story, not just display numbers
+
+---
+
+## 🔥 Core Explanation
+
+### KQL — Your Window into Azure
+
+<CodeBlock language="kql" title="Essential KQL Queries">
+// Top 5 VMs by CPU usage (last 1 hour)
+Perf
+| where TimeGenerated > ago(1h)
+| where ObjectName == "Processor" and CounterName == "% Processor Time"
+| summarize AvgCPU = avg(CounterValue) by Computer
+| top 5 by AvgCPU desc
+
+// Failed sign-in attempts (last 24 hours)
+SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType != 0
+| summarize Count = count() by UserPrincipalName, AppDisplayName
+| order by Count desc
+| take 10
+
+// Storage account operations by caller
+StorageBlobLogs
+| where TimeGenerated > ago(1h)
+| summarize Count = count() by OperationName, AuthenticationType
+| order by Count desc
+</CodeBlock>
+
+<Tip>
+
+**KQL is pipe-based, like Unix shell.** `Table | filter | summarize | sort | take`. If you can write `grep | awk | sort | head`, you can write KQL.
+
+</Tip>
+
+---
+
+## 🏗️ Professional Explanation
+
+### Alert Rules That Don't Lie
+
+<CodeBlock language="kql" title="Smart Alert: API Errors with Context">
+// Alert only if error rate exceeds 1% AND there's significant traffic
+// (Don't alert on 100% error rate when it's 1 of 1 requests)
+let threshold = 1.0;    // 1% error rate
+let minTraffic = 100;   // At least 100 requests
+AppRequests
+| where TimeGenerated > ago(5m)
+| summarize Total = count(),
+            Errors = countif(Success == false)
+            by CloudRoleName
+| extend ErrorRate = round((Errors * 100.0) / Total, 2)
+| where Total > minTraffic and ErrorRate > threshold
+| project CloudRoleName, ErrorRate, Total, Errors
+</CodeBlock>
+
+---
+
+## 🏭 Production Explanation
+
+### Dashboard Design Principles
+
+<BestPractice title="CloudNova Dashboard Standards">
+
+1. **Row 1: Service health at a glance** — Red/Green status, key SLIs
+2. **Row 2: Trends** — Request rate, latency, errors over time
+3. **Row 3: Drill-down** — Per-service, per-region, per-endpoint
+4. **Row 4: Resources** — CPU, memory, disk, costs
+
+Every dashboard has: time range picker, auto-refresh, and a link to the runbook.
+
+</BestPractice>
+
+---
+
+## 🧪 Active Recall
+
+<Flashcard
+  front="What is KQL?"
+  back="**Kusto Query Language** — Azure's query language for logs and analytics. Pipe-based: `Table | where ... | summarize ... | order by ...`. Used in Azure Monitor, Log Analytics, App Insights, and Sentinel."
+/>
+
+<Flashcard
+  front="What's an important consideration when setting error rate alerts?"
+  back="Account for low traffic — 100% error rate when there were only 3 requests is not an incident. Add a minimum traffic threshold to avoid false positives."
+/>
+
+---
+
+## 📝 Quiz
+
+<Quiz>
+  <Question
+    question="What KQL operator groups and calculates aggregate values?"
+    options={["where", "summarize", "order", "take"]}
+    correct={1}
+  />
+  
+  <Question
+    question="What should the top row of a monitoring dashboard show?"
+    options={[
+      "Raw log data",
+      "Service health at a glance — Red/Green status",
+      "Detailed resource metrics",
+      "Cost reports"
+    ]}
+    correct={1}
+  />
+</Quiz>
+
+---
+
+## 📋 Summary
+
+| Component | Purpose |
+|-----------|---------|
+| **KQL** | Query language for Azure logs |
+| **Alert Rules** | Signal → condition → action group |
+| **Dashboards** | Visualize operational state |
+| **Workbooks** | Interactive reports and investigations |

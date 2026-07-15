@@ -1,0 +1,183 @@
+---
+id: gh-04
+title: "GitHub CLI, APIs & Automation"
+slug: github-cli-apis
+module: 14-github
+difficulty: intermediate
+estimated_time: 45
+technologies: [github, bash, rest-api]
+skills: [gh-cli, github-api, automation]
+certifications: []
+prerequisites: [gh-01]
+career_level: mid
+status: published
+version: "1.0.0"
+last_updated: "2026-07-15"
+learningObjectives:
+  - Master `gh` CLI for PRs, issues, releases
+  - Automate GitHub operations with REST and GraphQL APIs
+  - Build scripts that integrate GitHub with cloud workflows
+knowledgeNodes: [gh-cli, github-api, automation]
+tags: [github, cli, api, automation]
+---
+
+import {
+  Info, Warning, Tip, BestPractice, Definition, Example,
+  Exercise, Challenge, Quiz, CodeBlock, TerminalBlock,
+  ProductionNote, InterviewQuestion, AITutor
+} from '@site/src/components/shared/InteractiveBlocks';
+
+# GitHub CLI, APIs & Automation
+
+<Definition>
+
+The **GitHub CLI (`gh`)** brings pull requests, issues, releases, and workflows to your terminal. Combined with the REST and GraphQL APIs, you can automate every aspect of your development workflow.
+
+</Definition>
+
+---
+
+## 🎯 Learning Objectives
+
+- Master `gh` CLI for day-to-day operations
+- Query and mutate GitHub data with REST and GraphQL
+- Build automation scripts that integrate GitHub with cloud workflows
+
+---
+
+## 🔥 `gh` CLI — Terminal-First GitHub
+
+<CodeBlock language="bash" title="Essential `gh` Commands">
+# Authentication
+gh auth login
+
+# Pull Requests
+gh pr create --title "feat: add cost tagging" --body "Closes #42"
+gh pr list --state open
+gh pr view 123
+gh pr checkout 123
+gh pr review --approve
+gh pr merge --squash
+
+# Issues
+gh issue create --title "Bug: deployment timeout" --label "bug"
+gh issue list --assignee @me
+gh issue close 42
+
+# Releases
+gh release create v1.2.0 --title "v1.2.0" --notes "Added cost tagging"
+
+# Workflows
+gh run list
+gh run watch
+gh run view --log
+
+# Repositories
+gh repo clone apexdataro-Fin/AEP
+gh repo fork
+gh repo view --web
+</CodeBlock>
+
+---
+
+## 🏗️ GitHub API — REST
+
+<CodeBlock language="bash" title="REST API Examples">
+# List open PRs
+curl -H "Authorization: token $GH_TOKEN" \
+  https://api.github.com/repos/apexdataro-Fin/AEP/pulls?state=open
+
+# Create an issue
+curl -X POST \
+  -H "Authorization: token $GH_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Cost optimization report","body":"Run weekly cost analysis"}' \
+  https://api.github.com/repos/apexdataro-Fin/AEP/issues
+
+# Get workflow runs
+curl -H "Authorization: token $GH_TOKEN" \
+  https://api.github.com/repos/apexdataro-Fin/AEP/actions/runs
+</CodeBlock>
+
+---
+
+## 🏭 Production Pattern: Release Automation
+
+<CodeBlock language="bash" title="Automated Release Script">
+#!/bin/bash
+# scripts/release.sh — Automated release creation
+
+VERSION=$1
+if [ -z "$VERSION" ]; then
+  echo "Usage: ./release.sh v1.2.3"
+  exit 1
+fi
+
+# 1. Verify main is clean and up to date
+git checkout main
+git pull --rebase
+
+# 2. Create tag
+git tag -a "$VERSION" -m "Release $VERSION"
+
+# 3. Push tag
+git push origin "$VERSION"
+
+# 4. Generate changelog and create GitHub release
+gh release create "$VERSION" \
+  --title "Release $VERSION" \
+  --notes "$(git log --oneline $(git describe --tags --abbrev=0 @^)..@)" \
+  --draft
+
+echo "✅ Draft release $VERSION created. Review and publish."
+</CodeBlock>
+
+---
+
+## 🧪 Active Recall
+
+<Flashcard
+  front="What command creates a PR from the CLI?"
+  back="`gh pr create --title \"title\" --body \"description\"` — opens a PR interactively or with provided parameters."
+/>
+
+<Flashcard
+  front="What's the difference between GitHub REST and GraphQL APIs?"
+  back="REST returns fixed data structures (may over/under-fetch). GraphQL lets you specify exactly what fields you want in a single request — more efficient for complex queries."
+/>
+
+---
+
+## 📝 Quiz
+
+<Quiz>
+  <Question
+    question="What command authenticates the `gh` CLI?"
+    options={["gh login", "gh auth login", "gh connect", "gh setup"]}
+    correct={1}
+  />
+  
+  <Question
+    question="How do you merge a PR via the CLI?"
+    options={[
+      "gh merge 123",
+      "gh pr merge 123",
+      "git merge pr/123",
+      "gh pr close 123"
+    ]}
+    correct={1}
+  />
+</Quiz>
+
+---
+
+## 📋 Summary
+
+| Tool | Use |
+|------|-----|
+| `gh pr` | Create, review, merge PRs |
+| `gh issue` | Track work items |
+| `gh release` | Manage releases |
+| `gh run` | Monitor CI/CD |
+| REST API | Simple integration |
+| GraphQL | Complex data queries |

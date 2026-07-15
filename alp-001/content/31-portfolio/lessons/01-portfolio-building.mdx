@@ -1,0 +1,154 @@
+---
+id: portfolio-01
+title: "Building Your Cloud Engineering Portfolio"
+slug: portfolio-building
+module: 31-portfolio
+difficulty: intermediate
+estimated_time: 45
+technologies: [portfolio, career, projects, github]
+skills: [portfolio-building, project-documentation, personal-branding]
+certifications: []
+prerequisites: [devops-01, github-01]
+career_level: junior
+status: published
+version: "1.0.0"
+last_updated: "2026-07-15"
+learningObjectives:
+  - Design a portfolio that demonstrates cloud engineering skills
+  - Document projects professionally for hiring managers
+  - Showcase Infrastructure-as-Code and cloud architecture work
+knowledgeNodes: [portfolio-building, project-documentation, personal-branding]
+tags: [portfolio, career, projects, github]
+---
+
+import {
+  Info, Warning, Tip, BestPractice, Definition,
+  Exercise, Challenge, Quiz, Flashcard,
+  ProductionNote, InterviewQuestion
+} from '@site/src/components/shared/InteractiveBlocks';
+
+# Building Your Cloud Engineering Portfolio
+
+<Definition>
+
+A **cloud engineering portfolio** demonstrates your skills through real projects — not just a list of certifications. It's a GitHub repository (or collection) that shows you can design, deploy, and operate cloud infrastructure.
+
+</Definition>
+
+---
+
+## 🎯 Learning Objectives
+
+- Design portfolio projects that impress hiring managers
+- Document cloud projects professionally (README, architecture diagrams, CI/CD badges)
+- Showcase IaC, monitoring, security, and automation skills
+
+---
+
+## 🔥 Core Explanation
+
+### What Makes a Great Cloud Portfolio?
+
+| Element | What it demonstrates |
+|---------|---------------------|
+| **Infrastructure as Code** | Terraform/Bicep — not click-ops |
+| **CI/CD Pipeline** | Automated deployment, not manual |
+| **Architecture Diagram** | You can design and communicate |
+| **Monitoring & Alerts** | Production thinking, not just "it works" |
+| **Security** | Managed identities, RBAC, network security |
+| **README with Diagrams** | Communication skills matter as much as code |
+| **Cost Optimization** | FinOps awareness |
+
+<BestPractice>
+
+**One great project beats five mediocre ones.** A single well-documented project with CI/CD, monitoring, security, and Mermaid diagrams tells a hiring manager more than five "I deployed a VM" projects.
+
+</BestPractice>
+
+---
+
+## 🏗️ Professional Explanation
+
+### Portfolio Project Structure
+
+<CodeBlock language="bash">
+cloud-portfolio/
+├── README.md              # Project overview + architecture diagram
+├── terraform/              # Infrastructure as Code
+│   ├── main.tf
+│   ├── variables.tf
+│   └── outputs.tf
+├── .github/workflows/      # CI/CD
+│   └── terraform.yml
+├── monitoring/             # Dashboards + alerts
+│   └── dashboards.json
+├── docs/
+│   └── architecture.md     # Decision records
+└── screenshots/
+    └── dashboard.png
+</CodeBlock>
+
+<Tip>
+
+**Every portfolio project should have a Mermaid architecture diagram in the README.** It immediately communicates the design to anyone reviewing your work — and demonstrates technical communication skill.
+
+</Tip>
+
+---
+
+## 🏭 CloudNova Portfolio Projects
+
+| Project | Skills Demonstrated |
+|---------|-------------------|
+| **Multi-Region AKS Deployment** | Kubernetes, Terraform, networking |
+| **CI/CD Pipeline with Security Scanning** | GitHub Actions, DevSecOps |
+| **Cost-Optimized Architecture** | FinOps, auto-scaling, spot instances |
+| **Monitoring Stack** | Prometheus, Grafana, Azure Monitor |
+| **Disaster Recovery Plan** | Backup, Site Recovery, runbooks |
+
+---
+
+## 🧪 Active Recall
+
+<Flashcard
+  front="What are the 5 essential elements of a cloud engineering portfolio project?"
+  back="1. **Infrastructure as Code** (Terraform/Bicep)
+2. **CI/CD Pipeline** (automated deployment)
+3. **Architecture Diagram** (Mermaid in README)
+4. **Monitoring & Alerts** (production readiness)
+5. **Security** (managed identities, RBAC, NSGs)"
+/>
+
+<Flashcard
+  front="Why put an architecture diagram in your README?"
+  back="It communicates your design to anyone reviewing your portfolio in seconds. It demonstrates that you can both build AND communicate complex systems — a critical skill for senior roles."
+/>
+
+---
+
+## 📝 Quiz
+
+<Quiz>
+  <Question
+    question="What demonstrates more skill to a hiring manager?"
+    options={[
+      "10 certifications but no projects",
+      "One well-documented project with IaC, CI/CD, monitoring, and diagrams",
+      "A long list of technologies on a resume",
+      "A university degree"
+    ]}
+    correct={1}
+  />
+</Quiz>
+
+---
+
+## 📋 Summary
+
+| Element | Why It Matters |
+|---------|---------------|
+| **IaC** | Shows you automate, not click |
+| **CI/CD** | Shows deployment pipeline thinking |
+| **Architecture Diagram** | Shows communication + design |
+| **Monitoring** | Shows production mindset |
+| **README** | Shows you document your work |

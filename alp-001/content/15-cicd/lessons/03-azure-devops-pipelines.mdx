@@ -1,0 +1,234 @@
+---
+id: cicd-03
+title: "Azure DevOps Pipelines"
+slug: azure-devops-pipelines
+module: 15-cicd
+difficulty: intermediate
+estimated_time: 60
+technologies: [azure-devops, ci-cd, yaml]
+skills: [azure-devops, pipelines, yaml]
+certifications: [az-400]
+prerequisites: [cicd-01]
+career_level: mid
+status: published
+version: "1.0.0"
+last_updated: "2026-07-15"
+learningObjectives:
+  - Compare Azure DevOps Pipelines with GitHub Actions
+  - Create multi-stage YAML pipelines in Azure DevOps
+  - Implement variable groups, service connections, and environments
+knowledgeNodes: [azure-devops, yaml-pipelines, service-connections]
+tags: [azure-devops, pipelines, ci-cd, enterprise]
+---
+
+import {
+  Info, Warning, Tip, BestPractice, Definition, Example,
+  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
+  ProductionNote, InterviewQuestion, AITutor
+} from '@site/src/components/shared/InteractiveBlocks';
+
+# Azure DevOps Pipelines
+
+<Definition>
+
+**Azure DevOps Pipelines** is Microsoft's enterprise CI/CD platform. It supports any language, any platform, and any cloud — with deep Azure integration through service connections and variable groups.
+
+</Definition>
+
+---
+
+## 🎯 Learning Objectives
+
+- Compare Azure DevOps Pipelines with GitHub Actions
+- Create multi-stage YAML pipelines
+- Use variable groups, service connections, and deployment environments
+
+---
+
+## 🔥 Core Explanation
+
+### Azure DevOps vs GitHub Actions
+
+| Feature | Azure DevOps | GitHub Actions |
+|---------|-------------|----------------|
+| **YAML syntax** | Azure Pipelines YAML | GitHub Actions YAML |
+| **Triggers** | CI, PR, scheduled, manual | push, PR, schedule, workflow_dispatch |
+| **Environments** | Environments + Approvals | Environments + Required reviewers |
+| **Secrets** | Variable Groups + Key Vault | Repository/Environment secrets |
+| **Azure auth** | Service Connections | OIDC federation |
+| **Best for** | Enterprise, compliance, Azure-heavy | Open source, GitHub-native, simpler |
+
+---
+
+## 🏗️ Professional Explanation
+
+### Multi-Stage Pipeline
+
+<CodeBlock language="yaml" title="azure-pipelines.yml">
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - terraform/**
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: terraform-common    # Variable group
+  - name: environment
+    value: dev
+
+stages:
+  - stage: Validate
+    displayName: 'Validate Infrastructure'
+    jobs:
+      - job: TerraformValidate
+        steps:
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: '1.7'
+          
+          - script: |
+              terraform init -backend=false
+              terraform validate
+            displayName: 'Terraform Validate'
+  
+  - stage: Plan
+    dependsOn: Validate
+    displayName: 'Plan Infrastructure'
+    jobs:
+      - job: TerraformPlan
+        steps:
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'cloudnova-service-connection'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                terraform init
+                terraform plan -out=tfplan
+  
+  - stage: Deploy
+    dependsOn: Plan
+    displayName: 'Deploy to $(environment)'
+    condition: succeeded()
+    jobs:
+      - deployment: DeployTerraform
+        environment: $(environment)
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: AzureCLI@2
+                  inputs:
+                    azureSubscription: 'cloudnova-service-connection'
+                    scriptType: 'bash'
+                    inlineScript: |
+                      terraform apply -auto-approve tfplan
+</CodeBlock>
+
+---
+
+## 🏭 Production Explanation
+
+### Variable Groups & Key Vault Integration
+
+<CodeBlock language="yaml" title="Key Vault Variable Group">
+variables:
+  - group: terraform-common        # Static variables
+  - group: cloudnova-keyvault      # Linked to Azure Key Vault
+    # Variables like:
+    #   database-password (from KV secret)
+    #   api-key (from KV secret)
+    # Automatically rotated — no pipeline changes needed
+</CodeBlock>
+
+<ProductionNote>
+
+**Key Vault integration in Azure DevOps** means secret values are never stored in the pipeline. The pipeline retrieves them at runtime from Key Vault. When secrets rotate, the pipeline gets the new value automatically.
+
+</ProductionNote>
+
+---
+
+## ☁️ CloudNova Scenario
+
+<Challenge title="Enterprise Pipeline Setup">
+
+**Context:** CloudNova's compliance team requires:
+- All deployments must go through Azure DevOps (not GitHub Actions)
+- Secrets must be in Azure Key Vault, never in pipeline variables
+- Production deployments require two approvals: team lead + security
+
+**Task:** Design the pipeline structure.
+
+<details>
+<summary>Design</summary>
+
+```yaml
+stages:
+  - stage: Validate  # No secrets needed
+  - stage: Plan      # Service connection auth only
+  - stage: DeployDev
+    environment: dev  # No approval needed
+    variables:
+      - group: cloudnova-keyvault-dev
+  - stage: DeployProd
+    environment: production  # Approvals configured in Azure DevOps UI
+    variables:
+      - group: cloudnova-keyvault-prod
+```
+</details>
+</Challenge>
+
+---
+
+## 🧪 Active Recall
+
+<Flashcard
+  front="What is a Service Connection in Azure DevOps?"
+  back="A secure, authenticated connection between Azure DevOps and an Azure subscription. It enables pipelines to deploy resources without storing credentials — using either service principal or workload identity federation."
+/>
+
+<Flashcard
+  front="What's the advantage of linking a Variable Group to Key Vault?"
+  back="Secrets are never stored in the pipeline definition. They're fetched at runtime from Key Vault. When secrets rotate, pipelines automatically get the new value without any pipeline changes."
+/>
+
+---
+
+## 📝 Quiz
+
+<Quiz>
+  <Question
+    question="What is a Variable Group in Azure DevOps?"
+    options={[
+      "A YAML section defining variables",
+      "A reusable collection of variables shared across pipelines",
+      "A group of build agents",
+      "A deployment environment"
+    ]}
+    correct={1}
+  />
+  
+  <Question
+    question="What's the equivalent of GitHub Environments in Azure DevOps?"
+    options={["Variable Groups", "Service Connections", "Environments", "Agent Pools"]}
+    correct={2}
+  />
+</Quiz>
+
+---
+
+## 📋 Summary
+
+| Component | Purpose |
+|-----------|---------|
+| **Pipeline YAML** | Pipeline-as-code definition |
+| **Variable Groups** | Shared variables/secrets |
+| **Service Connections** | Azure authentication |
+| **Environments** | Deployment targets with approvals |
+| **Key Vault** | Secret management at runtime |
