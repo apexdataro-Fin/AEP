@@ -1,0 +1,114 @@
+---
+id: "05-documentation-culture"
+title: "Documentation Culture"
+slug: /cloud-engineering/01-foundations/documentation-culture
+content_type: "lesson"
+summary: "Build a documentation-first culture. Learn why 'documentation as code' is the standard at top engineering organizations and how to make documentation a habit, not a chore."
+description: "Build a documentation-first engineering culture: docs-as-code, living documentation, and making documentation a team habit."
+difficulty: "beginner"
+estimated_time:
+  minutes: 30
+  hours: 0.5
+  display: "30 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-documentation-culture"
+    name: "Documentation Culture"
+    proficiency: "basic"
+prerequisites: ["03-technical-writing"]
+related_lessons: ["06-systems-thinking-deep-dive"]
+certifications: []
+knowledge_nodes: ["documentation-culture", "docs-as-code", "living-documentation"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Implement docs-as-code: documentation stored in git, reviewed like code, deployed automatically"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-2"
+    description: "Explain the difference between static documentation and living documentation"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-3"
+    description: "Establish a documentation review process that prevents stale docs"
+    category: "skill"
+    bloom_level: "create"
+active_recall:
+  - question: "What are the 3 principles of docs-as-code?"
+    answer: "1. Documentation stored in version control (git). 2. Documentation reviewed like code (PR review). 3. Documentation deployed automatically (CI/CD)."
+    difficulty: "easy"
+feynman_points:
+  - "Explain 'living documentation' using a restaurant menu analogy."
+tags: [documentation, docs-as-code, engineering-culture, best-practices]
+search_keywords: [documentation as code, living documentation, docs culture, how to write good docs]
+---
+
+# Documentation Culture
+
+:::level simple
+
+**Documentation is like a map.** When you first explore a city, you need a map. After living there for years, you don't need it anymore — but every new person does.
+
+Engineers often skip documentation because they already know their own systems. They forget that every new team member is exploring the city for the first time, without a map.
+
+**The rule:** If a new engineer can't understand your system from the docs in their first week, the docs have failed. Not the engineer.
+
+:::
+
+:::level core
+
+## Docs-as-Code: Documentation Lives in Git
+
+Documentation-as-code means treating docs exactly like software:
+
+```mermaid
+graph LR
+    A[Write Docs in Markdown] --> B[Store in Git]
+    B --> C[Review via Pull Request]
+    C --> D[CI/CD Validates]
+    D --> E[Auto-Deploy to Website]
+    
+    style A fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style C fill:#f59e0b,stroke:#d97706,color:#000
+    style E fill:#10b981,stroke:#059669,color:#fff
+```
+
+At CloudNova, every PR that changes infrastructure must either:
+- Include updated documentation, or
+- Explicitly state why docs don't need updating
+
+This single rule eliminated 80% of stale documentation in 3 months.
+
+:::
+
+---
+
+<BestPractice title="The Documentation PR Checklist">
+- [ ] Runbooks updated with new commands or procedures?
+- [ ] Architecture diagrams reflect the change?
+- [ ] README still accurate?
+- [ ] ADR created for significant decisions?
+</BestPractice>
+
+---
+
+## Key Takeaways
+
+- **Docs-as-code** means docs in git, reviewed in PRs, deployed via CI/CD — just like code.
+- **Living documentation** is updated alongside the system; stale docs are worse than no docs.
+- **Your future self** is the primary audience. Write for the person debugging this at 3 AM.
+
+---
+
+## Next Steps
+
+- **Next Lesson:** [Systems Thinking Deep Dive](/cloud-engineering/01-foundations/systems-thinking-deep-dive)
+- **Practice:** Pick any system you work with. Does it have a runbook? An architecture diagram? If not, create one.
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

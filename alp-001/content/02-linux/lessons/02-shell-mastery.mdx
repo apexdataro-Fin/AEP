@@ -1,0 +1,174 @@
+---
+id: "linux-02-shell-mastery"
+title: "Shell & Command Line Mastery"
+slug: /cloud-engineering/02-linux/shell-mastery
+content_type: "lesson"
+summary: "Master the Linux shell: essential commands, pipes, redirection, job control, and shell scripting fundamentals that every cloud engineer uses daily."
+description: "Linux shell mastery: essential commands, pipes, redirection, job control, and scripting for cloud engineers."
+difficulty: "beginner"
+estimated_time:
+  minutes: 45
+  hours: 0.75
+  display: "45 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-bash-scripting"
+    name: "Bash Scripting"
+    proficiency: "basic"
+technologies:
+  - name: "Bash"
+    category: "shell"
+    proficiency_required: "awareness"
+prerequisites: ["linux-01-architecture"]
+related_labs: ["lab-linux-02"]
+certifications: []
+career_relevance:
+  - role: "Junior Cloud Engineer"
+    level: "junior"
+    importance: 5
+knowledge_nodes: ["bash-scripting", "pipes-and-redirection", "shell-productivity"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Use pipes, redirection, and standard I/O streams to compose commands"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-2"
+    description: "Navigate, search, and manipulate files from the command line"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-3"
+    description: "Write a simple shell script with variables, conditionals, and loops"
+    category: "skill"
+    bloom_level: "create"
+active_recall:
+  - question: "What are stdin, stdout, and stderr? What file descriptors are they?"
+    answer: "stdin (0): Standard input — where commands read data from. stdout (1): Standard output — where commands write normal output. stderr (2): Standard error — where commands write error messages."
+    difficulty: "medium"
+  - question: "What's the difference between `>` and `>>`?"
+    answer: "`>` overwrites the file. `>>` appends to the file. Example: `echo 'line' > file.txt` replaces content; `echo 'line' >> file.txt` adds to the end."
+    difficulty: "easy"
+feynman_points:
+  - "Explain pipes using a factory assembly line analogy."
+tags: [linux, bash, shell, command-line, scripting]
+search_keywords: [linux commands, bash scripting, pipes, redirection, shell mastery]
+---
+
+# Shell & Command Line Mastery
+
+:::level simple
+
+The command line looks scary — black screen, blinking cursor, no icons. But it's actually just texting with your computer. Instead of clicking buttons, you type what you want.
+
+**Why it matters for cloud:** You can't click buttons on 50 servers at once. But you can run one command across all of them. That's why cloud engineers live in the terminal.
+
+:::
+
+:::level core
+
+## The Big Three: stdin, stdout, stderr
+
+```mermaid
+graph LR
+    A[Keyboard / File] -->|stdin (0)| B[Command]
+    B -->|stdout (1)| C[Terminal / File]
+    B -->|stderr (2)| D[Terminal / File]
+    
+    style A fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style B fill:#8b5cf6,stroke:#7c3aed,color:#fff
+    style C fill:#10b981,stroke:#059669,color:#fff
+    style D fill:#ef4444,stroke:#dc2626,color:#fff
+```
+
+Every Linux command has three standard streams:
+- **stdin (0):** Where input comes from (keyboard or file or another command)
+- **stdout (1):** Where normal output goes (terminal or file or another command)
+- **stderr (2):** Where error messages go
+
+:::
+
+## Essential Commands
+
+| Command | Purpose | CloudNova Use Case |
+|---|---|---|
+| `grep` | Search text | Find errors in logs |
+| `find` | Find files | Locate config files |
+| `awk` | Process columns | Extract IPs from logs |
+| `sed` | Stream edit | Replace text in configs |
+| `curl` | HTTP client | Test API endpoints |
+| `jq` | JSON processor | Parse API responses |
+
+### Pipes: The Unix Superpower
+
+```bash
+# Find all ERROR lines, extract the IP, count occurrences, show top 10
+grep "ERROR" /var/log/app.log \
+  | awk '{print $1}' \
+  | sort \
+  | uniq -c \
+  | sort -rn \
+  | head -10
+```
+
+### Redirection Quick Reference
+
+```bash
+command > file.txt   # stdout to file (overwrite)
+command >> file.txt  # stdout to file (append)
+command 2> error.log # stderr to file
+command &> all.log   # both stdout and stderr to file
+command < input.txt  # read stdin from file
+```
+
+### First Shell Script
+
+```bash
+#!/bin/bash
+# check-service.sh — Check if a service is running
+
+SERVICE=$1
+
+if systemctl is-active --quiet "$SERVICE"; then
+    echo "✅ $SERVICE is running"
+    exit 0
+else
+    echo "❌ $SERVICE is NOT running"
+    exit 1
+fi
+```
+
+---
+
+## Key Takeaways
+
+- **stdin (0), stdout (1), stderr (2)** — the three I/O streams every command uses.
+- **Pipes (`|`)** connect command output to command input — the Unix superpower.
+- **Redirection (`>`, `>>`, `<`)** sends output to files or reads from files.
+- **Shell scripts** are just commands in a file — start automating immediately.
+
+---
+
+## Check Your Understanding
+
+1. **What happens when you run `command > output.txt 2>&1`?**
+   - A) stdout goes to output.txt, stderr goes to terminal
+   - B) Both stdout and stderr go to output.txt
+   - C) Nothing — it's invalid syntax
+   - D) Only stderr goes to output.txt
+
+   <details><summary>Answer</summary>**B.** `2>&1` redirects stderr (file descriptor 2) to wherever stdout (file descriptor 1) is going — which in this case is `output.txt`.</details>
+
+---
+
+## Next Steps
+
+- **Next Lesson:** [File System Deep Dive](/cloud-engineering/02-linux/filesystem-deep-dive)
+- **Lab:** [Shell Scripting Basics](/labs/lab-linux-02)
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

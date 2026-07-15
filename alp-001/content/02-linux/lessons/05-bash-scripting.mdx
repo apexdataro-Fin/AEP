@@ -1,0 +1,153 @@
+---
+id: "linux-05-bash-scripting"
+title: "Bash Scripting for Automation"
+slug: /cloud-engineering/02-linux/bash-scripting
+content_type: "lesson"
+summary: "Write production bash scripts: variables, conditionals, loops, functions, error handling, and logging. Automate the repetitive tasks that consume cloud engineers' time."
+description: "Production bash scripting: variables, conditionals, loops, functions, error handling, and logging for cloud automation."
+difficulty: "beginner"
+estimated_time:
+  minutes: 50
+  hours: 0.83
+  display: "50 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-bash-scripting"
+    name: "Bash Scripting"
+    proficiency: "basic"
+technologies:
+  - name: "Bash"
+    category: "shell"
+prerequisites: ["linux-02-shell-mastery"]
+certifications: []
+knowledge_nodes: ["bash-scripting", "automation-patterns", "error-handling"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Write bash scripts with variables, conditionals, loops, and functions"
+    category: "skill"
+    bloom_level: "create"
+  - id: "obj-2"
+    description: "Implement proper error handling with exit codes and trap"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-3"
+    description: "Create a production-grade backup automation script"
+    category: "skill"
+    bloom_level: "create"
+active_recall:
+  - question: "What does `set -euo pipefail` do in a bash script?"
+    answer: "`set -e`: Exit immediately if any command fails. `set -u`: Treat unset variables as errors. `set -o pipefail`: A pipeline fails if any command in it fails (not just the last one)."
+    difficulty: "medium"
+tags: [bash, scripting, automation, linux]
+search_keywords: [bash scripting tutorial, shell script automation, bash error handling, production scripts]
+---
+
+# Bash Scripting for Automation
+
+:::level simple
+
+**Scripts are just saved commands.** Instead of typing the same 10 commands every day, save them in a file, make it executable, and run it with one command. That's a script.
+
+Cloud engineers automate everything: backups, health checks, deployments, log rotation. If you do something more than twice, script it.
+
+:::
+
+:::level core
+
+## The Anatomy of a Production Script
+
+```bash
+#!/bin/bash
+set -euo pipefail  # Fail fast, fail loud
+
+# === Configuration ===
+BACKUP_DIR="/var/backups/cloudnova"
+RETENTION_DAYS=7
+LOG_FILE="/var/log/backup.log"
+
+# === Logging ===
+log() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG_FILE"
+}
+
+# === Cleanup on failure ===
+cleanup() {
+    log "ERROR: Backup failed. Cleaning up..."
+    rm -rf "${BACKUP_DIR}/temp"
+}
+trap cleanup ERR
+
+# === Main ===
+log "Starting backup..."
+mkdir -p "$BACKUP_DIR"
+
+# Backup PostgreSQL
+pg_dump cloudnova > "${BACKUP_DIR}/db_$(date +%Y%m%d).sql"
+log "Database backup complete."
+
+# Clean up old backups
+find "$BACKUP_DIR" -name "*.sql" -mtime +$RETENTION_DAYS -delete
+log "Removed backups older than $RETENTION_DAYS days."
+
+log "Backup completed successfully."
+```
+
+### Key Patterns
+
+| Pattern | Code | Why |
+|---|---|---|
+| Fail fast | `set -euo pipefail` | Stop on first error |
+| Logging function | `log() { echo "[$(date)] $*"; }` | Timestamped, consistent logs |
+| Cleanup trap | `trap cleanup ERR` | Clean up even on failure |
+| Config at top | Variables at top of file | Easy to change, no magic numbers |
+
+:::
+
+## CloudNova Automation Example
+
+```bash
+#!/bin/bash
+# health-check.sh — Check all CloudNova services
+set -euo pipefail
+
+SERVICES=("nginx" "postgresql" "cloudnova-api" "redis")
+ALERT_EMAIL="infra-oncall@cloudnova.io"
+
+for svc in "${SERVICES[@]}"; do
+    if systemctl is-active --quiet "$svc"; then
+        echo "✅ $svc"
+    else
+        echo "❌ $svc is DOWN! Restarting..."
+        sudo systemctl restart "$svc"
+        echo "ALERT: $svc was down and restarted" | \
+            mail -s "Service Restart: $svc" "$ALERT_EMAIL"
+    fi
+done
+```
+
+---
+
+## Check Your Understanding
+
+1. **What happens without `set -e` if a command in your script fails?**
+   - A) The script stops immediately
+   - B) The script continues to the next command — potentially causing cascading failures
+   - C) The script sends an email
+   - D) Nothing — bash scripts can't fail
+
+   <details><summary>Answer</summary>**B.** Without `set -e`, bash continues executing even after failures. This can cause catastrophic cascading errors. Always use `set -euo pipefail`.</details>
+
+---
+
+## Next Steps
+
+- **Next Lesson:** [Linux Networking Stack](/cloud-engineering/02-linux/linux-networking)
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

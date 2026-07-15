@@ -1,0 +1,150 @@
+---
+id: "linux-08-troubleshooting"
+title: "Linux Troubleshooting Methodology"
+slug: /cloud-engineering/02-linux/troubleshooting
+content_type: "lesson"
+summary: "Master the systematic approach to Linux troubleshooting: the USE method, log analysis, and the tools (strace, lsof, dmesg) that solve production incidents at 3 AM."
+description: "Linux troubleshooting methodology: USE method, strace, lsof, dmesg, and systematic debugging for production incidents."
+difficulty: "beginner"
+estimated_time:
+  minutes: 40
+  hours: 0.67
+  display: "40 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-troubleshooting"
+    name: "Troubleshooting"
+    proficiency: "basic"
+prerequisites: ["linux-04-processes", "linux-06-networking"]
+certifications: []
+knowledge_nodes: ["troubleshooting-methodology", "use-method", "strace"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Apply the USE method (Utilization, Saturation, Errors) to diagnose system problems"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-2"
+    description: "Use strace, lsof, and dmesg to trace process behavior and system events"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What does the USE method stand for, and what does each component check?"
+    answer: "Utilization: How busy is the resource? (CPU %, memory %, disk %). Saturation: How much queued work is waiting? (run queue, swap usage). Errors: How many errors is the resource generating? (disk errors, network drops)."
+    difficulty: "medium"
+tags: [linux, troubleshooting, debugging, strace, use-method]
+search_keywords: [linux troubleshooting, USE method, strace tutorial, lsof, dmesg debugging]
+---
+
+# Linux Troubleshooting Methodology
+
+:::level simple
+
+**Don't guess. Measure.** The difference between a junior engineer who panics and a senior engineer who calmly resolves an incident is methodology. Systematic troubleshooting beats intuition every time.
+
+When something is slow or broken, don't start changing random settings. Follow a method: check utilization, check saturation, check errors. Then dig deeper with the right tools.
+
+:::
+
+:::level core
+
+## The USE Method
+
+```mermaid
+graph TD
+    A[Problem: Service is slow] --> B{U: Utilization Check}
+    B -->|CPU > 90%| C[CPU-bound: optimize or scale]
+    B -->|Memory > 90%| D[Memory-bound: check for leaks]
+    B -->|Normal| E{S: Saturation Check}
+    E -->|High run queue| F[Too many processes waiting for CPU]
+    E -->|Swap used| G[Memory pressure — adding RAM or reducing footprint]
+    E -->|Normal| H{E: Errors Check}
+    H -->|Disk errors| I[Failing disk or controller]
+    H -->|Network drops| J[Network congestion or misconfiguration]
+    
+    style A fill:#f59e0b,stroke:#d97706,color:#000
+    style C fill:#ef4444,stroke:#dc2626,color:#fff
+    style J fill:#ef4444,stroke:#dc2626,color:#fff
+```
+
+### Quick Diagnostics Commands
+
+```bash
+# CPU
+top -bn1 | head -5           # CPU utilization
+uptime                        # Load average (1, 5, 15 min)
+
+# Memory
+free -h                       # Memory overview
+vmstat 1 5                    # Virtual memory stats
+
+# Disk
+df -h                         # Disk space
+iostat -x 1                   # Disk I/O stats
+
+# Network
+ss -s                         # Socket summary
+netstat -i                    # Interface errors/drops
+
+# System
+dmesg | tail -30              # Kernel messages (hardware errors!)
+journalctl -xe                # Recent system logs
+```
+
+## Deep-Dive Tools
+
+```bash
+# What files is this process using?
+lsof -p $(pgrep nginx)
+
+# Trace system calls (see exactly what a process is doing)
+strace -p $(pgrep nginx) -f -e trace=network
+
+# What's consuming disk I/O?
+iotop -o
+```
+
+:::
+
+---
+
+<Example title="CloudNova Incident: High Load Average">
+
+**Alert:** Load average on web-04 jumped to 25 (normally 2).
+
+```bash
+# USE Method:
+# U: CPU at 95% — something's burning CPU
+top -bn1
+# PID 28941 'ffmpeg' using 400% CPU (4 cores)
+
+# What is that process?
+ps aux | grep 28941
+# It's a transcoding job that shouldn't be on this server
+
+# Who started it?
+systemctl status transcoder
+# A developer manually ran it for testing and forgot
+
+# Fix: kill the process, send email to developer
+kill 28941
+```
+
+</Example>
+
+---
+
+## Key Takeaways
+
+- **USE Method:** Check Utilization → Saturation → Errors — in that order.
+- **`dmesg`** reveals hardware and kernel-level issues invisible to `top`.
+- **`strace`** shows exactly what a process is doing — invaluable for "it hangs" bugs.
+- **Don't guess, measure.** Half of troubleshooting is asking the right questions.
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

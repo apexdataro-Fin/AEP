@@ -1,0 +1,174 @@
+---
+id: "linux-03-filesystem"
+title: "File System Deep Dive"
+slug: /cloud-engineering/02-linux/filesystem-deep-dive
+content_type: "lesson"
+summary: "Understand Linux file systems: inodes, permissions, mounting, symbolic and hard links, and the Virtual File System layer. Essential for storage management in the cloud."
+description: "Linux file systems: inodes, permissions, mounting, symbolic links, VFS layer, and practical storage management for cloud engineers."
+difficulty: "beginner"
+estimated_time:
+  minutes: 40
+  hours: 0.67
+  display: "40 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-file-system-management"
+    name: "File System Management"
+    proficiency: "basic"
+technologies:
+  - name: "Linux"
+    category: "operating-system"
+prerequisites: ["linux-02-shell-mastery"]
+certifications: []
+knowledge_nodes: ["file-systems", "inodes", "permissions", "vfs-layer"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Explain inodes and why they matter for disk space management"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-2"
+    description: "Manage file permissions using chmod in symbolic and octal notation"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-3"
+    description: "Differentiate between symbolic links, hard links, and when to use each"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What is an inode and what information does it store?"
+    answer: "An inode is a data structure that stores metadata about a file: permissions, owner, size, timestamps, and pointers to data blocks. It does NOT store the filename — that's in the directory entry."
+    difficulty: "medium"
+  - question: "What permission does a directory need for a user to list its contents?"
+    answer: "Read (r) permission on the directory. Execute (x) is needed to access files inside it."
+    difficulty: "medium"
+feynman_points:
+  - "Explain inodes using a library card catalog analogy."
+tags: [linux, filesystem, inodes, permissions, storage]
+search_keywords: [linux filesystem, inodes, chmod, symbolic links, hard links, disk management]
+---
+
+# File System Deep Dive
+
+:::level simple
+
+Everything in Linux is a file. Your hard drive? A file (`/dev/sda`). Your terminal? A file (`/dev/tty`). Running programs? Files in `/proc/`. Even network connections are files.
+
+This "everything is a file" philosophy means you can use the same tools (`cat`, `ls`, `grep`) to inspect almost anything. It's one of Linux's most powerful design decisions.
+
+:::
+
+:::level core
+
+## Inodes: The "Behind the Scenes" of Every File
+
+```mermaid
+graph TD
+    A[Directory Entry] -->|points to| B[Inode 45782]
+    B --> C[Permissions: -rw-r--r--]
+    B --> D[Owner: david / group: infra]
+    B --> E[Size: 4096 bytes]
+    B --> F[Timestamps: created, modified, accessed]
+    B --> G[Data Block Pointers]
+    G --> H[Actual file data on disk]
+    
+    style B fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style H fill:#10b981,stroke:#059669,color:#fff
+```
+
+The **inode** stores everything about the file except its name and its data. The name lives in the directory. The data lives in disk blocks the inode points to.
+
+```bash
+# See inode numbers
+ls -i
+# Output:
+# 45782 nginx.conf
+# 89123 access.log
+
+# Check inode usage (running out of inodes = can't create files even with free space!)
+df -i
+```
+
+:::
+
+## Permissions Deep Dive
+
+```bash
+# -rwxr-xr--  1 david infra  4096 Jul 15 14:30 script.sh
+#  └─┬─┘└─┬─┘└─┬─┘
+#    │    │    └── Others: read only
+#    │    └─────── Group: read, execute
+#    └──────────── Owner: read, write, execute
+#                File type: - (regular file)
+```
+
+| Octal | Symbolic | Permission |
+|---|---|---|
+| 7 | rwx | Read, write, execute |
+| 6 | rw- | Read, write |
+| 5 | r-x | Read, execute |
+| 4 | r-- | Read only |
+| 0 | --- | No permission |
+
+```bash
+chmod 755 script.sh   # rwxr-xr-x (owner: all, others: read+execute)
+chmod 600 secret.key  # rw------- (owner only: read+write)
+chmod +x script.sh    # Add execute for everyone
+```
+
+### Symlinks vs Hard Links
+
+| Feature | Symlink (`ln -s`) | Hard Link (`ln`) |
+|---|---|---|
+| Points to | File path (name) | Inode (the file itself) |
+| Works across filesystems? | Yes | No |
+| Survives original deletion? | ❌ Broken link | ✅ Data persists |
+| Shows as different file? | Yes (starts with `l`) | No (shares inode) |
+
+---
+
+<Example title="CloudNova: Debugging Disk Full">
+
+```bash
+# Disk is "full" but df shows space available — the inode trap!
+df -h /dev/sda1   # 60% used — plenty of space
+df -i /dev/sda1   # 100% inodes used!
+
+# A misbehaving process created millions of tiny temp files
+find /tmp -type f -name "session_*" | wc -l
+# Output: 3,847,291 files
+
+# Fix: delete them
+find /tmp -type f -name "session_*" -delete
+```
+
+</Example>
+
+---
+
+## Key Takeaways
+
+- **Everything is a file** — disks, processes, network connections.
+- **Inodes** store metadata and data pointers. Running out of inodes = can't create files even with free space.
+- **Permissions** use octal (755) or symbolic (rwxr-xr-x) notation.
+- **Symlinks** point to paths; **hard links** point to inodes.
+
+---
+
+## Check Your Understanding
+
+1. **What happens when you delete a file that still has a hard link?**
+   - A) The data is deleted immediately
+   - B) The data remains until all hard links are deleted
+   - C) The hard link becomes a symlink
+   - D) Nothing — you can't delete a file with hard links
+
+   <details><summary>Answer</summary>**B.** The data persists until the inode's link count reaches 0.</details>
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

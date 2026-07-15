@@ -1,0 +1,189 @@
+---
+id: "linux-07-security"
+title: "Linux Security Hardening"
+slug: /cloud-engineering/02-linux/security-hardening
+content_type: "lesson"
+summary: "Harden Linux servers for production: SSH hardening, firewall configuration, automatic updates, fail2ban, and security auditing. Apply the same hardening CloudNova uses on all production servers."
+description: "Linux security hardening: SSH, firewall, auto-updates, fail2ban, auditing — production-grade server security."
+difficulty: "beginner"
+estimated_time:
+  minutes: 40
+  hours: 0.67
+  display: "40 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-server-hardening"
+    name: "Server Hardening"
+    proficiency: "basic"
+technologies:
+  - name: "Linux"
+    category: "operating-system"
+prerequisites: ["linux-01-architecture"]
+related_projects: ["proj-001"]
+certifications: []
+career_relevance:
+  - role: "Junior Cloud Engineer"
+    level: "junior"
+    importance: 5
+knowledge_nodes: ["ssh-hardening", "firewall-configuration", "security-baseline"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Harden SSH by disabling password auth and root login"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-2"
+    description: "Configure ufw/iptables firewall with least-privilege rules"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-3"
+    description: "Set up fail2ban and automatic security updates"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What 3 SSH hardening steps should you apply to every production server?"
+    answer: "1. Disable password authentication (use keys only). 2. Disable root login. 3. Change the default SSH port (optional, reduces automated attacks)."
+    difficulty: "easy"
+tags: [linux, security, hardening, ssh, firewall, fail2ban]
+search_keywords: [linux security hardening, SSH hardening, ufw firewall, fail2ban, production server security]
+---
+
+# Linux Security Hardening
+
+:::level simple
+
+**Security is not optional.** An unsecured Linux server exposed to the internet will be compromised within hours — sometimes minutes — by automated attacks.
+
+Hardening means applying a set of configurations that reduce your attack surface. Think of it like locking doors and windows: you don't wait until after a burglary to install locks.
+
+:::
+
+:::level core
+
+## SSH Hardening
+
+```bash
+# /etc/ssh/sshd_config
+PermitRootLogin no               # Never allow root SSH
+PasswordAuthentication no         # Keys only, no passwords
+PubkeyAuthentication yes          # Allow SSH keys
+MaxAuthTries 3                    # Limit brute force attempts
+ClientAliveInterval 300           # Disconnect idle sessions after 5 min
+AllowUsers david emma             # Only specific users can SSH
+```
+
+```bash
+# After changing config, test and reload
+sshd -t                           # Test config syntax
+systemctl reload sshd             # Apply changes without dropping connections
+```
+
+## Firewall with UFW
+
+```bash
+# CloudNova Standard Firewall Rules
+ufw default deny incoming         # Block everything by default
+ufw default allow outgoing        # Allow all outbound
+
+ufw allow 22/tcp                  # SSH
+ufw allow 80/tcp                  # HTTP
+ufw allow 443/tcp                 # HTTPS
+
+ufw enable                        # Turn it on
+ufw status verbose                # Verify
+```
+
+## Fail2ban: Block Attackers
+
+```bash
+apt install fail2ban
+
+# /etc/fail2ban/jail.local
+[DEFAULT]
+bantime = 3600                    # Ban for 1 hour
+findtime = 600                    # Window: 10 minutes
+maxretry = 5                      # 5 failures = ban
+
+[sshd]
+enabled = true
+```
+
+## Automatic Security Updates
+
+```bash
+apt install unattended-upgrades
+dpkg-reconfigure unattended-upgrades  # Choose "Yes"
+```
+
+---
+
+<Example title="CloudNova Security Baseline Script">
+
+```bash
+#!/bin/bash
+# cloudnova-harden.sh — Production hardening script
+set -euo pipefail
+echo "=== CloudNova Server Hardening ==="
+
+# 1. SSH Hardening
+sed -i 's/^#PermitRootLogin.*/PermitRootLogin no/' /etc/ssh/sshd_config
+sed -i 's/^#PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
+systemctl reload sshd
+echo "✅ SSH hardened"
+
+# 2. Firewall
+ufw --force enable
+ufw default deny incoming
+ufw allow 22/tcp
+ufw allow 80,443/tcp
+echo "✅ Firewall configured"
+
+# 3. Auto updates
+apt install -y unattended-upgrades
+echo "✅ Auto updates enabled"
+
+# 4. Fail2ban
+apt install -y fail2ban
+systemctl enable --now fail2ban
+echo "✅ Fail2ban active"
+
+echo "=== Hardening complete ==="
+```
+
+</Example>
+
+---
+
+## Key Takeaways
+
+- **Disable root SSH login and password auth** — keys only.
+- **Default deny firewall** — open only what you need.
+- **fail2ban** blocks brute-force attacks automatically.
+- **Automatic security updates** patch CVEs without manual intervention.
+- Apply these to **every server, every time** — no exceptions.
+
+---
+
+## Check Your Understanding
+
+1. **Why disable root SSH login?**
+   - A) Root can't use SSH keys
+   - B) Every attacker knows the username "root" — it's the first target. SSH as a regular user, then `sudo`
+   - C) root login is slower
+   - D) It's not necessary to disable
+
+   <details><summary>Answer</summary>**B.** "root" is the most attacked username on the internet. Disable it. SSH as your user, then use sudo for privileged commands.</details>
+
+---
+
+## Career at CloudNova
+
+This lesson directly applies to **Project 001: CloudNova Linux Server**. Your first task is to provision a server and run this exact hardening script.
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

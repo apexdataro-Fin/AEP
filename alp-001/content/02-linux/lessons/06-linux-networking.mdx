@@ -1,0 +1,141 @@
+---
+id: "linux-06-networking"
+title: "Linux Networking Stack"
+slug: /cloud-engineering/02-linux/linux-networking
+content_type: "lesson"
+summary: "Understand the Linux networking stack: interfaces, routing, iptables, and network debugging tools. Every cloud engineer must understand how packets flow."
+description: "Linux networking: interfaces, routing, iptables, and network debugging tools for cloud engineers."
+difficulty: "intermediate"
+estimated_time:
+  minutes: 45
+  hours: 0.75
+  display: "45 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-linux-networking"
+    name: "Linux Networking"
+    proficiency: "basic"
+prerequisites: ["linux-01-architecture"]
+certifications: []
+knowledge_nodes: ["linux-networking", "iptables", "routing"]
+learning_objectives:
+  - id: "obj-1"
+    description: "Inspect network interfaces, routing tables, and active connections"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-2"
+    description: "Use tcpdump, ss, and netstat for network debugging"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What's the difference between `ss` and `netstat`?"
+    answer: "`ss` (socket statistics) is the modern, faster replacement for `netstat`. It reads directly from kernel space. `netstat` reads from `/proc` and is slower. Always use `ss`."
+    difficulty: "easy"
+tags: [linux, networking, iptables, tcpdump, routing]
+search_keywords: [linux networking, iptables tutorial, tcpdump, ss command, routing table]
+---
+
+# Linux Networking Stack
+
+:::level simple
+
+Every server has a network card. Linux gives you complete control over it — what IP it has, which routes it uses, what traffic it allows or blocks. This is the networking stack.
+
+Cloud engineers spend a lot of time debugging: "Why can't server A talk to server B?" Understanding the Linux network stack makes you the person who can answer that question.
+
+:::
+
+:::level core
+
+### Essential Network Commands
+
+```bash
+# Show interfaces and IPs
+ip addr show
+ip -br addr   # Brief version
+
+# Show routing table
+ip route show
+
+# Show listening ports
+ss -tlnp   # TCP listening
+ss -ulnp   # UDP listening
+
+# Capture packets
+tcpdump -i eth0 port 443
+tcpdump -i any host 10.0.1.5 and port 80 -w capture.pcap
+
+# Test connectivity
+ping -c 3 8.8.8.8
+curl -v https://api.cloudnova.io/health
+```
+
+### iptables: The Linux Firewall
+
+```bash
+# List current rules
+iptables -L -n -v
+
+# Allow SSH from specific IP
+iptables -A INPUT -p tcp -s 10.0.0.5 --dport 22 -j ACCEPT
+
+# Block all other SSH
+iptables -A INPUT -p tcp --dport 22 -j DROP
+
+# Save rules
+iptables-save > /etc/iptables/rules.v4
+```
+
+```mermaid
+graph LR
+    A[Incoming Packet] --> B{iptables INPUT chain}
+    B -->|SSH from 10.0.0.5| C[ACCEPT]
+    B -->|SSH from anywhere else| D[DROP]
+    B -->|HTTP/HTTPS| E[ACCEPT]
+    B -->|Everything else| D
+    
+    style C fill:#10b981,stroke:#059669,color:#fff
+    style D fill:#ef4444,stroke:#dc2626,color:#fff
+```
+
+---
+
+<Example title="CloudNova Debugging: Connection Refused">
+
+```bash
+# Developer says: "Can't connect to API on port 8080"
+
+# Step 1: Is the service listening?
+ss -tlnp | grep 8080
+# Output: (nothing) — service not listening!
+
+# Step 2: Is the service running?
+systemctl status cloudnova-api
+# Output: active (running) — but on port 8000, not 8080
+
+# Step 3: Check config
+grep "port" /opt/cloudnova/api/config.yaml
+# Output: port: 8000 — there's the problem
+
+# Fix: Either change the config or use the correct port
+```
+
+</Example>
+
+---
+
+## Key Takeaways
+
+- `ip addr`, `ip route`, `ss` — the modern networking toolkit.
+- `tcpdump` captures packets for deep debugging.
+- `iptables` is the Linux firewall — understand the chains (INPUT, OUTPUT, FORWARD).
+- Always verify the service is **listening on the expected port** before debugging the network.
+
+---
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90
