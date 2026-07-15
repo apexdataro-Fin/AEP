@@ -1,0 +1,112 @@
+{
+  "version": "1.0.0",
+  "description": "Content Management Engine — draft, review, published, archived, deprecated workflows. Versioning, revision history, change tracking, future updates.",
+  "workflow": {
+    "states": {
+      "draft": {
+        "label": "Draft",
+        "description": "Content being actively written. Not visible to learners.",
+        "transitions": ["review"],
+        "permissions": ["author", "editor"]
+      },
+      "review": {
+        "label": "In Review",
+        "description": "Content undergoing editorial or technical review.",
+        "transitions": ["draft", "published"],
+        "permissions": ["author", "editor", "reviewer"]
+      },
+      "published": {
+        "label": "Published",
+        "description": "Live content visible to all learners.",
+        "transitions": ["archived", "deprecated"],
+        "permissions": ["author", "editor", "publisher"]
+      },
+      "archived": {
+        "label": "Archived",
+        "description": "Removed from active catalog. Visible only to enrolled learners who started it.",
+        "transitions": ["published"],
+        "permissions": ["admin"]
+      },
+      "deprecated": {
+        "label": "Deprecated",
+        "description": "Superseded by newer content. Warnings shown to learners.",
+        "transitions": ["archived"],
+        "permissions": ["admin"],
+        "metadata": { "superseded_by": "string (ALP ID)", "deprecation_notice": "string" }
+      }
+    }
+  },
+  "versioning": {
+    "semver": true,
+    "convention": "MAJOR.MINOR.PATCH",
+    "branching": {
+      "main": "Current published version",
+      "draft": "Working version for next release",
+      "historical": "All previous published versions preserved"
+    },
+    "schema": {
+      "id": "string",
+      "version": "string (semver)",
+      "date": "ISO date",
+      "author": "string",
+      "type": "major | minor | patch",
+      "summary": "string",
+      "detailed_changes": [
+        {
+          "file": "string",
+          "change_type": "added | modified | removed | renamed | moved",
+          "description": "string"
+        }
+      ],
+      "breaking_changes": ["string"],
+      "migration_notes": "string"
+    }
+  },
+  "revision_history": {
+    "description": "Complete history of every change to every content file",
+    "schema": {
+      "file": "string",
+      "revisions": [
+        {
+          "revision_id": "string (UUID)",
+          "timestamp": "ISO date-time",
+          "author": "string",
+          "change_type": "create | edit | delete | rename | move",
+          "summary": "string",
+          "diff": "string (git-style diff, optional)"
+        }
+      ]
+    }
+  },
+  "change_tracking": {
+    "description": "Track proposed changes before they are applied",
+    "schema": {
+      "id": "string (UUID)",
+      "proposed_by": "string",
+      "proposed_at": "ISO date-time",
+      "status": "pending | approved | rejected",
+      "files_changed": [
+        {
+          "file": "string",
+          "current_content_hash": "string",
+          "proposed_content_hash": "string"
+        }
+      ],
+      "reviewers": ["string"],
+      "review_comments": [
+        { "reviewer": "string", "comment": "string", "timestamp": "ISO date-time", "resolved": "boolean" }
+      ]
+    }
+  },
+  "content_scheduling": {
+    "description": "Schedule future content updates and releases",
+    "supported": true,
+    "schema": {
+      "id": "string",
+      "content_id": "string",
+      "action": "publish | archive | update | deprecate",
+      "scheduled_at": "ISO date-time",
+      "status": "pending | executed | cancelled"
+    }
+  }
+}

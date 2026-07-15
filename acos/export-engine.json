@@ -1,0 +1,193 @@
+{
+  "engine": "export-engine",
+  "version": "1.0.0",
+  "description": "Reusable Export Engine for the ARES Content Operating System. Supports exporting content to multiple formats for offline, print, and distribution.",
+  "export_formats": {
+    "markdown": {
+      "id": "markdown",
+      "description": "Plain Markdown export",
+      "mime_type": "text/markdown",
+      "extension": ".md",
+      "config": {
+        "preserve_frontmatter": "boolean",
+        "include_metadata": "boolean",
+        "image_handling": { "enum": ["embed_base64", "relative_paths", "external_urls"] },
+        "diagram_handling": { "enum": ["mermaid_source", "rendered_svg", "png_screenshot"] },
+        "code_block_style": { "enum": ["fenced", "indented"] }
+      }
+    },
+    "mdx": {
+      "id": "mdx",
+      "description": "MDX export (preserving JSX components)",
+      "mime_type": "text/mdx",
+      "extension": ".mdx",
+      "config": {
+        "preserve_components": "boolean",
+        "include_imports": "boolean",
+        "bundle_components": "boolean"
+      }
+    },
+    "html": {
+      "id": "html",
+      "description": "Standalone HTML document",
+      "mime_type": "text/html",
+      "extension": ".html",
+      "config": {
+        "template": { "enum": ["minimal", "styled", "platform_theme"] },
+        "include_css": "boolean",
+        "include_js": "boolean",
+        "responsive": "boolean",
+        "self_contained": "boolean",
+        "include_toc": "boolean",
+        "include_search": "boolean"
+      }
+    },
+    "pdf": {
+      "id": "pdf",
+      "description": "Portable Document Format export",
+      "mime_type": "application/pdf",
+      "extension": ".pdf",
+      "config": {
+        "page_size": { "enum": ["A4", "Letter", "A5", "Legal"] },
+        "orientation": { "enum": ["portrait", "landscape"] },
+        "margins": "object",
+        "include_cover": "boolean",
+        "include_toc": "boolean",
+        "include_index": "boolean",
+        "header_footer": "boolean",
+        "font_family": "string",
+        "font_size": "number",
+        "code_theme": "string",
+        "diagrams_as": { "enum": ["vector", "raster"] },
+        "two_column": "boolean",
+        "watermark": { "type": "string", "optional": true }
+      }
+    },
+    "epub": {
+      "id": "epub",
+      "description": "Electronic publication format for e-readers",
+      "mime_type": "application/epub+zip",
+      "extension": ".epub",
+      "config": {
+        "version": { "enum": ["2.0", "3.0", "3.2"] },
+        "cover_image": "string",
+        "metadata": {
+          "title": "string",
+          "author": "string",
+          "publisher": "string",
+          "language": "string",
+          "isbn": "string",
+          "description": "string"
+        },
+        "reflowable": "boolean",
+        "fixed_layout": "boolean",
+        "include_fonts": "boolean",
+        "reading_order": { "enum": ["linear", "custom"] }
+      }
+    },
+    "json": {
+      "id": "json",
+      "description": "Structured JSON export for programmatic use",
+      "mime_type": "application/json",
+      "extension": ".json",
+      "config": {
+        "include_metadata": "boolean",
+        "include_content": "boolean",
+        "include_relationships": "boolean",
+        "pretty_print": "boolean",
+        "schema_version": "string"
+      }
+    },
+    "offline_package": {
+      "id": "offline_package",
+      "description": "Self-contained offline learning package",
+      "mime_type": "application/zip",
+      "extension": ".zip",
+      "config": {
+        "include_assets": "boolean",
+        "include_interactive": "boolean",
+        "include_quizzes": "boolean",
+        "include_simulators": "boolean",
+        "include_search_index": "boolean",
+        "service_worker": "boolean",
+        "manifest": "boolean"
+      }
+    },
+    "print_version": {
+      "id": "print_version",
+      "description": "Print-optimized version with page breaks and printer-friendly styling",
+      "mime_type": "application/pdf",
+      "extension": ".pdf",
+      "config": {
+        "page_breaks": { "enum": ["after_sections", "after_chapters", "manual"] },
+        "bleed": "boolean",
+        "crop_marks": "boolean",
+        "color_mode": { "enum": ["color", "grayscale"] },
+        "binding": { "enum": ["none", "saddle_stitch", "perfect_bound"] },
+        "print_resolution": { "enum": ["300dpi", "600dpi"] }
+      }
+    },
+    "csv": {
+      "id": "csv",
+      "description": "Tabular data export (questions, glossary, metadata)",
+      "mime_type": "text/csv",
+      "extension": ".csv",
+      "config": {
+        "delimiter": "string",
+        "include_headers": "boolean",
+        "encoding": { "enum": ["utf-8", "utf-8-bom"] },
+        "quote_all": "boolean"
+      }
+    },
+    "yaml": {
+      "id": "yaml",
+      "description": "YAML export for configuration and structured data",
+      "mime_type": "application/yaml",
+      "extension": ".yaml",
+      "config": {
+        "flow_style": "boolean",
+        "indent": "number",
+        "include_comments": "boolean"
+      }
+    },
+    "slides": {
+      "id": "slides",
+      "description": "Presentation slide deck export",
+      "mime_type": "text/html",
+      "extension": ".html",
+      "config": {
+        "framework": { "enum": ["revealjs", "marp", "impress"] },
+        "theme": "string",
+        "transition": "string",
+        "speaker_notes": "boolean",
+        "progress_bar": "boolean"
+      }
+    }
+  },
+  "export_scopes": {
+    "single_lesson": "Export one lesson",
+    "chapter": "Export an entire chapter",
+    "module": "Export a module with all lessons",
+    "course": "Export a full course",
+    "book": "Export a complete book",
+    "learning_path": "Export an entire learning path",
+    "question_bank": "Export question banks",
+    "glossary": "Export glossary entries",
+    "knowledge_graph": "Export knowledge graph data",
+    "custom_selection": "Export user-selected content"
+  },
+  "batch_export": {
+    "description": "Export multiple items in one operation",
+    "config": {
+      "parallel_exports": "number",
+      "combine_into_single": "boolean",
+      "naming_pattern": "string",
+      "output_directory": "string"
+    }
+  },
+  "hooks": {
+    "pre_export": "Transform content before export",
+    "post_export": "Post-process exported files",
+    "asset_pipeline": "Process and optimize assets for target format"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "version": "1.0.0",
+  "description": "Course Engine — complete course architecture: modules, units, lessons, projects, labs, assignments, assessments, exams, certificates, prerequisites, completion tracking.",
+  "course_structure": {
+    "hierarchy": ["course", "module", "unit", "lesson"],
+    "components": ["introduction", "lessons", "projects", "labs", "assignments", "quizzes", "exams", "certificate"]
+  },
+  "course_schema": {
+    "id": "string (alp-course-*)",
+    "title": "string",
+    "subtitle": "string",
+    "description": "string",
+    "domain": "string",
+    "difficulty": "beginner | intermediate | advanced | expert | master",
+    "estimated_hours": "number",
+    "language": "string",
+    "modules": [
+      {
+        "id": "string",
+        "number": "integer",
+        "title": "string",
+        "description": "string",
+        "estimated_hours": "number",
+        "units": [
+          {
+            "id": "string",
+            "number": "integer",
+            "title": "string",
+            "description": "string",
+            "type": "theory | practice | project | lab | assessment",
+            "lessons": [
+              {
+                "id": "string",
+                "title": "string",
+                "slug": "string",
+                "type": "lesson | mini-lesson | video | reading | exercise",
+                "estimated_minutes": "number",
+                "content_file": "string"
+              }
+            ],
+            "projects": [
+              {
+                "id": "string",
+                "title": "string",
+                "type": "guided | challenge | capstone",
+                "estimated_hours": "number",
+                "content_file": "string"
+              }
+            ],
+            "labs": [
+              {
+                "id": "string",
+                "title": "string",
+                "type": "guided | challenge | debugging | architecture",
+                "estimated_minutes": "number",
+                "content_file": "string"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "assessments": {
+      "quizzes": [
+        {
+          "id": "string",
+          "title": "string",
+          "after_unit": "string (unit id)",
+          "passing_score": "number (0-100)",
+          "question_count": "integer",
+          "time_limit_minutes": "number"
+        }
+      ],
+      "assignments": [
+        {
+          "id": "string",
+          "title": "string",
+          "after_module": "string (module id)",
+          "type": "written | code | project | presentation",
+          "rubric": [
+            { "criterion": "string", "max_points": "number" }
+          ]
+        }
+      ],
+      "exams": {
+        "midterm": {
+          "title": "string",
+          "after_module": "string",
+          "duration_minutes": "number",
+          "passing_score": "number"
+        },
+        "final": {
+          "title": "string",
+          "duration_minutes": "number",
+          "passing_score": "number",
+          "comprehensive": true
+        }
+      }
+    },
+    "certificate": {
+      "title": "string",
+      "issuer": "string",
+      "requirements": {
+        "complete_all_lessons": true,
+        "pass_all_quizzes": true,
+        "complete_all_projects": true,
+        "pass_final_exam": true,
+        "minimum_attendance_percent": 0
+      }
+    },
+    "prerequisites": {
+      "required_courses": ["string (course IDs)"],
+      "required_skills": ["string (skill IDs)"],
+      "recommended_background": "string"
+    },
+    "completion": {
+      "tracking": {
+        "lesson_progress": "percent",
+        "quiz_scores": "object (quiz_id -> score)",
+        "project_status": "object (project_id -> status)",
+        "lab_completion": "object (lab_id -> completed)",
+        "overall_progress": "percent"
+      }
+    }
+  },
+  "micro_course_schema": {
+    "description": "Micro-courses are short, focused courses (1-5 hours) for quick skill acquisition",
+    "id": "string (alp-micro-*)",
+    "title": "string",
+    "estimated_minutes": "number (max 300)",
+    "lessons": ["array of lesson IDs"],
+    "quiz": { "question_count": "integer", "passing_score": "number" }
+  },
+  "learning_collection_schema": {
+    "description": "Collections group related courses/books into a coherent learning journey",
+    "id": "string (alp-collection-*)",
+    "title": "string",
+    "items": [
+      { "id": "string", "type": "course | book | micro-course", "order": "integer", "required": "boolean" }
+    ],
+    "completion_criteria": { "required_items": "integer", "optional_items": "integer" }
+  }
+}

@@ -1,0 +1,151 @@
+{
+  "version": "1.0.0",
+  "description": "Book Engine — complete book architecture supporting volumes, parts, chapters, sections, lessons, appendices, glossary, references, indexes, version history, authors, contributors, translations, book metadata, themes, assets, search, and analytics.",
+  "book_structure": {
+    "hierarchy": ["book", "volume", "part", "chapter", "section", "lesson", "page"],
+    "supplementary": ["preface", "introduction", "appendices", "glossary", "references", "index", "colophon"]
+  },
+  "book_schema": {
+    "id": "string (kebab-case, alp-book-*)",
+    "title": "string",
+    "subtitle": "string",
+    "edition": "string (e.g., '2nd Edition')",
+    "isbn": "string",
+    "cover_image": "string (URL)",
+    "domain": "string",
+    "language": "string (ISO 639-1)",
+    "direction": "ltr | rtl",
+    "difficulty": "beginner | intermediate | advanced | expert | master",
+    "estimated_hours": "number",
+    "volumes": [
+      {
+        "id": "string",
+        "number": "integer",
+        "title": "string",
+        "parts": [
+          {
+            "id": "string",
+            "number": "integer",
+            "title": "string",
+            "chapters": [
+              {
+                "id": "string",
+                "number": "integer",
+                "title": "string",
+                "description": "string",
+                "slug": "string",
+                "sections": [
+                  {
+                    "id": "string",
+                    "title": "string",
+                    "slug": "string",
+                    "type": "lesson | exercise | case-study | review | project",
+                    "estimated_minutes": "number",
+                    "content_file": "string (relative path to MDX)"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "appendices": [
+      {
+        "id": "string",
+        "letter": "string (A, B, C...)",
+        "title": "string",
+        "sections": ["array of sections"]
+      }
+    ],
+    "glossary": {
+      "terms": [
+        {
+          "term": "string",
+          "definition": "string",
+          "related_terms": ["string"],
+          "first_used_in": "string (chapter reference)"
+        }
+      ]
+    },
+    "references": {
+      "entries": [
+        {
+          "id": "string",
+          "title": "string",
+          "type": "book | article | website | documentation | video | course",
+          "url": "string",
+          "authors": ["string"],
+          "year": "integer",
+          "cited_in": ["string (chapter reference)"]
+        }
+      ]
+    },
+    "index": {
+      "entries": [
+        {
+          "term": "string",
+          "references": ["string (chapter.section format)"],
+          "see_also": ["string"]
+        }
+      ]
+    }
+  },
+  "book_metadata": {
+    "title_page": { "title": "string", "subtitle": "string", "authors": "string", "edition": "string", "publisher": "string", "year": "integer" },
+    "copyright_page": { "copyright": "string", "license": "string", "isbn": "string", "disclaimer": "string" },
+    "dedication": "string",
+    "acknowledgments": "string",
+    "about_authors": [{ "name": "string", "bio": "string", "photo": "string", "social": {} }]
+  },
+  "versioning": {
+    "supported": true,
+    "schema": {
+      "current_version": "string (semver)",
+      "versions": [
+        {
+          "version": "string",
+          "date": "ISO date",
+          "changes": "string (summary)",
+          "type": "major | minor | patch",
+          "detailed_changes": [
+            {
+              "chapter": "string",
+              "section": "string",
+              "change": "string",
+              "author": "string"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "translations": {
+    "supported": true,
+    "schema": {
+      "original_language": "string",
+      "translations": [
+        {
+          "language": "string",
+          "translator": "string",
+          "status": "in_progress | completed | published",
+          "completion_percent": "number"
+        }
+      ]
+    }
+  },
+  "book_assets": {
+    "images": { "path": "assets/images/", "formats": ["png", "jpg", "svg", "webp"] },
+    "diagrams": { "path": "assets/diagrams/", "format": "mermaid | svg | png" },
+    "code": { "path": "assets/code/", "format": "directory of code files" },
+    "datasets": { "path": "assets/data/", "format": "json | csv" },
+    "downloads": { "path": "assets/downloads/", "format": "pdf | epub | zip" }
+  },
+  "analytics": {
+    "metrics": [
+      "total_readers", "completion_rate", "average_reading_time",
+      "most_read_chapter", "most_skipped_chapter", "search_frequency",
+      "rating", "review_count", "difficulty_rating"
+    ]
+  }
+}

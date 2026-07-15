@@ -1,0 +1,81 @@
+{
+  "schema_version": "1.0.0",
+  "alp": {
+    "id": "alp-example-template",
+    "name": "Example ARES Learning Package",
+    "version": "1.0.0",
+    "description": "Template for creating new ARES Learning Packages. Copy this file and customize for your educational product.",
+    "domain": "custom",
+    "type": "book",
+    "authors": [
+      { "id": "author-id", "name": "Author Name", "role": "author", "email": "author@example.com" }
+    ],
+    "organization": {
+      "id": "org-id", "name": "Organization Name", "type": "academy", "url": "https://example.com"
+    },
+    "license": "CC BY-SA 4.0",
+    "languages": ["en"],
+    "keywords": ["education", "learning", "template"],
+    "icon": "static/img/alp-icon.svg",
+    "website": "https://example.com",
+    "repository": "https://github.com/example/alp-example",
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z",
+    "status": "draft",
+    "min_platform_version": "1.0.0"
+  },
+  "dependencies": [],
+  "modules": [
+    {
+      "id": "content-module",
+      "name": "Content",
+      "type": "content",
+      "entries": [],
+      "config": {
+        "source": "content/",
+        "format": "mdx",
+        "index_page": "content/index.mdx"
+      }
+    },
+    {
+      "id": "questions-module",
+      "name": "Questions",
+      "type": "questions",
+      "entries": [],
+      "config": {
+        "source": "questions/",
+        "bank_type": "question_bank"
+      }
+    },
+    {
+      "id": "assessments-module",
+      "name": "Assessments",
+      "type": "assessments",
+      "entries": [],
+      "config": {
+        "source": "assessments/",
+        "types": ["quiz", "project", "exam"]
+      }
+    },
+    {
+      "id": "labs-module",
+      "name": "Labs",
+      "type": "labs",
+      "entries": [],
+      "config": {
+        "source": "labs/",
+        "environments": ["terminal"]
+      }
+    },
+    {
+      "id": "knowledge-graph-module",
+      "name": "Knowledge Graph",
+      "type": "knowledge_graph",
+      "entries": [],
+      "config": {
+        "source": "knowledge-graph/graph.json"
+      }
+    }
+  ],
+  "extensions": []
+}

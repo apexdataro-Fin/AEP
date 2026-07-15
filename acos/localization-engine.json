@@ -1,0 +1,77 @@
+{
+  "version": "1.0.0",
+  "description": "Localization Engine — multilingual content support, RTL/LTR layouts, multilingual metadata, translation management. Supported languages: Arabic, English, Finnish, Kurdish, and extensible to any language.",
+  "languages": {
+    "supported": [
+      { "code": "en", "name": "English", "direction": "ltr", "native_name": "English", "enabled": true },
+      { "code": "ar", "name": "Arabic", "direction": "rtl", "native_name": "العربية", "enabled": false },
+      { "code": "fi", "name": "Finnish", "direction": "ltr", "native_name": "Suomi", "enabled": false },
+      { "code": "ku", "name": "Kurdish", "direction": "rtl", "native_name": "کوردی", "enabled": false }
+    ],
+    "extensibility": {
+      "description": "Any ISO 639-1 language can be added",
+      "adding_new_language": {
+        "step_1": "Add language entry to this config",
+        "step_2": "Create translation files in acos/i18n/{code}/",
+        "step_3": "Enable RTL if needed (direction: rtl)",
+        "step_4": "Translate content metadata"
+      }
+    }
+  },
+  "layout": {
+    "rtl_support": {
+      "description": "Right-to-left layout for Arabic, Kurdish, Persian, Hebrew, Urdu, etc.",
+      "activation": "automatically based on language.direction or user preferences",
+      "css": "dir='rtl' on html element; CSS logical properties (margin-inline-start, padding-inline-end, etc.)",
+      "mirrored_components": ["navigation", "sidebar", "timeline", "progress indicators", "breadcrumbs"],
+      "non_mirrored": ["icons", "code blocks", "numbers", "URLs", "Mermaid diagrams"]
+    },
+    "multilingual_urls": {
+      "strategy": "prefix-based: /{lang}/path",
+      "default_language": "en (no prefix: /path = /en/path)",
+      "example": "/en/lessons/vpc → /ar/الدروس/vpc → /fi/oppitunnit/vpc"
+    }
+  },
+  "translation_schema": {
+    "id": "string",
+    "source_content_id": "string",
+    "source_language": "string (ISO 639-1)",
+    "target_language": "string (ISO 639-1)",
+    "status": "draft | in_progress | review | completed | published",
+    "translator": "string",
+    "reviewer": "string",
+    "completion_percent": "number",
+    "last_updated": "ISO date",
+    "translated_fields": {
+      "title": "string",
+      "subtitle": "string",
+      "description": "string",
+      "content": "string (path to translated MDX)",
+      "metadata_keywords": ["string"],
+      "glossary_terms": [
+        { "source": "string", "translation": "string" }
+      ]
+    }
+  },
+  "multilingual_metadata": {
+    "description": "Content metadata available in multiple languages for AI indexing and search",
+    "schema": {
+      "content_id": "string",
+      "translations": {
+        "{lang_code}": {
+          "title": "string",
+          "description": "string",
+          "keywords": ["string"],
+          "ai_metadata": "object (localized ai_metadata)"
+        }
+      }
+    }
+  },
+  "i18n_framework": {
+    "description": "Internationalization framework for UI strings",
+    "approach": "Docusaurus i18n + custom i18n provider",
+    "key_format": "dot.notation (e.g., 'lesson.objectives.title')",
+    "fallback": "en → ar (for missing translations)",
+    "plurals": "CLDR plural rules per language"
+  }
+}

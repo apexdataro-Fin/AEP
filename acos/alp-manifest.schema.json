@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://apexdataro-fin.github.io/AEP/acos/alp-manifest.schema.json",
+  "title": "ARES Learning Package (ALP) Manifest",
+  "description": "Every educational product inside AEP is an independent ARES Learning Package. ALPs are installable without modifying the platform. This manifest defines the package structure, dependencies, and metadata.",
+  "type": "object",
+  "required": ["alp", "meta", "content"],
+  "properties": {
+    "alp": {
+      "type": "object",
+      "required": ["id", "version", "type"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^alp-[a-z0-9-]+$", "description": "Unique ALP identifier (alp- prefix)" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+        "type": {
+          "enum": ["book", "course", "learning-path", "bootcamp", "academy", "reference-library", "knowledge-base", "certification-track", "documentation", "micro-course", "learning-collection"],
+          "description": "Content type of this package"
+        },
+        "platform_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$", "description": "Minimum AEP platform version required" },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "alp_id": { "type": "string" },
+              "version": { "type": "string" },
+              "required": { "type": "boolean", "default": true }
+            }
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "required": ["title", "domain", "language"],
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "subtitle": { "type": "string" },
+        "description": { "type": "string" },
+        "domain": { "type": "string", "description": "Primary education domain" },
+        "domains": { "type": "array", "items": { "type": "string" }, "description": "All applicable domains" },
+        "language": { "type": "string", "pattern": "^[a-z]{2}(-[A-Z]{2})?$", "description": "ISO 639-1 language code" },
+        "languages": { "type": "array", "items": { "type": "string" }, "description": "All available languages" },
+        "direction": { "enum": ["ltr", "rtl"], "default": "ltr" },
+        "difficulty": { "enum": ["beginner", "intermediate", "advanced", "expert", "master", "all"] },
+        "estimated_hours": { "type": "number", "minimum": 0 },
+        "prerequisites": { "type": "array", "items": { "type": "string" } },
+        "keywords": { "type": "array", "items": { "type": "string" }, "maxItems": 20 },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "content": {
+      "type": "object",
+      "required": ["structure"],
+      "properties": {
+        "structure": { "type": "object", "description": "Content structure — books, courses, etc. Schema varies by ALP type." },
+        "assets": { "type": "object", "description": "Asset manifest" },
+        "questions": { "type": "object", "description": "Question bank reference" },
+        "assessments": { "type": "object", "description": "Assessment manifest" },
+        "exports": { "type": "object", "description": "Export configuration" }
+      }
+    },
+    "authors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "roles": { "type": "array", "items": { "enum": ["author", "editor", "reviewer", "contributor", "translator", "illustrator", "instructor"] } },
+          "organization": { "type": "string" },
+          "contact": { "type": "string", "format": "email" },
+          "url": { "type": "string", "format": "uri" }
+        }
+      }
+    },
+    "config": {
+      "type": "object",
+      "description": "ALP-specific configuration",
+      "properties": {
+        "theme": { "type": "object", "description": "Custom theme overrides for this ALP" },
+        "navigation": { "type": "object", "description": "Custom navigation for this ALP" },
+        "features": { "type": "object", "description": "Feature flags for this ALP" },
+        "settings": { "type": "object", "description": "ALP-specific settings" }
+      }
+    },
+    "publishing": {
+      "type": "object",
+      "properties": {
+        "status": { "enum": ["draft", "review", "published", "archived", "deprecated"] },
+        "version_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "version": { "type": "string" },
+              "date": { "type": "string", "format": "date" },
+              "changes": { "type": "string" },
+              "author": { "type": "string" }
+            }
+          }
+        },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "published_at": { "type": "string", "format": "date-time" },
+        "license": { "type": "string", "default": "MIT" },
+        "copyright": { "type": "string" }
+      }
+    }
+  }
+}

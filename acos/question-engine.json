@@ -1,0 +1,329 @@
+{
+  "engine": "question-engine",
+  "version": "1.0.0",
+  "description": "Reusable Question Engine for the ARES Content Operating System. Supports all question types, banks, and assessment formats.",
+  "question_types": {
+    "multiple_choice": {
+      "id": "multiple_choice",
+      "description": "Single or multiple correct answers from a set of options",
+      "schema": {
+        "stem": { "type": "string", "required": true },
+        "options": { "type": "array", "minItems": 2, "maxItems": 8 },
+        "correct": { "type": "array", "minItems": 1 },
+        "explanations": { "type": "object", "optional": true },
+        "shuffle": { "type": "boolean", "default": true }
+      }
+    },
+    "true_false": {
+      "id": "true_false",
+      "description": "Binary true/false question",
+      "schema": {
+        "stem": { "type": "string", "required": true },
+        "correct": { "type": "boolean", "required": true },
+        "explanation": { "type": "string", "optional": true }
+      }
+    },
+    "fill_in_blank": {
+      "id": "fill_in_blank",
+      "description": "Complete the sentence or code block",
+      "schema": {
+        "template": { "type": "string", "required": true },
+        "blanks": { "type": "array", "items": { "answer": "string | string[]", "caseSensitive": "boolean" } },
+        "acceptable_variations": { "type": "boolean", "default": true }
+      }
+    },
+    "matching": {
+      "id": "matching",
+      "description": "Match items from two columns",
+      "schema": {
+        "left": { "type": "array", "items": "string" },
+        "right": { "type": "array", "items": "string" },
+        "pairs": { "type": "array", "items": { "leftIndex": "number", "rightIndex": "number" } }
+      }
+    },
+    "ordering": {
+      "id": "ordering",
+      "description": "Put items in the correct sequence",
+      "schema": {
+        "items": { "type": "array", "items": "string" },
+        "correct_order": { "type": "array", "items": "number" },
+        "partial_credit": { "type": "boolean", "default": true }
+      }
+    },
+    "short_answer": {
+      "id": "short_answer",
+      "description": "Free-text short response",
+      "schema": {
+        "stem": { "type": "string", "required": true },
+        "model_answer": { "type": "string", "required": true },
+        "keywords": { "type": "array", "items": "string" },
+        "max_length": { "type": "number", "default": 500 },
+        "grading": { "type": "string", "enum": ["manual", "keyword_match", "ai"] }
+      }
+    },
+    "essay": {
+      "id": "essay",
+      "description": "Long-form written response",
+      "schema": {
+        "prompt": { "type": "string", "required": true },
+        "rubric": { "type": "object", "optional": true },
+        "word_limit": { "type": "number", "optional": true },
+        "grading": { "type": "string", "enum": ["manual", "ai", "peer"] }
+      }
+    },
+    "code_question": {
+      "id": "code_question",
+      "description": "Write or fix code to solve a problem",
+      "schema": {
+        "prompt": { "type": "string", "required": true },
+        "language": { "type": "string", "required": true },
+        "starter_code": { "type": "string", "optional": true },
+        "test_cases": { "type": "array", "items": { "input": "any", "expected": "any" } },
+        "solution": { "type": "string", "optional": true }
+      }
+    },
+    "diagram_question": {
+      "id": "diagram_question",
+      "description": "Identify or complete architecture/network diagrams",
+      "schema": {
+        "diagram": { "type": "string", "format": "mermaid" },
+        "question": { "type": "string", "required": true },
+        "interaction": { "type": "string", "enum": ["identify", "complete", "fix", "explain"] }
+      }
+    },
+    "scenario": {
+      "id": "scenario",
+      "description": "Multi-step scenario-based question",
+      "schema": {
+        "context": { "type": "string", "required": true },
+        "steps": { "type": "array", "items": { "question": "string", "type": "string", "answer": "any" } },
+        "decision_points": { "type": "array", "optional": true }
+      }
+    },
+    "flashcard": {
+      "id": "flashcard",
+      "description": "Front/back card for active recall",
+      "schema": {
+        "front": { "type": "string", "required": true },
+        "back": { "type": "string", "required": true },
+        "hint": { "type": "string", "optional": true },
+        "difficulty": { "type": "string", "enum": ["easy", "medium", "hard"] },
+        "tags": { "type": "array", "items": "string" }
+      }
+    },
+    "decision_scenario": {
+      "id": "decision_scenario",
+      "description": "Branching decision tree with consequences",
+      "schema": {
+        "context": { "type": "string", "required": true },
+        "options": { "type": "array", "items": { "label": "string", "outcome": "string", "score": "number" } },
+        "branches": { "type": "array", "optional": true }
+      }
+    }
+  },
+  "banks": {
+    "question_bank": {
+      "description": "Collection of individual questions tagged by topic, difficulty, and skill",
+      "structure": {
+        "id": "string",
+        "name": "string",
+        "description": "string",
+        "questions": { "type": "array", "ref": "question" },
+        "taxonomy": {
+          "topics": "string[]",
+          "skills": "string[]",
+          "technologies": "string[]",
+          "difficulty": "string[]",
+          "certification_id": "string"
+        },
+        "metadata": { "ref": "extended_metadata" }
+      }
+    },
+    "quiz_bank": {
+      "description": "Curated quizzes composed of multiple questions with scoring rules",
+      "structure": {
+        "id": "string",
+        "name": "string",
+        "description": "string",
+        "quizzes": {
+          "type": "array",
+          "items": {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "questions": { "type": "array", "ref": "question" },
+            "time_limit": "number",
+            "pass_score": "number",
+            "shuffle_questions": "boolean",
+            "shuffle_options": "boolean",
+            "allow_retry": "boolean",
+            "show_answers": "string",
+            "enum": ["immediately", "after_quiz", "never"]
+          }
+        }
+      }
+    },
+    "flashcard_bank": {
+      "description": "Collection of flashcard decks for spaced repetition",
+      "structure": {
+        "id": "string",
+        "name": "string",
+        "decks": {
+          "type": "array",
+          "items": {
+            "id": "string",
+            "title": "string",
+            "cards": { "type": "array", "ref": "flashcard" },
+            "review_algorithm": "string",
+            "daily_new_cards": "number",
+            "max_reviews": "number"
+          }
+        }
+      }
+    },
+    "interview_bank": {
+      "description": "Interview questions organized by role, topic, and difficulty",
+      "structure": {
+        "id": "string",
+        "roles": "string[]",
+        "categories": {
+          "behavioral": "question[]",
+          "technical": "question[]",
+          "system_design": "question[]",
+          "architecture": "question[]",
+          "coding": "code_question[]",
+          "scenario": "scenario[]",
+          "leadership": "question[]"
+        },
+        "levels": ["junior", "mid", "senior", "staff", "principal"]
+      }
+    },
+    "exam_bank": {
+      "description": "Full practice exams replicating certification tests",
+      "structure": {
+        "id": "string",
+        "certification_id": "string",
+        "exams": {
+          "type": "array",
+          "items": {
+            "id": "string",
+            "title": "string",
+            "questions": { "type": "array", "count": "number" },
+            "time_limit": "number",
+            "pass_score": "number",
+            "domains_covered": "string[]",
+            "simulates_real_exam": "boolean"
+          }
+        }
+      }
+    },
+    "challenge_bank": {
+      "description": "Coding and architecture challenges for practice",
+      "structure": {
+        "id": "string",
+        "challenges": {
+          "type": "array",
+          "items": {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "difficulty": "string",
+            "type": "string",
+            "time_estimate": "number",
+            "starter_code": "string",
+            "test_cases": "array",
+            "hints": "string[]",
+            "solution": "string"
+          }
+        }
+      }
+    }
+  },
+  "scoring": {
+    "simple": {
+      "description": "Correct = 1, Incorrect = 0",
+      "config": {}
+    },
+    "weighted": {
+      "description": "Questions have different weights based on difficulty or importance",
+      "config": {
+        "weights": { "easy": 1, "medium": 2, "hard": 3, "critical": 5 }
+      }
+    },
+    "partial_credit": {
+      "description": "Partial points for partially correct answers",
+      "config": {
+        "strategy": "string",
+        "enum": ["proportional", "keyword_count", "step_based"]
+      }
+    },
+    "rubric_based": {
+      "description": "Scored against predefined rubric criteria",
+      "config": {
+        "criteria": { "type": "array", "items": { "name": "string", "max_points": "number", "descriptors": "object" } }
+      }
+    },
+    "adaptive": {
+      "description": "Question difficulty adapts based on previous answers",
+      "config": {
+        "algorithm": "string",
+        "enum": ["irt", "cat", "custom"],
+        "starting_difficulty": "string"
+      }
+    },
+    "time_bonus": {
+      "description": "Bonus points for answering quickly",
+      "config": {
+        "max_bonus": "number",
+        "decay_rate": "number"
+      }
+    }
+  },
+  "rubrics": {
+    "holistic": {
+      "description": "Single overall score with level descriptors",
+      "levels": [
+        { "score": 4, "label": "Expert", "description": "Demonstrates comprehensive understanding" },
+        { "score": 3, "label": "Proficient", "description": "Demonstrates solid understanding" },
+        { "score": 2, "label": "Developing", "description": "Demonstrates partial understanding" },
+        { "score": 1, "label": "Beginning", "description": "Demonstrates minimal understanding" }
+      ]
+    },
+    "analytic": {
+      "description": "Separate scores for multiple dimensions",
+      "dimensions": ["correctness", "completeness", "clarity", "efficiency", "best_practices"]
+    },
+    "checklist": {
+      "description": "Binary pass/fail for each criterion",
+      "criteria": "string[]"
+    }
+  },
+  "certificates": {
+    "completion": {
+      "description": "Certificate for completing a course or learning path",
+      "fields": ["learner_name", "course_name", "completion_date", "skills_acquired", "hours_completed", "issuer", "verification_code"]
+    },
+    "certification": {
+      "description": "Certificate for passing a certification exam",
+      "fields": ["candidate_name", "certification_name", "exam_date", "score", "pass_score", "valid_until", "credential_id", "issuing_body"]
+    },
+    "achievement": {
+      "description": "Certificate for milestone achievements",
+      "fields": ["learner_name", "achievement_name", "date_earned", "description", "xp_awarded", "badge_id"]
+    }
+  },
+  "ai_integration": {
+    "auto_generate_questions": "Generate questions from content using AI",
+    "auto_grade_essays": "Grade essay responses with AI",
+    "adaptive_difficulty": "Adjust difficulty based on learner performance",
+    "explanation_generation": "Generate explanations for correct/incorrect answers",
+    "question_variants": "Create variants of questions to prevent memorization",
+    "gap_analysis": "Identify knowledge gaps from question performance"
+  },
+  "extensibility": {
+    "custom_question_types": "Plugin system for custom question types",
+    "external_bank_import": "Import from external question banks",
+    "lms_integration": "Integrate with Learning Management Systems",
+    "api_endpoints": "REST and GraphQL APIs for question serving"
+  }
+}

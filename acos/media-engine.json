@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "description": "Media Engine — images, SVG, icons, Mermaid, video, audio, interactive diagrams, animations, PDF attachments, downloads, external references.",
+  "media_types": {
+    "images": {
+      "formats": ["png", "jpg", "jpeg", "webp", "avif", "svg", "gif"],
+      "responsive": { "breakpoints": [640, 768, 1024, 1400, 1920], "format": "automatically select best format" },
+      "lazy_loading": true,
+      "alt_text_required": true,
+      "captions": "optional markdown caption",
+      "lightbox": "click to expand"
+    },
+    "svg": {
+      "description": "Scalable vector graphics for diagrams, icons, illustrations",
+      "inline": true,
+      "color_adaptation": "CSS currentColor for theme compatibility",
+      "accessibility": "title and desc elements required"
+    },
+    "icons": {
+      "description": "Icon system for the platform",
+      "format": "SVG sprite or individual SVG files",
+      "categories": ["navigation", "content_types", "actions", "status", "domains", "certifications", "skills", "social"],
+      "size": "24x24 default"
+    },
+    "mermaid": {
+      "description": "Interactive diagrams rendered at build time",
+      "supported_types": ["flowchart", "sequence", "class", "state", "er", "gantt", "pie", "git", "mindmap", "timeline"],
+      "dark_mode": "automatic theme switching",
+      "interactive": "clickable nodes, zoom, pan (future)"
+    },
+    "video": {
+      "description": "Embedded or referenced video content",
+      "sources": ["local mp4/webm", "YouTube", "Vimeo", "self-hosted"],
+      "features": ["captions", "transcript", "chapters", "playback_speed", "picture_in_picture"],
+      "responsive": "16:9 aspect ratio, max-width 100%"
+    },
+    "audio": {
+      "description": "Audio content for language learning, pronunciation, podcasts",
+      "formats": ["mp3", "ogg", "wav"],
+      "features": ["playback_speed", "transcript", "download"]
+    },
+    "interactive_diagrams": {
+      "description": "Interactive, clickable diagrams for exploration",
+      "technology": "Mermaid with click handlers or custom SVG/Canvas",
+      "examples": ["network topology explorer", "architecture decision tree", "concept relationship map"]
+    },
+    "animations": {
+      "description": "Animated explanations of complex concepts",
+      "formats": ["Lottie", "CSS animation", "GIF (fallback)"],
+      "reduced_motion": "respect prefers-reduced-motion, provide static alternative"
+    },
+    "pdf": {
+      "description": "PDF attachments and generated documents",
+      "modes": ["download", "inline_view", "print"],
+      "generation": "server-side PDF generation from MDX (Phase 5)"
+    },
+    "downloads": {
+      "description": "Downloadable resources",
+      "types": ["code_zip", "dataset_csv", "cheat_sheet_pdf", "slide_deck_pdf", "exercise_files"],
+      "versioning": "downloads versioned with content version"
+    },
+    "external_references": {
+      "description": "Links to external resources",
+      "types": ["documentation", "article", "video", "tool", "community"],
+      "metadata": { "url": "string", "title": "string", "source": "string", "access_date": "ISO date", "requires_account": "boolean" }
+    }
+  },
+  "asset_management": {
+    "storage": "static/ or CDN (Phase 5+)",
+    "naming": "kebab-case, descriptive: 'vpc-architecture-diagram.svg'",
+    "organization": "by ALP: alp-{id}/assets/{type}/",
+    "optimization": "automatic at build time: image compression, responsive srcset, lazy loading"
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "engine": "content-analytics-engine",
+  "version": "1.0.0",
+  "description": "Reusable Content Analytics Engine for the ARES Content Operating System. Tracks and analyzes content usage, learner behavior, and content quality.",
+  "analytics_dimensions": {
+    "content_usage": {
+      "description": "How content is consumed and engaged with",
+      "metrics": {
+        "views": { "type": "counter", "description": "Total page views" },
+        "unique_visitors": { "type": "counter", "description": "Distinct learner views" },
+        "avg_time_on_page": { "type": "gauge", "description": "Average time spent per page" },
+        "bounce_rate": { "type": "percentage", "description": "Percentage of single-page sessions" },
+        "scroll_depth": { "type": "percentage", "description": "How far learners scroll" },
+        "return_rate": { "type": "percentage", "description": "Learners who return to content" },
+        "shares": { "type": "counter", "description": "Content shares and referrals" },
+        "bookmarks": { "type": "counter", "description": "Times bookmarked" },
+        "highlights": { "type": "counter", "description": "Text highlights made" },
+        "notes_count": { "type": "counter", "description": "Personal notes added" }
+      }
+    },
+    "completion": {
+      "description": "Content completion and progress tracking",
+      "metrics": {
+        "completion_rate": { "type": "percentage", "description": "Percentage of learners who complete" },
+        "completion_time": { "type": "distribution", "description": "Time distribution to complete" },
+        "drop_off_point": { "type": "string", "description": "Where learners tend to stop" },
+        "skip_rate": { "type": "percentage", "description": "Sections frequently skipped" },
+        "revisit_rate": { "type": "percentage", "description": "Sections frequently revisited" }
+      }
+    },
+    "difficulty": {
+      "description": "Content difficulty analysis",
+      "metrics": {
+        "perceived_difficulty": { "type": "rating", "description": "Learner-reported difficulty" },
+        "quiz_pass_rate": { "type": "percentage", "description": "Quiz pass rate" },
+        "avg_quiz_score": { "type": "number", "description": "Average quiz score" },
+        "hint_usage": { "type": "counter", "description": "How often hints are used" },
+        "retry_rate": { "type": "percentage", "description": "Retry rate on exercises" },
+        "time_to_mastery": { "type": "duration", "description": "Time until concept mastery" }
+      }
+    },
+    "popularity": {
+      "description": "Content popularity and trends",
+      "metrics": {
+        "total_views_rank": { "type": "rank", "description": "Rank by total views" },
+        "trending_score": { "type": "number", "description": "Recent popularity trend" },
+        "rating_avg": { "type": "number", "description": "Average learner rating" },
+        "rating_count": { "type": "counter", "description": "Number of ratings" },
+        "recommendation_clicks": { "type": "counter", "description": "Times recommended" },
+        "search_impressions": { "type": "counter", "description": "Search result impressions" },
+        "search_clicks": { "type": "counter", "description": "Search result click-throughs" }
+      }
+    },
+    "search_analytics": {
+      "description": "How content is discovered via search",
+      "metrics": {
+        "top_search_terms": { "type": "ranking", "description": "Most common search queries" },
+        "zero_result_searches": { "type": "counter", "description": "Searches with no results" },
+        "click_through_rate": { "type": "percentage", "description": "Search result CTR" },
+        "avg_position": { "type": "number", "description": "Average search result position" },
+        "query_to_content": { "type": "mapping", "description": "Which queries lead to which content" }
+      }
+    },
+    "question_analytics": {
+      "description": "Question and assessment analytics",
+      "metrics": {
+        "question_difficulty_index": { "type": "number", "description": "Measured question difficulty" },
+        "discrimination_index": { "type": "number", "description": "How well question distinguishes ability" },
+        "distractor_analysis": { "type": "distribution", "description": "Which wrong answers are chosen" },
+        "time_to_answer": { "type": "distribution", "description": "Time distribution per question" },
+        "skip_rate": { "type": "percentage", "description": "How often question is skipped" },
+        "common_mistakes": { "type": "ranking", "description": "Most frequent wrong answers" }
+      }
+    },
+    "book_statistics": {
+      "description": "Per-book analytics",
+      "metrics": {
+        "total_readers": "number",
+        "completion_by_chapter": "Record<string, number>",
+        "avg_book_completion": "percentage",
+        "most_read_chapter": "string",
+        "least_read_chapter": "string",
+        "reader_retention_curve": "number[]",
+        "chapter_transitions": "object"
+      }
+    },
+    "course_statistics": {
+      "description": "Per-course analytics",
+      "metrics": {
+        "enrollment": "number",
+        "completion_rate": "percentage",
+        "avg_completion_time": "duration",
+        "module_completion": "Record<string, number>",
+        "certificate_issued": "number",
+        "learner_satisfaction": "number",
+        "net_promoter_score": "number"
+      }
+    },
+    "learning_outcomes": {
+      "description": "Assess if learning objectives are being met",
+      "metrics": {
+        "pre_test_avg": "number",
+        "post_test_avg": "number",
+        "improvement_delta": "number",
+        "objective_mastery": "Record<string, percentage>",
+        "skill_acquisition_rate": "Record<string, number>"
+      }
+    }
+  },
+  "reporting": {
+    "dashboards": {
+      "content_health": "Overview of content quality and usage",
+      "learner_performance": "How learners are performing on content",
+      "content_gaps": "Topics and skills missing from content",
+      "author_performance": "Content performance by author",
+      "certification_readiness": "How content prepares for certifications"
+    },
+    "exports": {
+      "formats": ["csv", "json", "pdf_report"],
+      "scheduled_reports": "boolean",
+      "api_access": "boolean"
+    }
+  },
+  "ai_insights": {
+    "content_recommendations": "AI suggests content improvements based on analytics",
+    "difficulty_calibration": "AI adjusts difficulty labels based on actual learner data",
+    "gap_detection": "AI identifies missing content areas",
+    "trend_prediction": "AI predicts emerging learning needs",
+    "personalization": "AI personalizes learning paths based on analytics",
+    "content_retirement": "AI flags outdated or low-quality content"
+  },
+  "privacy": {
+    "anonymization": "Aggregate data only, no PII in analytics",
+    "opt_out": "Learners can opt out of analytics collection",
+    "data_retention": "Configurable data retention periods",
+    "gdpr_compliant": true
+  }
+}

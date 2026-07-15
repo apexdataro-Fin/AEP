@@ -1,0 +1,196 @@
+{
+  "engine": "import-engine",
+  "version": "1.0.0",
+  "description": "Reusable Import Engine for the ARES Content Operating System. Supports importing content from multiple formats and sources into the platform.",
+  "import_formats": {
+    "markdown": {
+      "id": "markdown",
+      "description": "Import plain Markdown files",
+      "config": {
+        "frontmatter_parsing": { "enum": ["yaml", "toml", "json"] },
+        "auto_detect_structure": "boolean",
+        "heading_to_section": "boolean",
+        "image_handling": { "enum": ["keep_paths", "absorb", "download"] },
+        "link_handling": { "enum": ["keep_external", "convert_internal", "validate"] },
+        "code_block_language": { "enum": ["detect", "require", "ignore"] }
+      },
+      "mapping": {
+        "h1": "title",
+        "h2": "section",
+        "h3": "subsection",
+        "blockquote": "callout",
+        "code_block": "code_block",
+        "table": "table",
+        "list": "list",
+        "image": "image",
+        "link": "link"
+      }
+    },
+    "mdx": {
+      "id": "mdx",
+      "description": "Import MDX files preserving JSX components",
+      "config": {
+        "validate_components": "boolean",
+        "resolve_imports": "boolean",
+        "component_registry": "string",
+        "unknown_component_behavior": { "enum": ["warn", "error", "strip_to_placeholder"] }
+      }
+    },
+    "json": {
+      "id": "json",
+      "description": "Import structured JSON content",
+      "config": {
+        "schema_validation": "boolean",
+        "schema_path": "string",
+        "transform_pipeline": "string[]",
+        "merge_strategy": { "enum": ["replace", "merge", "append"] }
+      }
+    },
+    "yaml": {
+      "id": "yaml",
+      "description": "Import YAML configuration and content",
+      "config": {
+        "schema_validation": "boolean",
+        "multi_document": "boolean",
+        "anchors_and_aliases": "boolean"
+      }
+    },
+    "csv": {
+      "id": "csv",
+      "description": "Import tabular data (questions, glossary, metadata)",
+      "config": {
+        "delimiter": "string",
+        "has_header": "boolean",
+        "column_mapping": "object",
+        "skip_empty_rows": "boolean",
+        "encoding": "string"
+      }
+    },
+    "api": {
+      "id": "api",
+      "description": "Import content via external APIs",
+      "config": {
+        "endpoint": "string",
+        "method": { "enum": ["GET", "POST"] },
+        "headers": "object",
+        "authentication": { "type": "string", "credentials": "object" },
+        "pagination": { "type": "string", "config": "object" },
+        "rate_limit": "number",
+        "transform": "string"
+      }
+    },
+    "git": {
+      "id": "git",
+      "description": "Import content from Git repositories",
+      "config": {
+        "repository_url": "string",
+        "branch": "string",
+        "path": "string",
+        "recursive": "boolean",
+        "file_patterns": "string[]",
+        "ignore_patterns": "string[]",
+        "auto_sync": "boolean",
+        "sync_interval": "string"
+      }
+    },
+    "notion": {
+      "id": "notion",
+      "description": "Import from Notion databases and pages",
+      "config": {
+        "api_key": "string",
+        "database_id": "string",
+        "block_types": "string[]",
+        "preserve_formatting": "boolean",
+        "download_files": "boolean"
+      }
+    },
+    "google_docs": {
+      "id": "google_docs",
+      "description": "Import from Google Docs",
+      "config": {
+        "document_id": "string",
+        "export_format": { "enum": ["markdown", "html", "docx"] },
+        "preserve_comments": "boolean",
+        "preserve_suggestions": "boolean"
+      }
+    },
+    "docx": {
+      "id": "docx",
+      "description": "Import Microsoft Word documents",
+      "config": {
+        "style_mapping": "object",
+        "extract_images": "boolean",
+        "preserve_tables": "boolean",
+        "heading_levels": "number"
+      }
+    },
+    "openapi": {
+      "id": "openapi",
+      "description": "Import OpenAPI/Swagger specs as documentation",
+      "config": {
+        "spec_version": { "enum": ["2.0", "3.0", "3.1"] },
+        "generate_examples": "boolean",
+        "include_schemas": "boolean",
+        "group_by_tag": "boolean"
+      }
+    }
+  },
+  "import_pipeline": {
+    "stages": [
+      {
+        "stage": "ingest",
+        "description": "Read raw content from source",
+        "validators": ["file_exists", "format_detected", "encoding_valid"]
+      },
+      {
+        "stage": "parse",
+        "description": "Parse content into structured format",
+        "validators": ["syntax_valid", "schema_compliant"]
+      },
+      {
+        "stage": "transform",
+        "description": "Transform to platform-native format",
+        "validators": ["structure_valid", "required_fields_present"]
+      },
+      {
+        "stage": "validate",
+        "description": "Validate content against platform schemas",
+        "validators": ["schema_check", "link_check", "reference_check", "duplicate_check"]
+      },
+      {
+        "stage": "enrich",
+        "description": "Enrich with platform metadata and relationships",
+        "validators": ["metadata_complete", "relationships_resolved"]
+      },
+      {
+        "stage": "store",
+        "description": "Persist to content repository",
+        "validators": ["write_successful", "indexed"]
+      }
+    ],
+    "error_handling": {
+      "on_error": { "enum": ["abort", "skip_item", "continue_with_warnings", "quarantine"] },
+      "log_level": { "enum": ["debug", "info", "warn", "error"] },
+      "rollback_on_failure": "boolean",
+      "notification": { "type": "string", "optional": true }
+    }
+  },
+  "content_deduplication": {
+    "strategies": {
+      "exact_match": "Skip content with identical hash",
+      "fuzzy_match": "Flag content with high similarity",
+      "id_based": "Update content with matching ID",
+      "slug_based": "Update content with matching slug"
+    },
+    "resolution": { "enum": ["skip", "overwrite", "create_new_version", "manual_review"] }
+  },
+  "batch_import": {
+    "description": "Import multiple items in bulk",
+    "config": {
+      "max_concurrent": "number",
+      "continue_on_error": "boolean",
+      "progress_reporting": "boolean",
+      "estimated_imports": "number"
+    }
+  }
+}

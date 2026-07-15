@@ -1,0 +1,247 @@
+{
+  "engine": "author-system",
+  "version": "1.0.0",
+  "description": "Reusable Author System for the ARES Content Operating System. Manages authors, editors, reviewers, contributors, organizations, academies, and publishers.",
+  "roles": {
+    "author": {
+      "id": "author",
+      "description": "Primary content creator",
+      "permissions": ["create_content", "edit_own_content", "submit_for_review", "view_own_analytics"],
+      "metadata": {
+        "name": "string",
+        "bio": "string",
+        "avatar": "string",
+        "website": "string",
+        "social": { "github": "string", "linkedin": "string", "twitter": "string", "blog": "string" },
+        "expertise": "string[]",
+        "certifications": "string[]",
+        "years_experience": "number",
+        "languages": "string[]",
+        "timezone": "string"
+      }
+    },
+    "co_author": {
+      "id": "co_author",
+      "description": "Collaborating author on shared content",
+      "permissions": ["edit_shared_content", "view_shared_analytics"],
+      "inherits": "author"
+    },
+    "editor": {
+      "id": "editor",
+      "description": "Reviews and improves content quality",
+      "permissions": ["review_content", "edit_any_content", "approve_content", "reject_content", "assign_reviewers"],
+      "metadata": {
+        "name": "string",
+        "bio": "string",
+        "specialties": "string[]",
+        "max_workload": "number"
+      }
+    },
+    "reviewer": {
+      "id": "reviewer",
+      "description": "Technical or subject matter reviewer",
+      "permissions": ["review_assigned_content", "leave_feedback", "approve_assigned", "reject_assigned"],
+      "metadata": {
+        "name": "string",
+        "expertise": "string[]",
+        "review_capacity": "number"
+      }
+    },
+    "contributor": {
+      "id": "contributor",
+      "description": "Occasional contributor (fixes, additions, translations)",
+      "permissions": ["suggest_changes", "submit_pull_request"],
+      "metadata": {
+        "name": "string",
+        "contributions": "number",
+        "areas": "string[]"
+      }
+    },
+    "translator": {
+      "id": "translator",
+      "description": "Translates content to other languages",
+      "permissions": ["create_translation", "edit_translation", "submit_translation_for_review"],
+      "metadata": {
+        "name": "string",
+        "source_languages": "string[]",
+        "target_languages": "string[]",
+        "certification": "string"
+      }
+    },
+    "maintainer": {
+      "id": "maintainer",
+      "description": "Long-term content maintainer ensuring content stays current",
+      "permissions": ["update_content", "deprecate_content", "archive_content", "manage_versions"],
+      "metadata": {
+        "name": "string",
+        "maintained_content": "string[]"
+      }
+    },
+    "curator": {
+      "id": "curator",
+      "description": "Curates learning paths and collections",
+      "permissions": ["create_learning_path", "curate_collections", "recommend_content"],
+      "metadata": {
+        "name": "string",
+        "curated_paths": "string[]"
+      }
+    }
+  },
+  "organizations": {
+    "academy": {
+      "id": "academy",
+      "description": "Educational organization offering courses and programs",
+      "metadata": {
+        "name": "string",
+        "description": "string",
+        "logo": "string",
+        "website": "string",
+        "accreditation": "string[]",
+        "founded": "string",
+        "instructors": "string[]",
+        "courses_offered": "string[]",
+        "learner_count": "number"
+      }
+    },
+    "publisher": {
+      "id": "publisher",
+      "description": "Organization that publishes educational content",
+      "metadata": {
+        "name": "string",
+        "description": "string",
+        "logo": "string",
+        "website": "string",
+        "isbn_prefix": "string",
+        "published_works": "string[]"
+      }
+    },
+    "company": {
+      "id": "company",
+      "description": "Company creating internal training content",
+      "metadata": {
+        "name": "string",
+        "description": "string",
+        "logo": "string",
+        "website": "string",
+        "industry": "string",
+        "internal_courses": "string[]"
+      }
+    },
+    "community": {
+      "id": "community",
+      "description": "Open-source or community-driven content group",
+      "metadata": {
+        "name": "string",
+        "description": "string",
+        "repository": "string",
+        "members": "number",
+        "governance": "string"
+      }
+    },
+    "certification_body": {
+      "id": "certification_body",
+      "description": "Organization that issues certifications",
+      "metadata": {
+        "name": "string",
+        "description": "string",
+        "logo": "string",
+        "website": "string",
+        "certifications_offered": "string[]",
+        "authority_level": { "enum": ["vendor", "industry", "government", "academic"] }
+      }
+    }
+  },
+  "content_ownership": {
+    "single_author": "Content owned by one author",
+    "co_authored": "Content with multiple equal authors",
+    "organization_owned": "Content owned by an organization",
+    "community_owned": "Content owned by the community",
+    "license_bound": "Content governed by a specific license"
+  },
+  "licensing": {
+    "supported_licenses": [
+      "CC BY 4.0",
+      "CC BY-SA 4.0",
+      "CC BY-NC 4.0",
+      "CC BY-NC-SA 4.0",
+      "CC0",
+      "MIT",
+      "Apache 2.0",
+      "Proprietary",
+      "All Rights Reserved",
+      "Custom"
+    ],
+    "license_fields": {
+      "type": "string",
+      "url": "string",
+      "attribution_required": "boolean",
+      "commercial_use": "boolean",
+      "modifications_allowed": "boolean",
+      "share_alike": "boolean"
+    }
+  },
+  "workflows": {
+    "content_creation": {
+      "steps": [
+        { "step": "draft", "actor": "author", "description": "Initial content creation" },
+        { "step": "self_review", "actor": "author", "description": "Author reviews own content" },
+        { "step": "submit", "actor": "author", "description": "Submit for review" },
+        { "step": "editor_review", "actor": "editor", "description": "Editor reviews content quality" },
+        { "step": "technical_review", "actor": "reviewer", "description": "Technical accuracy check" },
+        { "step": "revision", "actor": "author", "description": "Address review feedback" },
+        { "step": "final_approval", "actor": "editor", "description": "Final sign-off" },
+        { "step": "publish", "actor": "editor", "description": "Content goes live" }
+      ]
+    },
+    "translation_workflow": {
+      "steps": [
+        { "step": "request", "actor": "any", "description": "Request translation" },
+        { "step": "assign", "actor": "editor", "description": "Assign to translator" },
+        { "step": "translate", "actor": "translator", "description": "Create translation" },
+        { "step": "review", "actor": "reviewer", "description": "Review translation accuracy" },
+        { "step": "publish", "actor": "editor", "description": "Publish translated content" }
+      ]
+    },
+    "update_workflow": {
+      "steps": [
+        { "step": "detect_outdated", "actor": "system", "description": "System flags outdated content" },
+        { "step": "assign_update", "actor": "maintainer", "description": "Assign for update" },
+        { "step": "update", "actor": "author", "description": "Update content" },
+        { "step": "review_update", "actor": "reviewer", "description": "Review changes" },
+        { "step": "publish_update", "actor": "editor", "description": "Publish new version" }
+      ]
+    },
+    "deprecation_workflow": {
+      "steps": [
+        { "step": "flag", "actor": "any", "description": "Flag content for deprecation" },
+        { "step": "review", "actor": "editor", "description": "Review deprecation request" },
+        { "step": "notify", "actor": "system", "description": "Notify affected learners" },
+        { "step": "redirect", "actor": "editor", "description": "Set up redirects to replacement content" },
+        { "step": "deprecate", "actor": "maintainer", "description": "Mark as deprecated" },
+        { "step": "archive", "actor": "system", "description": "Auto-archive after grace period" }
+      ]
+    }
+  },
+  "attribution": {
+    "in_content": {
+      "show_author": "boolean",
+      "show_contributors": "boolean",
+      "show_reviewers": "boolean",
+      "show_organization": "boolean",
+      "show_license": "boolean",
+      "show_last_updated": "boolean"
+    },
+    "citation_format": {
+      "apa": "Author. (Year). Title. Publisher.",
+      "mla": "Author. \"Title.\" Publisher, Year.",
+      "bibtex": "@misc{key, author={Author}, title={Title}, year={Year}, publisher={Publisher}}"
+    }
+  },
+  "extensibility": {
+    "custom_roles": "Define additional author roles",
+    "custom_workflows": "Define custom review and approval workflows",
+    "external_identity": "Integrate with ORCID, Google Scholar, LinkedIn",
+    "reputation_system": "Author reputation and contribution scoring",
+    "collaboration_tools": "Real-time collaboration, comments, suggestions"
+  }
+}

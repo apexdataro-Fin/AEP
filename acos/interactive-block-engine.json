@@ -1,0 +1,103 @@
+{
+  "version": "1.0.0",
+  "description": "Interactive Block Engine — reusable interactive content blocks: quizzes, exercises, decision trees, interactive tables, code blocks, terminal blocks, architecture blocks, expandable sections, flashcards, AI blocks, production notes, warnings, tips, callouts, knowledge links.",
+  "block_categories": {
+    "assessment": ["quiz", "exercise", "challenge", "exam-question"],
+    "interactive": ["decision-tree", "interactive-table", "code-block", "terminal-block", "architecture-block", "drag-drop", "sortable-list"],
+    "presentation": ["expandable", "tabs", "accordion", "carousel", "timeline-interactive"],
+    "study": ["flashcard", "active-recall", "feynman", "cheat-sheet"],
+    "ai": ["ai-explain", "ai-quiz", "ai-flashcards", "ai-review", "ai-tutor"],
+    "callout": ["info", "warning", "tip", "best-practice", "production-note", "architecture-note", "security-note", "cost-note"],
+    "knowledge": ["knowledge-link", "skill-link", "concept-map", "prerequisite-chain"]
+  },
+  "block_schemas": {
+    "quiz": {
+      "description": "Self-assessment quiz embedded in content",
+      "props": {
+        "id": "string",
+        "title": "string",
+        "questions": [
+          {
+            "id": "string",
+            "type": "multiple-choice | multiple-select | true-false | fill-blank | short-answer | matching | ordering",
+            "question": "string (markdown)",
+            "options": ["string array (for choice types)"],
+            "correct": "string | string[]",
+            "explanation": "string (shown after answer)",
+            "points": "number"
+          }
+        ],
+        "passing_score": "number (0-100)",
+        "show_answers": "after_submission | after_each | never",
+        "retry_allowed": "boolean",
+        "time_limit_seconds": "number (optional)"
+      }
+    },
+    "code_block": {
+      "description": "Enhanced code block with copy, run, and diff capabilities",
+      "props": {
+        "language": "string",
+        "code": "string",
+        "filename": "string (optional)",
+        "highlight_lines": ["number array"],
+        "runnable": "boolean (sandboxed execution)",
+        "diff_mode": "boolean (show additions/removals)",
+        "caption": "string"
+      }
+    },
+    "terminal_block": {
+      "description": "Simulated terminal with command execution",
+      "props": {
+        "commands": [{ "command": "string", "output": "string", "description": "string" }],
+        "interactive": "boolean (Phase 5: live execution)",
+        "cwd": "string"
+      }
+    },
+    "decision_tree": {
+      "description": "Interactive decision flow for architecture/design decisions",
+      "props": {
+        "question": "string",
+        "nodes": [
+          {
+            "id": "string",
+            "label": "string",
+            "type": "question | decision | outcome",
+            "options": [{ "label": "string", "next_node": "string (node id)" }],
+            "explanation": "string"
+          }
+        ]
+      }
+    },
+    "flashcard": {
+      "description": "Embedded flashcard deck for active recall",
+      "props": {
+        "cards": [{ "front": "string", "back": "string", "hint": "string", "tags": ["string"] }],
+        "mode": "flip | type_answer",
+        "shuffle": "boolean"
+      }
+    },
+    "expandable": {
+      "description": "Expandable/collapsible content sections",
+      "props": {
+        "title": "string",
+        "content": "string (markdown)",
+        "default_open": "boolean",
+        "icon": "string (emoji)"
+      }
+    },
+    "knowledge_link": {
+      "description": "Link to a knowledge graph node, skill, or concept",
+      "props": {
+        "type": "concept | skill | technology | certification",
+        "id": "string",
+        "label": "string",
+        "show_preview": "boolean (hover card)"
+      }
+    }
+  },
+  "implementation": {
+    "phase_4": "All block schemas defined. Some UI stubs exist from Phase 3.",
+    "phase_5": "Full React component implementation for all blocks.",
+    "phase_6": "AI blocks backend integration. Terminal blocks with WebAssembly."
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "engine": "assessment-engine",
+  "version": "1.0.0",
+  "description": "Reusable Assessment Engine for the ARES Content Operating System. Supports practice, quizzes, assignments, projects, labs, exams, and certification assessments.",
+  "assessment_types": {
+    "practice": {
+      "id": "practice",
+      "description": "Ungraded practice for self-assessment",
+      "config": {
+        "scored": false,
+        "show_answers": "immediately",
+        "unlimited_attempts": true,
+        "timed": false,
+        "adaptive": false
+      }
+    },
+    "quiz": {
+      "id": "quiz",
+      "description": "Short graded assessment on a single topic",
+      "config": {
+        "scored": true,
+        "question_count": { "min": 3, "max": 30 },
+        "time_limit": { "type": "number", "optional": true },
+        "pass_score": { "type": "number", "default": 70 },
+        "attempts": { "type": "number", "default": 1 },
+        "shuffle": true,
+        "feedback": "after_submission"
+      }
+    },
+    "assignment": {
+      "id": "assignment",
+      "description": "Take-home task with a deliverable",
+      "config": {
+        "scored": true,
+        "submission_type": ["text", "file", "code", "link"],
+        "due_date": { "type": "string", "format": "date-time", "optional": true },
+        "rubric": { "ref": "rubric", "optional": true },
+        "peer_review": { "type": "boolean", "default": false },
+        "plagiarism_check": { "type": "boolean", "default": false }
+      }
+    },
+    "project": {
+      "id": "project",
+      "description": "Extended multi-step project assessment",
+      "config": {
+        "scored": true,
+        "deliverables": { "type": "array", "ref": "deliverable" },
+        "acceptance_criteria": { "type": "array", "ref": "acceptance_criterion" },
+        "grading_rubric": { "ref": "rubric" },
+        "milestones": { "type": "array", "optional": true },
+        "portfolio_eligible": { "type": "boolean", "default": true },
+        "team_size": { "type": "number", "default": 1 }
+      }
+    },
+    "lab": {
+      "id": "lab",
+      "description": "Hands-on practical assessment in a sandbox environment",
+      "config": {
+        "scored": true,
+        "environment": { "type": "string", "required": true },
+        "tasks": { "type": "array", "ref": "lab_task" },
+        "completion_criteria": { "type": "array", "items": "string" },
+        "time_limit": { "type": "number", "optional": true },
+        "hints_available": { "type": "boolean", "default": true },
+        "hint_penalty": { "type": "number", "default": 0 }
+      }
+    },
+    "exam": {
+      "id": "exam",
+      "description": "Formal examination (mid-term, module, or chapter exam)",
+      "config": {
+        "scored": true,
+        "question_count": { "min": 20, "max": 100 },
+        "time_limit": { "type": "number", "required": true },
+        "pass_score": { "type": "number", "default": 60 },
+        "attempts": { "type": "number", "default": 1 },
+        "proctored": { "type": "boolean", "default": false },
+        "shuffle": true,
+        "feedback": "after_exam",
+        "domains_covered": "string[]"
+      }
+    },
+    "final_exam": {
+      "id": "final_exam",
+      "description": "Comprehensive end-of-course examination",
+      "config": {
+        "scored": true,
+        "question_count": { "min": 50, "max": 200 },
+        "time_limit": { "type": "number", "required": true },
+        "pass_score": { "type": "number", "default": 70 },
+        "attempts": { "type": "number", "default": 1 },
+        "cumulative": true,
+        "weight_in_course": { "type": "number", "default": 40 },
+        "domains_covered": "string[]",
+        "certificate_eligible": { "type": "boolean", "default": true }
+      }
+    },
+    "certification_exam": {
+      "id": "certification_exam",
+      "description": "Mock certification exam replicating real certification format",
+      "config": {
+        "scored": true,
+        "certification_id": { "type": "string", "required": true },
+        "question_count": "number",
+        "time_limit": "number",
+        "pass_score": "number",
+        "simulates_real": true,
+        "domains": "string[]",
+        "retirement_date": { "type": "string", "format": "date", "optional": true }
+      }
+    },
+    "diagnostic": {
+      "id": "diagnostic",
+      "description": "Pre-assessment to determine current knowledge level",
+      "config": {
+        "scored": true,
+        "adaptive": true,
+        "purpose": "placement",
+        "generates_learning_path": true,
+        "identifies_gaps": true
+      }
+    }
+  },
+  "grading": {
+    "auto_graded": {
+      "description": "Automatically scored by the system",
+      "applicable_to": ["multiple_choice", "true_false", "fill_in_blank", "matching", "ordering"],
+      "config": {
+        "instant_feedback": true,
+        "show_correct_answers": "configurable"
+      }
+    },
+    "instructor_graded": {
+      "description": "Manually graded by instructor or reviewer",
+      "applicable_to": ["essay", "short_answer", "assignment", "project"],
+      "config": {
+        "rubric_required": true,
+        "blind_grading": "optional",
+        "multiple_graders": "optional"
+      }
+    },
+    "ai_assisted": {
+      "description": "AI provides initial grading, instructor reviews",
+      "applicable_to": ["essay", "short_answer", "code_question"],
+      "config": {
+        "ai_confidence_threshold": 0.85,
+        "below_threshold": "route_to_human",
+        "above_threshold": "auto_grade_with_review_option"
+      }
+    },
+    "peer_graded": {
+      "description": "Graded by fellow learners",
+      "applicable_to": ["assignment", "project", "essay"],
+      "config": {
+        "reviewers_per_submission": { "type": "number", "default": 3 },
+        "calibration_required": true,
+        "anonymized": true,
+        "rubric_provided": true
+      }
+    }
+  },
+  "feedback": {
+    "immediate": {
+      "description": "Shown immediately after each question",
+      "types": ["correct", "incorrect", "explanation", "reference_links"]
+    },
+    "after_submission": {
+      "description": "Shown after submitting the full assessment",
+      "types": ["score", "correct_answers", "explanations", "performance_by_topic"]
+    },
+    "after_deadline": {
+      "description": "Shown after the assessment deadline passes",
+      "types": ["score", "model_answers", "class_statistics"]
+    },
+    "never": {
+      "description": "No feedback shown (for certification mock exams)"
+    }
+  },
+  "analytics": {
+    "learner": {
+      "overall_score": "number",
+      "by_topic": "Record<string, number>",
+      "by_difficulty": "Record<string, number>",
+      "time_spent": "number",
+      "improvement_trend": "number[]",
+      "weak_areas": "string[]",
+      "strong_areas": "string[]",
+      "question_level_stats": "array"
+    },
+    "cohort": {
+      "average_score": "number",
+      "score_distribution": "object",
+      "difficult_questions": "string[]",
+      "reliability": "number",
+      "discrimination_index": "number"
+    }
+  },
+  "anti_cheating": {
+    "question_variants": "Generate unique question sets per learner",
+    "time_analysis": "Detect suspiciously fast submissions",
+    "pattern_detection": "Detect answer pattern anomalies",
+    "browser_monitoring": "Detect tab switching (optional)",
+    "ip_tracking": "Detect multiple attempts from different locations",
+    "plagiarism": "Check code/text submissions for similarity"
+  }
+}

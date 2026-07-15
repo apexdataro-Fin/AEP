@@ -1,0 +1,163 @@
+{
+  "engine": "content-search-engine",
+  "version": "1.0.0",
+  "description": "Reusable Content Search Engine for the ARES Content Operating System. Supports full-text, faceted, and semantic search across all content types.",
+  "search_scopes": {
+    "global": {
+      "description": "Search across all content in the platform",
+      "includes": ["books", "courses", "lessons", "projects", "labs", "questions", "glossary", "technologies", "skills", "knowledge_graph", "metadata"]
+    },
+    "book_scope": {
+      "description": "Search within a specific book",
+      "includes": ["chapters", "sections", "lessons", "appendices", "glossary"]
+    },
+    "course_scope": {
+      "description": "Search within a specific course",
+      "includes": ["modules", "units", "lessons", "projects", "labs", "quizzes", "exams"]
+    },
+    "knowledge_scope": {
+      "description": "Search across knowledge structures",
+      "includes": ["knowledge_graph", "skill_tree", "taxonomy", "glossary"]
+    },
+    "question_scope": {
+      "description": "Search across all question banks",
+      "includes": ["question_bank", "quiz_bank", "flashcard_bank", "interview_bank", "exam_bank"]
+    },
+    "career_scope": {
+      "description": "Search career and certification content",
+      "includes": ["career_paths", "certifications", "job_roles", "skills_required"]
+    }
+  },
+  "search_features": {
+    "full_text": {
+      "description": "Standard full-text search with relevance ranking",
+      "config": {
+        "fuzzy_matching": { "type": "boolean", "default": true },
+        "prefix_matching": { "type": "boolean", "default": true },
+        "phrase_matching": { "type": "boolean", "default": true },
+        "proximity_search": { "type": "boolean", "default": false },
+        "wildcard_support": { "type": "boolean", "default": true },
+        "case_sensitive": { "type": "boolean", "default": false }
+      }
+    },
+    "faceted": {
+      "description": "Filter search results by metadata facets",
+      "facets": [
+        { "name": "content_type", "values": ["lesson", "lab", "project", "quiz", "reference", "glossary"] },
+        { "name": "difficulty", "values": ["beginner", "intermediate", "advanced", "expert"] },
+        { "name": "domain", "values": "string[]" },
+        { "name": "technology", "values": "string[]" },
+        { "name": "skill", "values": "string[]" },
+        { "name": "learning_level", "values": ["simple", "core", "professional", "production", "architect"] },
+        { "name": "language", "values": "string[]" },
+        { "name": "certification", "values": "string[]" },
+        { "name": "career_level", "values": ["junior", "mid", "senior", "staff", "principal"] },
+        { "name": "content_status", "values": ["draft", "review", "published", "archived"] },
+        { "name": "author", "values": "string[]" }
+      ]
+    },
+    "semantic": {
+      "description": "AI-powered semantic search understanding meaning, not just keywords",
+      "config": {
+        "embedding_model": "string",
+        "similarity_threshold": "number",
+        "max_results": "number",
+        "query_expansion": "boolean",
+        "synonym_expansion": "boolean",
+        "concept_matching": "boolean"
+      }
+    },
+    "structured": {
+      "description": "Search with structured query syntax",
+      "operators": ["AND", "OR", "NOT", "NEAR", "EXACT"],
+      "field_queries": ["title:", "tag:", "tech:", "skill:", "difficulty:", "author:", "status:"]
+    },
+    "knowledge_graph": {
+      "description": "Search and traverse the knowledge graph",
+      "config": {
+        "traversal_depth": "number",
+        "relationship_types": "string[]",
+        "include_related_nodes": "boolean",
+        "path_finding": "boolean"
+      }
+    }
+  },
+  "search_ui": {
+    "instant_search": {
+      "description": "Results update as user types",
+      "config": {
+        "debounce_ms": 150,
+        "min_chars": 2,
+        "max_preview_results": 8
+      }
+    },
+    "search_preview": {
+      "description": "Rich previews in search results",
+      "includes": ["title", "summary", "content_type_badge", "difficulty_badge", "relevance_score", "breadcrumb", "quick_actions"]
+    },
+    "search_suggestions": {
+      "description": "Query suggestions and autocomplete",
+      "sources": ["recent_searches", "popular_searches", "content_titles", "tags", "technologies"]
+    },
+    "search_history": {
+      "description": "Track and manage search history",
+      "config": {
+        "max_history": 50,
+        "clearable": true,
+        "exportable": true
+      }
+    },
+    "saved_searches": {
+      "description": "Save and reuse complex searches",
+      "config": {
+        "max_saved": 20,
+        "named": true,
+        "shareable": true
+      }
+    }
+  },
+  "indexing": {
+    "content_fields": [
+      { "field": "title", "weight": 10, "analyzer": "standard" },
+      { "field": "summary", "weight": 8, "analyzer": "standard" },
+      { "field": "description", "weight": 6, "analyzer": "standard" },
+      { "field": "body", "weight": 5, "analyzer": "standard" },
+      { "field": "learning_objectives", "weight": 7, "analyzer": "standard" },
+      { "field": "keywords", "weight": 9, "analyzer": "keyword" },
+      { "field": "tags", "weight": 9, "analyzer": "keyword" },
+      { "field": "technologies", "weight": 8, "analyzer": "keyword" },
+      { "field": "skills", "weight": 8, "analyzer": "keyword" },
+      { "field": "code_blocks", "weight": 4, "analyzer": "code" },
+      { "field": "glossary_terms", "weight": 7, "analyzer": "standard" }
+    ],
+    "strategies": {
+      "incremental": "Index only changed content on each build",
+      "full_rebuild": "Rebuild entire search index from scratch",
+      "scheduled": "Rebuild index on a schedule",
+      "real_time": "Update index immediately on content change"
+    }
+  },
+  "ranking": {
+    "factors": [
+      { "factor": "relevance_score", "weight": 0.4 },
+      { "factor": "content_quality", "weight": 0.15 },
+      { "factor": "recency", "weight": 0.1 },
+      { "factor": "popularity", "weight": 0.1 },
+      { "factor": "completion_rate", "weight": 0.1 },
+      { "factor": "field_weights", "weight": 0.15 }
+    ],
+    "boost_rules": {
+      "exact_title_match": 2.0,
+      "exact_tag_match": 1.8,
+      "published_over_draft": 1.5,
+      "higher_difficulty_match": 1.2,
+      "recently_updated": 1.1
+    }
+  },
+  "extensibility": {
+    "search_providers": ["local", "algolia", "typesense", "meilisearch", "elasticsearch"],
+    "custom_analyzers": "Plugin system for custom text analyzers",
+    "custom_facets": "Add custom facet dimensions",
+    "search_api": "REST and GraphQL search endpoints"
+  }
+}
