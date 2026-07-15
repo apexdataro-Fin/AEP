@@ -1,0 +1,422 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "ALP-001 Project Roadmap — 10 interconnected projects that gradually build one production-grade cloud platform. Each project extends the previous one. The learner builds a real portfolio.",
+  "principle": "Projects are never isolated. Each extends the previous. The learner builds one production cloud platform over the entire academy.",
+  "projects": [
+    {
+      "id": "proj-001",
+      "name": "CloudNova Linux Server",
+      "tagline": "Provision and harden your first production server",
+      "module": "02-linux",
+      "order": 1,
+      "difficulty": "beginner",
+      "duration_hours": 8,
+      "extends": null,
+      "extended_by": "proj-002",
+      "story": "You've joined CloudNova as a Junior Cloud Engineer. Your first task: provision and secure the company's new Linux application server.",
+      "objectives": [
+        "Provision an Ubuntu server",
+        "Configure SSH key-based authentication",
+        "Set up firewall (iptables/ufw)",
+        "Configure automatic security updates",
+        "Set up system monitoring basics",
+        "Document the server configuration"
+      ],
+      "deliverables": [
+        "Fully configured Linux server",
+        "SSH configuration documentation",
+        "Firewall rules documentation",
+        "Server hardening checklist"
+      ],
+      "acceptance_criteria": [
+        "SSH accessible only via key authentication",
+        "Firewall blocks all ports except 22, 80, 443",
+        "Unattended security upgrades enabled",
+        "Fail2ban configured and running",
+        "Server documentation is clear and complete"
+      ],
+      "skills": ["linux-administration", "ssh-configuration", "firewall-management", "server-hardening", "technical-documentation"],
+      "technologies": ["linux", "bash", "ssh", "iptables", "fail2ban"],
+      "certifications": [],
+      "portfolio_value": "medium",
+      "career_level": "junior",
+      "related_modules": ["02-linux", "04-security"],
+      "knowledge_nodes": ["server-provisioning", "ssh-hardening", "firewall-configuration", "security-baseline"]
+    },
+    {
+      "id": "proj-002",
+      "name": "CloudNova Secure Network",
+      "tagline": "Design and secure the corporate network",
+      "module": "03-networking",
+      "order": 2,
+      "difficulty": "beginner",
+      "duration_hours": 10,
+      "extends": "proj-001",
+      "extended_by": "proj-003",
+      "story": "The server from Project 1 needs network connectivity. Design a secure VNet with proper subnetting, DNS, and network security for CloudNova's growing infrastructure.",
+      "objectives": [
+        "Design a VNet with proper subnetting (CIDR)",
+        "Configure DNS resolution",
+        "Set up Network Security Groups",
+        "Implement load balancing",
+        "Configure TLS certificates",
+        "Test network connectivity and security"
+      ],
+      "deliverables": [
+        "VNet architecture diagram (Mermaid)",
+        "Subnet allocation plan",
+        "NSG rules documentation",
+        "DNS configuration",
+        "TLS certificate setup"
+      ],
+      "acceptance_criteria": [
+        "VNet has proper subnet isolation (public/private/dmz)",
+        "DNS resolves internal and external names",
+        "NSGs enforce least-privilege network access",
+        "Load balancer distributes traffic to Proj-001 server",
+        "HTTPS terminates with valid TLS certificate",
+        "Network diagram is accurate and clear"
+      ],
+      "skills": ["vnet-design", "subnetting", "dns-configuration", "nsg-management", "load-balancing", "tls-certificates"],
+      "technologies": ["azure-vnet", "dns", "nsg", "azure-load-balancer", "tls", "letsencrypt"],
+      "certifications": ["AZ-104 (networking domain)"],
+      "portfolio_value": "medium",
+      "career_level": "junior",
+      "related_modules": ["03-networking", "07-azure-core", "04-security"],
+      "knowledge_nodes": ["network-topology", "subnet-design", "defense-in-depth", "load-balancing-patterns"]
+    },
+    {
+      "id": "proj-003",
+      "name": "CloudNova Automation Engine",
+      "tagline": "Automate infrastructure with Python",
+      "module": "05-python",
+      "order": 3,
+      "difficulty": "beginner",
+      "duration_hours": 10,
+      "extends": "proj-002",
+      "extended_by": "proj-004",
+      "story": "Manual server management doesn't scale. Build Python automation scripts to manage CloudNova's infrastructure — health checks, backups, and provisioning.",
+      "objectives": [
+        "Write Python scripts for server health monitoring",
+        "Automate daily backups",
+        "Create infrastructure inventory script",
+        "Build a CLI tool for common operations",
+        "Write unit tests for all automation"
+      ],
+      "deliverables": [
+        "Python automation toolkit (GitHub repo)",
+        "Health check script with alerting",
+        "Backup automation with rotation",
+        "Infrastructure inventory CLI",
+        "Test suite with >80% coverage"
+      ],
+      "acceptance_criteria": [
+        "Health checks run every 5 minutes and log results",
+        "Backups run daily with 7-day retention",
+        "CLI tool has --help for all commands",
+        "All scripts have error handling and logging",
+        "Test coverage exceeds 80%",
+        "Code follows PEP 8 style guide"
+      ],
+      "skills": ["python-scripting", "api-integration", "cli-development", "testing", "error-handling"],
+      "technologies": ["python", "pytest", "click", "requests", "azure-sdk"],
+      "certifications": [],
+      "portfolio_value": "high",
+      "career_level": "junior",
+      "related_modules": ["05-python", "02-linux"],
+      "knowledge_nodes": ["automation-patterns", "sdk-integration", "cli-design", "testing-pyramid"]
+    },
+    {
+      "id": "proj-004",
+      "name": "CloudNova Azure Landing Zone",
+      "tagline": "Provision production Azure infrastructure with Terraform",
+      "module": "12-terraform",
+      "order": 4,
+      "difficulty": "intermediate",
+      "duration_hours": 12,
+      "extends": "proj-003",
+      "extended_by": "proj-005",
+      "story": "CloudNova is moving to Azure. As the Cloud Engineer, design and provision the entire Azure landing zone — networking, compute, storage, identity — all as code with Terraform.",
+      "objectives": [
+        "Design Azure landing zone architecture",
+        "Write Terraform modules for networking, compute, storage",
+        "Implement remote state management",
+        "Set up CI/CD for Terraform (GitHub Actions)",
+        "Implement cost estimation and tagging"
+      ],
+      "deliverables": [
+        "Terraform module repository",
+        "Landing zone architecture diagram",
+        "CI/CD pipeline for Terraform (plan/apply)",
+        "Cost estimation configuration",
+        "Resource tagging strategy document"
+      ],
+      "acceptance_criteria": [
+        "All Azure resources are provisioned via Terraform (no manual steps)",
+        "Remote state stored in Azure Storage with locking",
+        "CI/CD pipeline runs terraform plan on PR, apply on merge",
+        "All resources are properly tagged",
+        "Cost estimation runs on every PR",
+        "Modules are reusable and documented"
+      ],
+      "skills": ["terraform-modules", "state-management", "iac-cicd", "cost-modeling", "module-design"],
+      "technologies": ["terraform", "azure", "github-actions", "infracost", "checkov"],
+      "certifications": ["AZ-104", "HashiCorp Terraform Associate"],
+      "portfolio_value": "high",
+      "career_level": "cloud_engineer",
+      "related_modules": ["12-terraform", "07-azure-core", "14-github", "15-cicd", "22-finops"],
+      "knowledge_nodes": ["iac-patterns", "landing-zone-design", "terraform-cicd", "cost-tagging"]
+    },
+    {
+      "id": "proj-005",
+      "name": "CloudNova Container Platform",
+      "tagline": "Dockerize and orchestrate CloudNova's applications",
+      "module": "09-docker",
+      "order": 5,
+      "difficulty": "intermediate",
+      "duration_hours": 10,
+      "extends": "proj-004",
+      "extended_by": "proj-006",
+      "story": "The automation scripts from Project 3 need to run as containerized services. Package them as Docker containers, push to Azure Container Registry, and deploy to the landing zone.",
+      "objectives": [
+        "Write production Dockerfiles for all automation services",
+        "Implement multi-stage builds for image optimization",
+        "Push images to Azure Container Registry",
+        "Deploy containers to Azure Container Instances",
+        "Set up container monitoring and logging"
+      ],
+      "deliverables": [
+        "Dockerized automation toolkit",
+        "Optimized Docker images (multi-stage)",
+        "ACR repository with tagged images",
+        "Container deployment manifests",
+        "Monitoring dashboard for containers"
+      ],
+      "acceptance_criteria": [
+        "Multi-stage builds reduce image size by >50%",
+        "Images scanned and free of critical vulnerabilities",
+        "Containers auto-restart on failure",
+        "Logs stream to Azure Monitor",
+        "Health probes configured for all containers"
+      ],
+      "skills": ["dockerfile-authoring", "multi-stage-builds", "image-scanning", "container-deployment"],
+      "technologies": ["docker", "azure-container-registry", "azure-container-instances", "trivy"],
+      "certifications": ["AZ-104 (compute domain)"],
+      "portfolio_value": "high",
+      "career_level": "cloud_engineer",
+      "related_modules": ["09-docker", "07-azure-core", "20-monitoring"],
+      "knowledge_nodes": ["containerization", "image-optimization", "container-security", "registry-management"]
+    },
+    {
+      "id": "proj-006",
+      "name": "CloudNova Kubernetes Production Cluster",
+      "tagline": "Deploy production Kubernetes on the Azure landing zone",
+      "module": "10-kubernetes",
+      "order": 6,
+      "difficulty": "advanced",
+      "duration_hours": 16,
+      "extends": "proj-005",
+      "extended_by": "proj-007",
+      "story": "Container Instances worked for starters, but CloudNova needs orchestration. Deploy an AKS cluster with proper networking, RBAC, monitoring, and deploy the containerized services.",
+      "objectives": [
+        "Provision AKS cluster with Terraform",
+        "Configure cluster networking (CNI, Network Policies)",
+        "Implement RBAC and namespace isolation",
+        "Deploy all containerized services to K8s",
+        "Set up ingress with TLS termination",
+        "Configure Horizontal Pod Autoscaling"
+      ],
+      "deliverables": [
+        "AKS Terraform module",
+        "Kubernetes manifests for all services",
+        "RBAC configuration",
+        "Ingress configuration with cert-manager",
+        "HPA configuration",
+        "Cluster architecture diagram"
+      ],
+      "acceptance_criteria": [
+        "AKS cluster provisioned entirely via Terraform",
+        "Network Policies enforce pod-to-pod isolation",
+        "RBAC restricts access per namespace",
+        "All services accessible via HTTPS ingress",
+        "HPA scales based on CPU/memory metrics",
+        "Cluster passes CIS benchmark scan"
+      ],
+      "skills": ["aks-administration", "k8s-networking", "rbac-design", "ingress-management", "autoscaling"],
+      "technologies": ["azure-aks", "kubernetes", "terraform", "cert-manager", "nginx-ingress", "network-policies"],
+      "certifications": ["CKA", "CKAD"],
+      "portfolio_value": "very-high",
+      "career_level": "senior",
+      "related_modules": ["10-kubernetes", "12-terraform", "04-security", "03-networking"],
+      "knowledge_nodes": ["kubernetes-architecture", "cluster-security", "service-mesh-readiness", "production-k8s"]
+    },
+    {
+      "id": "proj-007",
+      "name": "CloudNova GitOps Delivery Pipeline",
+      "tagline": "Implement GitOps with ArgoCD for continuous delivery",
+      "module": "18-gitops",
+      "order": 7,
+      "difficulty": "advanced",
+      "duration_hours": 12,
+      "extends": "proj-006",
+      "extended_by": "proj-008",
+      "story": "Manual kubectl apply won't cut it anymore. Implement GitOps: all Kubernetes configs live in Git, ArgoCD syncs them automatically, and every change goes through PR review.",
+      "objectives": [
+        "Install and configure ArgoCD on AKS",
+        "Structure GitOps repository (app-of-apps pattern)",
+        "Implement automated sync and drift detection",
+        "Configure progressive delivery (canary/blue-green)",
+        "Set up secrets management with External Secrets Operator"
+      ],
+      "deliverables": [
+        "GitOps repository with app-of-apps structure",
+        "ArgoCD configuration and ApplicationSets",
+        "Sealed Secrets / External Secrets setup",
+        "Progressive delivery configuration",
+        "Drift detection and alerting"
+      ],
+      "acceptance_criteria": [
+        "All K8s resources synced from Git via ArgoCD",
+        "PR merge triggers automatic sync",
+        "Drift is detected and alerted within 3 minutes",
+        "Secrets are never stored in plain text in Git",
+        "Rollback is as simple as git revert"
+      ],
+      "skills": ["gitops-patterns", "argocd-administration", "secret-management", "progressive-delivery"],
+      "technologies": ["argocd", "sealed-secrets", "external-secrets-operator", "argo-rollouts"],
+      "certifications": [],
+      "portfolio_value": "very-high",
+      "career_level": "senior",
+      "related_modules": ["18-gitops", "10-kubernetes", "14-github", "15-cicd"],
+      "knowledge_nodes": ["gitops-pipelines", "reconciliation-loop", "app-of-apps", "secret-management"]
+    },
+    {
+      "id": "proj-008",
+      "name": "CloudNova Observability Platform",
+      "tagline": "Full-stack observability for the production platform",
+      "module": "20-monitoring",
+      "order": 8,
+      "difficulty": "advanced",
+      "duration_hours": 12,
+      "extends": "proj-007",
+      "extended_by": "proj-009",
+      "story": "Production is running but you can't see inside. Deploy Prometheus, Grafana, Loki, and Tempo — the complete observability stack — with dashboards, alerts, and SLO tracking.",
+      "objectives": [
+        "Deploy Prometheus with ServiceMonitors",
+        "Create Grafana dashboards for all services",
+        "Set up Loki for log aggregation",
+        "Configure Tempo for distributed tracing",
+        "Define SLIs, SLOs, and error budgets",
+        "Configure alerting with PagerDuty integration"
+      ],
+      "deliverables": [
+        "Prometheus/Grafana/Loki/Tempo deployment (via GitOps)",
+        "Service dashboards for all microservices",
+        "SLO dashboard with error budgets",
+        "Alert rules with routing",
+        "Runbook documentation for all alerts"
+      ],
+      "acceptance_criteria": [
+        "All services emit metrics to Prometheus",
+        "Dashboards show RED metrics (Rate, Errors, Duration)",
+        "Logs are queryable via Grafana Loki",
+        "Distributed traces visible across services",
+        "Alerts fire within SLA and route to correct team",
+        "SLOs are tracked with burn rate alerts"
+      ],
+      "skills": ["prometheus-querying", "grafana-dashboards", "logging-pipelines", "distributed-tracing", "slo-culture"],
+      "technologies": ["prometheus", "grafana", "loki", "tempo", "opentelemetry", "alertmanager"],
+      "certifications": ["AZ-400 (instrumentation domain)"],
+      "portfolio_value": "very-high",
+      "career_level": "senior",
+      "related_modules": ["20-monitoring", "21-observability", "18-gitops"],
+      "knowledge_nodes": ["observability-stack", "metrics-pipelines", "slo-engineering", "incident-response"]
+    },
+    {
+      "id": "proj-009",
+      "name": "CloudNova AI Inference Platform",
+      "tagline": "Deploy production AI services on your cloud platform",
+      "module": "30-ai-infra",
+      "order": 9,
+      "difficulty": "expert",
+      "duration_hours": 14,
+      "extends": "proj-008",
+      "extended_by": "proj-010",
+      "story": "CloudNova is launching AI features. Deploy LLM inference, vector search, and RAG pipelines on the Kubernetes platform — with the same GitOps, observability, and security standards.",
+      "objectives": [
+        "Deploy LLM inference endpoints on AKS",
+        "Set up vector database cluster (Qdrant/pgvector)",
+        "Implement RAG pipeline as a microservice",
+        "Configure AI-specific monitoring (token usage, latency)",
+        "Implement AI guardrails and content safety"
+      ],
+      "deliverables": [
+        "LLM inference deployment manifests",
+        "Vector DB deployment and indexing pipeline",
+        "RAG microservice with evaluation framework",
+        "AI observability dashboard",
+        "Content safety and guardrail configuration"
+      ],
+      "acceptance_criteria": [
+        "LLM inference scales to handle 100+ concurrent requests",
+        "Vector search returns results under 100ms p95",
+        "RAG pipeline achieves >90% answer relevance",
+        "Token usage and cost tracked per request",
+        "Content safety blocks harmful inputs/outputs",
+        "GPU utilization is monitored and optimized"
+      ],
+      "skills": ["llm-deployment", "vector-search", "rag-architecture", "gpu-orchestration", "ai-safety"],
+      "technologies": ["azure-openai", "qdrant", "langchain", "kubernetes", "nvidia-gpu-operator", "guardrails-ai"],
+      "certifications": ["AI-102"],
+      "portfolio_value": "very-high",
+      "career_level": "principal",
+      "related_modules": ["30-ai-infra", "25-vector-db", "26-rag", "10-kubernetes"],
+      "knowledge_nodes": ["ai-inference-platform", "vector-search-scale", "rag-production", "ai-observability"]
+    },
+    {
+      "id": "proj-010",
+      "name": "CloudNova Production Platform",
+      "tagline": "One platform to rule them all — your capstone project",
+      "module": "31-portfolio",
+      "order": 10,
+      "difficulty": "expert",
+      "duration_hours": 16,
+      "extends": "proj-009",
+      "extended_by": null,
+      "story": "Integrate all previous projects into one unified production platform. This is your capstone — the thing you'll show in interviews. One `terraform apply` provisions everything. One GitOps repo manages it all. One observability stack monitors it all.",
+      "objectives": [
+        "Integrate all 9 previous projects into one platform",
+        "Create a single terraform apply that provisions everything",
+        "Unified GitOps repository with all applications",
+        "Complete architecture diagram of the entire platform",
+        "Write architecture decision records (ADRs)",
+        "Create a polished case study and demo"
+      ],
+      "deliverables": [
+        "Unified Terraform root module",
+        "Unified GitOps repository",
+        "Complete architecture diagram (Mermaid + draw.io)",
+        "5+ Architecture Decision Records",
+        "Platform case study (blog post format)",
+        "5-minute demo video script",
+        "Portfolio-ready GitHub README"
+      ],
+      "acceptance_criteria": [
+        "Single `terraform apply` provisions the entire platform",
+        "ArgoCD manages all applications from one GitOps repo",
+        "Complete observability: metrics, logs, traces for everything",
+        "Platform passes security and compliance scans",
+        "Case study demonstrates business value and technical decisions",
+        "Portfolio README is interview-ready"
+      ],
+      "skills": ["platform-engineering", "architecture-design", "technical-communication", "portfolio-building", "systems-integration"],
+      "technologies": ["all-previous-technologies"],
+      "certifications": ["AZ-104", "AZ-400", "AI-102 (combined readiness)"],
+      "portfolio_value": "very-high",
+      "career_level": "all",
+      "related_modules": ["31-portfolio", "32-interview", "33-career"],
+      "knowledge_nodes": ["platform-engineering", "unified-architecture", "production-readiness", "portfolio-excellence"]
+    }
+  ]
+}

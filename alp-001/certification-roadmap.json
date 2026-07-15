@@ -1,0 +1,146 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "Certification Roadmap for ALP-001 Cloud Engineering. Maps every module to specific certification objectives for AZ-900, AZ-104, AZ-400, and AI-102.",
+  "certifications": [
+    {
+      "code": "AZ-900",
+      "name": "Microsoft Azure Fundamentals",
+      "level": "fundamentals",
+      "target_role": "Junior Cloud Engineer",
+      "when_to_take": "After Module 06 (Cloud Fundamentals)",
+      "modules_aligned": ["06-cloud-fundamentals"],
+      "objective_coverage": {
+        "az900-cloud-concepts": {
+          "weight": 25,
+          "modules": ["06-cloud-fundamentals"],
+          "description": "Cloud computing, benefits, service types (IaaS/PaaS/SaaS)"
+        },
+        "az900-azure-architecture": {
+          "weight": 35,
+          "modules": ["06-cloud-fundamentals", "07-azure-core"],
+          "description": "Azure architectural components, compute, networking, storage, identity"
+        },
+        "az900-management": {
+          "weight": 40,
+          "modules": ["06-cloud-fundamentals", "07-azure-core", "22-finops"],
+          "description": "Cost management, governance, compliance, deployment tools, monitoring"
+        }
+      }
+    },
+    {
+      "code": "AZ-104",
+      "name": "Microsoft Azure Administrator",
+      "level": "associate",
+      "target_role": "Cloud Engineer",
+      "when_to_take": "After Module 12 (Terraform)",
+      "modules_aligned": ["06-cloud-fundamentals", "07-azure-core", "03-networking", "04-security", "12-terraform", "20-monitoring", "23-identity", "22-finops"],
+      "objective_coverage": {
+        "az104-identity": {
+          "weight": 20,
+          "modules": ["04-security", "23-identity"],
+          "description": "Azure AD users/groups, RBAC, subscriptions and governance"
+        },
+        "az104-storage": {
+          "weight": 20,
+          "modules": ["07-azure-core"],
+          "description": "Storage access, storage accounts, Azure Files, Blob Storage"
+        },
+        "az104-compute": {
+          "weight": 25,
+          "modules": ["07-azure-core", "09-docker"],
+          "description": "VMs, App Service, Container Instances, AKS"
+        },
+        "az104-networking": {
+          "weight": 25,
+          "modules": ["03-networking", "07-azure-core"],
+          "description": "Virtual networks, subnets, load balancing, NSGs, DNS"
+        },
+        "az104-monitoring": {
+          "weight": 10,
+          "modules": ["07-azure-core", "20-monitoring"],
+          "description": "Azure Monitor, backup and recovery"
+        }
+      }
+    },
+    {
+      "code": "AZ-400",
+      "name": "Designing and Implementing Microsoft DevOps Solutions",
+      "level": "expert",
+      "target_role": "Senior Cloud Engineer / DevOps Engineer",
+      "when_to_take": "After Module 18 (GitOps)",
+      "prerequisite_certs": ["AZ-104 (or AZ-204)"],
+      "modules_aligned": ["14-github", "15-cicd", "16-devops", "17-devsecops", "12-terraform", "18-gitops", "19-platform", "20-monitoring"],
+      "objective_coverage": {
+        "az400-cicd": {
+          "weight": 15,
+          "modules": ["16-devops"],
+          "description": "Processes and communications, Agile, work tracking"
+        },
+        "az400-source": {
+          "weight": 15,
+          "modules": ["13-git", "14-github"],
+          "description": "Source control, branching strategies, code review"
+        },
+        "az400-pipelines": {
+          "weight": 40,
+          "modules": ["15-cicd", "18-gitops"],
+          "description": "Build and release pipelines, deployment patterns"
+        },
+        "az400-security": {
+          "weight": 10,
+          "modules": ["17-devsecops"],
+          "description": "Security and compliance in DevOps"
+        },
+        "az400-instrumentation": {
+          "weight": 20,
+          "modules": ["20-monitoring", "21-observability"],
+          "description": "Instrumentation, monitoring, logging, telemetry"
+        }
+      }
+    },
+    {
+      "code": "AI-102",
+      "name": "Designing and Implementing a Microsoft Azure AI Solution",
+      "level": "associate",
+      "target_role": "AI Cloud Engineer",
+      "when_to_take": "After Module 27 (AI Agents)",
+      "modules_aligned": ["24-azure-ai", "25-vector-db", "26-rag", "27-ai-agents"],
+      "objective_coverage": {
+        "ai102-plan": {
+          "weight": 20,
+          "modules": ["24-azure-ai"],
+          "description": "Plan and manage Azure AI solutions"
+        },
+        "ai102-decision": {
+          "weight": 15,
+          "modules": ["24-azure-ai"],
+          "description": "Decision support solutions"
+        },
+        "ai102-vision": {
+          "weight": 20,
+          "modules": ["24-azure-ai"],
+          "description": "Computer vision solutions"
+        },
+        "ai102-nlp": {
+          "weight": 25,
+          "modules": ["24-azure-ai", "26-rag"],
+          "description": "Natural language processing, RAG"
+        },
+        "ai102-conversation": {
+          "weight": 20,
+          "modules": ["24-azure-ai", "26-rag", "27-ai-agents"],
+          "description": "Knowledge mining, document intelligence, conversational AI"
+        }
+      }
+    }
+  ],
+  "recommended_sequence": ["AZ-900", "AZ-104", "AZ-400", "AI-102"],
+  "certification_tracking": {
+    "per_lesson_mapping": true,
+    "progress_visualization": "radar_chart",
+    "exam_readiness_score": "percentage",
+    "weak_domain_detection": true,
+    "practice_exams_available": ["AZ-900", "AZ-104", "AZ-400", "AI-102"]
+  }
+}

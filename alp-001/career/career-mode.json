@@ -1,0 +1,241 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "ALP-001 Career Mode — the fictional company CloudNova. Every lesson, project, and lab takes place within this simulated company. Learners progress from Junior to Principal within one coherent world.",
+  "company": {
+    "name": "CloudNova Technologies",
+    "founded": 2022,
+    "headquarters": "Seattle, WA (Remote-First)",
+    "industry": "Cloud-Native SaaS Platform",
+    "size": "200+ employees",
+    "mission": "Build the operating system for modern logistics — connecting warehouses, trucks, and supply chains through cloud-native AI.",
+    "tech_stack": {
+      "cloud": "Microsoft Azure",
+      "compute": "Azure Kubernetes Service (AKS), Azure Functions, Azure VM Scale Sets",
+      "storage": "Azure Blob Storage, Azure SQL, CosmosDB",
+      "networking": "Azure VNet, Azure Front Door, Azure DNS",
+      "cicd": "GitHub Actions, ArgoCD, Terraform Cloud",
+      "observability": "Prometheus, Grafana, Loki, Tempo, Azure Monitor",
+      "security": "Azure AD / Entra ID, Key Vault, Defender for Cloud",
+      "ai": "Azure OpenAI, Azure AI Search, Azure ML",
+      "collaboration": "GitHub, Slack, Jira, Confluence"
+    },
+    "departments": {
+      "platform_engineering": {
+        "name": "Platform Engineering",
+        "mission": "Build and maintain the internal developer platform",
+        "manager": "Sarah Chen (Director of Platform Engineering)",
+        "teams": ["infrastructure", "developer-experience", "sre"]
+      },
+      "infrastructure": {
+        "name": "Cloud Infrastructure",
+        "mission": "Provision, secure, and optimize all cloud resources",
+        "manager": "Marcus Williams (Senior Engineering Manager)",
+        "team_size": 8,
+        "roles": ["Junior Cloud Engineer", "Cloud Engineer", "Senior Cloud Engineer"]
+      },
+      "sre": {
+        "name": "Site Reliability Engineering",
+        "mission": "Ensure reliability, performance, and incident response",
+        "manager": "Priya Patel (SRE Manager)",
+        "team_size": 6,
+        "roles": ["SRE", "Senior SRE", "Staff SRE"]
+      },
+      "developer_experience": {
+        "name": "Developer Experience",
+        "mission": "Build golden paths, tooling, and self-service capabilities",
+        "manager": "Alex Nguyen (Developer Experience Lead)",
+        "team_size": 5,
+        "roles": ["Platform Engineer", "Senior Platform Engineer"]
+      },
+      "ai_platform": {
+        "name": "AI Platform",
+        "mission": "Build and operate the AI/ML infrastructure",
+        "manager": "Dr. Jordan Taylor (Head of AI Platform)",
+        "team_size": 7,
+        "roles": ["ML Engineer", "AI Infrastructure Engineer", "Cloud AI Architect"]
+      },
+      "security": {
+        "name": "Cloud Security",
+        "mission": "Secure everything — from code to cloud",
+        "manager": "Rebecca Martinez (CISO)",
+        "team_size": 5,
+        "roles": ["Security Engineer", "Senior Security Engineer"]
+      }
+    },
+    "colleagues": [
+      { "name": "David Kim", "role": "Senior Cloud Engineer", "team": "infrastructure", "personality": "Patient mentor, loves diagrams, always asks 'why?'", "mentor_for": "junior" },
+      { "name": "Emma Wilson", "role": "Cloud Engineer", "team": "infrastructure", "personality": "Automation enthusiast, writes Terraform in her sleep", "mentor_for": "junior" },
+      { "name": "James Okafor", "role": "Staff SRE", "team": "sre", "personality": "Calm under pressure, incident commander, runs blameless postmortems", "mentor_for": "senior" },
+      { "name": "Lena Bergström", "role": "Platform Engineer", "team": "developer_experience", "personality": "Backstage expert, golden-paths advocate, developer empathy", "mentor_for": "cloud_engineer" },
+      { "name": "Raj Mehta", "role": "Cloud AI Architect", "team": "ai_platform", "personality": "AI whisperer, loves vector search, always pushing the platform forward", "mentor_for": "principal" }
+    ]
+  },
+  "career_progression": [
+    {
+      "level": "junior",
+      "title": "Junior Cloud Engineer",
+      "when": "Modules 01–07",
+      "salary": "$85,000",
+      "manager": "Marcus Williams",
+      "mentor": "David Kim",
+      "responsibilities": [
+        "Complete onboarding and training",
+        "Pair with senior engineers on infrastructure tasks",
+        "Handle L3 support tickets",
+        "Update runbooks and documentation",
+        "Deploy pre-approved Terraform changes",
+        "Participate in on-call shadowing"
+      ],
+      "tickets": [
+        { "id": "ticket-001", "title": "Provision a new development VM", "priority": "P3", "module": "07-azure-core" },
+        { "id": "ticket-002", "title": "Rotate expired TLS certificates", "priority": "P2", "module": "03-networking" },
+        { "id": "ticket-003", "title": "Add monitoring to the inventory service", "priority": "P3", "module": "20-monitoring" },
+        { "id": "ticket-004", "title": "Fix broken CI pipeline for auth-service", "priority": "P3", "module": "15-cicd" }
+      ],
+      "promotion_criteria": "Complete AZ-900 certification and Project 003 (CloudNova Automation Engine)"
+    },
+    {
+      "level": "cloud_engineer",
+      "title": "Cloud Engineer",
+      "when": "Modules 08–14",
+      "salary": "$115,000",
+      "manager": "Marcus Williams",
+      "mentor": "Emma Wilson",
+      "responsibilities": [
+        "Own the container platform (Docker, AKS)",
+        "Develop Terraform modules for the team",
+        "Participate in on-call rotation (1 week/month)",
+        "Code review infrastructure changes",
+        "Mentor junior engineers",
+        "Lead small infrastructure projects"
+      ],
+      "tickets": [
+        { "id": "ticket-005", "title": "Containerize the billing service", "priority": "P2", "module": "09-docker" },
+        { "id": "ticket-006", "title": "Build a Terraform module for AKS", "priority": "P2", "module": "12-terraform" },
+        { "id": "ticket-007", "title": "Investigate slow deployment times", "priority": "P2", "module": "15-cicd" }
+      ],
+      "promotion_criteria": "Complete AZ-104 certification and Project 006 (CloudNova Kubernetes Production Cluster)"
+    },
+    {
+      "level": "senior",
+      "title": "Senior Cloud Engineer",
+      "when": "Modules 15–22",
+      "salary": "$160,000",
+      "manager": "Marcus Williams",
+      "mentor": "James Okafor (SRE)",
+      "responsibilities": [
+        "Lead architecture reviews for infrastructure changes",
+        "Design the GitOps migration plan",
+        "Own SLO/SLI definitions for platform services",
+        "Incident commander for SEV2 incidents",
+        "Mentor cloud engineers",
+        "Drive cost optimization initiatives",
+        "Write architecture decision records (ADRs)"
+      ],
+      "tickets": [
+        { "id": "ticket-008", "title": "Design GitOps migration strategy", "priority": "P1", "module": "18-gitops" },
+        { "id": "ticket-009", "title": "Lead SEV2 incident: API gateway latency spike", "priority": "P1", "module": "21-observability" },
+        { "id": "ticket-010", "title": "Reduce cloud spend by 20% this quarter", "priority": "P1", "module": "22-finops" },
+        { "id": "ticket-011", "title": "Architecture review for new multi-region deployment", "priority": "P2", "module": "19-platform" }
+      ],
+      "promotion_criteria": "Complete AZ-400 certification and Project 008 (CloudNova Observability Platform)"
+    },
+    {
+      "level": "architect",
+      "title": "Cloud Architect",
+      "when": "Modules 23–30",
+      "salary": "$200,000",
+      "manager": "Sarah Chen",
+      "mentor": "Lena Bergström (Platform)",
+      "responsibilities": [
+        "Define platform engineering strategy",
+        "Design the AI infrastructure roadmap",
+        "Lead cross-team architecture initiatives",
+        "Evaluate build-vs-buy decisions",
+        "Represent CloudNova at industry events",
+        "Drive internal developer platform adoption",
+        "Set engineering standards across the organization"
+      ],
+      "tickets": [
+        { "id": "ticket-012", "title": "Architect the AI inference platform", "priority": "P1", "module": "30-ai-infra" },
+        { "id": "ticket-013", "title": "Design zero-trust identity model", "priority": "P1", "module": "23-identity" },
+        { "id": "ticket-014", "title": "Evaluate LLM deployment options (Azure OpenAI vs self-hosted)", "priority": "P2", "module": "29-llmops" }
+      ],
+      "promotion_criteria": "Complete AI-102 certification and Project 009 (CloudNova AI Inference Platform)"
+    },
+    {
+      "level": "principal",
+      "title": "Principal Cloud Engineer",
+      "when": "Modules 31–33",
+      "salary": "$260,000",
+      "manager": "CTO",
+      "mentor": "Raj Mehta (AI Architect)",
+      "responsibilities": [
+        "Set technical vision for the entire cloud platform",
+        "Drive industry best practices adoption",
+        "Represent CloudNova at conferences and open source",
+        "Hire and develop senior engineering talent",
+        "Make build-vs-buy decisions at organizational level",
+        "Shape the engineering culture and values"
+      ],
+      "tickets": [
+        { "id": "ticket-015", "title": "Define 3-year cloud platform strategy", "priority": "P1", "module": "33-career" },
+        { "id": "ticket-016", "title": "Present CloudNova platform at KubeCon", "priority": "P2", "module": "31-portfolio" }
+      ],
+      "promotion_criteria": "Complete Project 010 (CloudNova Production Platform capstone)"
+    }
+  ],
+  "incidents": [
+    {
+      "id": "incident-001",
+      "title": "Database Connection Pool Exhaustion",
+      "severity": "SEV2",
+      "scenario": "At 2:47 AM, the logistics API returns 503 errors. On-call engineer discovers the PostgreSQL connection pool is exhausted due to a new microservice not closing connections properly.",
+      "affected_services": ["logistics-api", "order-service", "postgres-primary"],
+      "carer_level": "cloud_engineer",
+      "module": "10-kubernetes",
+      "key_skills": ["kubernetes-troubleshooting", "database-connection-management", "on-call-response"]
+    },
+    {
+      "id": "incident-002",
+      "title": "TLS Certificate Expiry Takes Down API",
+      "severity": "SEV1",
+      "scenario": "The TLS certificate for api.cloudnova.io expired. All external API calls fail. cert-manager misconfiguration — automation failed to renew. Manual intervention required.",
+      "affected_services": ["api-gateway", "all-external-apis"],
+      "carer_level": "senior",
+      "module": "03-networking",
+      "key_skills": ["certificate-management", "incident-command", "postmortem-facilitation"]
+    },
+    {
+      "id": "incident-003",
+      "title": "CI/CD Pipeline Secret Leak",
+      "severity": "SEV1",
+      "scenario": "A developer accidentally committed an Azure service principal secret to a public GitHub repo. Security detects it within 4 minutes. Immediate key rotation and investigation required.",
+      "affected_services": ["github-actions", "azure-key-vault", "all-services-using-that-principal"],
+      "carer_level": "senior",
+      "module": "17-devsecops",
+      "key_skills": ["secret-management", "incident-response", "security-investigation", "key-rotation"]
+    },
+    {
+      "id": "incident-004",
+      "title": "Kubernetes Node Pool Out of Memory",
+      "severity": "SEV2",
+      "scenario": "AKS node pool runs out of memory. Pods are being OOMKilled. Memory requests/limits misconfigured. New ML workload consuming unexpected resources.",
+      "affected_services": ["ml-inference-service", "vector-search-api", "aks-node-pool-02"],
+      "carer_level": "senior",
+      "module": "30-ai-infra",
+      "key_skills": ["kubernetes-resource-management", "capacity-planning", "incident-troubleshooting"]
+    },
+    {
+      "id": "incident-005",
+      "title": "DDoS Attack on Public API",
+      "severity": "SEV0",
+      "scenario": "Large-scale DDoS attack targeting the public API. Azure DDoS Protection triggers but need to engage incident response, implement rate limiting, and coordinate with security team.",
+      "affected_services": ["api-gateway", "public-website", "all-customer-facing-services"],
+      "carer_level": "architect",
+      "module": "04-security",
+      "key_skills": ["ddos-mitigation", "crisis-management", "cross-team-coordination", "post-incident-hardening"]
+    }
+  ]
+}

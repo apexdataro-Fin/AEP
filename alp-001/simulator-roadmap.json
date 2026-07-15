@@ -1,0 +1,129 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "ALP-001 Simulator Roadmap — 13 simulators mapped to modules. Simulators are interactive, hands-on environments where learners practice in realistic, sandboxed settings.",
+  "simulators": [
+    {
+      "id": "sim-linux-terminal",
+      "name": "Linux Terminal",
+      "description": "Interactive Linux terminal in the browser. Execute real commands, explore the filesystem, manage processes, and write scripts.",
+      "mapped_modules": ["02-linux", "08-containers"],
+      "capabilities": ["shell-execution", "filesystem-navigation", "process-management", "package-installation", "networking-commands"],
+      "difficulty": "beginner",
+      "career_scenarios": ["server-setup", "log-analysis", "performance-tuning", "troubleshooting"]
+    },
+    {
+      "id": "sim-azure-portal",
+      "name": "Azure Portal",
+      "description": "Guided Azure Portal simulator for learning the UI, resource creation, and management workflows without real Azure costs.",
+      "mapped_modules": ["06-cloud-fundamentals", "07-azure-core", "22-finops"],
+      "capabilities": ["resource-provisioning", "dashboard-creation", "cost-analysis", "policy-configuration", "monitoring-setup"],
+      "difficulty": "beginner",
+      "career_scenarios": ["vm-deployment", "storage-configuration", "cost-review", "compliance-check"]
+    },
+    {
+      "id": "sim-terraform",
+      "name": "Terraform Simulator",
+      "description": "Write and apply Terraform configurations in a sandboxed environment. Plan, apply, destroy — see the full IaC lifecycle.",
+      "mapped_modules": ["12-terraform"],
+      "capabilities": ["terraform-plan", "terraform-apply", "state-inspection", "module-testing", "drift-detection"],
+      "difficulty": "intermediate",
+      "career_scenarios": ["infrastructure-provisioning", "module-development", "state-recovery", "cost-estimation"]
+    },
+    {
+      "id": "sim-docker",
+      "name": "Docker Simulator",
+      "description": "Build, run, and debug Docker containers. Experiment with Dockerfiles, multi-stage builds, and compose files.",
+      "mapped_modules": ["09-docker"],
+      "capabilities": ["image-building", "container-running", "compose-orchestration", "registry-push-pull", "image-inspection"],
+      "difficulty": "intermediate",
+      "career_scenarios": ["containerization", "image-optimization", "multi-service-apps", "ci-integration"]
+    },
+    {
+      "id": "sim-kubernetes",
+      "name": "Kubernetes Simulator",
+      "description": "Full Kubernetes cluster in the browser. Deploy pods, services, ingress, configmaps, and troubleshoot issues.",
+      "mapped_modules": ["10-kubernetes", "11-helm", "18-gitops"],
+      "capabilities": ["kubectl-commands", "manifest-apply", "pod-debugging", "scaling-operations", "rbac-configuration", "helm-install"],
+      "difficulty": "advanced",
+      "career_scenarios": ["deployment-management", "incident-response", "capacity-planning", "security-audit"]
+    },
+    {
+      "id": "sim-networking",
+      "name": "Networking Simulator",
+      "description": "Design and test network topologies. Configure subnets, routing tables, firewalls, and load balancers.",
+      "mapped_modules": ["03-networking"],
+      "capabilities": ["topology-design", "subnet-calculation", "routing-configuration", "firewall-rules", "packet-tracing"],
+      "difficulty": "intermediate",
+      "career_scenarios": ["vnet-design", "connectivity-troubleshooting", "security-group-configuration"]
+    },
+    {
+      "id": "sim-cidr",
+      "name": "CIDR Calculator",
+      "description": "Interactive CIDR calculator and subnetting practice tool. Visualize address spaces and practice subnetting.",
+      "mapped_modules": ["03-networking"],
+      "capabilities": ["cidr-calculation", "subnet-visualization", "range-identification", "supernetting"],
+      "difficulty": "beginner",
+      "career_scenarios": ["subnet-planning", "ip-allocation", "network-design"]
+    },
+    {
+      "id": "sim-dns",
+      "name": "DNS Simulator",
+      "description": "Trace DNS resolution, configure zones, and troubleshoot DNS issues. Understand the full resolution chain.",
+      "mapped_modules": ["03-networking"],
+      "capabilities": ["dns-resolution-trace", "zone-configuration", "record-management", "troubleshooting"],
+      "difficulty": "intermediate",
+      "career_scenarios": ["dns-configuration", "resolution-troubleshooting", "domain-migration"]
+    },
+    {
+      "id": "sim-iam",
+      "name": "IAM Simulator",
+      "description": "Design and test IAM policies, RBAC configurations, and conditional access rules. See the effect of policies in real-time.",
+      "mapped_modules": ["04-security", "23-identity"],
+      "capabilities": ["policy-authoring", "rbac-simulation", "conditional-access-testing", "privilege-analysis"],
+      "difficulty": "advanced",
+      "career_scenarios": ["access-review", "policy-design", "privilege-audit", "zero-trust-implementation"]
+    },
+    {
+      "id": "sim-monitoring",
+      "name": "Monitoring Simulator",
+      "description": "Configure Prometheus alerts, build Grafana dashboards, and respond to simulated production incidents.",
+      "mapped_modules": ["20-monitoring"],
+      "capabilities": ["prometheus-querying", "dashboard-building", "alert-configuration", "incident-response"],
+      "difficulty": "intermediate",
+      "career_scenarios": ["on-call-response", "dashboard-creation", "alert-tuning", "postmortem-analysis"]
+    },
+    {
+      "id": "sim-incident-response",
+      "name": "Incident Response Simulator",
+      "description": "Live incident scenarios. Production is down — diagnose, mitigate, resolve, and write the postmortem.",
+      "mapped_modules": ["16-devops", "21-observability", "33-career"],
+      "capabilities": ["incident-triage", "root-cause-analysis", "mitigation-actions", "postmortem-writing"],
+      "difficulty": "advanced",
+      "career_scenarios": ["sev1-response", "incident-command", "blameless-postmortem", "improvement-tracking"]
+    },
+    {
+      "id": "sim-architecture-builder",
+      "name": "Architecture Builder",
+      "description": "Drag-and-drop cloud architecture designer. Build diagrams, validate against best practices, and get AI feedback.",
+      "mapped_modules": ["19-platform", "30-ai-infra", "31-portfolio"],
+      "capabilities": ["diagram-building", "best-practice-validation", "cost-estimation", "ai-review"],
+      "difficulty": "advanced",
+      "career_scenarios": ["architecture-design", "solution-proposal", "cost-optimization", "technical-decision"]
+    },
+    {
+      "id": "sim-ai-playground",
+      "name": "AI Playground",
+      "description": "Experiment with LLMs, prompt engineering, RAG pipelines, and agent architectures in a sandboxed AI environment.",
+      "mapped_modules": ["24-azure-ai", "26-rag", "27-ai-agents", "29-llmops"],
+      "capabilities": ["prompt-testing", "model-comparison", "rag-experimentation", "agent-orchestration", "evaluation-metrics"],
+      "difficulty": "intermediate",
+      "career_scenarios": ["ai-solution-design", "prompt-optimization", "model-evaluation", "rag-tuning"]
+    }
+  ],
+  "implementation_notes": {
+    "phase": "Simulators are architectural specifications. Implementation planned in future phases.",
+    "technologies_considered": ["WebAssembly for terminal/CLI simulators", "Monaco Editor for code simulators", "React Flow for architecture builder", "Playwright for sandboxed environments"],
+    "priority_order": ["linux-terminal", "kubernetes", "terraform", "azure-portal", "ai-playground", "iam-simulator"]
+  }
+}

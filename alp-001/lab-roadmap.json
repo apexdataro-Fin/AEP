@@ -1,0 +1,114 @@
+{
+  "version": "1.0.0",
+  "alp_id": "alp-001",
+  "description": "ALP-001 Lab Roadmap — 8 lab types with full progression from guided to career-immersive labs. Every lab maps to modules, skills, and career activities.",
+  "total_labs": 40,
+  "lab_types": {
+    "guided": {
+      "id": "guided",
+      "description": "Step-by-step labs with complete instructions. Learner follows along to build confidence.",
+      "when_to_use": "When introducing new technology or concept",
+      "difficulty_range": "beginner",
+      "count": 12,
+      "modules": ["01-foundations", "02-linux", "05-python", "06-cloud-fundamentals", "13-git"]
+    },
+    "challenge": {
+      "id": "challenge",
+      "description": "Goal given, minimal instructions. Learner must figure out implementation.",
+      "when_to_use": "After guided labs, to build independence",
+      "difficulty_range": "beginner to intermediate",
+      "count": 10,
+      "modules": ["03-networking", "09-docker", "14-github", "15-cicd", "20-monitoring"]
+    },
+    "production": {
+      "id": "production",
+      "description": "Real-world production scenarios. Learner applies skills to production-like environments.",
+      "when_to_use": "When learner is ready for production-grade work",
+      "difficulty_range": "intermediate to advanced",
+      "count": 8,
+      "modules": ["07-azure-core", "10-kubernetes", "12-terraform", "18-gitops"]
+    },
+    "debugging": {
+      "id": "debugging",
+      "description": "Broken systems. Learner must diagnose and fix issues. Root cause analysis required.",
+      "when_to_use": "To build troubleshooting and incident-response skills",
+      "difficulty_range": "intermediate to advanced",
+      "count": 5,
+      "modules": ["02-linux", "03-networking", "10-kubernetes", "21-observability"]
+    },
+    "security": {
+      "id": "security",
+      "description": "Security-focused labs: hardening, penetration testing mindset, vulnerability remediation.",
+      "when_to_use": "Building security-first engineering habits",
+      "difficulty_range": "intermediate to advanced",
+      "count": 4,
+      "modules": ["04-security", "17-devsecops", "23-identity"]
+    },
+    "architecture": {
+      "id": "architecture",
+      "description": "Design challenges. Learner designs architecture, gets it reviewed, iterates.",
+      "when_to_use": "Building architectural thinking",
+      "difficulty_range": "advanced",
+      "count": 3,
+      "modules": ["19-platform", "30-ai-infra", "31-portfolio"]
+    },
+    "ai": {
+      "id": "ai",
+      "description": "AI-focused labs: prompt engineering, model deployment, RAG, agents, evaluation.",
+      "when_to_use": "For AI/ML track modules",
+      "difficulty_range": "intermediate to expert",
+      "count": 5,
+      "modules": ["24-azure-ai", "25-vector-db", "26-rag", "27-ai-agents"]
+    },
+    "career": {
+      "id": "career",
+      "description": "Career-immersive labs: simulated workday, incident response, architecture review, mock interview.",
+      "when_to_use": "To bridge learning and real-world work",
+      "difficulty_range": "all",
+      "count": 3,
+      "modules": ["32-interview", "33-career"]
+    }
+  },
+  "lab_progression": [
+    { "order": 1, "lab_id": "lab-linux-01", "type": "guided", "name": "Your First Linux Server", "module": "02-linux", "duration_minutes": 45 },
+    { "order": 2, "lab_id": "lab-linux-02", "type": "guided", "name": "Shell Scripting Basics", "module": "02-linux", "duration_minutes": 45 },
+    { "order": 3, "lab_id": "lab-linux-03", "type": "debugging", "name": "Broken Server — Diagnose and Fix", "module": "02-linux", "duration_minutes": 60 },
+    { "order": 4, "lab_id": "lab-net-01", "type": "guided", "name": "TCP/IP in Practice", "module": "03-networking", "duration_minutes": 45 },
+    { "order": 5, "lab_id": "lab-net-02", "type": "challenge", "name": "Design a Subnet Plan", "module": "03-networking", "duration_minutes": 60 },
+    { "order": 6, "lab_id": "lab-net-03", "type": "debugging", "name": "DNS Outage Resolution", "module": "03-networking", "duration_minutes": 45 },
+    { "order": 7, "lab_id": "lab-sec-01", "type": "guided", "name": "IAM Policy Design", "module": "04-security", "duration_minutes": 45 },
+    { "order": 8, "lab_id": "lab-sec-02", "type": "security", "name": "Harden a Public-Facing Server", "module": "04-security", "duration_minutes": 60 },
+    { "order": 9, "lab_id": "lab-py-01", "type": "guided", "name": "Python SDK Automation", "module": "05-python", "duration_minutes": 45 },
+    { "order": 10, "lab_id": "lab-py-02", "type": "challenge", "name": "Build an Infrastructure CLI", "module": "05-python", "duration_minutes": 90 },
+    { "order": 11, "lab_id": "lab-cloud-01", "type": "guided", "name": "Azure Portal Navigation", "module": "06-cloud-fundamentals", "duration_minutes": 30 },
+    { "order": 12, "lab_id": "lab-cloud-02", "type": "guided", "name": "Provision Your First VM", "module": "06-cloud-fundamentals", "duration_minutes": 30 },
+    { "order": 13, "lab_id": "lab-az-01", "type": "guided", "name": "Azure Compute Deep Dive", "module": "07-azure-core", "duration_minutes": 45 },
+    { "order": 14, "lab_id": "lab-az-02", "type": "production", "name": "Deploy a Multi-Tier Application", "module": "07-azure-core", "duration_minutes": 90 },
+    { "order": 15, "lab_id": "lab-az-03", "type": "challenge", "name": "Configure Auto-Scaling Rules", "module": "07-azure-core", "duration_minutes": 60 },
+    { "order": 16, "lab_id": "lab-cont-01", "type": "guided", "name": "Container Internals with runc", "module": "08-containers", "duration_minutes": 45 },
+    { "order": 17, "lab_id": "lab-docker-01", "type": "guided", "name": "Dockerfile Best Practices", "module": "09-docker", "duration_minutes": 45 },
+    { "order": 18, "lab_id": "lab-docker-02", "type": "challenge", "name": "Optimize Image Size by 80%", "module": "09-docker", "duration_minutes": 60 },
+    { "order": 19, "lab_id": "lab-docker-03", "type": "production", "name": "Multi-Container App with Compose", "module": "09-docker", "duration_minutes": 60 },
+    { "order": 20, "lab_id": "lab-k8s-01", "type": "guided", "name": "Your First Kubernetes Deployment", "module": "10-kubernetes", "duration_minutes": 45 },
+    { "order": 21, "lab_id": "lab-k8s-02", "type": "challenge", "name": "Deploy a Stateful Application", "module": "10-kubernetes", "duration_minutes": 90 },
+    { "order": 22, "lab_id": "lab-k8s-03", "type": "debugging", "name": "Cluster in CrashLoopBackOff", "module": "10-kubernetes", "duration_minutes": 60 },
+    { "order": 23, "lab_id": "lab-k8s-04", "type": "production", "name": "Configure HPA and Cluster Autoscaler", "module": "10-kubernetes", "duration_minutes": 60 },
+    { "order": 24, "lab_id": "lab-helm-01", "type": "guided", "name": "Create a Helm Chart", "module": "11-helm", "duration_minutes": 45 },
+    { "order": 25, "lab_id": "lab-tf-01", "type": "guided", "name": "Terraform Your First Resource", "module": "12-terraform", "duration_minutes": 45 },
+    { "order": 26, "lab_id": "lab-tf-02", "type": "challenge", "name": "Build a Reusable Terraform Module", "module": "12-terraform", "duration_minutes": 60 },
+    { "order": 27, "lab_id": "lab-tf-03", "type": "production", "name": "Multi-Environment Infrastructure", "module": "12-terraform", "duration_minutes": 90 },
+    { "order": 28, "lab_id": "lab-cicd-01", "type": "guided", "name": "GitHub Actions Pipeline", "module": "15-cicd", "duration_minutes": 45 },
+    { "order": 29, "lab_id": "lab-cicd-02", "type": "challenge", "name": "Blue-Green Deployment Pipeline", "module": "15-cicd", "duration_minutes": 60 },
+    { "order": 30, "lab_id": "lab-gitops-01", "type": "production", "name": "ArgoCD Application Deployment", "module": "18-gitops", "duration_minutes": 60 },
+    { "order": 31, "lab_id": "lab-mon-01", "type": "guided", "name": "Prometheus Metrics Collection", "module": "20-monitoring", "duration_minutes": 45 },
+    { "order": 32, "lab_id": "lab-mon-02", "type": "challenge", "name": "Build an SLO Dashboard", "module": "20-monitoring", "duration_minutes": 60 },
+    { "order": 33, "lab_id": "lab-obs-01", "type": "debugging", "name": "Trace a Latency Issue", "module": "21-observability", "duration_minutes": 60 },
+    { "order": 34, "lab_id": "lab-devsec-01", "type": "security", "name": "CI/CD Security Scanning Pipeline", "module": "17-devsecops", "duration_minutes": 45 },
+    { "order": 35, "lab_id": "lab-id-01", "type": "security", "name": "Zero-Trust Identity Architecture", "module": "23-identity", "duration_minutes": 60 },
+    { "order": 36, "lab_id": "lab-ai-01", "type": "ai", "name": "Deploy an LLM Inference Endpoint", "module": "24-azure-ai", "duration_minutes": 60 },
+    { "order": 37, "lab_id": "lab-ai-02", "type": "ai", "name": "Build a RAG Pipeline", "module": "26-rag", "duration_minutes": 60 },
+    { "order": 38, "lab_id": "lab-ai-03", "type": "ai", "name": "Multi-Agent Orchestration", "module": "27-ai-agents", "duration_minutes": 90 },
+    { "order": 39, "lab_id": "lab-arch-01", "type": "architecture", "name": "Design a Production Platform", "module": "19-platform", "duration_minutes": 90 },
+    { "order": 40, "lab_id": "lab-career-01", "type": "career", "name": "Simulated Production Incident Response", "module": "33-career", "duration_minutes": 120 }
+  ]
+}

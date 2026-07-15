@@ -1,0 +1,8 @@
+{
+  "label": "MODULE_NAME",
+  "position": MODULE_NUM,
+  "link": {
+    "type": "doc",
+    "id": "MODULE_PATH/index"
+  }
+}

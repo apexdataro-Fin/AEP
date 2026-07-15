@@ -2,7 +2,7 @@
 
 > Last updated: 2026-07-15
 
-## Overall Completion: ~65%
+## Overall Completion: ~80%
 
 | Phase | Status | Progress |
 |---|---|---|
@@ -10,138 +10,102 @@
 | **Phase 2 — Learning Core** | ✅ Complete | 100% |
 | **Phase 3 — Platform Experience** | ✅ Complete | 100% |
 | **Phase 4 — ARES Content Operating System (ACOS)** | ✅ Complete | 100% |
-| **Phase 5 — Content & Community** | 🔜 Next | 0% |
-| **Phase 6 — Platform Ecosystem** | 📋 Planned | 0% |
+| **Phase 5 — ALP-001: Cloud Engineering Foundation** | ✅ Complete | 100% |
+| **Phase 6 — Content Creation & Community** | 🔜 Next | 0% |
 
 ---
 
-## Phase 4 — ARES Content Operating System (ACOS) ✅
+## Phase 5 — ALP-001: Cloud Engineering Foundation ✅
 
-Implemented the complete ARES Content Operating System — the reusable content infrastructure that allows AEP to host unlimited educational content. All 14 engines are fully specified with JSON schemas and TypeScript types.
+Implemented the first official ARES Learning Package — the complete Cloud Engineering Academy architecture. Every module, project, lab, simulator, career scenario, and AI feature is interconnected through the knowledge graph and skill tree.
 
-### Engines Implemented
+### Package Architecture
 
-| # | Engine | Schema | Description |
-|---|---|---|---|
-| 1 | **ALP (ARES Learning Package)** | `acos/alp-manifest.schema.json` | Modular package architecture — every educational product is an ALP |
-| 2 | **Book Engine** | `acos/book-engine.json` | Volumes, parts, chapters, sections, appendices, glossary, indexes, version history, translations |
-| 3 | **Course Engine** | `acos/course-engine.json` | Modules, units, lessons, projects, labs, assignments, assessments, exams, certificates |
-| 4 | **Content Management** | `acos/content-management.json` | Draft → Review → Published → Archived → Deprecated lifecycle with versioning |
-| 5 | **Localization Engine** | `acos/localization-engine.json` | Multilingual (Arabic, English, Finnish, Kurdish + future), RTL/LTR, translation memory |
-| 6 | **Media Engine** | `acos/media-engine.json` | Images, SVG, icons, Mermaid, video, audio, interactive diagrams, PDF, downloads |
-| 7 | **Interactive Block Engine** | `acos/interactive-block-engine.json` | 17 block types: quizzes, exercises, decision trees, code blocks, flashcards, callouts |
-| 8 | **Question Engine** | `acos/question-engine.json` | 12 question types, 6 bank types, 6 scoring strategies, rubrics, certificates |
-| 9 | **Assessment Engine** | `acos/assessment-engine.json` | 9 assessment types, 4 grading approaches, feedback modes, analytics, anti-cheating |
-| 10 | **Export Engine** | `acos/export-engine.json` | 12 export formats: Markdown, MDX, HTML, PDF, ePub, JSON, offline, print, CSV, YAML, slides |
-| 11 | **Import Engine** | `acos/import-engine.json` | 11 import formats, 6-stage pipeline, content deduplication, batch import |
-| 12 | **Content Search Engine** | `acos/search-engine.json` | Full-text, faceted, semantic, knowledge graph search across all content types |
-| 13 | **Content Analytics Engine** | `acos/analytics-engine.json` | Usage, completion, difficulty, popularity, search, question, book, course analytics |
-| 14 | **Author System** | `acos/author-system.json` | 8 author roles, 5 organization types, 4 workflows, licensing, attribution |
+| Component | Description |
+|---|---|
+| **33 Modules** | Complete learning path from beginner to principal-level |
+| **10 Projects** | Interconnected, building one production cloud platform |
+| **40 Labs** | 8 types: guided, challenge, production, debugging, security, architecture, AI, career |
+| **13 Simulators** | Linux terminal, Azure portal, Kubernetes, Terraform, IAM, AI playground, etc. |
+| **6 Career Levels** | Junior → Cloud Engineer → Senior → Architect → Principal at CloudNova |
+| **4 Certifications** | AZ-900, AZ-104, AZ-400, AI-102 fully mapped |
+| **80+ Skills** | With full dependency chain, career mapping, certification mapping |
+| **70+ Knowledge Nodes** | Skills, technologies, patterns, security, cost, AI — all interconnected |
 
-### Master Index
-- ✅ `acos/index.json` — Complete catalog of all engines, design decisions, and extension points
-- ✅ `acos/alp-example.manifest.json` — Copy-and-customize template for creating new ALPs
-
-### TypeScript Types
-- ✅ `src/types/acos.ts` — 60+ interfaces and types covering the entire ACOS
-- ✅ Complete type safety for ALP, Book, Course, Content Management, Localization, Media, Interactive Blocks, Questions, Assessments, Export/Import, Search, Analytics, and Author System
-
-### Design Decisions
-1. **ALP is the atomic unit** — Every educational product is an ARES Learning Package, installable without modifying the platform
-2. **Domain-agnostic by mandate** — No engine references "cloud," "engineering," or any specific subject
-3. **Books support 6-level hierarchy** — Volumes → Parts → Chapters → Sections → Lessons → Content blocks
-4. **Courses support embedded assessments** — Modules contain units with quizzes, labs, projects, and exams inline
-5. **5-state content lifecycle** — Draft → Review → Published → Archived → Deprecated with full audit trails
-6. **12 export formats** — Content is portable and can leave the platform in any format
-7. **11 import formats** — Content can enter from external sources with a 6-stage validation pipeline
-8. **Search is multi-modal** — Full-text + faceted filters + semantic AI + knowledge graph traversal
-9. **Analytics are privacy-aware** — Aggregate-only, opt-out support, GDPR compliant
-10. **Author system is hierarchical** — 8 distinct roles with 4 workflow definitions
-
-### Extension Points
-- Custom ALP module types via `ALPExtension`
-- Custom question types via plugin system
-- Custom export/import formats via format plugins
-- Custom search providers (local, algolia, typesense, meilisearch, elasticsearch)
-- Custom author roles and content workflows
-- Custom assessment types and grading strategies
-- Custom interactive block types
-- External identity integration (ORCID, Google Scholar, LinkedIn)
-
-### Files Created (Phase 4)
+### Files Created (Phase 5)
 
 ```
-acos/
-├── index.json                          # Master engine catalog
-├── alp-manifest.schema.json            # ALP package architecture
-├── alp-example.manifest.json           # Copy-and-customize template
-├── book-engine.json                    # Complete book structure
-├── course-engine.json                  # Complete course structure
-├── content-management.json             # Content lifecycle & versioning
-├── localization-engine.json            # Multilingual support
-├── media-engine.json                   # Asset management
-├── interactive-block-engine.json       # 17 reusable block types
-├── question-engine.json                # 12 question types, 6 banks
-├── assessment-engine.json              # 9 assessment types, grading
-├── export-engine.json                  # 12 export formats
-├── import-engine.json                  # 11 import formats, pipeline
-├── search-engine.json                  # Multi-modal search
-├── analytics-engine.json               # Content & learner analytics
-└── author-system.json                  # Roles, orgs, workflows
-
-src/types/
-└── acos.ts                             # 60+ TypeScript interfaces
+alp-001/
+├── alp-manifest.json                          # Package manifest & metadata
+├── learning-path.json                         # 33 modules with full specs
+├── certification-roadmap.json                 # 4 certs mapped to modules
+├── project-roadmap.json                       # 10 interconnected projects
+├── lab-roadmap.json                           # 40 labs across 8 types
+├── simulator-roadmap.json                     # 13 simulators
+├── knowledge-graph/
+│   ├── cloud-engineering-graph.json           # 70+ nodes, 60+ relationships
+│   └── skill-tree.json                        # 80+ skills, 43 with full deps
+├── ai/
+│   └── ai-integration.json                    # 12 AI features mapped to modules
+├── career/
+│   └── career-mode.json                       # CloudNova company, 6 levels, incidents
+├── questions/                                 # Question banks (placeholder)
+├── assessments/                               # Assessment definitions (placeholder)
+└── content/
+    ├── 01-foundations/index.md                # 33 module index pages
+    ├── 02-linux/index.md
+    ├── 03-networking/index.md
+    ├── ... (all 33 modules)
+    └── 33-career/index.md
 ```
 
-### Total Project Statistics
-- **~140 files** created across Phases 1–4
+### ALP-001 Specs Created
+
+| # | Spec File | Key Data |
+|---|---|---|
+| 1 | `alp-manifest.json` | Package ID, 33 modules, 10 projects, 40 labs, 4 certs |
+| 2 | `learning-path.json` | 33 modules × 16 fields each (skills, technologies, certs, knowledge nodes, AI features) |
+| 3 | `certification-roadmap.json` | 4 certs with objective-level module mapping |
+| 4 | `project-roadmap.json` | 10 projects with narrative, deliverables, acceptance criteria |
+| 5 | `lab-roadmap.json` | 40 labs with type, duration, module mapping |
+| 6 | `simulator-roadmap.json` | 13 simulators with capabilities and career scenarios |
+| 7 | `career-mode.json` | CloudNova company, 6 departments, 5 colleagues, 6 levels, 5 incidents, 16 tickets |
+| 8 | `ai-integration.json` | 12 AI features, per-module mapping |
+| 9 | `cloud-engineering-graph.json` | 70+ knowledge nodes, 60+ relationships |
+| 10 | `skill-tree.json` | 43 skills with full dependency chains |
+| 11 | `33 module index.md` | Docusaurus-ready landing pages |
+
+### Key Architecture Decisions (Phase 5)
+
+1. **One Company, One World** — All learning happens at CloudNova Technologies, a fictional but realistic cloud-native SaaS company
+2. **Projects Build on Projects** — 10 projects form one connected chain: Linux Server → Secure Network → Python Automation → Azure Landing Zone → Container Platform → K8s Cluster → GitOps Pipeline → Observability Platform → AI Inference Platform → Capstone Platform
+3. **Certifications Are Embedded** — Every module knows which certification objectives it covers. AZ-900, AZ-104, AZ-400, AI-102 mapped at the objective level
+4. **Skills Have Dependencies** — 43 skills form a directed acyclic graph with prerequisites, unlocks, and career level expectations
+5. **AI Is Everywhere** — 12 AI features (tutor, quiz, flashcards, code review, architecture review, mock interview, etc.) mapped to every module
+6. **Career Mode Is Immersive** — 6 career levels with managers, mentors, tickets, incidents, and promotion criteria
+7. **Simulators Are Mapped** — 13 simulators specified with capabilities and module mapping (implementation in future phase)
+
+### Total Project Statistics (Phases 1–5)
+
+- **~175 files** created across all phases
 - **24 reusable React components** (Phase 3)
 - **17 custom hooks** (Phase 3)
 - **14 content engines** (Phase 4)
+- **10 ALP-001 spec files** (Phase 5)
+- **33 module directories** with index pages (Phase 5)
 - **100+ TypeScript interfaces** across all phases
 - **20 domains** supported
-- **13 content categories** supported
 - **Build**: ✅ Clean (0 errors)
-
----
-
-## Architecture Decisions (Cumulative)
-
-### Phase 1 — Foundation
-- Docusaurus 3 with TypeScript as the platform base
-- Local search, PWA, dark mode, Mermaid from day one
-- GitHub Pages for deployment, GitHub Actions for CI/CD
-
-### Phase 2 — Learning Core
-- 5 learning levels are layers within one lesson, not separate files
-- Metadata-first: content is self-describing and AI-consumable
-- Templates over generators: contributors copy, don't generate
-
-### Phase 3 — Platform Experience
-- Domain-agnostic by design — no file assumes Cloud Engineering
-- localStorage as state backend (migratable to Convex in future)
-- React Context + Custom Hooks for state management
-- CSS Custom Properties (60+ tokens) for complete re-theming
-- UI-First AI Integration: components are functional shells, backend later
-
-### Phase 4 — ARES Content Operating System
-- ALP as the atomic content packaging unit
-- Books and Courses have distinct but complementary structures
-- Import/Export are symmetric: content can enter and leave the platform
-- Search is more than full-text: it includes facets, semantic AI, and graph traversal
-- Analytics are built-in from the start, not retrofitted
-- Author workflows are explicit and configurable
 
 ---
 
 ## Next Recommended Implementation
 
-**Phase 5 — Content & Community:**
-- First ALP content package (e.g., Cloud Engineering Fundamentals)
-- Community features (discussions, reviews, mentorship)
-- Marketplace structure
-- Live class integration hooks
-- Premium content structure
-- Organization and team management
-- AI backend integration (Convex actions for GPT/Claude)
-- Progress tracking backend (Convex schema)
+**Phase 6 — Content Creation & Community:**
+- Write actual lesson content for ALP-001 modules (starting with priority modules)
+- Create question banks with real questions
+- Implement interactive block React components
+- Build community features (discussions, reviews)
+- Backend integration with Convex for state persistence
+- AI backend integration (GPT/Claude via Convex actions)
+- Implement simulator WebAssembly prototypes
