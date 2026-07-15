@@ -1,0 +1,107 @@
+{
+  "version": "1.0.0",
+  "description": "AI Integration specification. Defines all AI blocks, capabilities, and interfaces for the Learning Core. AI features embed directly in lessons, labs, projects, and simulators.",
+  "ai_blocks": {
+    "ai_summary": {
+      "id": "ai_summary",
+      "label": "AI Summary",
+      "description": "AI generates a dynamic summary of the current content at the user's learning level.",
+      "trigger": "on_page_load | on_demand",
+      "inputs": ["content_text", "learning_level", "learner_profile"],
+      "output": "string (markdown summary)"
+    },
+    "ai_explanation": {
+      "id": "ai_explanation",
+      "label": "AI Explanation",
+      "description": "AI provides deeper explanation of a specific concept, adapted to learning level.",
+      "trigger": "on_select | on_question",
+      "inputs": ["selected_concept", "learning_level", "previous_interactions"],
+      "output": "string (markdown explanation)"
+    },
+    "ai_quiz": {
+      "id": "ai_quiz",
+      "label": "AI Quiz Generator",
+      "description": "AI generates quiz questions based on content. Adaptive difficulty.",
+      "trigger": "on_demand",
+      "inputs": ["content_text", "difficulty", "topic", "previous_performance"],
+      "output": "[{ question, options, correct_answer, explanation }]"
+    },
+    "ai_flashcards": {
+      "id": "ai_flashcards",
+      "label": "AI Flashcards",
+      "description": "AI generates flashcard deck from content. Supports spaced repetition.",
+      "trigger": "on_demand",
+      "inputs": ["content_text", "topic"],
+      "output": "[{ front, back, hint, difficulty }]"
+    },
+    "ai_interview": {
+      "id": "ai_interview",
+      "label": "AI Interview Questions",
+      "description": "AI generates relevant interview questions based on content topic and career level.",
+      "trigger": "on_demand",
+      "inputs": ["topic", "career_level", "interview_type"],
+      "output": [{ "question": "string", "expected_topics": ["string"], "difficulty": "string" }]
+    },
+    "ai_code_review": {
+      "id": "ai_code_review",
+      "label": "AI Code Review",
+      "description": "AI reviews code/configuration submitted by learner and provides feedback.",
+      "trigger": "on_submit",
+      "inputs": ["code", "language", "task_description", "best_practices"],
+      "output": { "issues": [{ "line", "severity", "message", "suggestion" }], "summary": "string" }
+    },
+    "ai_architecture_review": {
+      "id": "ai_architecture_review",
+      "label": "AI Architecture Review",
+      "description": "AI reviews architecture diagram/description and provides feedback.",
+      "trigger": "on_submit",
+      "inputs": ["architecture_description", "constraints", "requirements"],
+      "output": { "strengths": ["string"], "concerns": ["string"], "suggestions": ["string"], "score": "number" }
+    },
+    "ai_recommendations": {
+      "id": "ai_recommendations",
+      "label": "AI Learning Recommendations",
+      "description": "AI recommends next content based on learner progress, weak topics, and goals.",
+      "trigger": "on_completion | on_demand",
+      "inputs": ["completed_content", "performance_history", "career_goal"],
+      "output": [{ "slug": "string", "reason": "string", "priority": "number" }]
+    },
+    "ai_revision": {
+      "id": "ai_revision",
+      "label": "AI Revision Suggestions",
+      "description": "AI identifies topics that need revision based on spaced repetition and performance.",
+      "trigger": "periodic | on_demand",
+      "inputs": ["review_schedule", "performance_data", "retention_data"],
+      "output": [{ "topic": "string", "slug": "string", "days_since_review": "number", "priority": "string" }]
+    },
+    "ai_difficulty_adaptation": {
+      "id": "ai_difficulty_adaptation",
+      "label": "AI Difficulty Adaptation",
+      "description": "AI adjusts content difficulty based on learner performance patterns.",
+      "trigger": "continuous",
+      "inputs": ["quiz_scores", "time_on_content", "hint_requests", "error_patterns"],
+      "output": { "recommended_level": "string", "confidence": "number" }
+    }
+  },
+  "content_integration": {
+    "mdx_syntax": {
+      "description": "AI blocks are embedded in MDX content using custom components",
+      "example": "<AIExplanation topic=\"VPC routing\" level=\"auto\" />\n<AIQuiz topic=\"networking\" count={5} difficulty=\"intermediate\" />\n<AICodeReview language=\"hcl\" task=\"Create a VPC module\" />"
+    },
+    "api_interface": {
+      "description": "AI blocks communicate with backend AI service via a unified API",
+      "endpoint": "/api/v1/ai/{block_type}",
+      "method": "POST",
+      "auth": "learner_token",
+      "request": { "block_type": "string", "context": "object", "learner_profile": "object" },
+      "response": { "result": "object", "tokens_used": "number", "model": "string" }
+    }
+  },
+  "future_features": {
+    "ai_tutor": "Full AI tutor that can answer any question about cloud engineering",
+    "ai_pair_programmer": "AI pair programming for lab exercises",
+    "ai_assessment": "AI grades projects and provides detailed feedback",
+    "ai_career_coach": "AI career coaching based on skill profile and market trends",
+    "ai_content_generator": "AI helps authors create and update content"
+  }
+}

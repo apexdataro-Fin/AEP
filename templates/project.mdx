@@ -1,0 +1,125 @@
+---
+id: "project-id"
+title: "Project Title"
+slug: /projects/project-slug
+content_type: "project"
+type: "guided"
+summary: "AI-friendly one-paragraph summary."
+description: "SEO meta description."
+difficulty: "intermediate"
+estimated_time:
+  hours: 4
+  display: "4 hours"
+status: "draft"
+technologies:
+  - name: "Technology"
+    version: "1.x"
+    required: true
+prerequisites:
+  required_lessons:
+    - slug: "/lessons/prereq"
+      title: "Prerequisite Lesson"
+  required_labs:
+    - slug: "/labs/prereq"
+      title: "Prerequisite Lab"
+  required_skills:
+    - id: "skill-id"
+      proficiency: "basic"
+learning_objectives:
+  - id: "obj-1"
+    description: "Objective"
+deliverables:
+  required:
+    - id: "del-1"
+      description: "Required deliverable"
+      artifact_type: "code"
+  optional:
+    - id: "del-2"
+      description: "Optional extension"
+      artifact_type: "document"
+acceptance_criteria:
+  - id: "ac-1"
+    criterion: "Criterion description"
+    verification_method: "manual"
+portfolio_value: "high"
+certification_mapping:
+  - code: "AZ-104"
+    objective_id: "az104-x.x"
+career_relevance:
+  - role: "Cloud Engineer"
+    importance: 5
+grading_rubric:
+  - criterion: "Correctness"
+    weight: 0.4
+    levels: ["Fails", "Partial", "Complete", "Excellent"]
+review_checklist:
+  - "Check item 1"
+extensions:
+  - "Extension idea for advanced learners"
+cleanup_instructions: "Run: terraform destroy"
+cost_estimate:
+  free_tier: true
+  estimated_cost: "$0 (free tier)"
+tags: [project, keyword]
+---
+
+import Info from "@site/src/components/Info";
+import Challenge from "@site/src/components/Challenge";
+import BestPractice from "@site/src/components/BestPractice";
+
+# Project Title
+
+## Overview
+Project description and real-world relevance.
+
+## Architecture
+
+```mermaid
+graph TB
+    A[Component] --> B[Component]
+```
+
+## Learning Objectives
+- Objective 1
+
+## Prerequisites
+- [Lesson](/lessons/prereq)
+
+## Setup
+
+```bash
+# Setup commands
+```
+
+## Implementation
+
+### Step 1: Title
+Instructions.
+
+<BestPractice>Best practice guidance.</BestPractice>
+
+### Step 2: Title
+Instructions.
+
+## Validation
+How to verify the project works.
+
+## Deliverables Checklist
+- [ ] Deliverable 1
+- [ ] Deliverable 2
+
+## Extensions
+<Challenge title="Extension" description="For advanced learners" />
+
+## Portfolio
+This project demonstrates skills in: [skills]
+
+## Cleanup
+```bash
+# Cleanup commands
+```
+
+## Grading Rubric
+| Criterion | Weight |
+|---|---|
+| Criterion | 0.4 |

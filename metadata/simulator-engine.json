@@ -1,0 +1,119 @@
+{
+  "version": "1.0.0",
+  "description": "Simulator Engine — architecture and interfaces for future cloud simulators. Simulators run in-browser (WebAssembly) or connect to sandboxed cloud environments. No implementation yet — architecture only.",
+  "simulator_types": {
+    "linux_terminal": {
+      "id": "linux_terminal",
+      "label": "Linux Terminal Simulator",
+      "description": "Simulated Linux terminal for practicing CLI commands. Pre-installed cloud CLIs (az, aws, gcloud, kubectl, terraform).",
+      "tech": "WebAssembly-based terminal emulator",
+      "commands_supported": ["bash", "az", "aws", "gcloud", "kubectl", "terraform", "docker", "git"],
+      "state": "ephemeral (reset on refresh) | persistent (localStorage)",
+      "ui_components": ["terminal", "file_explorer", "output_panel"]
+    },
+    "azure_portal": {
+      "id": "azure_portal",
+      "label": "Azure Portal Simulator",
+      "description": "Simulated Azure Portal for practicing resource creation and configuration.",
+      "tech": "React component library mimicking Azure Portal UI",
+      "services_supported": ["VMs", "VNet", "Storage", "AKS", "Functions", "App Service", "Key Vault"],
+      "interaction": "click-through UI matching real portal"
+    },
+    "terraform": {
+      "id": "terraform",
+      "label": "Terraform Simulator",
+      "description": "Write Terraform configs and see what resources would be created. Plan-only mode (no real provisioning).",
+      "tech": "Terraform plan parser + visualization",
+      "features": ["plan_visualization", "state_inspection", "module_templates"]
+    },
+    "docker": {
+      "id": "docker",
+      "label": "Docker Simulator",
+      "description": "Build and run containers in browser. Dockerfile editor + build output.",
+      "tech": "WebAssembly Docker runtime",
+      "features": ["dockerfile_editor", "build_output", "container_logs", "image_inspection"]
+    },
+    "kubernetes": {
+      "id": "kubernetes",
+      "label": "Kubernetes Simulator",
+      "description": "Deploy and manage K8s resources. Visual cluster view.",
+      "tech": "WebAssembly k3s or simulated K8s API",
+      "features": ["cluster_visualization", "yaml_editor", "kubectl_terminal", "pod_logs", "service_mesh_view"]
+    },
+    "networking": {
+      "id": "networking",
+      "label": "Networking Simulator",
+      "description": "Design VPCs, subnets, routing tables. Visual packet flow.",
+      "tech": "Canvas-based network visualization",
+      "features": ["drag_drop_subnets", "packet_tracer", "route_table_editor", "security_group_builder"]
+    },
+    "cidr": {
+      "id": "cidr",
+      "label": "CIDR Calculator",
+      "description": "Interactive CIDR block calculator. Visualize IP ranges and subnet divisions.",
+      "tech": "React + Canvas",
+      "features": ["cidr_input", "visual_subnetting", "overlap_detection", "ip_count_display"]
+    },
+    "iam": {
+      "id": "iam",
+      "label": "IAM Policy Simulator",
+      "description": "Write IAM policies and test against resources. See what's allowed/denied.",
+      "tech": "Policy evaluation engine",
+      "features": ["policy_editor", "resource_selector", "simulation_results", "least_privilege_suggestions"]
+    },
+    "monitoring": {
+      "id": "monitoring",
+      "label": "Monitoring Simulator",
+      "description": "Configure dashboards, alerts, and SLOs. Respond to simulated incidents.",
+      "tech": "Chart library + simulated metric streams",
+      "features": ["dashboard_builder", "alert_configuration", "slo_calculator", "incident_simulator"]
+    },
+    "cloud_cost": {
+      "id": "cloud_cost",
+      "label": "Cloud Cost Simulator",
+      "description": "Build architectures and see estimated costs. Optimize for budget constraints.",
+      "tech": "Pricing calculator + visualization",
+      "features": ["architecture_builder", "cost_breakdown", "optimization_suggestions", "budget_alerts"]
+    },
+    "architecture_builder": {
+      "id": "architecture_builder",
+      "label": "Architecture Builder",
+      "description": "Drag-and-drop cloud architecture diagrams. Automatic best-practice validation.",
+      "tech": "Canvas-based diagram editor",
+      "features": ["drag_drop_components", "best_practice_validation", "cost_estimation", "export_diagrams"]
+    },
+    "incident_response": {
+      "id": "incident_response",
+      "label": "Incident Response Simulator",
+      "description": "Real-time incident scenarios. Diagnose, mitigate, and post-mortem.",
+      "tech": "Event-driven simulation engine",
+      "features": ["incident_timeline", "diagnostic_tools", "communication_log", "post_mortem_template", "scoring"]
+    }
+  },
+  "simulator_interface": {
+    "lifecycle": {
+      "init": "Initialize simulator with scenario configuration",
+      "start": "Begin simulation",
+      "pause": "Pause simulation state",
+      "reset": "Reset to initial state",
+      "complete": "Validate completion and provide feedback"
+    },
+    "events": {
+      "stateChange": "Emitted when simulator state changes",
+      "taskComplete": "Emitted when a task is completed",
+      "hintRequested": "Emitted when learner requests hint",
+      "error": "Emitted on simulator error"
+    },
+    "ai_integration": {
+      "hints": "AI provides contextual hints based on current state",
+      "review": "AI reviews learner's work and provides feedback",
+      "adaptation": "AI adjusts difficulty based on performance"
+    }
+  },
+  "implementation_phases": {
+    "phase_3": ["linux_terminal", "cidr", "iam"],
+    "phase_4": ["terraform", "docker", "networking", "architecture_builder"],
+    "phase_5": ["azure_portal", "kubernetes", "monitoring", "cloud_cost"],
+    "phase_6": ["incident_response"]
+  }
+}

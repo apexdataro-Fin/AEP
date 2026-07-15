@@ -1,0 +1,98 @@
+{
+  "version": "1.0.0",
+  "description": "Lab Engine — reusable lab system for guided exercises, challenges, debugging, architecture, security, and cost optimization labs.",
+  "lab_types": {
+    "guided": {
+      "id": "guided",
+      "label": "Guided Lab",
+      "description": "Step-by-step instructions. Learner follows along.",
+      "difficulty_range": ["beginner", "intermediate"],
+      "duration_range_minutes": { "min": 15, "max": 90 }
+    },
+    "challenge": {
+      "id": "challenge",
+      "label": "Challenge Lab",
+      "description": "Goal given, no step-by-step. Tests self-sufficiency.",
+      "difficulty_range": ["intermediate", "advanced"],
+      "duration_range_minutes": { "min": 30, "max": 180 }
+    },
+    "production": {
+      "id": "production",
+      "label": "Production Lab",
+      "description": "Simulated production environment. Realistic constraints and failures.",
+      "difficulty_range": ["advanced", "architect"],
+      "duration_range_minutes": { "min": 60, "max": 240 }
+    },
+    "debugging": {
+      "id": "debugging",
+      "label": "Debugging Lab",
+      "description": "Broken environment — learner finds and fixes issues.",
+      "difficulty_range": ["intermediate", "advanced"],
+      "duration_range_minutes": { "min": 30, "max": 120 }
+    },
+    "architecture": {
+      "id": "architecture",
+      "label": "Architecture Lab",
+      "description": "Design exercise. Learner creates architecture for a scenario.",
+      "difficulty_range": ["advanced", "architect"],
+      "duration_range_minutes": { "min": 60, "max": 180 }
+    },
+    "security": {
+      "id": "security",
+      "label": "Security Lab",
+      "description": "Security-focused: find vulnerabilities, implement hardening.",
+      "difficulty_range": ["intermediate", "advanced"],
+      "duration_range_minutes": { "min": 30, "max": 120 }
+    },
+    "cost_optimization": {
+      "id": "cost_optimization",
+      "label": "Cost Optimization Lab",
+      "description": "Review architecture and optimize for cost.",
+      "difficulty_range": ["intermediate", "advanced"],
+      "duration_range_minutes": { "min": 30, "max": 90 }
+    },
+    "ai_lab": {
+      "id": "ai_lab",
+      "label": "AI Lab",
+      "description": "AI-assisted lab. AI provides hints, reviews work, adapts difficulty.",
+      "difficulty_range": ["beginner", "advanced"],
+      "duration_range_minutes": { "min": 15, "max": 120 }
+    }
+  },
+  "lab_schema": {
+    "id": "string (kebab-case)",
+    "title": "string",
+    "slug": "string (URL path)",
+    "type": "string (lab type id)",
+    "summary": "string",
+    "difficulty": "string",
+    "estimated_time": { "minutes": "number", "display": "string" },
+    "scenario": {
+      "context": "string (real-world scenario description)",
+      "role": "string (learner's role in the scenario)",
+      "objectives": ["string"]
+    },
+    "prerequisites": {
+      "required_lessons": [{ "slug": "string" }],
+      "required_skills": [{ "id": "string", "proficiency": "string" }],
+      "tools": ["string (CLI tools, SDKs, etc.)"]
+    },
+    "environment": {
+      "type": "sandbox | simulator | real_cloud | local",
+      "configuration": "object (environment-specific config)",
+      "cleanup_instructions": "string"
+    },
+    "tasks": [{
+      "id": "string",
+      "title": "string",
+      "description": "string",
+      "time_estimate_minutes": "number",
+      "hints": [{ "trigger": "string", "hint": "string" }],
+      "verification": { "method": "string", "expected_output": "string" },
+      "solution": "string (only shown after completion)"
+    }],
+    "troubleshooting": [{ "problem": "string", "solution": "string" }],
+    "check_your_understanding": [{ "question": "string", "answer": "string" }],
+    "cost_estimate": { "free_tier_safe": "boolean", "max_cost": "string" }
+  }
+}

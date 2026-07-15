@@ -1,0 +1,46 @@
+---
+id: "simulator-id"
+title: "Simulator Title"
+slug: /simulators/simulator-slug
+content_type: "simulator"
+type: "linux_terminal"
+summary: "AI-friendly description of this simulator experience."
+description: "SEO meta description"
+difficulty: "intermediate"
+estimated_time:
+  minutes: 30
+  display: "30 min"
+simulator_config:
+  type: "linux_terminal"
+  scenario: "scenario-id"
+  initial_state: {}
+  completion_criteria:
+    - "Create X"
+    - "Configure Y"
+prerequisites:
+  required_skills: []
+  tools: ["az cli"]
+tags: [simulator, practice]
+---
+
+import Simulator from "@site/src/components/Simulator";
+
+# Simulator: [Title]
+
+## Scenario
+Description of the simulation scenario.
+
+## Your Mission
+1. Task 1
+2. Task 2
+
+## Simulator
+
+<Simulator type="linux_terminal" scenario="scenario-id" />
+
+## Hints (use only if stuck)
+<details><summary>Hint 1</summary>Try running `command --help`</details>
+
+## After the Simulation
+- What you should have learned
+- How this applies to real work

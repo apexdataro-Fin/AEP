@@ -1,0 +1,205 @@
+{
+  "version": "1.0.0",
+  "description": "Certification Engine — maps all learning content to cloud certification objectives. Supports AZ-900, AZ-104, AZ-400, AI-102, and extensible to all major certifications.",
+  "certifications": {
+    "AZ-900": {
+      "code": "AZ-900",
+      "name": "Microsoft Azure Fundamentals",
+      "provider": "Microsoft",
+      "level": "fundamentals",
+      "description": "Foundational knowledge of cloud concepts and Azure services",
+      "exam_duration_minutes": 65,
+      "question_count": "40-60",
+      "passing_score": 700,
+      "cost_usd": 99,
+      "domains": [
+        {
+          "id": "az900-cloud-concepts",
+          "name": "Describe cloud concepts",
+          "weight_percent": 25,
+          "objectives": [
+            { "id": "az900-1.1", "description": "Describe cloud computing" },
+            { "id": "az900-1.2", "description": "Describe the benefits of cloud" },
+            { "id": "az900-1.3", "description": "Describe cloud service types" }
+          ]
+        },
+        {
+          "id": "az900-azure-architecture",
+          "name": "Describe Azure architecture and services",
+          "weight_percent": 35,
+          "objectives": [
+            { "id": "az900-2.1", "description": "Describe Azure architectural components" },
+            { "id": "az900-2.2", "description": "Describe Azure compute and networking" },
+            { "id": "az900-2.3", "description": "Describe Azure storage services" },
+            { "id": "az900-2.4", "description": "Describe Azure identity, access, and security" }
+          ]
+        },
+        {
+          "id": "az900-management",
+          "name": "Describe Azure management and governance",
+          "weight_percent": 40,
+          "objectives": [
+            { "id": "az900-3.1", "description": "Describe cost management in Azure" },
+            { "id": "az900-3.2", "description": "Describe governance and compliance" },
+            { "id": "az900-3.3", "description": "Describe management and deployment tools" },
+            { "id": "az900-3.4", "description": "Describe monitoring tools in Azure" }
+          ]
+        }
+      ]
+    },
+    "AZ-104": {
+      "code": "AZ-104",
+      "name": "Microsoft Azure Administrator",
+      "provider": "Microsoft",
+      "level": "associate",
+      "description": "Manage Azure identities, governance, storage, compute, and virtual networks",
+      "prerequisite_certifications": ["AZ-900 (recommended)"],
+      "exam_duration_minutes": 120,
+      "question_count": "40-60",
+      "passing_score": 700,
+      "cost_usd": 165,
+      "domains": [
+        {
+          "id": "az104-identity",
+          "name": "Manage Azure identities and governance",
+          "weight_percent": 20,
+          "objectives": [
+            { "id": "az104-1.1", "description": "Manage Azure AD users and groups" },
+            { "id": "az104-1.2", "description": "Manage role-based access control (RBAC)" },
+            { "id": "az104-1.3", "description": "Manage subscriptions and governance" }
+          ]
+        },
+        {
+          "id": "az104-storage",
+          "name": "Implement and manage storage",
+          "weight_percent": 20,
+          "objectives": [
+            { "id": "az104-2.1", "description": "Configure access to storage" },
+            { "id": "az104-2.2", "description": "Configure and manage storage accounts" },
+            { "id": "az104-2.3", "description": "Configure Azure Files and Azure Blob Storage" }
+          ]
+        },
+        {
+          "id": "az104-compute",
+          "name": "Deploy and manage Azure compute resources",
+          "weight_percent": 25,
+          "objectives": [
+            { "id": "az104-3.1", "description": "Configure VMs" },
+            { "id": "az104-3.2", "description": "Configure App Service plans" },
+            { "id": "az104-3.3", "description": "Configure Azure Container Instances" },
+            { "id": "az104-3.4", "description": "Configure Azure Kubernetes Service" }
+          ]
+        },
+        {
+          "id": "az104-networking",
+          "name": "Configure and manage virtual networks",
+          "weight_percent": 25,
+          "objectives": [
+            { "id": "az104-4.1", "description": "Configure virtual networks and subnets" },
+            { "id": "az104-4.2", "description": "Configure load balancing" },
+            { "id": "az104-4.3", "description": "Configure network security groups" },
+            { "id": "az104-4.4", "description": "Configure Azure DNS" }
+          ]
+        },
+        {
+          "id": "az104-monitoring",
+          "name": "Monitor and maintain Azure resources",
+          "weight_percent": 10,
+          "objectives": [
+            { "id": "az104-5.1", "description": "Monitor resources with Azure Monitor" },
+            { "id": "az104-5.2", "description": "Implement backup and recovery" }
+          ]
+        }
+      ]
+    },
+    "AZ-400": {
+      "code": "AZ-400",
+      "name": "Designing and Implementing Microsoft DevOps Solutions",
+      "provider": "Microsoft",
+      "level": "expert",
+      "description": "DevOps practices, CI/CD, IaC, monitoring, and collaboration",
+      "prerequisite_certifications": ["AZ-104 or AZ-204"],
+      "domains": [
+        {
+          "id": "az400-cicd",
+          "name": "Configure processes and communications",
+          "weight_percent": 15,
+          "objectives": []
+        },
+        {
+          "id": "az400-source",
+          "name": "Design and implement source control",
+          "weight_percent": 15,
+          "objectives": []
+        },
+        {
+          "id": "az400-pipelines",
+          "name": "Design and implement build and release pipelines",
+          "weight_percent": 40,
+          "objectives": []
+        },
+        {
+          "id": "az400-security",
+          "name": "Develop a security and compliance plan",
+          "weight_percent": 10,
+          "objectives": []
+        },
+        {
+          "id": "az400-instrumentation",
+          "name": "Implement an instrumentation strategy",
+          "weight_percent": 20,
+          "objectives": []
+        }
+      ]
+    },
+    "AI-102": {
+      "code": "AI-102",
+      "name": "Designing and Implementing a Microsoft Azure AI Solution",
+      "provider": "Microsoft",
+      "level": "associate",
+      "description": "Build, manage, and deploy AI solutions using Azure AI services",
+      "prerequisite_certifications": ["AZ-900 (recommended)"],
+      "domains": [
+        {
+          "id": "ai102-plan",
+          "name": "Plan and manage an Azure AI solution",
+          "weight_percent": 20,
+          "objectives": []
+        },
+        {
+          "id": "ai102-decision",
+          "name": "Implement decision support solutions",
+          "weight_percent": 15,
+          "objectives": []
+        },
+        {
+          "id": "ai102-vision",
+          "name": "Implement computer vision solutions",
+          "weight_percent": 20,
+          "objectives": []
+        },
+        {
+          "id": "ai102-nlp",
+          "name": "Implement natural language processing solutions",
+          "weight_percent": 25,
+          "objectives": []
+        },
+        {
+          "id": "ai102-conversation",
+          "name": "Implement knowledge mining and document intelligence",
+          "weight_percent": 20,
+          "objectives": []
+        }
+      ]
+    }
+  },
+  "usage_in_content": {
+    "description": "Each lesson/project/lab declares certification mappings in frontmatter",
+    "example": {
+      "certifications": [
+        { "code": "AZ-104", "objective_id": "az104-4.1", "weight": 5 },
+        { "code": "AZ-104", "objective_id": "az104-4.3", "weight": 3 }
+      ]
+    }
+  }
+}

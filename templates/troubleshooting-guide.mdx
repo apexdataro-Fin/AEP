@@ -1,0 +1,52 @@
+---
+id: "troubleshooting-id"
+title: "Troubleshooting: Topic"
+slug: /reference/troubleshooting/slug
+content_type: "troubleshooting-guide"
+difficulty: "intermediate"
+symptoms: ["Symptom 1", "Symptom 2"]
+services_affected: ["Service A"]
+tags: [troubleshooting, debugging]
+---
+
+import Debugging from "@site/src/components/Debugging";
+
+# Troubleshooting: [Topic]
+
+## Common Symptoms
+- Symptom 1
+- Symptom 2
+
+## Quick Diagnosis Flow
+
+```mermaid
+graph TD
+    A[Symptom] --> B{Check 1}
+    B -->|Pass| C{Check 2}
+    B -->|Fail| D[Fix 1]
+    C -->|Pass| E[All good]
+    C -->|Fail| F[Fix 2]
+```
+
+## Step-by-Step Diagnosis
+
+### Step 1: Check X
+```bash
+# Command to run
+```
+
+**If you see X:** Go to step 2
+**If you see Y:** Go to step 3
+
+### Step 2: Check Y
+
+## Common Resolutions
+
+| Problem | Solution |
+|---|---|
+| Issue 1 | Fix 1 |
+| Issue 2 | Fix 2 |
+
+## Prevention
+- How to prevent this issue
+- Monitoring to detect it early

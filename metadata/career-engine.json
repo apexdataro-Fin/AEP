@@ -1,0 +1,145 @@
+{
+  "version": "1.0.0",
+  "description": "Career Engine — career paths, progression, tickets, incidents, projects, architecture reviews, daily tasks, meetings, and performance reviews. Foundation for Career Mode.",
+  "career_levels": {
+    "junior": {
+      "id": "junior",
+      "label": "Junior Cloud Engineer",
+      "experience_years": "0-2",
+      "description": "Learning fundamentals, following documented procedures, supervised work",
+      "salary_benchmark": "$70K–$100K",
+      "certifications": ["AZ-900", "AWS Cloud Practitioner"],
+      "expected_skills": {
+        "cloud-fundamentals": "basic",
+        "compute-concepts": "basic",
+        "networking-concepts": "awareness"
+      },
+      "daily_activities": ["ticket_triage", "documentation_updates", "pairing_with_seniors", "training"],
+      "ticket_types": ["simple_provisioning", "access_requests", "minor_configuration_changes"]
+    },
+    "cloud_engineer": {
+      "id": "cloud_engineer",
+      "label": "Cloud Engineer",
+      "experience_years": "3-5",
+      "description": "Independent contributor, owns components, participates in on-call",
+      "salary_benchmark": "$100K–$140K",
+      "certifications": ["AZ-104", "AWS Solutions Architect Associate"],
+      "expected_skills": {
+        "compute-concepts": "intermediate",
+        "networking-concepts": "basic",
+        "iac-terraform": "intermediate"
+      },
+      "daily_activities": ["infrastructure_automation", "ci_cd_maintenance", "on_call_rotation", "code_reviews"],
+      "ticket_types": ["infrastructure_changes", "deployment_issues", "performance_degradation"]
+    },
+    "senior": {
+      "id": "senior",
+      "label": "Senior Cloud Engineer",
+      "experience_years": "5-8",
+      "description": "Technical leader, designs solutions, mentors juniors, leads incidents",
+      "salary_benchmark": "$140K–$190K",
+      "certifications": ["AZ-400", "AWS Solutions Architect Professional"],
+      "expected_skills": {
+        "networking-concepts": "intermediate",
+        "iac-terraform": "advanced",
+        "kubernetes": "intermediate"
+      },
+      "daily_activities": ["architecture_reviews", "incident_leadership", "mentoring", "capacity_planning"],
+      "ticket_types": ["major_incidents", "architecture_decisions", "security_incidents"]
+    },
+    "architect": {
+      "id": "architect",
+      "label": "Cloud Architect",
+      "experience_years": "8-12",
+      "description": "Defines technical strategy, makes build-vs-buy decisions, influences organization",
+      "salary_benchmark": "$180K–$240K",
+      "certifications": ["AZ-305", "AWS Solutions Architect Professional"],
+      "expected_skills": {
+        "networking-concepts": "advanced",
+        "kubernetes": "advanced",
+        "architecture": "expert"
+      },
+      "daily_activities": ["architecture_decision_records", "stakeholder_meetings", "cost_optimization", "technology_strategy"],
+      "ticket_types": ["system_design_reviews", "cost_optimization", "compliance_reviews"]
+    },
+    "principal": {
+      "id": "principal",
+      "label": "Principal Engineer",
+      "experience_years": "12+",
+      "description": "Organizational influence, sets engineering standards, shapes culture",
+      "salary_benchmark": "$220K–$300K+",
+      "certifications": [],
+      "expected_skills": {},
+      "daily_activities": ["engineering_strategy", "cross_team_architecture", "hiring", "industry_engagement"],
+      "ticket_types": []
+    }
+  },
+  "career_activities": {
+    "tickets": {
+      "description": "Simulated tickets that engineers encounter daily",
+      "categories": ["provisioning", "configuration", "incident", "access", "deployment", "security", "cost"],
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "description": "string",
+        "priority": "P1 | P2 | P3 | P4",
+        "career_level": "junior | cloud_engineer | senior",
+        "skills_tested": ["skill_ids"],
+        "time_estimate_minutes": "number",
+        "solution_guide": "string"
+      }
+    },
+    "incidents": {
+      "description": "Production incidents for simulation and learning",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "severity": "SEV1 | SEV2 | SEV3",
+        "scenario": "string",
+        "affected_services": ["string"],
+        "timeline": [{ "time": "string", "event": "string" }],
+        "root_cause": "string",
+        "resolution": "string",
+        "prevention": "string",
+        "lessons_learned": ["string"]
+      }
+    },
+    "projects": {
+      "description": "Career-building projects for portfolio",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "career_level": "string",
+        "duration_weeks": "number",
+        "technologies": ["string"],
+        "deliverables": ["string"],
+        "portfolio_value": "low | medium | high",
+        "review_criteria": ["string"]
+      }
+    },
+    "architecture_reviews": {
+      "description": "Architecture Decision Records (ADR) and review scenarios",
+      "schema": {
+        "id": "string",
+        "title": "string",
+        "context": "string",
+        "decision": "string",
+        "alternatives_considered": ["string"],
+        "consequences": "string",
+        "skills_tested": ["skill_ids"]
+      }
+    },
+    "performance_reviews": {
+      "description": "Simulated performance review scenarios",
+      "schema": {
+        "id": "string",
+        "career_level": "string",
+        "scenario": "string",
+        "strengths": ["string"],
+        "growth_areas": ["string"],
+        "action_items": ["string"],
+        "promotion_readiness": "boolean"
+      }
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "version": "1.0.0",
+  "description": "Complete Skill Tree for Cloud Engineering. Maps all skills, their relationships, career mappings, and certification mappings.",
+  "skill_categories": {
+    "foundations": {
+      "id": "foundations",
+      "label": "Cloud Foundations",
+      "description": "Core cloud computing concepts every engineer must know"
+    },
+    "compute": { "id": "compute", "label": "Compute", "description": "Virtual machines, containers, serverless" },
+    "networking": { "id": "networking", "label": "Networking", "description": "VPC, DNS, load balancing, CDN" },
+    "storage": { "id": "storage", "label": "Storage", "description": "Object, block, file, archival storage" },
+    "databases": { "id": "databases", "label": "Databases", "description": "SQL, NoSQL, caching, data modeling" },
+    "security": { "id": "security", "label": "Security & IAM", "description": "Identity, access, encryption, compliance" },
+    "iac": { "id": "iac", "label": "Infrastructure as Code", "description": "Terraform, CloudFormation, Pulumi, Ansible" },
+    "ci_cd": { "id": "ci_cd", "label": "CI/CD", "description": "Pipelines, automation, deployment strategies" },
+    "containers": { "id": "containers", "label": "Containers & K8s", "description": "Docker, Kubernetes, orchestration" },
+    "observability": { "id": "observability", "label": "Observability", "description": "Monitoring, logging, tracing, alerting" },
+    "architecture": { "id": "architecture", "label": "Architecture", "description": "System design, patterns, trade-offs" },
+    "cost": { "id": "cost", "label": "Cost Optimization", "description": "FinOps, budgeting, optimization" },
+    "ai_ml": { "id": "ai_ml", "label": "AI & ML in Cloud", "description": "ML services, AI infrastructure, LLM hosting" },
+    "soft_skills": { "id": "soft_skills", "label": "Professional Skills", "description": "Communication, leadership, incident management" }
+  },
+  "proficiency_levels": {
+    "awareness": { "level": 0, "label": "Awareness", "description": "Knows the concept exists" },
+    "basic": { "level": 1, "label": "Basic", "description": "Can follow documented procedures" },
+    "intermediate": { "level": 2, "label": "Intermediate", "description": "Can work independently on common tasks" },
+    "advanced": { "level": 3, "label": "Advanced", "description": "Can design solutions and mentor others" },
+    "expert": { "level": 4, "label": "Expert", "description": "Can define best practices and lead organization-wide initiatives" }
+  },
+  "skills": [
+    {
+      "id": "cloud-fundamentals",
+      "name": "Cloud Computing Fundamentals",
+      "category": "foundations",
+      "description": "Understanding of cloud service models (IaaS, PaaS, SaaS), deployment models, and shared responsibility model",
+      "parent_skills": [],
+      "child_skills": ["compute-concepts", "networking-concepts", "storage-concepts"],
+      "unlocked_skills": [],
+      "recommended_order": 1,
+      "career_mapping": {
+        "junior": "basic",
+        "cloud_engineer": "intermediate",
+        "senior": "advanced",
+        "architect": "expert"
+      },
+      "certification_mapping": {
+        "AZ-900": "core",
+        "AZ-104": "prerequisite"
+      },
+      "technology_mapping": ["aws-concepts", "azure-concepts", "gcp-concepts"],
+      "estimated_hours": 20
+    },
+    {
+      "id": "compute-concepts",
+      "name": "Compute Services",
+      "category": "compute",
+      "description": "VMs, containers, serverless functions, and choosing the right compute model",
+      "parent_skills": ["cloud-fundamentals"],
+      "child_skills": ["vm-management", "container-orchestration", "serverless-architecture"],
+      "unlocked_skills": ["auto-scaling", "high-availability-design"],
+      "recommended_order": 3,
+      "career_mapping": {
+        "junior": "basic",
+        "cloud_engineer": "intermediate",
+        "senior": "advanced",
+        "architect": "expert"
+      },
+      "certification_mapping": {
+        "AZ-104": "core",
+        "AZ-400": "applied"
+      },
+      "estimated_hours": 30
+    },
+    {
+      "id": "networking-concepts",
+      "name": "Cloud Networking",
+      "category": "networking",
+      "description": "VPC design, subnets, routing, DNS, load balancers, CDN, VPN, and hybrid connectivity",
+      "parent_skills": ["cloud-fundamentals"],
+      "child_skills": ["vpc-design", "hybrid-networking", "network-security"],
+      "unlocked_skills": ["multi-region-architecture"],
+      "recommended_order": 2,
+      "career_mapping": {
+        "junior": "awareness",
+        "cloud_engineer": "basic",
+        "senior": "intermediate",
+        "architect": "expert"
+      },
+      "certification_mapping": {
+        "AZ-104": "core",
+        "AZ-400": "applied"
+      },
+      "estimated_hours": 25
+    },
+    {
+      "id": "iac-terraform",
+      "name": "Infrastructure as Code — Terraform",
+      "category": "iac",
+      "description": "Declarative infrastructure management with Terraform, state management, modules, and CI/CD integration",
+      "parent_skills": ["cloud-fundamentals"],
+      "child_skills": ["terraform-modules", "terraform-cicd", "policy-as-code"],
+      "unlocked_skills": ["gitops", "multi-cloud-management"],
+      "recommended_order": 5,
+      "career_mapping": {
+        "cloud_engineer": "intermediate",
+        "senior": "advanced",
+        "architect": "expert"
+      },
+      "certification_mapping": {
+        "AZ-400": "core"
+      },
+      "estimated_hours": 35
+    },
+    {
+      "id": "kubernetes",
+      "name": "Kubernetes",
+      "category": "containers",
+      "description": "Container orchestration with Kubernetes — pods, services, deployments, networking, storage, security, and operators",
+      "parent_skills": ["compute-concepts", "container-orchestration"],
+      "child_skills": ["k8s-networking", "k8s-security", "k8s-operators", "service-mesh"],
+      "unlocked_skills": ["platform-engineering", "multi-cluster-management"],
+      "recommended_order": 8,
+      "career_mapping": {
+        "senior": "intermediate",
+        "architect": "advanced",
+        "platform_engineer": "expert"
+      },
+      "certification_mapping": {
+        "CKA": "core",
+        "CKS": "advanced"
+      },
+      "estimated_hours": 60
+    },
+    {
+      "id": "observability-stack",
+      "name": "Observability",
+      "category": "observability",
+      "description": "Monitoring, logging, distributed tracing, alerting, SLOs, error budgets, and observability culture",
+      "parent_skills": ["cloud-fundamentals"],
+      "child_skills": ["prometheus", "grafana", "elk-stack", "opentelemetry"],
+      "unlocked_skills": ["incident-response", "sre-practices"],
+      "recommended_order": 6,
+      "career_mapping": {
+        "cloud_engineer": "basic",
+        "senior": "intermediate",
+        "sre": "expert"
+      },
+      "estimated_hours": 25
+    }
+  ]
+}

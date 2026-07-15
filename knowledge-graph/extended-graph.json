@@ -1,0 +1,49 @@
+{
+  "version": "1.0.0",
+  "description": "Complete Knowledge Graph for the Cloud Engineering Learning OS. Maps all entities and their relationships.",
+  "domain": "cloud-engineering",
+  "node_types": {
+    "lesson": { "icon": "📖", "color": "#0ea5e9" },
+    "lab": { "icon": "🧪", "color": "#10b981" },
+    "project": { "icon": "🛠️", "color": "#f59e0b" },
+    "simulator": { "icon": "⚡", "color": "#8b5cf6" },
+    "skill": { "icon": "🎯", "color": "#ef4444" },
+    "technology": { "icon": "💻", "color": "#6366f1" },
+    "certification": { "icon": "📜", "color": "#ec4899" },
+    "career_role": { "icon": "👔", "color": "#14b8a6" },
+    "concept": { "icon": "🧠", "color": "#f97316" },
+    "interview_topic": { "icon": "💬", "color": "#84cc16" },
+    "architecture_pattern": { "icon": "🏗️", "color": "#a855f7" },
+    "incident_type": { "icon": "🚨", "color": "#dc2626" },
+    "cloud_service": { "icon": "☁️", "color": "#3b82f6" }
+  },
+  "relationship_types": {
+    "prerequisite_of": { "inverse": "depends_on", "description": "A must be learned before B" },
+    "teaches": { "inverse": "taught_by", "description": "Content teaches a skill" },
+    "tests": { "inverse": "tested_by", "description": "Content tests a skill" },
+    "implements": { "inverse": "implemented_by", "description": "Project/lab implements a concept" },
+    "prepares_for": { "inverse": "prepared_by", "description": "Content prepares for a certification" },
+    "relates_to": { "inverse": "relates_to", "description": "Bidirectional relationship between concepts" },
+    "part_of": { "inverse": "contains", "description": "Component belongs to a larger system" },
+    "maps_to": { "inverse": "mapped_from", "description": "Skill maps to a certification objective" },
+    "required_for": { "inverse": "requires", "description": "Skill is required for a career role" },
+    "uses": { "inverse": "used_by", "description": "Lesson uses a technology" },
+    "builds_on": { "inverse": "foundation_for", "description": "Advanced concept builds on foundational concept" },
+    "similar_to": { "inverse": "similar_to", "description": "Concepts are analogous across providers" }
+  },
+  "domains": {
+    "aws": { "label": "Amazon Web Services", "nodes": [], "edges": [] },
+    "azure": { "label": "Microsoft Azure", "nodes": [], "edges": [] },
+    "gcp": { "label": "Google Cloud Platform", "nodes": [], "edges": [] },
+    "cloud-agnostic": { "label": "Cloud-Agnostic Concepts", "nodes": [], "edges": [] }
+  },
+  "nodes": [],
+  "edges": [],
+  "visualization_config": {
+    "default_layout": "force-directed",
+    "group_by": "domain",
+    "max_visible_nodes": 100,
+    "zoom_levels": ["overview", "domain", "detail"],
+    "color_mode": "node_type"
+  }
+}

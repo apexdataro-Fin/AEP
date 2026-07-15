@@ -1,0 +1,114 @@
+{
+  "version": "1.0.0",
+  "description": "Five explanation layers for adaptive learning. Each lesson can be rendered at multiple depths. Not separate lessons — layers within one lesson.",
+  "levels": {
+    "simple": {
+      "id": "simple",
+      "label": "Simple",
+      "icon": "🌱",
+      "order": 1,
+      "description": "Explained like you're new to tech. Uses everyday analogies. Assumes zero cloud knowledge.",
+      "target_audience": ["career_changers", "students", "non_technical"],
+      "characteristics": {
+        "vocabulary": "Plain language, no jargon",
+        "detail": "Breadth over depth — what and why, not how",
+        "analogies": "Heavy use of real-world analogies",
+        "prerequisites": "None",
+        "max_concepts_per_lesson": 3,
+        "typical_reading_time_multiplier": 1.0
+      }
+    },
+    "core": {
+      "id": "core",
+      "label": "Core",
+      "icon": "📚",
+      "order": 2,
+      "description": "Standard cloud engineering explanation. Technical but accessible. The default level most learners use.",
+      "target_audience": ["junior_engineers", "cloud_engineers", "devops_engineers"],
+      "characteristics": {
+        "vocabulary": "Standard cloud terminology, acronyms defined",
+        "detail": "Balanced breadth and depth — how things work",
+        "analogies": "Technical analogies where helpful",
+        "prerequisites": "Basic cloud concepts",
+        "max_concepts_per_lesson": 5,
+        "typical_reading_time_multiplier": 1.5
+      }
+    },
+    "professional": {
+      "id": "professional",
+      "label": "Professional",
+      "icon": "⚡",
+      "order": 3,
+      "description": "Practical, production-oriented. Deep dives into configuration, trade-offs, and real-world patterns.",
+      "target_audience": ["senior_engineers", "devops_engineers", "sre"],
+      "characteristics": {
+        "vocabulary": "Industry-standard terminology, abbreviations acceptable",
+        "detail": "Deep configuration, CLI examples, API references",
+        "analogies": "Minimal — focuses on concrete examples",
+        "prerequisites": "2+ years cloud experience",
+        "max_concepts_per_lesson": 8,
+        "typical_reading_time_multiplier": 2.0
+      }
+    },
+    "production": {
+      "id": "production",
+      "label": "Production",
+      "icon": "🏭",
+      "order": 4,
+      "description": "War stories and battle-tested patterns. Incident reports, debugging narratives, monitoring setups, cost optimization.",
+      "target_audience": ["senior_engineers", "sre", "platform_engineers", "architects"],
+      "characteristics": {
+        "vocabulary": "Full technical depth, assumes operational experience",
+        "detail": "Incident timelines, debugging traces, performance data",
+        "analogies": "None — pure engineering detail",
+        "prerequisites": "5+ years production cloud experience",
+        "max_concepts_per_lesson": 10,
+        "typical_reading_time_multiplier": 3.0
+      }
+    },
+    "architect": {
+      "id": "architect",
+      "label": "Architect",
+      "icon": "🏛️",
+      "order": 5,
+      "description": "System-level thinking. Multi-cloud, organizational patterns, build-vs-buy decisions, 5-year horizon planning.",
+      "target_audience": ["cloud_architects", "principal_engineers", "cto", "vp_engineering"],
+      "characteristics": {
+        "vocabulary": "Executive-to-engineer translation, business context",
+        "detail": "Architecture decision records, system trade-offs, organizational impact",
+        "analogies": "Strategic frameworks and mental models",
+        "prerequisites": "Architecture experience, broad technology exposure",
+        "max_concepts_per_lesson": 6,
+        "typical_reading_time_multiplier": 2.5
+      }
+    }
+  },
+  "usage_in_content": {
+    "frontmatter_declaration": {
+      "description": "Each lesson declares which levels are available in frontmatter",
+      "example": {
+        "learning_levels": {
+          "has_simple": true,
+          "has_core": true,
+          "has_professional": true,
+          "has_production": false,
+          "has_architect": false
+        }
+      }
+    },
+    "mdx_syntax": {
+      "description": "Content blocks are wrapped in conditional level tags",
+      "example": ":::level simple\nExplain this like I'm five...\n:::\n\n:::level core\nThe standard explanation...\n:::\n\n:::level professional\nAdvanced configuration details...\n:::"
+    }
+  },
+  "future_ui": {
+    "description": "Learners can toggle between levels with a dropdown/tabs. AI can auto-select the appropriate level based on learner profile.",
+    "features": [
+      "Level selector dropdown in lesson header",
+      "Remember last chosen level in localStorage",
+      "AI auto-detection based on skill assessment",
+      "Print/export at specific level",
+      "Compare levels side-by-side (future)"
+    ]
+  }
+}

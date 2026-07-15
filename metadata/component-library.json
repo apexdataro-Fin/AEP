@@ -1,0 +1,205 @@
+{
+  "version": "1.0.0",
+  "description": "Component Library — reusable UI/content components for the Cloud Engineering Learning OS. These are embedded in MDX content using custom Docusaurus/React components.",
+  "components": {
+    "callout_blocks": [
+      {
+        "id": "Info",
+        "tag": "<Info>",
+        "description": "Additional context or background information",
+        "icon": "ℹ️",
+        "color": "blue",
+        "example": ":::info\nAdditional context about this concept.\n:::"
+      },
+      {
+        "id": "Warning",
+        "tag": "<Warning>",
+        "description": "Something to be careful about or potential pitfalls",
+        "icon": "⚠️",
+        "color": "amber",
+        "example": ":::warning\nBe careful when modifying production resources.\n:::"
+      },
+      {
+        "id": "Tip",
+        "tag": "<Tip>",
+        "description": "Practical advice or time-saving technique",
+        "icon": "💡",
+        "color": "green",
+        "example": ":::tip\nUse this shortcut to save time.\n:::"
+      },
+      {
+        "id": "BestPractice",
+        "tag": "<BestPractice>",
+        "description": "Industry best practice recommendation",
+        "icon": "✅",
+        "color": "emerald",
+        "example": ":::best-practice\nFollow the principle of least privilege.\n:::"
+      },
+      {
+        "id": "ProductionNote",
+        "tag": "<ProductionNote>",
+        "description": "Production-specific guidance, war stories, gotchas",
+        "icon": "🏭",
+        "color": "orange",
+        "example": ":::production-note\nIn production, we found that...\n:::"
+      },
+      {
+        "id": "ArchitectureNote",
+        "tag": "<ArchitectureNote>",
+        "description": "Architecture-level insight or trade-off discussion",
+        "icon": "🏛️",
+        "color": "purple",
+        "example": ":::architecture-note\nAt scale, this pattern introduces...\n:::"
+      },
+      {
+        "id": "SecurityNote",
+        "tag": "<SecurityNote>",
+        "description": "Security consideration or vulnerability awareness",
+        "icon": "🔒",
+        "color": "red",
+        "example": ":::security-note\nThis configuration exposes...\n:::"
+      },
+      {
+        "id": "CostNote",
+        "tag": "<CostNote>",
+        "description": "Cost implication or optimization opportunity",
+        "icon": "💰",
+        "color": "yellow",
+        "example": ":::cost-note\nThis resource costs approximately...\n:::"
+      }
+    ],
+    "interactive_blocks": [
+      {
+        "id": "InterviewQuestion",
+        "tag": "<InterviewQuestion>",
+        "description": "Practice interview question with revealable answer",
+        "icon": "💬",
+        "props": ["question", "expectedTopics", "difficulty", "careerLevel"]
+      },
+      {
+        "id": "Challenge",
+        "tag": "<Challenge>",
+        "description": "Hands-on challenge for the learner",
+        "icon": "🏆",
+        "props": ["title", "description", "timeEstimate", "hints"]
+      },
+      {
+        "id": "Exercise",
+        "tag": "<Exercise>",
+        "description": "Practice exercise with solution",
+        "icon": "✏️",
+        "props": ["title", "instructions", "solution", "showSolution"]
+      },
+      {
+        "id": "Quiz",
+        "tag": "<Quiz>",
+        "description": "Self-assessment quiz embedded in content",
+        "icon": "❓",
+        "props": ["questions", "showAnswers", "onComplete"]
+      },
+      {
+        "id": "Definition",
+        "tag": "<Definition>",
+        "description": "Term definition with optional tooltip",
+        "icon": "📖",
+        "props": ["term", "definition"]
+      },
+      {
+        "id": "Example",
+        "tag": "<Example>",
+        "description": "Real-world example illustrating a concept",
+        "icon": "📋",
+        "props": ["title", "context"]
+      },
+      {
+        "id": "Analogy",
+        "tag": "<Analogy>",
+        "description": "Everyday analogy to explain technical concepts",
+        "icon": "🪞",
+        "props": ["concept", "analogy"]
+      },
+      {
+        "id": "CheatSheet",
+        "tag": "<CheatSheet>",
+        "description": "Quick reference card for a topic",
+        "icon": "📝",
+        "props": ["title", "items"]
+      },
+      {
+        "id": "CommonMistake",
+        "tag": "<CommonMistake>",
+        "description": "Common error and how to avoid it",
+        "icon": "🚫",
+        "props": ["mistake", "correction"]
+      },
+      {
+        "id": "Debugging",
+        "tag": "<Debugging>",
+        "description": "Debugging scenario with diagnosis steps",
+        "icon": "🔍",
+        "props": ["scenario", "symptoms", "diagnosis", "solution"]
+      },
+      {
+        "id": "DecisionPoint",
+        "tag": "<DecisionPoint>",
+        "description": "Architecture decision point with trade-offs",
+        "icon": "🔀",
+        "props": ["options", "criteria", "recommendation"]
+      }
+    ],
+    "ai_blocks": [
+      {
+        "id": "AIPrompt",
+        "tag": "<AIPrompt>",
+        "description": "AI interaction prompt embedded in content",
+        "icon": "🤖",
+        "props": ["type", "context", "placeholder"]
+      },
+      {
+        "id": "AIExplanation",
+        "tag": "<AIExplanation>",
+        "description": "AI-generated deeper explanation",
+        "icon": "🤖",
+        "props": ["topic", "level"]
+      },
+      {
+        "id": "AIQuiz",
+        "tag": "<AIQuiz>",
+        "description": "AI-generated adaptive quiz",
+        "icon": "🤖",
+        "props": ["topic", "count", "difficulty"]
+      },
+      {
+        "id": "AIFlashcards",
+        "tag": "<AIFlashcards>",
+        "description": "AI-generated flashcard deck",
+        "icon": "🤖",
+        "props": ["topic", "count"]
+      }
+    ],
+    "diagram_blocks": [
+      {
+        "id": "MermaidBlock",
+        "tag": "<Mermaid>",
+        "description": "Mermaid diagram with level-specific rendering",
+        "icon": "📊",
+        "props": ["diagram", "caption", "level"]
+      }
+    ],
+    "simulator_blocks": [
+      {
+        "id": "SimulatorPlaceholder",
+        "tag": "<Simulator>",
+        "description": "Placeholder for future simulator embedding",
+        "icon": "⚡",
+        "props": ["type", "scenario", "config"]
+      }
+    ]
+  },
+  "implementation_status": {
+    "phase_2": "Specification complete. Components defined with props and examples.",
+    "phase_3": "React component implementation for all callout blocks and interactive blocks.",
+    "phase_4": "AI block implementation with backend integration.",
+    "phase_5": "Simulator block implementation with WebAssembly simulators."
+  }
+}

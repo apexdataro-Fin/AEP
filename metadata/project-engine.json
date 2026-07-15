@@ -1,0 +1,69 @@
+{
+  "version": "1.0.0",
+  "description": "Project Engine — reusable project framework for hands-on cloud engineering projects. Supports dependencies, deliverables, acceptance criteria, portfolio visibility, and future grading.",
+  "project_types": {
+    "guided": {
+      "id": "guided",
+      "label": "Guided Project",
+      "description": "Step-by-step instructions with expected outputs. Best for beginners.",
+      "difficulty_range": ["beginner", "intermediate"],
+      "duration_range_hours": { "min": 2, "max": 8 }
+    },
+    "challenge": {
+      "id": "challenge",
+      "label": "Challenge Project",
+      "description": "Requirements given, implementation left to learner. Tests problem-solving.",
+      "difficulty_range": ["intermediate", "advanced"],
+      "duration_range_hours": { "min": 4, "max": 24 }
+    },
+    "capstone": {
+      "id": "capstone",
+      "label": "Capstone Project",
+      "description": "Multi-week, end-to-end project demonstrating mastery of multiple domains.",
+      "difficulty_range": ["advanced", "expert"],
+      "duration_range_hours": { "min": 16, "max": 80 }
+    },
+    "production": {
+      "id": "production",
+      "label": "Production Project",
+      "description": "Mirrors real production environment. Includes SLA, monitoring, incident response.",
+      "difficulty_range": ["advanced", "architect"],
+      "duration_range_hours": { "min": 24, "max": 120 }
+    }
+  },
+  "project_schema": {
+    "id": "string (kebab-case)",
+    "title": "string",
+    "slug": "string (URL path)",
+    "type": "guided | challenge | capstone | production",
+    "summary": "string (one paragraph)",
+    "description": "string (longer description)",
+    "difficulty": "beginner | intermediate | advanced | expert | architect",
+    "estimated_time": { "hours": "number", "display": "string" },
+    "technologies": [{ "name": "string", "version": "string", "required": "boolean" }],
+    "prerequisites": {
+      "required_lessons": [{ "slug": "string", "title": "string" }],
+      "required_labs": [{ "slug": "string", "title": "string" }],
+      "required_skills": [{ "id": "string", "proficiency": "string" }]
+    },
+    "learning_objectives": [{ "id": "string", "description": "string" }],
+    "deliverables": {
+      "required": [{ "id": "string", "description": "string", "artifact_type": "code | config | diagram | document | demo" }],
+      "optional": [{ "id": "string", "description": "string", "artifact_type": "string" }]
+    },
+    "acceptance_criteria": [
+      { "id": "string", "criterion": "string", "verification_method": "manual | automated | peer_review" }
+    ],
+    "portfolio_value": "low | medium | high | showcase",
+    "certification_mapping": [{ "code": "string", "objective_id": "string" }],
+    "career_relevance": [{ "role": "string", "importance": "integer (1-5)" }],
+    "grading_rubric": [
+      { "criterion": "string", "weight": "number (0-1)", "levels": ["string array"] }
+    ],
+    "review_checklist": ["string array — peer review items"],
+    "extensions": ["string array — optional extensions for advanced learners"],
+    "cleanup_instructions": "string",
+    "cost_estimate": { "free_tier": "boolean", "estimated_cost": "string" },
+    "template_version": "string (semver)"
+  }
+}

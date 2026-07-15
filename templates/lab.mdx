@@ -1,0 +1,97 @@
+---
+id: "lab-id"
+title: "Lab Title"
+slug: /labs/lab-slug
+content_type: "lab"
+type: "guided"
+summary: "AI-friendly one-paragraph summary."
+description: "SEO meta description."
+difficulty: "beginner"
+estimated_time:
+  minutes: 45
+  display: "45 min"
+status: "draft"
+scenario:
+  context: "Real-world scenario"
+  role: "Your role in this scenario"
+  objectives:
+    - "Objective 1"
+prerequisites:
+  required_lessons: []
+  required_skills: []
+  tools: ["az cli", "kubectl"]
+environment:
+  type: "sandbox"
+  cleanup_instructions: "Delete resource group"
+tasks:
+  - id: "task-1"
+    title: "Task Title"
+    description: "Task description"
+    time_estimate_minutes: 10
+    hints:
+      - trigger: "Stuck on step 2"
+        hint: "Check the resource group name"
+    verification:
+      method: "cli"
+      expected_output: "expected output"
+    solution: "Solution revealed after completion"
+troubleshooting:
+  - problem: "Common problem"
+    solution: "Solution"
+check_your_understanding:
+  - question: "Question?"
+    answer: "Answer"
+cost_estimate:
+  free_tier_safe: true
+  max_cost: "$0"
+tags: [lab, keyword]
+---
+
+import Info from "@site/src/components/Info";
+import Warning from "@site/src/components/Warning";
+import Tip from "@site/src/components/Tip";
+
+# Lab Title
+
+## Scenario
+You are a [role]. You need to [task].
+
+## Objectives
+1. Objective 1
+
+## Prerequisites
+- Tool 1
+- [Lesson](/lessons/prereq)
+
+## Environment
+<Info>This lab runs in a sandbox environment.</Info>
+
+## Tasks
+
+### Task 1: Title
+1. Step one
+2. Step two
+
+**Expected Output:**
+```
+expected output
+```
+
+<Tip>Pro tip: shortcut or technique.</Tip>
+
+### Task 2: Title
+1. Step one
+
+## Troubleshooting
+| Problem | Solution |
+|---|---|
+| Issue | Fix |
+
+## Check Your Understanding
+1. Question?
+2. Question?
+
+## Cleanup
+```bash
+# Cleanup commands
+```
