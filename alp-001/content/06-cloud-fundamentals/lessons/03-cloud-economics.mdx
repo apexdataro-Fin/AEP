@@ -1,0 +1,112 @@
+---
+id: "cld-03-cloud-economics"
+title: "Cloud Economics & Business Case"
+slug: /cloud-engineering/06-cloud-fundamentals/cloud-economics
+content_type: "lesson"
+summary: "Understand CapEx vs OpEx, TCO analysis, economies of scale, and how to build the business case for cloud migration."
+description: "Cloud economics: CapEx vs OpEx, TCO analysis, economies of scale, and building the business case for cloud migration."
+difficulty: "beginner"
+estimated_time:
+  minutes: 30
+  hours: 0.5
+  display: "30 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+skills:
+  - id: "sk-cloud-economics"
+    name: "Cloud Economics"
+    proficiency: "basic"
+certifications:
+  - code: "AZ-900"
+    objective_id: "az900-1.2"
+    weight: 5
+learning_objectives:
+  - id: "obj-1"
+    description: "Differentiate between CapEx and OpEx with cloud-specific examples"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-2"
+    description: "Explain economies of scale and how cloud providers pass savings to customers"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-3"
+    description: "Identify the key factors in a cloud TCO analysis"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "Why does cloud computing shift spending from CapEx to OpEx?"
+    answer: "Cloud eliminates upfront hardware investment. You pay monthly for what you use instead of buying servers, which shifts costs from capital expenditure (depreciating asset) to operational expenditure (monthly service fee). This improves cash flow and reduces financial risk."
+    difficulty: "medium"
+tags: [cloud-fundamentals, AZ-900, economics, CapEx, OpEx, TCO]
+search_keywords: [cloud economics, CapEx vs OpEx, TCO analysis, cloud business case, AZ-900]
+---
+
+# Cloud Economics & Business Case
+
+:::level simple
+
+**Buying servers is like buying a car.** You pay $30,000 upfront, then pay for gas, insurance, and maintenance every month. The car loses value over time. If you drive less, you still pay the same.
+
+**Cloud is like using Uber.** You pay per ride. No upfront cost. No maintenance. No insurance. If you don't go anywhere, you pay nothing. If you need a bigger car, you order an SUV.
+
+That's CapEx (buying the car) vs OpEx (paying per ride). Cloud shifts IT spending from buying to renting — and that changes everything about how companies budget and operate.
+
+:::
+
+:::level core
+
+## CapEx vs OpEx
+
+| | CapEx (Capital Expenditure) | OpEx (Operational Expenditure) |
+|---|---|---|
+| **What** | Upfront investment in assets | Ongoing operational costs |
+| **Example** | Buy servers for $500K | Pay Azure $8K/month |
+| **Accounting** | Depreciated over 3-5 years | Deducted in current year |
+| **Cash Flow** | Large upfront hit | Predictable monthly cost |
+| **Flexibility** | Locked into capacity | Scale up/down instantly |
+
+## Economies of Scale
+
+```mermaid
+graph LR
+    A[Microsoft buys millions of servers] --> B[Lower per-unit cost]
+    B --> C[Lower prices for customers]
+    C --> D[More customers]
+    D --> A
+    
+    style A fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style C fill:#10b981,stroke:#059669,color:#fff
+```
+
+Cloud providers achieve economies of scale impossible for individual companies. Microsoft operates 200+ datacenters worldwide. Their per-server costs (power, cooling, networking, security, staffing) are a fraction of what any single company can achieve. Those savings flow to customers.
+
+:::
+
+## CloudNova: The Migration Business Case
+
+When CloudNova evaluated moving from on-premises to Azure:
+
+| Factor | On-Premises | Azure |
+|---|---|---|
+| Upfront cost | $850,000 | $0 |
+| Monthly cost | $12,000 | $8,400 |
+| Provisioning time | 4-8 weeks | 5 minutes |
+| Utilization rate | 22% | 65% |
+| DR capability | Manual, 48h RTO | Automated, 4h RTO |
+
+**Annual savings:** $43,200 in operational costs + elimination of $170K/year in depreciation = **$213K/year savings.**
+
+---
+
+## Key Takeaways
+
+- **CapEx = buy assets (servers). OpEx = pay for usage (cloud).**
+- **Cloud OpEx is flexible, predictable, and tax-efficient.**
+- **Economies of scale mean cloud providers can always offer better per-unit costs.**
+- **TCO must include hardware, power, cooling, staffing, and opportunity cost — not just server prices.**
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

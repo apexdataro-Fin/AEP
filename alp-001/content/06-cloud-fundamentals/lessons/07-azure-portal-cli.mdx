@@ -1,0 +1,109 @@
+---
+id: "cld-07-azure-portal"
+title: "Azure Portal & CLI Walkthrough"
+slug: /cloud-engineering/06-cloud-fundamentals/azure-portal-cli
+content_type: "lesson"
+summary: "Hands-on walkthrough of the Azure Portal, Cloud Shell, and Azure CLI. Learn to navigate, create resources, and automate from day one."
+description: "Azure Portal, Cloud Shell, and CLI walkthrough for beginners — navigate, create resources, and automate."
+difficulty: "beginner"
+estimated_time:
+  minutes: 35
+  hours: 0.58
+  display: "35 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+certifications:
+  - code: "AZ-900"
+    objective_id: "az900-3.3"
+    weight: 6
+learning_objectives:
+  - id: "obj-1"
+    description: "Navigate the Azure Portal and locate key services"
+    category: "skill"
+    bloom_level: "apply"
+  - id: "obj-2"
+    description: "Use Azure CLI to create and query resources"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What's the difference between Azure Portal and Azure CLI? When would you use each?"
+    answer: "Portal: GUI for exploration, learning, and one-off tasks. CLI: Command-line for automation, scripting, and CI/CD pipelines. Use CLI for anything you do more than once."
+    difficulty: "easy"
+tags: [cloud-fundamentals, AZ-900, azure-portal, azure-cli, hands-on]
+search_keywords: [azure portal tutorial, azure cli, cloud shell, az commands, AZ-900]
+---
+
+# Azure Portal & CLI Walkthrough
+
+:::level simple
+
+**The Azure Portal is a website where you manage all your cloud resources.** Point, click, create. It's great for learning and exploring.
+
+**The Azure CLI is a command-line tool** that lets you do the same things by typing commands. It's great for automation and doing the same task across 50 resources at once.
+
+Cloud engineers use both — Portal for exploration, CLI for automation.
+
+:::
+
+:::level core
+
+## Portal Navigation
+
+```mermaid
+graph TD
+    A[portal.azure.com] --> B[Dashboard]
+    B --> C[Create a Resource]
+    B --> D[Resource Groups]
+    B --> E[All Resources]
+    B --> F[Cost Management]
+    B --> G[Microsoft Entra ID]
+    
+    style A fill:#0ea5e9,stroke:#0284c7,color:#fff
+```
+
+## Azure CLI Essentials
+
+```bash
+# Login
+az login
+
+# List your subscriptions
+az account list --output table
+
+# Create a resource group
+az group create --name learning-rg --location eastus
+
+# List all resources in a group
+az resource list --resource-group learning-rg --output table
+
+# Delete everything (careful!)
+az group delete --name learning-rg --yes
+```
+
+## CloudNova at the CLI
+
+At CloudNova, nobody provisions production resources through the Portal — everything is Terraform and CLI. But for learning, exploration, and debugging, the Portal is your friend.
+
+```bash
+# CloudNova's daily CLI usage
+az vm list --output table                    # Check all VMs
+az monitor metrics list --resource ...        # Check metrics
+az keyvault secret show --name db-password    # Retrieve secrets
+```
+
+:::
+
+---
+
+## Key Takeaways
+
+- **Portal = exploration and learning. CLI = automation and scripting.**
+- **Cloud Shell** gives you a browser-based terminal with Azure CLI pre-installed.
+- **az commands** follow a consistent pattern: `az <service> <action> <parameters>`.
+- At CloudNova: Portal for debugging, CLI for automation, Terraform for infrastructure.
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

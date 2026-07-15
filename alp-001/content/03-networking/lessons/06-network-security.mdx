@@ -1,0 +1,341 @@
+---
+id: net-06
+title: "Network Security & Firewalls"
+difficulty: intermediate
+estimated_time: "50 min"
+prerequisites: ["net-01", "net-04"]
+skills: ["network-security", "nsg", "firewall", "ddos", "waf"]
+technologies: ["azure-nsg", "azure-firewall", "waf", "ddos-protection"]
+certifications: ["az-104", "az-500"]
+knowledge_nodes: ["nsg-rules", "defense-in-depth", "microsegmentation", "waf-rules"]
+review_schedule: "3d,7d,30d"
+author: "ARES Engineering"
+last_updated: "2026-07-15"
+---
+
+import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+
+# Network Security & Firewalls
+
+<Info>
+
+**Learning Objectives**
+- Design NSG rules with least-privilege principle
+- Layer Azure Firewall, NSGs, and WAF for defense-in-depth
+- Detect and respond to DDoS attacks in Azure
+- Implement microsegmentation in Kubernetes and VMs
+
+**Prerequisites:** TCP/IP, CIDR, Load Balancing  
+**Estimated Time:** 50 minutes  
+**Difficulty:** Intermediate
+
+</Info>
+
+---
+
+## Simple Explanation
+
+Your cloud network is like an office building:
+
+- **NSG (Network Security Group):** The lock on each office door. "Only HR can enter this room."
+- **Azure Firewall:** The security desk in the lobby. "Nobody enters without a badge check."
+- **WAF (Web Application Firewall):** The metal detector. "Scanning every bag for SQL injection and XSS."
+- **DDoS Protection:** The bouncer. "Too many people at once? I'm blocking the crowd."
+
+<Analogy>
+
+**The Castle Defense Analogy**
+
+<Mermaid>
+graph LR
+    A["🏰 Moat (DDoS Protection)<br/>Absorbs volumetric attacks"] --> B["🏰 Outer Wall (Azure Firewall)<br/>Blocks known threats, filters by FQDN"]
+    B --> C["🏰 Inner Gate (NSG)<br/>Port-level rules per subnet"]
+    C --> D["🏰 Room Guard (WAF)<br/>Inspects HTTP layer for exploits"]
+
+    style A fill:#38bdf8,color:#000
+    style B fill:#ef4444,color:#fff
+    style C fill:#f59e0b,color:#000
+    style D fill:#8b5cf6,color:#fff
+</Mermaid>
+
+Each layer stops different attacks. No single layer is enough.
+
+</Analogy>
+
+---
+
+## Core Explanation
+
+### NSG Rules: Priority and Evaluation
+
+NSG rules are evaluated in **priority order** (lowest number wins). The last rule (65500) is always the default "Deny All."
+
+<Mermaid>
+graph TD
+    Packet["📦 Incoming Packet<br/>src: 10.0.2.5:443 → dst: 10.0.1.10:80"]
+    
+    Packet --> Rule100{"Rule 100<br/>Allow 10.0.2.0/24:80?"}
+    Rule100 -->|"✅ Match! ALLOW"| Pass["Packet passes"]
+    Rule100 -->|No match| Rule200{"Rule 200<br/>Deny 10.0.2.0/24:22?"}
+    Rule200 -->|No match| Rule300{"Rule 300<br/>Allow 10.0.1.0/24:80?"}
+    Rule300 -->|"❌ No match (wrong src)"| Rule65500{"Default: DenyAllInbound"}
+    Rule65500 -->|"❌ Deny"| Drop["Packet dropped 🔒"]
+
+    style Pass fill:#22c55e,color:#000
+    style Drop fill:#ef4444,color:#fff
+</Mermaid>
+
+**Key NSG facts:**
+- Rules are **stateful**: allow inbound → return traffic automatically allowed
+- Priority: 100-4096 (lower = higher priority)
+- Service Tags: `Internet`, `AzureLoadBalancer`, `VirtualNetwork` are built-in
+- Application Security Groups (ASGs): group VMs by role, not IP
+
+<Example>
+
+```bash
+# Create NSG with least-privilege rules
+az network nsg create --name web-nsg --resource-group cloudnova-prod
+
+# Rule 100: Allow HTTP from anywhere
+az network nsg rule create --name AllowHTTP --nsg-name web-nsg \
+  --priority 100 --direction Inbound \
+  --source-address-prefixes Internet \
+  --destination-port-ranges 80 443 --protocol Tcp --access Allow
+
+# Rule 200: Allow SSH ONLY from bastion subnet
+az network nsg rule create --name AllowSSH-from-Bastion --nsg-name web-nsg \
+  --priority 200 --direction Inbound \
+  --source-address-prefixes 10.0.0.32/27 \
+  --destination-port-ranges 22 --protocol Tcp --access Allow
+
+# Rule 300: Deny all other inbound (explicit — default already does this)
+az network nsg rule create --name DenyAllInbound --nsg-name web-nsg \
+  --priority 4000 --direction Inbound \
+  --source-address-prefixes '*' \
+  --destination-port-ranges '*' --protocol '*' --access Deny
+```
+
+</Example>
+
+---
+
+## Professional Explanation
+
+### Defense-in-Depth: The Complete Picture
+
+<Mermaid>
+graph TB
+    subgraph "Layer 1: DDoS Protection"
+        DDoS["Azure DDoS Protection Standard<br/>Volumetric + Protocol attacks"]
+    end
+    
+    subgraph "Layer 2: Edge Security"
+        WAF_Edge["Front Door WAF<br/>OWASP Top 10, bot protection"]
+    end
+    
+    subgraph "Layer 3: Perimeter"
+        AzFW["Azure Firewall<br/>FQDN filtering, threat intelligence"]
+    end
+    
+    subgraph "Layer 4: Subnet"
+        NSG_Web["NSG: Web Tier<br/>Allow: 80, 443<br/>Deny: all else"]
+        NSG_App["NSG: App Tier<br/>Allow: 8080 from Web<br/>Deny: Internet, SSH"]
+        NSG_Data["NSG: Data Tier<br/>Allow: 1433 from App<br/>Deny: Internet, Web, SSH"]
+    end
+    
+    subgraph "Layer 5: Endpoint"
+        PrivateEP["Private Endpoints<br/>No public exposure"]
+    end
+    
+    DDoS --> WAF_Edge
+    WAF_Edge --> AzFW
+    AzFW --> NSG_Web
+    NSG_Web --> NSG_App
+    NSG_App --> NSG_Data
+    NSG_Data --> PrivateEP
+</Mermaid>
+
+### NSG vs Azure Firewall: When to Use Which
+
+| Concern | NSG | Azure Firewall |
+|---------|-----|---------------|
+| **Scope** | Subnet or NIC | Hub VNet (centralized) |
+| **Filtering** | IP, port, protocol | IP, port, FQDN, threat intel |
+| **Logging** | NSG flow logs | Firewall logs + Log Analytics |
+| **Cost** | Free | $900+/month (Standard) |
+| **State** | Stateful (5-tuple) | Stateful + application-level |
+| **Best for** | Granular subnet rules | Central egress/ingress control |
+
+<SecurityNote>
+
+**Rule of thumb:** NSGs for east-west (subnet-to-subnet) and basic filtering. Azure Firewall for north-south (Internet ↔ VNet), FQDN filtering, and centralized logging. Use both — they complement, not replace.
+
+</SecurityNote>
+
+---
+
+## Production Explanation
+
+### CloudNova Security Architecture in Action
+
+<Mermaid>
+graph TB
+    subgraph "Internet"
+        User["Legitimate User"]
+        Attacker["⚠️ Attacker"]
+    end
+    
+    DDoS["Azure DDoS Protection<br/>Blocks: 500 Gbps SYN flood → dropped at edge"]
+    
+    FD["Front Door + WAF<br/>Blocks: SQLi in query params<br/>Blocks: XSS in request body<br/>Rate limits: >100 req/s per IP"]
+    
+    subgraph "Hub VNet"
+        AzFW["Azure Firewall<br/>Allows: *.cloudnova.io only<br/>Blocks: known malicious IPs<br/>DNAT: 443 → App Gateway"]
+    end
+    
+    subgraph "Spoke: Production"
+        AG["App Gateway<br/>TLS termination + WAF"]
+        WebNSG["NSG - Web<br/>80,443 from AG only"]
+        AppNSG["NSG - App<br/>8080 from Web only<br/>NO Internet, NO SSH"]
+    end
+    
+    User --> DDoS
+    Attacker --> DDoS
+    DDoS --> FD
+    FD --> AzFW
+    AzFW --> AG
+    AG --> WebNSG
+    WebNSG --> AppNSG
+</Mermaid>
+
+<ProductionNote>
+
+### CloudNova: The RDP Incident
+
+**Incident #IN-601 — "Unauthorized RDP access detected"**
+
+A developer opened RDP (port 3389) to `0.0.0.0/0` on a test VM "just for 10 minutes." They forgot to close it. Within 6 hours, Azure Security Center detected brute-force attempts from 47 different IP addresses in 5 countries.
+
+**Fix implemented:**
+1. **Azure Policy** to deny NSG rules with source `0.0.0.0/0` and destination ports 22/3389
+2. **Just-in-Time (JIT) VM Access** — request temporary access with justification
+3. **Bastion** for all VM access — no public RDP/SSH ever
+4. **Automated remediation** — Logic App that removes allow-all rules within 5 minutes
+
+</ProductionNote>
+
+---
+
+## Architect Explanation
+
+### Microsegmentation
+
+Instead of one big "internal network," every workload gets its own security boundary:
+
+```
+❌ Old way: One subnet, all VMs can talk to each other
+   ┌──────────────────────────────────┐
+   │ Web VM → App VM → DB VM  (all open internally) │
+   └──────────────────────────────────┘
+
+✅ Microsegmentation:
+   ┌────┐  ┌──────┐  ┌────┐
+   │Web │→ │ App  │→ │ DB │  (only specific ports between specific tiers)
+   └────┘  └──────┘  └────┘
+   No Web→DB direct, No App→Internet, No external→App
+```
+
+**Implementation in Azure:**
+1. NSGs at subnet level (broad rules)
+2. ASGs for application-level groups
+3. Azure Policy to enforce NSG on every subnet
+4. Network Watcher to verify actual flows match expected rules
+
+---
+
+## Hands-On Exercise
+
+<Exercise>
+
+### Lab: Detect and Block a Port Scan
+
+```bash
+# 1. Enable NSG flow logs
+az network watcher flow-log create \
+  --resource-group cloudnova-lab \
+  --nsg web-nsg \
+  --storage-account cloudnovalogs
+
+# 2. Simulate a port scan (from authorized test VM)
+for port in 22 80 443 3389 8080 9090; do
+  nc -zv -w1 10.0.1.10 $port
+done
+
+# 3. Query flow logs for the scan pattern
+# (Check Log Analytics after 5-10 min ingestion delay)
+# | where SrcIP == "10.0.2.5" and DestPort in (22, 3389, 8080, 9090)
+# | where FlowStatus == "D" (Denied)
+```
+
+</Exercise>
+
+---
+
+<Challenge>
+
+### Challenge: Design a Zero-Trust Network for CloudNova
+
+CloudNova's current network allows all traffic within VNets. Management wants a zero-trust architecture.
+
+**Constraints:**
+- 47 microservices across 3 environments (prod, staging, dev)
+- Must not break existing application communication
+- Budget for implementation: 2 sprints (4 weeks)
+
+**Deliverable:** Migration plan with phases, NSG rule design for each tier, testing strategy.
+
+</Challenge>
+
+---
+
+<Flashcard
+  front="What's the difference between an NSG and Azure Firewall?"
+  back="NSG = subnet/NIC-level, free, IP+port filtering with 5-tuple state. Azure Firewall = VNet-level centralized appliance, paid ($900+/mo), adds FQDN filtering, threat intelligence, SNAT, and centralized logging. Use NSG for granular subnet rules, Firewall for centralized egress control."
+/>
+
+<Flashcard
+  front="How do NSG priority numbers work?"
+  back="Lower number = higher priority (100 beats 200). Rules evaluated in order — first match wins. Default rules at 65000+ always come last (AllowVnetInBound, AllowAzureLoadBalancerInBound, DenyAllInBound). You can't override them, only insert higher-priority rules before them."
+/>
+
+<Quiz
+  question="An NSG has: Rule 100: Allow HTTP from Internet. Rule 200: Deny all from 203.0.113.5. What happens to HTTP from 203.0.113.5?"
+  options={[
+    "Denied — explicit deny beats implicit allow",
+    "Allowed — Rule 100 is higher priority and matches first",
+    "Depends on whether the traffic is inbound or outbound",
+    "Trick question — NSGs can't block specific IPs"
+  ]}
+  correct={0}
+  explanation="Wait — Rule 100 has higher priority! It matches first and allows the traffic. The packet never reaches Rule 200. To block a specific IP, the Deny rule MUST have a lower priority number than the Allow rule. This is the #1 NSG design mistake."
+/>
+
+---
+
+<CheatSheet title="Network Security Quick Reference">
+
+| Tool | Protects Against | Cost | Key Features |
+|------|-----------------|------|-------------|
+| **NSG** | Unauthorized port access | Free | IP/port, stateful, subnet/NIC |
+| **Azure Firewall** | Egress, FQDN-based threats | $900+/mo | FQDN, threat intel, SNAT |
+| **WAF (App GW)** | OWASP Top 10, bots | Included in AG | SQLi, XSS, CRS rules |
+| **Front Door WAF** | Edge-level HTTP attacks | Included in FD | Global, bot management |
+| **DDoS Protection** | Volumetric + protocol | $2,944/mo | Auto-mitigation, cost guarantee |
+| **Private Endpoints** | Public exposure | Per endpoint | No public IP, Azure backbone |
+
+</CheatSheet>
+
+---
+
+**Next:** [Hybrid & Multi-Cloud Networking](./07-hybrid-networking) • **Previous:** [Load Balancing Patterns](./05-load-balancing)

@@ -1,0 +1,82 @@
+---
+id: "cld-06-well-architected"
+title: "Well-Architected Framework"
+slug: /cloud-engineering/06-cloud-fundamentals/well-architected-framework
+content_type: "lesson"
+summary: "Master the 5 pillars of the Azure Well-Architected Framework: Operational Excellence, Security, Reliability, Performance Efficiency, and Cost Optimization."
+description: "Azure Well-Architected Framework: 5 pillars for building secure, reliable, efficient, and cost-optimized cloud workloads."
+difficulty: "beginner"
+estimated_time:
+  minutes: 30
+  hours: 0.5
+  display: "30 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+certifications:
+  - code: "AZ-900"
+    objective_id: "az900-3.3"
+    weight: 8
+learning_objectives:
+  - id: "obj-1"
+    description: "List the 5 pillars of the Well-Architected Framework"
+    category: "concept"
+    bloom_level: "remember"
+  - id: "obj-2"
+    description: "Apply each pillar to evaluate a cloud architecture design"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What are the 5 pillars of the Azure Well-Architected Framework?"
+    answer: "1. Operational Excellence — automate operations, document runbooks. 2. Security — protect data, manage identity, control access. 3. Reliability — design for failure, implement DR. 4. Performance Efficiency — right-size resources, scale dynamically. 5. Cost Optimization — eliminate waste, use reserved capacity."
+    difficulty: "medium"
+tags: [cloud-fundamentals, AZ-900, well-architected-framework, best-practices]
+search_keywords: [well-architected framework, azure pillars, cloud best practices, AZ-900]
+---
+
+# Well-Architected Framework
+
+:::level simple
+
+**Building in the cloud without a framework is like building a house without blueprints.**
+
+The Well-Architected Framework is your blueprint. It has 5 pillars — 5 areas you must think about for every workload. Skip any pillar and your house (or cloud deployment) will eventually have problems.
+
+:::
+
+:::level core
+
+## The 5 Pillars
+
+```mermaid
+graph TD
+    WAF[Well-Architected Framework] --> OE[1. Operational Excellence]
+    WAF --> SEC[2. Security]
+    WAF --> REL[3. Reliability]
+    WAF --> PERF[4. Performance Efficiency]
+    WAF --> COST[5. Cost Optimization]
+    
+    style WAF fill:#0ea5e9,stroke:#0284c7,color:#fff
+```
+
+| Pillar | Key Question | CloudNova Practice |
+|---|---|---|
+| **Operational Excellence** | How do we run this reliably? | IaC, CI/CD, runbooks, monitoring |
+| **Security** | How do we protect data and systems? | Zero Trust, encryption, IAM, compliance |
+| **Reliability** | How does this survive failures? | Multi-zone, auto-scaling, DR plan |
+| **Performance Efficiency** | How do we use resources well? | Right-sizing, caching, CDN |
+| **Cost Optimization** | Are we paying the right amount? | Reserved instances, waste elimination, tagging |
+
+:::
+
+## Key Takeaways
+
+- **Every architecture decision should reference the 5 pillars.**
+- **The framework is a conversation tool**, not a checklist.
+- **Trade-offs are normal** — security vs cost, performance vs reliability.
+- **Review architecture against the framework quarterly.**
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

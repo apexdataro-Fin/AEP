@@ -1,0 +1,365 @@
+---
+id: net-03
+title: "HTTP/HTTPS & TLS Deep Dive"
+difficulty: intermediate
+estimated_time: "50 min"
+prerequisites: ["net-01", "net-02"]
+skills: ["http", "https", "tls", "certificates", "web-security"]
+technologies: ["http", "https", "tls", "ssl", "certificates", "openssl"]
+certifications: ["az-104", "az-900"]
+knowledge_nodes: ["http-methods", "http-status-codes", "tls-handshake", "certificate-chain", "mtls"]
+review_schedule: "3d,7d,30d"
+author: "ARES Engineering"
+last_updated: "2026-07-15"
+---
+
+import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+
+# HTTP/HTTPS & TLS Deep Dive
+
+<Info>
+
+**Learning Objectives**
+- Explain HTTP request/response structure and status codes
+- Diagram the TLS 1.3 handshake step by step
+- Debug certificate chain issues in production
+- Configure HTTPS on Azure App Service and Application Gateway
+
+**Prerequisites:** TCP/IP, DNS  
+**Estimated Time:** 50 minutes  
+**Difficulty:** Intermediate
+
+</Info>
+
+---
+
+## Simple Explanation
+
+HTTP is the language your browser speaks with servers. It's like ordering at a restaurant:
+
+1. **You (browser):** "GET me the menu" (HTTP request)
+2. **Waiter (server):** "200 OK, here's the menu" (HTTP response with content)
+
+HTTPS is the same conversation, but in a soundproof booth with ID checks — nobody can eavesdrop or pretend to be the waiter.
+
+<Analogy>
+
+**HTTP vs HTTPS Analogy**
+- **HTTP:** Sending a postcard — anyone handling it can read the message.
+- **HTTPS:** Sending a letter in a locked briefcase. Only the recipient has the key.
+
+The "lock" is TLS encryption. The "ID check" is the certificate — proving the server really is `cloudnova.io`, not an impostor.
+
+</Analogy>
+
+---
+
+## Core Explanation
+
+### HTTP Request/Response Structure
+
+```
+GET /api/inventory?sku=ABC123 HTTP/1.1
+Host: api.cloudnova.io
+Authorization: Bearer eyJhbGciOi...
+Accept: application/json
+User-Agent: CloudNova-CLI/2.1
+
+[BODY — optional]
+```
+
+| Method | Purpose | Idempotent? |
+|--------|---------|------------|
+| **GET** | Retrieve resource | Yes |
+| **POST** | Create resource | No |
+| **PUT** | Replace resource | Yes |
+| **PATCH** | Partial update | No |
+| **DELETE** | Remove resource | Yes |
+| **HEAD** | Get headers only | Yes |
+| **OPTIONS** | CORS preflight | Yes |
+
+### Status Codes You Actually Need
+
+| Code | Meaning | When You'll See It |
+|------|---------|-------------------|
+| **200 OK** | Success | Normal operation |
+| **201 Created** | Resource created | POST succeeded |
+| **204 No Content** | Success, no body | DELETE succeeded |
+| **301 Moved Permanently** | URL changed forever | Old API → new API |
+| **302 Found** | Temporary redirect | Login redirect |
+| **400 Bad Request** | Client sent bad data | Validation error |
+| **401 Unauthorized** | Missing/invalid auth | Token expired |
+| **403 Forbidden** | Authenticated but not allowed | RBAC blocked |
+| **404 Not Found** | Resource doesn't exist | Wrong URL / deleted |
+| **429 Too Many Requests** | Rate limited | Throttling |
+| **500 Internal Server Error** | Server crashed | Bug in code |
+| **502 Bad Gateway** | Upstream failure | Backend down |
+| **503 Service Unavailable** | Overloaded | Scaling event |
+
+---
+
+## Professional Explanation
+
+### TLS 1.3 Handshake (Simplified)
+
+<Mermaid>
+sequenceDiagram
+    participant Client
+    participant Server
+    
+    Note over Client,Server: TLS 1.3 — 1-RTT handshake
+    
+    Client->>Server: ClientHello<br/>(supported cipher suites, key share)
+    Note right of Server: Server selects<br/>cipher + computes<br/>session key
+    
+    Server->>Client: ServerHello + Certificate + Finished<br/>(chosen cipher, server key share,<br/>certificate, encrypted "finished")
+    
+    Note over Client: Client verifies<br/>certificate chain,<br/>computes session key
+    
+    Client->>Server: Finished<br/>(encrypted "finished" + HTTP request)
+    
+    Note over Client,Server: 🔒 ENCRYPTED from here onward
+    
+    Server->>Client: Encrypted HTTP response
+</Mermaid>
+
+**TLS 1.3 improvements over 1.2:**
+- **1-RTT vs 2-RTT** — eliminates one round trip
+- **0-RTT resumption** — instant reconnection for returning clients
+- **Removed insecure cipher suites** — no more RSA key exchange, no CBC mode
+
+<Example>
+
+**Inspect a TLS certificate with OpenSSL:**
+```bash
+# Check certificate details
+openssl s_client -connect cloudnova.io:443 -servername cloudnova.io </dev/null | openssl x509 -text -noout
+
+# Check certificate chain
+openssl s_client -connect cloudnova.io:443 -showcerts </dev/null 2>/dev/null | grep -E "subject=|issuer="
+
+# Verify expiry
+echo | openssl s_client -servername cloudnova.io -connect cloudnova.io:443 2>/dev/null | openssl x509 -noout -dates
+```
+
+</Example>
+
+---
+
+## Production Explanation
+
+### Certificate Chain
+
+<Mermaid>
+graph TD
+    Root["Root CA<br/>(DigiCert Global Root)<br/>⏰ Trusted by OS/browser<br/>📦 In your trust store"] --> Intermediate["Intermediate CA<br/>(DigiCert TLS RSA SHA256)<br/>📦 Signed by Root"]
+    Intermediate --> Leaf["Leaf Certificate<br/>(*.cloudnova.io)<br/>📦 Signed by Intermediate<br/>🔗 Proves identity"]
+    
+    Root -.- Trust["✅ Browser/OS trust anchor<br/>⏱️ Expires: 2031"]
+    Intermediate -.- Signed["🔏 Signed by Root CA<br/>⏱️ Expires: 2026"]
+    Leaf -.- Domain["🌐 Covers: *.cloudnova.io<br/>⏱️ Expires: 2025"]
+
+    style Root fill:#22c55e,color:#000
+    style Intermediate fill:#f59e0b,color:#000
+    style Leaf fill:#0ea5e9,color:#fff
+</Mermaid>
+
+**Critical certificate rules:**
+1. Chain must be complete — missing intermediate = browser shows "untrusted"
+2. Common Name (CN) or SAN must match the hostname exactly
+3. Certificate must not be expired (check `notAfter` date)
+
+<ProductionNote>
+
+### CloudNova: The Expired Certificate Incident
+
+**Incident #IN-415 — "Complete production outage"**
+
+Tuesday 03:14 UTC. All HTTPS endpoints for `*.cloudnova.io` return connection errors. The monitoring dashboard is entirely red.
+
+**Root cause:** The wildcard certificate for `*.cloudnova.io` expired at midnight UTC. The auto-renewal job had failed silently 3 weeks earlier because the ACME challenge validation was misconfigured after a DNS migration.
+
+**Timeline:**
+- **03:14** — PagerDuty alert: "All HTTPS endpoints unreachable"
+- **03:21** — Identified expired certificate via `openssl s_client -connect`
+- **03:27** — Emergency manual renewal via Let's Encrypt
+- **03:35** — Certificate deployed to App Gateway
+- **03:42** — All services recovered
+
+**Fix implemented:**
+1. Certificate expiry monitoring (alert at 30, 14, 7, 3, 1 days)
+2. ACME challenge validation test as part of DNS migration checklist
+3. Cert-manager on AKS for automatic Kubernetes certificate renewal
+
+</ProductionNote>
+
+---
+
+### mTLS (Mutual TLS)
+
+Standard TLS: **Client** verifies **server** ("Am I talking to the real cloudnova.io?")  
+mTLS: **Both sides** verify each other ("Is this client allowed to call our API?")
+
+<Mermaid>
+sequenceDiagram
+    participant Client
+    participant Server
+    
+    Note over Client,Server: mTLS — BOTH sides present certificates
+    
+    Client->>Server: ClientHello + Client Certificate
+    Server->>Client: ServerHello + Server Certificate
+    Note over Client,Server: Each side verifies the other
+    Client->>Server: 🔒 Encrypted request
+    Server->>Client: 🔒 Encrypted response
+</Mermaid>
+
+**When to use mTLS:**
+- Service-to-service communication in zero-trust networks
+- API gateway to backend (gateway authenticates as specific client)
+- Financial/healthcare regulated environments
+
+<CodeBlock language="bash">
+
+```bash
+# curl with client certificate (mTLS)
+curl --cert client.pem --key client-key.pem \
+  --cacert ca.pem \
+  https://api.internal.cloudnova.io/health
+```
+
+</CodeBlock>
+
+---
+
+## Architect Explanation
+
+### TLS Termination Architecture
+
+Where you terminate TLS matters enormously:
+
+<Mermaid>
+graph TB
+    subgraph "Option A: TLS at App Gateway"
+        User1["User"] -->|"🔒 HTTPS"| AppGW["Azure App Gateway<br/>(TLS termination)"]
+        AppGW -->|"🔓 HTTP (VNet internal)"| Backend["AKS Pods"]
+    end
+    
+    subgraph "Option B: End-to-End TLS"
+        User2["User"] -->|"🔒 HTTPS"| AppGW2["App Gateway<br/>(TLS re-encryption)"]
+        AppGW2 -->|"🔒 HTTPS (mTLS)"| Backend2["AKS Pods<br/>(with cert)"]
+    end
+
+    style AppGW fill:#0ea5e9,color:#fff
+    style AppGW2 fill:#0ea5e9,color:#fff
+</Mermaid>
+
+| Approach | Pros | Cons |
+|----------|------|------|
+| **TLS termination at gateway** | Simplified cert management, WAF inspection | Plaintext inside VNet |
+| **End-to-end TLS** | Defense in depth, compliance | More certs to manage, slight latency |
+| **mTLS everywhere** | Zero-trust, strong identity | Complex PKI, operational overhead |
+
+<SecurityNote>
+
+**Regulatory requirement:** PCI-DSS, HIPAA, and SOC2 typically require encryption in transit, even on internal networks. End-to-end TLS is not optional in regulated environments.
+
+</SecurityNote>
+
+---
+
+## Hands-On Exercise
+
+<Exercise>
+
+### Lab: Debug a TLS Issue
+
+**Scenario:** `curl https://inventory.cloudnova.io` returns `SSL certificate problem: unable to get local issuer certificate`
+
+```bash
+# Step 1: Check the certificate chain
+openssl s_client -connect inventory.cloudnova.io:443 -showcerts </dev/null 2>/dev/null | grep -E "verify|subject|issuer"
+
+# Step 2: If verify=1, certificate expired?
+echo | openssl s_client -connect inventory.cloudnova.io:443 2>/dev/null | openssl x509 -noout -dates
+
+# Step 3: Check SANs match
+echo | openssl s_client -connect inventory.cloudnova.io:443 2>/dev/null | openssl x509 -noout -ext subjectAltName
+
+# Step 4: If all looks OK, run the full chain verification
+openssl s_client -connect inventory.cloudnova.io:443 -CApath /etc/ssl/certs -verify_return_error
+```
+
+</Exercise>
+
+---
+
+<Challenge>
+
+### Challenge: Design Certificate Lifecycle
+
+CloudNova runs 47 microservices on AKS, each terminating its own TLS. Manual certificate renewal takes 4 hours and happens quarterly.
+
+**Your task:** Design an automated certificate management system that:
+1. Automatically renews certificates before expiry
+2. Handles wildcard (`*.cloudnova.io`) and per-service certs
+3. Works with Azure Key Vault for storage
+4. Integrates with Application Gateway Ingress Controller
+
+**Deliverable:** Architecture diagram + implementation plan (tools: cert-manager, Let's Encrypt, Azure Key Vault CSI driver)
+
+</Challenge>
+
+---
+
+<Flashcard
+  front="What's the key difference between HTTP status 401 and 403?"
+  back="401 Unauthorized = 'You haven't proved who you are' (missing/invalid token, needs login). 403 Forbidden = 'I know who you are, and you're not allowed' (authenticated but insufficient permissions/RBAC)."
+/>
+
+<Flashcard
+  front="What makes TLS 1.3 faster than TLS 1.2?"
+  back="TLS 1.3 completes in 1 round-trip (vs 2 in TLS 1.2). It removes the separate ServerKeyExchange, combines ServerHello + encryption parameters, and encrypts the 'Finished' message. Also supports 0-RTT resumption for returning clients."
+/>
+
+<Quiz
+  question="Your HTTPS endpoint works in curl but browsers show 'Not Secure'. Most likely cause?"
+  options={[
+    "TLS certificate is expired",
+    "The certificate chain is incomplete (missing intermediate cert)",
+    "Using a self-signed certificate",
+    "Wrong cipher suite selected"
+  ]}
+  correct={1}
+  explanation="Browsers are stricter than curl. If the intermediate certificate isn't served, the browser can't build the chain to a trusted root. Curl may work because it might already have the intermediate cached. Always serve the full chain."
+/>
+
+---
+
+<InterviewQuestion>
+
+**Q:** "Explain the TLS handshake to a junior engineer."
+**A:** "Your browser and the server need to agree on a secret code before they can talk privately. Here's how: 1) Browser says 'Hi, I support these encryption methods' (ClientHello). 2) Server says 'Great, let's use this one, and here's my ID card (certificate)' (ServerHello). 3) Both use math (Diffie-Hellman key exchange) to independently compute the same secret key — nobody watching can figure it out. Now they talk privately using that shared key. TLS 1.3 does this in one round trip."
+
+**Q:** "Should you terminate TLS at the load balancer or at the application?"
+**A:** "It depends on your threat model and compliance. Terminate at the LB for: simpler cert management, WAF inspection, centralized logging. Terminate at the app for: defense in depth, regulatory compliance (PCI/HIPAA). Most production setups do both — LB terminates, then re-encrypts to backend (end-to-end TLS)."
+
+</InterviewQuestion>
+
+---
+
+<CheatSheet title="TLS Certificate Commands">
+
+| Task | Command |
+|------|---------|
+| Check cert expiry | `openssl s_client -connect host:443 2>/dev/null \| openssl x509 -noout -enddate` |
+| View full cert | `openssl s_client -connect host:443 -showcerts` |
+| Generate self-signed | `openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes` |
+| Verify chain | `openssl verify -CAfile chain.pem cert.pem` |
+| Check ciphers | `nmap --script ssl-enum-ciphers -p 443 host` |
+
+</CheatSheet>
+
+---
+
+**Next:** [Subnetting & CIDR Mastery](./04-subnetting-cidr) • **Previous:** [DNS: The Internet's Phonebook](./02-dns-phonebook)

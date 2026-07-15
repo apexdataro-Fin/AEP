@@ -1,0 +1,324 @@
+---
+id: net-05
+title: "Load Balancing Patterns"
+difficulty: intermediate
+estimated_time: "50 min"
+prerequisites: ["net-01", "net-04"]
+skills: ["load-balancing", "azure-load-balancer", "application-gateway", "traffic-management"]
+technologies: ["azure-load-balancer", "application-gateway", "traffic-manager", "front-door"]
+certifications: ["az-104", "az-400"]
+knowledge_nodes: ["layer4-vs-layer7", "load-balancing-algorithms", "health-probes", "session-affinity"]
+review_schedule: "3d,7d,30d"
+author: "ARES Engineering"
+last_updated: "2026-07-15"
+---
+
+import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+
+# Load Balancing Patterns
+
+<Info>
+
+**Learning Objectives**
+- Choose between L4 and L7 load balancing for any scenario
+- Configure Azure Load Balancer and Application Gateway
+- Design health probe strategies that detect real failures
+- Architect multi-region traffic routing
+
+**Prerequisites:** TCP/IP, CIDR  
+**Estimated Time:** 50 minutes  
+**Difficulty:** Intermediate
+
+</Info>
+
+---
+
+## Simple Explanation
+
+A load balancer is like a restaurant host: when you arrive, the host checks which waiter has the fewest tables and sends you there. If a waiter calls in sick (health probe fails), the host stops sending them customers.
+
+<Analogy>
+
+**The Supermarket Analogy**
+
+- **Layer 4 (Azure LB):** Multiple checkout lanes. The manager sees lane 3 is empty and directs you there. They don't know or care what's in your cart.
+- **Layer 7 (App Gateway):** A specialty store where the manager looks at your items and says: "Alcohol? Lane 5 is the only one authorized." They inspect your cart (HTTP headers) and route accordingly.
+
+L4 is faster. L7 is smarter.
+
+</Analogy>
+
+---
+
+## Core Explanation
+
+### L4 vs L7: The Decision Framework
+
+<Mermaid>
+graph TD
+    Start["Need load balancing?"] --> L4_L7{What do you<br/>need to inspect?}
+    
+    L4_L7 -->|"Just IP + port"| L4["Layer 4 — Azure Load Balancer<br/>• TCP/UDP<br/>• Ultra-low latency<br/>• 5-tuple hash distribution<br/>• Pass-through"]
+    
+    L4_L7 -->|"HTTP headers, paths, cookies"| L7["Layer 7 — Application Gateway<br/>• URL-based routing<br/>• TLS termination<br/>• WAF integration<br/>• Cookie-based affinity"]
+    
+    L4_L7 -->|"Global routing + failover"| DNS["DNS-based — Traffic Manager<br/>• Geographic routing<br/>• Priority failover<br/>• No data-plane (DNS only)"]
+    
+    L4_L7 -->|"Global + L7 + anycast"| FD["Azure Front Door<br/>• Global anycast<br/>• L7 routing<br/>• WAF at edge<br/>• CDN integration"]
+
+    style L4 fill:#f59e0b,color:#000
+    style L7 fill:#0ea5e9,color:#fff
+    style DNS fill:#8b5cf6,color:#fff
+    style FD fill:#22c55e,color:#000
+</Mermaid>
+
+### Health Probes: Design Matters
+
+```
+Bad probe:  TCP port 80 open? → "Healthy!" (even if app returns 500s)
+Good probe: GET /health → returns 200 + checks DB connection → "Healthy!"
+
+Great probe: GET /health/deep → returns 200, checks:
+  1. Database: connected ✓
+  2. Redis: reachable ✓
+  3. Queue: not backlogged ✓
+  4. Disk: < 80% full ✓
+```
+
+<ProductionNote>
+
+### CloudNova: The Health Probe That Lied
+
+**Incident #IN-228 — "API returns 500s but load balancer says healthy"**
+
+The inventory API's health endpoint returned `200 OK` just by checking if the process was running. When the database became unreachable (network partition), the health check still passed — the process was alive, just useless.
+
+**Root cause:** Health probes didn't validate actual dependencies.
+
+**Fix:**
+```python
+@app.get("/health/deep")
+async def deep_health():
+    checks = {
+        "database": await check_db(),
+        "redis": await check_redis(),
+        "disk": check_disk_space(),
+    }
+    all_healthy = all(checks.values())
+    status_code = 200 if all_healthy else 503
+    return {"status": "healthy" if all_healthy else "degraded", "checks": checks}, status_code
+```
+
+After fix: database partition → health returns 503 → LB removes backend → traffic routes to healthy region.
+
+</ProductionNote>
+
+---
+
+## Professional Explanation
+
+### Load Balancing Algorithms
+
+| Algorithm | How it works | Best for |
+|-----------|-------------|----------|
+| **Round Robin** | Each request to next server in list | Equal-capacity backends |
+| **Least Connections** | Server with fewest active connections | Mixed-duration requests |
+| **IP Hash (5-tuple)** | Hash of src IP, dst IP, src port, dst port, protocol | Consistent routing (NAT) |
+| **Weighted** | Percentage split (80/20) | Canary deployments |
+| **Path-based** | `/api/*` → pool A, `/static/*` → pool B | Microservices routing |
+| **Host-based** | `api.cloudnova.io` → pool A, `admin.cloudnova.io` → pool B | Multi-tenant |
+
+### Session Affinity (Sticky Sessions)
+
+When a user must stay on the same backend (e.g., websocket, server-side session state):
+
+```
+Without affinity: User → LB → Server A  (request 1)
+                  User → LB → Server B  (request 2)  ← Session lost!
+
+With affinity:    User → LB → Server A  (request 1)
+                  User → LB → Server A  (request 2)  ← Same server
+```
+
+<Warning>
+Session affinity creates a scaling problem: if Server A goes down, all its users lose sessions. **Prefer stateless backends** — store sessions in Redis/CosmosDB instead.
+</Warning>
+
+---
+
+## Production Explanation
+
+### CloudNova Production Architecture
+
+<Mermaid>
+graph TB
+    Internet["🌐 Internet"] --> FD["Azure Front Door<br/>(Global anycast + WAF)"]
+    
+    FD -->|"Path: /api/*"| AG_EU["App Gateway<br/>(West Europe)"]
+    FD -->|"Path: /api/*"| AG_ASIA["App Gateway<br/>(SE Asia)"]
+    FD -->|"Path: /static/*"| CDN["Azure CDN"]
+    
+    subgraph "West Europe"
+        AG_EU -->|"Round Robin"| AKS_EU["AKS Pods<br/>app: inventory-api"]
+        AG_EU --> LB_EU["Azure LB"]
+        LB_EU --> VM_EU["VMSS<br/>(legacy service)"]
+    end
+    
+    subgraph "Southeast Asia"
+        AG_ASIA --> AKS_ASIA["AKS Pods<br/>app: inventory-api"]
+    end
+
+    style FD fill:#22c55e,color:#000
+    style AG_EU fill:#0ea5e9,color:#fff
+    style AG_ASIA fill:#0ea5e9,color:#fff
+</Mermaid>
+
+**Key design decisions:**
+1. Front Door at edge (anycast) → lowest latency for global users
+2. App Gateway per region → L7 routing, WAF at regional level
+3. Azure LB for VMSS → L4 pass-through for non-HTTP workloads
+4. CDN for static assets → offload from application
+
+---
+
+## Hands-On Exercise
+
+<Exercise>
+
+### Lab: Configure Azure Load Balancer
+
+```bash
+# Create public LB
+az network lb create \
+  --resource-group cloudnova-lab \
+  --name cn-public-lb \
+  --sku Standard \
+  --frontend-ip-name frontend \
+  --public-ip-address cn-lb-pip
+
+# Create backend pool
+az network lb address-pool create \
+  --resource-group cloudnova-lab \
+  --lb-name cn-public-lb \
+  --name web-pool
+
+# Create health probe
+az network lb probe create \
+  --resource-group cloudnova-lab \
+  --lb-name cn-public-lb \
+  --name http-health \
+  --protocol Http \
+  --port 80 \
+  --path /health
+
+# Create load balancing rule
+az network lb rule create \
+  --resource-group cloudnova-lab \
+  --lb-name cn-public-lb \
+  --name http-rule \
+  --protocol Tcp \
+  --frontend-port 80 \
+  --backend-port 80 \
+  --frontend-ip-name frontend \
+  --backend-pool-name web-pool \
+  --probe-name http-health
+```
+
+</Exercise>
+
+---
+
+<Challenge>
+
+### Challenge: Design Multi-Region Failover
+
+CloudNova's app runs in West Europe. They have a 99.9% SLA. Customer wants 99.99%. Your task:
+
+1. Design the multi-region architecture (regions, services, routing)
+2. Calculate expected: RTO (Recovery Time Objective), RPO (Recovery Point Objective)
+3. Estimate monthly cost increase
+4. Identify the weakest link in your design
+
+**Constraints:** Budget increase must be < 40%. Database is Azure SQL (single-region primary).
+
+</Challenge>
+
+---
+
+<Debugging>
+
+### Quick LB Diagnostics
+
+```bash
+# Check backend health (App Gateway)
+az network application-gateway show-backend-health \
+  --resource-group cloudnova-prod \
+  --name cn-appgw
+
+# Check LB rules
+az network lb rule list \
+  --resource-group cloudnova-prod \
+  --lb-name cn-public-lb
+
+# Test health probe directly from backend VM
+curl -v http://localhost/health
+
+# Check NSG allows probe traffic
+# App Gateway health probes come from 65200-65535
+```
+
+</Debugging>
+
+---
+
+<Flashcard
+  front="When would you use Azure Load Balancer (L4) instead of Application Gateway (L7)?"
+  back="Use L4 when: 1) Non-HTTP protocols (database, SMTP, custom TCP), 2) Ultra-low latency required (no inspection overhead), 3) High-throughput pass-through needed, 4) Client source IP must be preserved without X-Forwarded-For headers."
+/>
+
+<Flashcard
+  front="What are the 3 types of Azure load balancing services and their OSI layers?"
+  back="1) Azure Load Balancer — Layer 4 (TCP/UDP), 2) Application Gateway — Layer 7 (HTTP/HTTPS), 3) Traffic Manager — DNS-level (above L7, no data-plane). Front Door = global L7 + anycast."
+/>
+
+<Quiz
+  question="A health probe checks port 80 with TCP only. The app returns 500 errors. What happens?"
+  options={[
+    "Load balancer removes the backend — port 80 is unresponsive",
+    "Load balancer keeps the backend — TCP probe only checks if port is open, not if app is healthy",
+    "Load balancer marks the backend as degraded and routes 50% traffic",
+    "Azure automatically detects 500s and removes the backend"
+  ]}
+  correct={1}
+  explanation="A TCP health probe only verifies the port is listening. It doesn't know about HTTP 500s. Use an HTTP health probe with path /health that actually checks application dependencies."
+/>
+
+---
+
+<InterviewQuestion>
+
+**Q:** "How do you handle 'thundering herd' on service restart?"
+**A:** "When a service restarts, all clients simultaneously reconnect, flooding it. Solutions: 1) Jitter in health check intervals on backends, 2) Gradual warmup — LB sends increasing traffic percentage over 60-120 seconds, 3) Connection pooling — clients reuse connections, reducing reconnect storms. App Gateway v2 supports connection draining and gradual warmup."
+
+**Q:** "What's the difference between Azure Front Door and Traffic Manager?"
+**A:** "Traffic Manager is DNS-only — it returns different IPs based on routing rules, but all traffic goes directly to the backend (no data-plane). Front Door is a global reverse proxy with anycast — traffic flows through Microsoft's edge network, providing WAF, TLS termination, URL routing, and caching at the edge. Use Traffic Manager for simple global failover. Use Front Door for global acceleration + security."
+
+</InterviewQuestion>
+
+---
+
+<CheatSheet title="Azure Load Balancer Quick Reference">
+
+| Service | Layer | Global? | TLS? | WAF? | Best For |
+|---------|-------|---------|------|------|----------|
+| Azure LB | L4 | ❌ | ❌ | ❌ | Internal services, VMSS |
+| App Gateway | L7 | ❌ | ✅ | ✅ | HTTP routing, TLS termination |
+| Traffic Manager | DNS | ✅ | ❌ | ❌ | Simple geo-failover |
+| Front Door | L7 | ✅ | ✅ | ✅ | Global app delivery |
+| Cross-region LB | L4 | ✅ | ❌ | ❌ | Global L4 failover |
+
+</CheatSheet>
+
+---
+
+**Next:** [Network Security & Firewalls](./06-network-security) • **Previous:** [Subnetting & CIDR Mastery](./04-subnetting-cidr)

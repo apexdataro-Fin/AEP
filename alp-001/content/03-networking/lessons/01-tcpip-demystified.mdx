@@ -1,0 +1,493 @@
+---
+id: net-01
+title: "TCP/IP Demystified"
+difficulty: intermediate
+estimated_time: "50 min"
+prerequisites: []
+skills: ["networking", "tcpip", "osi-model", "packet-analysis"]
+technologies: ["tcp", "ip", "udp", "wireshark"]
+certifications: ["az-104", "az-900"]
+knowledge_nodes: ["tcp-three-way-handshake", "osi-model", "ip-addressing", "port-numbers"]
+review_schedule: "3d,7d,30d"
+author: "ARES Engineering"
+last_updated: "2026-07-15"
+---
+
+import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+
+# TCP/IP Demystified
+
+<Info>
+
+**Learning Objectives**
+- Explain the TCP 3-way handshake step-by-step
+- Map protocols to OSI layers in cloud context
+- Read a packet capture and identify key headers
+- Calculate TCP sequence/acknowledgment numbers
+- Diagnose common TCP connection issues
+
+**Prerequisites:** None  
+**Estimated Time:** 50 minutes  
+**Difficulty:** Intermediate
+
+</Info>
+
+---
+
+## Simple Explanation
+
+Imagine you want to send a 1000-page book to a friend in another country. You can't mail it all at once — the envelope would burst. Instead, you:
+
+1. **Number every page** (this is like TCP sequence numbers)
+2. **Send 10 pages at a time** (this is the TCP window)
+3. **Wait for your friend to say "I got pages 1-10"** before sending more
+4. **Resend any lost pages**
+
+This is exactly how TCP sends your data across the internet — in numbered, confirmed, resendable chunks.
+
+<Analogy>
+
+**The Post Office Analogy**
+- **IP** = the postal service that delivers individual letters (packets). It doesn't care if letters arrive in order or at all.
+- **TCP** = the protocol you follow: number every page, confirm receipt, resend if lost.
+
+TCP runs *on top of* IP — like numbered pages traveling inside postal envelopes.
+
+</Analogy>
+
+---
+
+## Core Explanation
+
+### The OSI Model (What Cloud Engineers Actually Need)
+
+<Mermaid>
+graph LR
+    A[Application Layer 7<br/>HTTP, DNS, SSH] --> B[Presentation Layer 6<br/>TLS/SSL]
+    B --> C[Session Layer 5<br/>Sockets]
+    C --> D[Transport Layer 4<br/>TCP/UDP]
+    D --> E[Network Layer 3<br/>IP, ICMP]
+    E --> F[Data Link Layer 2<br/>Ethernet, ARP]
+    F --> G[Physical Layer 1<br/>Fiber, Copper, WiFi]
+
+    style A fill:#0ea5e9,color:#fff
+    style D fill:#f59e0b,color:#000
+    style E fill:#f59e0b,color:#000
+</Mermaid>
+
+**Cloud engineers spend 90% of their time in Layers 3, 4, and 7.** You need to know:
+- **Layer 3 (IP):** Routing, subnetting, VNet design
+- **Layer 4 (TCP/UDP):** Port numbers, connection state, load balancer configuration  
+- **Layer 7 (HTTP/DNS):** Application routing, TLS termination, API design
+
+### TCP Header — What Matters
+
+```
+ 0                   1                   2                   3
+ 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|          Source Port          |       Destination Port        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                        Sequence Number                        |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|                    Acknowledgment Number                      |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+|  Data |       |C|E|U|A|P|R|S|F|                               |
+| Offset| Rsrvd |W|C|R|C|S|S|Y|I|            Window             |
+|       |       |R|E|G|K|H|T|N|N|                               |
++-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+```
+
+**Key fields a cloud engineer needs:**
+- **Source/Destination Port:** "Which application am I talking to?"
+- **SYN flag:** "I want to start a connection"
+- **ACK flag:** "I confirm receipt"
+- **RST flag:** "Connection refused — go away"
+
+### The Three-Way Handshake
+
+<Mermaid>
+sequenceDiagram
+    participant Client
+    participant Server
+    
+    Note over Client,Server: TCP Three-Way Handshake
+    
+    Client->>Server: SYN (seq=x)<br/>"Hello, can we talk?"
+    Note right of Server: Server allocates<br/>buffer space
+    Server->>Client: SYN-ACK (seq=y, ack=x+1)<br/>"Yes, I'm ready"
+    Client->>Server: ACK (seq=x+1, ack=y+1)<br/>"Great, here's my data"
+    
+    Note over Client,Server: Connection ESTABLISHED
+    
+    Client->>Server: Data (seq=x+1, ack=y+1)<br/>"GET /api/health HTTP/1.1"
+    Server->>Client: Data + ACK<br/>"200 OK + data"
+</Mermaid>
+
+<Example>
+
+**Real-world TCP handshake (tcpdump output):**
+```
+10:32:01.123456 IP 10.0.1.5.54321 > 10.0.2.10.443: Flags [S], seq 1234567890
+10:32:01.124890 IP 10.0.2.10.443 > 10.0.1.5.54321: Flags [S.], seq 987654321, ack 1234567891
+10:32:01.125001 IP 10.0.1.5.54321 > 10.0.2.10.443: Flags [.], ack 987654322
+```
+Line 1: Client sends SYN (S)  
+Line 2: Server responds SYN-ACK (S.)  
+Line 3: Client acknowledges
+
+</Example>
+
+---
+
+## Professional Explanation
+
+### TCP State Machine
+
+Every TCP connection goes through these states. You'll see them in `netstat`, `ss`, and cloud load balancer logs.
+
+<Mermaid>
+stateDiagram-v2
+    [*] --> CLOSED
+    CLOSED --> LISTEN: Server listens
+    LISTEN --> SYN_RCVD: Receive SYN
+    CLOSED --> SYN_SENT: Client sends SYN
+    SYN_SENT --> ESTABLISHED: Receive SYN-ACK
+    SYN_RCVD --> ESTABLISHED: Receive ACK
+    ESTABLISHED --> FIN_WAIT_1: Close connection
+    FIN_WAIT_1 --> FIN_WAIT_2: Receive ACK
+    FIN_WAIT_1 --> CLOSING: Receive FIN
+    FIN_WAIT_2 --> TIME_WAIT: Receive FIN
+    TIME_WAIT --> CLOSED: 2MSL timeout
+    ESTABLISHED --> CLOSE_WAIT: Receive FIN
+    CLOSE_WAIT --> LAST_ACK: Send FIN
+    LAST_ACK --> CLOSED: Receive ACK
+</Mermaid>
+
+**States that matter in production:**
+
+| State | Problem | Cloud Impact |
+|-------|---------|-------------|
+| `TIME_WAIT` | Port exhaustion | "My app can't open more connections!" |
+| `SYN_RCVD` | SYN flood attack | "Server unresponsive — check DDoS protection" |
+| `CLOSE_WAIT` | Application not closing socket | "File descriptor leak — app will crash" |
+
+<ProductionNote>
+
+### CloudNova: Debugging TCP Connection Timeouts
+
+**Ticket #CN-2847 — "Users can't reach the inventory API"**
+
+You're a Junior Cloud Engineer at **CloudNova**. The monitoring dashboard shows the inventory-service API responding with 5-second delays for 30% of requests.
+
+**Your investigation:**
+
+```bash
+# Step 1: Check connection states on the load balancer
+ss -tan state time-wait | wc -l
+# Output: 28473 — that's way too many TIME_WAIT connections!
+
+# Step 2: Check what's happening
+ss -tan | awk '{print $1}' | sort | uniq -c | sort -rn
+# Output:
+#  28473 TIME-WAIT
+#    127 ESTAB
+#      5 LISTEN
+#      2 CLOSE-WAIT  ← This is bad! App not closing connections
+```
+
+**Root cause:** The inventory service opens a new TCP connection for every database query instead of using connection pooling. Each query takes 50ms, but closing the connection leaves the port in TIME_WAIT for 120 seconds. At 500 queries/second, you exhaust all ephemeral ports in under a minute.
+
+**Fix:** Implement connection pooling (max 20 persistent connections instead of per-query). Response times drop from 5s to 80ms.
+
+</ProductionNote>
+
+---
+
+## Production Explanation
+
+### TCP Tuning for Cloud Workloads
+
+When deploying to Azure, these kernel parameters matter:
+
+```bash
+# /etc/sysctl.conf — production tuning
+
+# Increase ephemeral port range (Azure defaults are too small)
+net.ipv4.ip_local_port_range = 1024 65535
+
+# Enable fast recycling of TIME_WAIT sockets
+net.ipv4.tcp_tw_reuse = 1
+
+# Increase TCP buffer sizes for high-throughput VMs
+net.core.rmem_max = 134217728
+net.core.wmem_max = 134217728
+net.ipv4.tcp_rmem = 4096 87380 134217728
+net.ipv4.tcp_wmem = 4096 65536 134217728
+
+# Enable TCP BBR congestion control (better for cloud)
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
+```
+
+<Warning>
+**Don't blindly apply these.** Benchmark your workload first. TCP BBR helps with packet loss (common in multi-region deployments), but CUBIC may be better in low-latency same-region scenarios.
+</Warning>
+
+### Load Balancer TCP Behavior
+
+Azure Load Balancer (L4) vs Application Gateway (L7) handle TCP differently:
+
+| Aspect | Azure LB (L4) | App Gateway (L7) |
+|--------|--------------|-------------------|
+| TCP termination | Pass-through | Terminates and re-originates |
+| Client IP visible? | Yes (default) | Via X-Forwarded-For header |
+| Health probes | TCP port check | HTTP path check |
+| Idle timeout | 4-30 min (configurable) | Per-request |
+
+<Debugging>
+
+### Quick TCP Diagnostics
+
+```bash
+# Is the port open on the remote host?
+nc -zv 10.0.1.5 443 -w 3
+
+# Trace TCP SYN to SYN-ACK time (latency to service)
+hping3 -S -p 443 10.0.1.5
+
+# What connection states exist?
+ss -tan | awk '{print $1}' | sort | uniq -c | sort -rn
+
+# Watch TCP retransmits (sign of network issues)
+watch -n 1 'netstat -s | grep retrans'
+
+# Check for SYN floods
+ss -tan state syn-recv | wc -l
+```
+
+</Debugging>
+
+---
+
+## Architect Explanation
+
+### TCP in Distributed Systems
+
+TCP's guarantees (ordered delivery, reliability) create interesting challenges at scale:
+
+**1. Head-of-Line Blocking**  
+If packet #5 is lost, packets #6-#100 wait in a buffer. In HTTP/1.1, this blocks the entire connection. HTTP/2 multiplexes streams to mitigate this, but TCP-level HOL blocking still occurs. This is why **HTTP/3 uses QUIC (UDP-based)** — to eliminate TCP's ordering constraint entirely.
+
+**2. The Bandwidth-Delay Product**  
+```
+BDP = bandwidth × RTT
+
+Example: 10 Gbps link, 50ms RTT
+BDP = 10 × 10^9 × 0.05 / 8 = 62.5 MB
+
+Your TCP buffer must hold 62.5 MB of "in-flight" data to fully utilize this link.
+```
+
+**3. TCP Over WAN (Azure Regions)**  
+Between US East and West Europe (~100ms RTT):
+- TCP slow-start takes ~8 round trips to reach full speed
+- That's 800ms before the connection reaches maximum throughput
+- Small API calls (one packet) never exit slow-start
+
+**Solution:** Persistent connections, connection pooling, or switch to UDP-based protocols (QUIC/HTTP3) for latency-sensitive services.
+
+<ArchitectureNote>
+
+### Decision Framework: TCP vs UDP
+
+```
+                         ┌─────────────────┐
+                         │  Need reliable   │
+                         │   delivery?      │
+                         └────────┬────────┘
+                                  │
+                    ┌─────────────┴─────────────┐
+                    │ Yes                       │ No
+                    ▼                           ▼
+         ┌──────────────────┐       ┌──────────────────┐
+         │ Can you tolerate  │       │ Is latency < 1ms  │
+         │ head-of-line      │       │ acceptable?       │
+         │ blocking?         │       └────────┬─────────┘
+         └────────┬─────────┘                 │
+                  │                ┌──────────┴──────────┐
+        ┌─────────┴─────────┐     │ Yes         │ No     │
+        │ Yes    │ No       │     ▼             ▼        │
+        ▼        ▼          │   TCP          ┌──────────┐│
+       TCP    ┌───────────┐ │               │ QUIC/     ││
+              │ Need sub-ms│ │               │ HTTP3     ││
+              │ latency?   │ │               │ (UDP)     ││
+              └─────┬─────┘ │               └──────────┘│
+                    │       │                            │
+          ┌─────────┴────┐  │                            │
+          │ Yes  │ No    │  │                            │
+          ▼      ▼       │  │                            │
+        QUIC   ┌───────┐ │  │                            │
+               │ Strict │ │  │                            │
+               │ order? │ │  │                            │
+               └───┬───┘ │  │                            │
+                   │     │  │                            │
+          ┌────────┴──┐  │  │                            │
+          │ Yes │ No  │  │  │                            │
+          ▼     ▼     │  │  │                            │
+         TCP   QUIC   │  │  │                            │
+                      │  │  │                            │
+                  Choose based on reliability needs       │
+```
+
+</ArchitectureNote>
+
+---
+
+## Hands-On Exercise
+
+<Exercise>
+
+### Lab: Observe a TCP Handshake
+
+**Prerequisites:** Linux VM or WSL, `tcpdump` installed  
+**Time:** 15 minutes
+
+1. Start a packet capture:
+```bash
+sudo tcpdump -i any -nn 'tcp and port 443' -w /tmp/handshake.pcap
+```
+
+2. In another terminal, make an HTTPS request:
+```bash
+curl -s https://httpbin.org/ip > /dev/null
+```
+
+3. Stop the capture (Ctrl+C) and analyze:
+```bash
+tcpdump -r /tmp/handshake.pcap -nn
+```
+
+4. Identify:  
+   ➤ Which packet is the SYN?  
+   ➤ Which is the SYN-ACK?  
+   ➤ What's the initial sequence number?  
+   ➤ How many data packets follow the handshake?
+
+</Exercise>
+
+---
+
+<Challenge>
+
+### Challenge: Calculate Port Exhaustion Time
+
+**Your CloudNova task:** The inventory service opens 200 new connections/second. Your ephemeral port range is 1024-65535 (64511 ports). TIME_WAIT is 120 seconds. How long until port exhaustion?
+
+**Bonus:** Propose 3 solutions and rank them by implementation difficulty.
+
+</Challenge>
+
+---
+
+## Active Recall
+
+<Flashcard
+  front="What are the three steps of the TCP handshake?"
+  back="1. Client → Server: SYN (I want to connect, here's my starting sequence number)<br/>2. Server → Client: SYN-ACK (I accept, here's my starting sequence number, I received yours)<br/>3. Client → Server: ACK (I confirm — connection established)"
+/>
+
+<Flashcard
+  front="What problem does TCP TIME_WAIT solve?"
+  back="It prevents old duplicate packets from a previous connection from being mistaken for packets in a new connection. The 2MSL (Maximum Segment Lifetime × 2) wait ensures all old packets have expired before the port can be reused."
+/>
+
+<Flashcard
+  front="Why does HTTP/3 use UDP instead of TCP?"
+  back="TCP's in-order delivery causes head-of-line blocking — if one packet is lost, all subsequent packets wait. UDP allows HTTP/3/QUIC to deliver streams independently, so a lost packet on stream A doesn't block stream B."
+/>
+
+<Flashcard
+  front="At which OSI layer does Azure Load Balancer operate? Application Gateway?"
+  back="Azure Load Balancer = Layer 4 (TCP/UDP), passes traffic through without inspection.<br/>Application Gateway = Layer 7 (HTTP/HTTPS), terminates TLS, inspects headers, can route based on URL path."
+/>
+
+<Quiz
+  question="A SYN flood attack exploits which TCP connection state?"
+  options={[
+    "ESTABLISHED",
+    "SYN_RCVD",
+    "TIME_WAIT",
+    "CLOSE_WAIT"
+  ]}
+  correct={1}
+  explanation="SYN flood fills the server's SYN_RCVD queue with half-open connections. Each SYN consumes resources until the server can't accept new connections. Mitigation: SYN cookies, rate limiting, Azure DDoS Protection."
+/>
+
+---
+
+<InterviewQuestion>
+
+### Common Interview Questions
+
+**Q:** "Explain what happens when you type 'google.com' in your browser — focus on TCP."
+**A:** Browser resolves DNS (UDP port 53), gets IP. Browser opens TCP socket, sends SYN to 142.250.x.x:443. Google responds SYN-ACK. Browser sends ACK, connection established. Then TLS handshake over TCP (ClientHello, ServerHello, certificate exchange) before HTTP request is sent.
+
+**Q:** "What's the difference between a TCP RST and a TCP FIN?"
+**A:** FIN = graceful close ("I'm done sending, let's close"). RST = abrupt close ("Something is wrong, tear this down immediately"). RST means no more data will be accepted. Common causes: port not listening, firewall blocking, application crash.
+
+**Q:** "Why is TCP slow-start needed?"
+**A:** Without slow-start, a sender could flood a network with packets at line rate, overwhelming intermediate routers. Slow-start probes bandwidth gradually by doubling the congestion window each RTT, discovering the path capacity without causing congestion collapse. Cloud implications: short-lived connections never reach full throughput.
+
+</InterviewQuestion>
+
+---
+
+## Study Checklist
+
+<CheatSheet title="TCP Quick Reference">
+
+| Concept | Key Points |
+|---------|-----------|
+| **Handshake** | SYN → SYN-ACK → ACK (3 steps) |
+| **Connection close** | FIN → ACK → FIN → ACK (4 steps) |
+| **Flow control** | Receiver advertises window size ("I can handle X bytes") |
+| **Congestion control** | Sender adjusts rate based on packet loss / RTT |
+| **Port numbers** | 1-65535. 1-1023 = privileged. Ephemeral = 32768-60999 (Linux default) |
+| **Common cloud ports** | 22 (SSH), 80 (HTTP), 443 (HTTPS), 1433 (SQL Server), 5432 (PostgreSQL), 6379 (Redis), 3306 (MySQL), 3389 (RDP) |
+
+</CheatSheet>
+
+---
+
+<CommonMistake>
+
+### Top Mistakes Cloud Engineers Make
+
+1. **Assuming TCP guarantees delivery at the application level.** TCP guarantees delivery *or notification of failure*. If `send()` returns success, data is in the kernel buffer — not necessarily delivered yet. Use application-level acknowledgments for critical operations.
+
+2. **Ignoring TIME_WAIT.** At 1000 connections/second with 120s TIME_WAIT, you hold 120,000 ports in limbo. You only have ~28,000 ephemeral ports by default. Solution: connection pooling, `tcp_tw_reuse`, or increase port range.
+
+3. **Mixing L4 and L7 load balancers.** Azure LB (L4) passes the client's real IP. App Gateway (L7) terminates connections — you need `X-Forwarded-For` to track origin. Firewall rules must match the load balancer tier.
+
+</CommonMistake>
+
+---
+
+<ProductionNote>
+
+### Production Checklist
+
+- [ ] Configure ephemeral port range: `1024 65535` for high-connection services
+- [ ] Enable `tcp_tw_reuse` for connection-heavy workloads
+- [ ] Monitor connection states (alert on > 1000 TIME_WAIT)
+- [ ] Use connection pooling for database connections
+- [ ] Set appropriate idle timeouts on load balancers
+- [ ] Tune TCP buffers for cross-region (high BDP) connections
+- [ ] Consider HTTP/3 (QUIC) for latency-sensitive global services
+
+</ProductionNote>
+
+---
+
+**Next:** [DNS: The Internet's Phonebook](./02-dns-phonebook) • **Related:** [Network Security & Firewalls](./06-network-security) • [Load Balancing Patterns](./05-load-balancing)

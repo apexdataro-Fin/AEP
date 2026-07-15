@@ -1,0 +1,101 @@
+---
+id: "cld-05-resource-organization"
+title: "Resource Organization & Management"
+slug: /cloud-engineering/06-cloud-fundamentals/resource-organization
+content_type: "lesson"
+summary: "Master Azure resource organization: management groups, subscriptions, resource groups, and tagging strategies for enterprise-scale cloud governance."
+description: "Azure resource organization: management groups, subscriptions, resource groups, and tagging for enterprise governance."
+difficulty: "beginner"
+estimated_time:
+  minutes: 25
+  hours: 0.4
+  display: "25 min"
+status: "published"
+author: "apexdataro-fin"
+version: "1.0.0"
+last_updated: "2026-07-15"
+certifications:
+  - code: "AZ-900"
+    objective_id: "az900-3.2"
+    weight: 7
+learning_objectives:
+  - id: "obj-1"
+    description: "Explain the 4-level Azure resource hierarchy"
+    category: "concept"
+    bloom_level: "understand"
+  - id: "obj-2"
+    description: "Design a tagging strategy for cost allocation and governance"
+    category: "skill"
+    bloom_level: "apply"
+active_recall:
+  - question: "What is the Azure resource hierarchy from top to bottom?"
+    answer: "Management Groups → Subscriptions → Resource Groups → Resources. Each level inherits policies from above. Use Management Groups for broad governance, Subscriptions for billing boundaries, and Resource Groups for lifecycle management."
+    difficulty: "medium"
+tags: [cloud-fundamentals, AZ-900, resource-organization, tagging, governance]
+search_keywords: [azure resource organization, management groups, resource groups, tagging strategy, AZ-900]
+---
+
+# Resource Organization & Management
+
+:::level simple
+
+**Organizing cloud resources is like organizing a company.**
+
+- **Management Group** = The entire company (policies apply everywhere)
+- **Subscription** = A department (has its own budget)
+- **Resource Group** = A project team (everything for one project lives here)
+- **Resource** = A single thing (a VM, a database, a storage account)
+
+When you delete a resource group, everything inside it gets deleted. When you apply a policy at the management group level, every subscription inherits it.
+
+:::
+
+:::level core
+
+## The Hierarchy
+
+```mermaid
+graph TD
+    MG[Management Group: CloudNova Corp] --> S1[Subscription: Production]
+    MG --> S2[Subscription: Development]
+    MG --> S3[Subscription: Sandbox]
+    S1 --> RG1[RG: logistics-platform]
+    S1 --> RG2[RG: auth-services]
+    RG1 --> R1[VM: web-prod-01]
+    RG1 --> R2[SQL: logistics-db]
+    
+    style MG fill:#0ea5e9,stroke:#0284c7,color:#fff
+    style S1 fill:#f59e0b,stroke:#d97706,color:#000
+    style RG1 fill:#10b981,stroke:#059669,color:#fff
+```
+
+## Tagging Strategy
+
+At CloudNova, every resource has mandatory tags:
+
+| Tag | Example | Purpose |
+|---|---|---|
+| `environment` | `production` | Separate prod from dev costs |
+| `team` | `infrastructure` | Cost allocation to teams |
+| `project` | `logistics-platform` | Project-level cost tracking |
+| `cost-center` | `CC-ENG-001` | Finance department mapping |
+
+```bash
+# Find untagged resources (common in cost audits)
+az resource list --query "[?tags==null].name"
+```
+
+:::
+
+---
+
+## Key Takeaways
+
+- **Management Groups → Subscriptions → Resource Groups → Resources.**
+- **Resource Groups share lifecycle** — delete the group, delete everything.
+- **Tags enable cost allocation, automation, and compliance.**
+- **Apply policies at the highest level possible** for consistency.
+
+## Spaced Repetition
+
+Review: Day 1, Day 3, Day 7, Day 14, Day 30, Day 90

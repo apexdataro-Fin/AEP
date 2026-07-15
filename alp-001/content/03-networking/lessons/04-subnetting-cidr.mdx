@@ -1,0 +1,352 @@
+---
+id: net-04
+title: "Subnetting & CIDR Mastery"
+difficulty: intermediate
+estimated_time: "55 min"
+prerequisites: ["net-01"]
+skills: ["subnetting", "cidr", "vnet-design", "ip-addressing"]
+technologies: ["ipv4", "cidr", "azure-vnet", "subnet"]
+certifications: ["az-104", "az-900", "az-400"]
+knowledge_nodes: ["cidr-notation", "subnet-calculation", "vnet-address-space", "subnet-delegation"]
+review_schedule: "3d,7d,14d,30d"
+author: "ARES Engineering"
+last_updated: "2026-07-15"
+---
+
+import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+
+# Subnetting & CIDR Mastery
+
+<Info>
+
+**Learning Objectives**
+- Read and calculate CIDR notation instantly
+- Design VNet address spaces that allow future growth
+- Calculate usable hosts per subnet for any prefix length
+- Design hub-spoke VNet topologies without overlap
+- Troubleshoot "address space full" errors in Azure
+
+**Prerequisites:** TCP/IP fundamentals  
+**Estimated Time:** 55 minutes  
+**Difficulty:** Intermediate
+
+</Info>
+
+---
+
+## Simple Explanation
+
+An IP address is like a house address. A subnet is like a neighborhood — all houses share the same street prefix.
+
+**CIDR notation** tells you two things:
+- `10.0.1.0/24` → "The first 24 bits are the neighborhood name. The last 8 bits are individual houses."
+
+Think of it like this:
+```
+10.0.1.0/24 = 10.0.1 is the street name, .0-.255 are the houses
+```
+
+- Bigger prefix (`/8`) = smaller neighborhood, more houses per street
+- Smaller prefix (`/28`) = bigger neighborhood, fewer houses per street
+
+<Analogy>
+
+**The Hotel Analogy**
+
+Imagine a hotel at `10.0.0.0/16`:
+- **/16** means the hotel name is `10.0` — every room starts with that
+- The remaining 16 bits are room numbers: `10.0.0.1` to `10.0.255.254`
+- That's 65,534 rooms!
+
+Now divide it into floors (subnets):
+- Floor 1: `10.0.1.0/24` — rooms `10.0.1.1` to `10.0.1.254` (254 rooms)
+- Floor 2: `10.0.2.0/24` — rooms `10.0.2.1` to `10.0.2.254` (254 rooms)
+
+Each `/24` floor holds 254 guests. Azure reserves 5 IPs per subnet, so 251 usable.
+
+</Analogy>
+
+---
+
+## Core Explanation
+
+### CIDR Quick Reference
+
+| CIDR | Subnet Mask | Hosts | Azure Usable | Typical Use |
+|------|------------|-------|-------------|------------|
+| /8 | 255.0.0.0 | 16,777,214 | — | VNet address space |
+| /16 | 255.255.0.0 | 65,534 | — | VNet address space |
+| /20 | 255.255.240.0 | 4,094 | — | VNet address space |
+| /24 | 255.255.255.0 | 254 | 251 | Standard subnet |
+| /25 | 255.255.255.128 | 126 | 123 | Medium subnet |
+| /26 | 255.255.255.192 | 62 | 59 | Small service subnet |
+| /27 | 255.255.255.224 | 30 | 25 | Gateway subnet (Azure) |
+| /28 | 255.255.255.240 | 14 | 9 | Bastion subnet |
+| /29 | 255.255.255.248 | 6 | 1 | Minimal Azure subnet |
+
+<Warning>
+Azure reserves 5 IP addresses per subnet: network (.0), default gateway (.1), Azure DNS (.2, .3), and broadcast (.255). A `/29` gives you only 1 usable IP — never use `/29` in Azure.
+</Warning>
+
+### The Math (You Need This)
+
+```
+Usable hosts = 2^(32 - prefix_length) - 2 (for network + broadcast)
+
+Azure usable = 2^(32 - prefix_length) - 5
+
+/24 example: 2^(32-24) - 2 = 256 - 2 = 254 (classic)
+             2^(32-24) - 5 = 256 - 5 = 251 (Azure)
+```
+
+---
+
+## Professional Explanation
+
+### VNet Address Space Design
+
+<Mermaid>
+graph TB
+    subgraph "CloudNova Production — 10.0.0.0/16"
+        subgraph "Common Services — 10.0.0.0/20"
+            GW["GatewaySubnet<br/>10.0.0.0/27"]
+            Bast["AzureBastionSubnet<br/>10.0.0.32/27"]
+            FW["FirewallSubnet<br/>10.0.0.64/26"]
+        end
+        
+        subgraph "Application Tier — 10.0.16.0/20"
+            Web["web-subnet<br/>10.0.16.0/24"]
+            API["api-subnet<br/>10.0.17.0/24"]
+            Worker["worker-subnet<br/>10.0.18.0/24"]
+        end
+        
+        subgraph "Data Tier — 10.0.32.0/20"
+            SQL["sql-subnet<br/>10.0.32.0/27 (delegated)"]
+            Redis["redis-subnet<br/>10.0.32.32/27"]
+            Storage["storage-subnet<br/>10.0.32.64/27 (endpoints)"]
+        end
+        
+        subgraph "AKS — 10.0.48.0/20"
+            AKS["aks-subnet<br/>10.0.48.0/22"]
+            AKS_Pods["aks-pod-subnet<br/>10.0.52.0/22"]
+        end
+        
+        subgraph "RESERVED — 10.0.64.0/18"
+            Future["Future Growth<br/>10.0.64.0/18"]
+        end
+    end
+
+    style Future fill:#e5e7eb,stroke-dasharray: 5 5,color:#000
+</Mermaid>
+
+**Design principles demonstrated:**
+1. **Summarizable:** All subnets fit within `10.0.0.0/16` — one route to rule them all
+2. **Grouped by function:** Common, app, data, AKS — each in its own `/20`
+3. **Future-proof:** 75% of address space reserved for growth
+4. **Non-overlapping:** No subnet conflicts anywhere in the design
+
+<ProductionNote>
+
+### CloudNova: "We Ran Out of IPs"
+
+**Ticket #CN-5132 — "Can't deploy new AKS nodes"**
+
+The Kubernetes cluster in `10.0.48.0/24` was designed for 20 nodes (251 IPs). After 18 months, the team needed 35 nodes for a major customer onboarding.
+
+**Problem:** `/24` only allows 251 IPs. With 35 nodes × 30 pods each = 1,050 pod IPs needed. The subnet was completely exhausted.
+
+**Solution:**
+1. Create new AKS node pool in `10.0.64.0/22` (1,013 usable IPs)
+2. Migrate workloads node by node (cordon/drain old nodes)
+3. Decommission old node pool
+
+**Lesson:** K8s subnet sizing: `(max_nodes × max_pods_per_node) + buffer`. For 50 nodes × 30 pods = 1,500 IPs → minimum `/21` (2,047 hosts).
+
+</ProductionNote>
+
+---
+
+## Production Explanation
+
+### Hub-Spoke VNet Topology with CIDR Planning
+
+<Mermaid>
+graph TB
+    subgraph "Hub — 10.0.0.0/16"
+        HubGW["VPN/ER Gateway"]
+        HubFW["Azure Firewall"]
+        HubBast["Bastion"]
+    end
+    
+    subgraph "Spoke: Production — 10.1.0.0/16"
+        ProdApp["App subnets<br/>10.1.0.0/20"]
+        ProdData["Data subnets<br/>10.1.16.0/20"]
+    end
+    
+    subgraph "Spoke: Staging — 10.2.0.0/16"
+        StagApp["App subnets<br/>10.2.0.0/20"]
+        StagData["Data subnets<br/>10.2.16.0/20"]
+    end
+    
+    subgraph "Spoke: Dev — 10.3.0.0/16"
+        DevApp["App subnets<br/>10.3.0.0/20"]
+    end
+    
+    HubGW <-->|Peering| ProdApp
+    HubFW <-->|Peering| ProdApp
+    HubGW <-->|Peering| StagApp
+    HubGW <-->|Peering| DevApp
+
+    style HubGW fill:#0ea5e9,color:#fff
+    style HubFW fill:#ef4444,color:#fff
+</Mermaid>
+
+**The golden rule of hub-spoke CIDR:** No two VNets may have overlapping address spaces. Ever. If they do, you cannot peer them.
+
+```
+✅ Hub:      10.0.0.0/16
+✅ Prod:     10.1.0.0/16
+✅ Staging:  10.2.0.0/16
+✅ Dev:      10.3.0.0/16
+❌ Dev:      10.1.0.0/16  — overlaps with Prod, peering impossible
+```
+
+---
+
+## Architect Explanation
+
+### Global CIDR Strategy for Multi-Region
+
+```
+Company Supernet: 10.0.0.0/8
+
+├── Region: West Europe    → 10.0.0.0/12 (1,048,576 IPs)
+│   ├── Hub (prod)         → 10.0.0.0/16
+│   ├── Prod Spoke 1       → 10.1.0.0/16
+│   ├── Prod Spoke 2       → 10.2.0.0/16
+│   ├── Non-Prod           → 10.3.0.0/16
+│   └── Reserved           → 10.4.0.0/14
+│
+├── Region: North Europe   → 10.16.0.0/12
+│   ├── DR Prod            → 10.16.0.0/16
+│   └── Reserved           → 10.17.0.0/14
+│
+└── Region: Southeast Asia → 10.32.0.0/12
+    ├── Prod                → 10.32.0.0/16
+    └── Reserved            → 10.33.0.0/14
+```
+
+This design allows:
+- **Summarization:** One route to West Europe (10.0.0.0/12), one to Asia (10.32.0.0/12)
+- **Growth:** Each region gets ~1 million IPs
+- **No overlap:** Guaranteed by architectural mandate — each region owns its `/12`
+
+---
+
+## Hands-On Exercise
+
+<Exercise>
+
+### Lab: Subnet Calculation Practice
+
+Calculate by hand (then verify with `ipcalc`):
+
+1. How many usable IPs in `192.168.1.0/28`? (Azure)
+2. What's the network address of `10.42.7.15/20`?
+3. Does `10.0.1.0/24` overlap with `10.0.1.128/25`?
+4. Design subnets: split `10.0.0.0/16` into 4 equal `/18` blocks.
+
+```bash
+# Verify with ipcalc
+ipcalc 192.168.1.0/28
+ipcalc 10.42.7.15/20
+```
+
+</Exercise>
+
+---
+
+<Challenge>
+
+### Challenge: CloudNova VNet Expansion
+
+CloudNova's existing `10.100.0.0/16` VNet is 90% full. They need to:
+1. Add a new AKS cluster (expected: 100 nodes × 30 pods)
+2. Add disaster recovery environment
+3. Not break existing peerings (hub: `10.0.0.0/16`, spoke: `10.100.0.0/16`)
+
+**Your task:** Propose the new address space allocation. Calculate exact subnets needed. What's the minimum new VNet size?
+
+</Challenge>
+
+---
+
+<Flashcard
+  front="How many usable IPs does Azure reserve in each subnet?"
+  back="5 IPs: .0 (network address), .1 (default gateway), .2 and .3 (Azure DNS), .255 (broadcast on /24). Formula: Azure usable = 2^(32 - prefix) - 5"
+/>
+
+<Flashcard
+  front="What's the smallest usable subnet in Azure?"
+  back="/29 = 8 total IPs, minus 5 Azure reserved = 3 usable. However, /29 is risky — many Azure services (like ILB) need multiple IPs. Practical minimum is /28 (9 usable). The GatewaySubnet requires minimum /27 (25 usable)."
+/>
+
+<Quiz
+  question="You have VNet 10.0.0.0/16 and want to add a new VNet. Which of these can you peer?"
+  options={[
+    "10.0.128.0/17 — no overlap because the /17 starts at .128",
+    "10.1.0.0/16 — completely separate /16 block",
+    "10.0.0.0/24 — a small subnet within the same range",
+    "10.0.0.0/8 — the supernet that contains both"
+  ]}
+  correct={1}
+  explanation="10.1.0.0/16 does not overlap with 10.0.0.0/16. 10.0.128.0/17 IS inside 10.0.0.0/16 (overlaps!), 10.0.0.0/24 is obviously inside, and 10.0.0.0/8 contains 10.0.0.0/16. Only non-overlapping address spaces can be peered."
+/>
+
+---
+
+<CommonMistake>
+
+### Top CIDR Mistakes in Cloud
+
+1. **"I'll just use /16 for everything."** Then you can't peer VNets together because they overlap. Plan your address space globally before creating the first VNet.
+
+2. **"AKS pods only need 30 IPs."** AKS pods get IPs from the subnet. At 30 pods × 50 nodes = 1,500 IPs, you need at least `/21`. Use separate pod subnets (Azure CNI with dynamic allocation).
+
+3. **"GatewaySubnet /29 is fine."** Azure requires GatewaySubnet to be at least `/27`. You'll get a confusing deployment error, not a helpful validation message.
+
+</CommonMistake>
+
+---
+
+<InterviewQuestion>
+
+**Q:** "Explain CIDR to someone who isn't technical."
+**A:** "An IP address is like a phone number. CIDR is like a phone number with an extension length — `10.0.1.0/24` means 'the area code plus prefix is 24 digits long, and the remaining 8 digits are individual extensions.'"
+
+**Q:** "How would you design VNet addressing for a company planning 10 Azure regions?"
+**A:** "I'd allocate a `/12` per region from `10.0.0.0/8` (or company RFC 1918 space). Each region gets ~1M IPs. Within each region, a `/16` for the hub and `/16`s for each spoke environment. This gives 16 spokes per region with room for growth. All regions are non-overlapping, enabling future global VNet peering or Virtual WAN hub connections."
+
+</InterviewQuestion>
+
+---
+
+<CheatSheet title="Subnet Math Quick Reference">
+
+| Prefix | Mask | Total | Usable (Standard) | Azure Usable |
+|--------|------|-------|-------------------|-------------|
+| /16 | 255.255.0.0 | 65,536 | 65,534 | 65,531 |
+| /20 | 255.255.240.0 | 4,096 | 4,094 | 4,091 |
+| /21 | 255.255.248.0 | 2,048 | 2,046 | 2,043 |
+| /22 | 255.255.252.0 | 1,024 | 1,022 | 1,019 |
+| /24 | 255.255.255.0 | 256 | 254 | 251 |
+| /27 | 255.255.255.224 | 32 | 30 | 25 |
+| /28 | 255.255.255.240 | 16 | 14 | 9 |
+
+**Quick formula:** `2^(32-X)` = total IPs. Subtract 5 for Azure.
+
+</CheatSheet>
+
+---
+
+**Next:** [Load Balancing Patterns](./05-load-balancing) • **Previous:** [HTTP/HTTPS & TLS](./03-https-tls)

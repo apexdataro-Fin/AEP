@@ -1,0 +1,422 @@
+---
+id: net-02
+title: "DNS: The Internet's Phonebook"
+difficulty: intermediate
+estimated_time: "45 min"
+prerequisites: ["net-01"]
+skills: ["dns", "networking", "azure-dns", "dns-troubleshooting"]
+technologies: ["dns", "azure-dns", "bind", "dnssec"]
+certifications: ["az-104", "az-900"]
+knowledge_nodes: ["dns-resolution", "dns-record-types", "azure-dns-zones", "dns-private-endpoints"]
+review_schedule: "3d,7d,30d"
+author: "ARES Engineering"
+last_updated: "2026-07-15"
+---
+
+import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+
+# DNS: The Internet's Phonebook
+
+<Info>
+
+**Learning Objectives**
+- Trace a DNS query from browser to authoritative server
+- Configure Azure DNS zones and records
+- Diagnose resolution failures systematically
+- Understand DNS's role in cloud architecture (private endpoints, traffic routing)
+
+**Prerequisites:** TCP/IP fundamentals (Module 03, Lesson 01)  
+**Estimated Time:** 45 minutes  
+**Difficulty:** Intermediate
+
+</Info>
+
+---
+
+## Simple Explanation
+
+You want to call CloudNova's office. You don't memorize phone numbers — you look up "CloudNova" in your phone's contacts, which gives you +1-555-0123.
+
+DNS works exactly the same way: you type `app.cloudnova.io`, and DNS translates it to an IP address like `10.42.7.15`.
+
+<Analogy>
+
+**The Phone Book Analogy**
+- **Your phone's contacts app** = Your local DNS cache (hosts file, browser cache)
+- **Your phone carrier's directory** = Recursive DNS resolver (e.g., Cloudflare 1.1.1.1, Azure DNS)
+- **The national phone registry** = Root nameservers (the 13 root servers)
+- **The company directory** = Authoritative nameserver for `cloudnova.io`
+
+</Analogy>
+
+---
+
+## Core Explanation
+
+### DNS Resolution: Full Walkthrough
+
+When you visit `api.inventory.cloudnova.io`, here's the complete chain:
+
+<Mermaid>
+sequenceDiagram
+    participant Browser
+    participant LocalCache
+    participant Recursive as Recursive Resolver<br/>(1.1.1.1 / Azure DNS)
+    participant Root as Root NS<br/>('.')
+    participant TLD as TLD NS<br/>('.io')
+    participant Auth as Authoritative NS<br/>('cloudnova.io')
+    
+    Browser->>LocalCache: "api.inventory.cloudnova.io?"
+    LocalCache-->>Browser: (cache miss)
+    Browser->>Recursive: "api.inventory.cloudnova.io?"
+    
+    Recursive->>Root: "Where is .io?"
+    Root-->>Recursive: "Ask a.0.nic.io (IP: 65.22.a.b)"
+    
+    Recursive->>TLD: "Where is cloudnova.io?"
+    TLD-->>Recursive: "Ask ns1.cloudnova.io (IP: 10.0.1.53)"
+    
+    Recursive->>Auth: "api.inventory.cloudnova.io?"
+    Auth-->>Recursive: "A record: 10.42.7.15 (TTL: 300)"
+    
+    Recursive-->>Browser: "10.42.7.15"
+    Note over Browser: Stores in cache<br/>for 300 seconds
+</Mermaid>
+
+<Example>
+
+**Real DNS resolution with `dig +trace`:**
+```bash
+$ dig +trace api.inventory.cloudnova.io
+
+# Step 1: Root servers
+io.    172800  IN  NS  a0.nic.io.
+a0.nic.io.    172800  IN  A   65.22.160.17
+
+# Step 2: TLD nameservers
+cloudnova.io.  86400  IN  NS  ns1.cloudnova.io.
+
+# Step 3: Authoritative answer
+api.inventory.cloudnova.io. 300 IN A 10.42.7.15
+```
+
+Each "+" in `+trace` shows one step in the chain.
+
+</Example>
+
+---
+
+## Professional Explanation
+
+### DNS Record Types Every Cloud Engineer Must Know
+
+| Record | Purpose | Cloud Usage |
+|--------|---------|------------|
+| **A** | IPv4 address | VM, Load Balancer public IP |
+| **AAAA** | IPv6 address | IPv6-enabled services |
+| **CNAME** | Alias to another name | CDN endpoints (`app-cdn.azureedge.net`) |
+| **MX** | Mail server | Email routing |
+| **TXT** | Arbitrary text | Domain verification, SPF, DKIM |
+| **NS** | Nameserver delegation | Zone delegation |
+| **SOA** | Start of Authority | Zone serial, refresh intervals |
+| **SRV** | Service location | Service discovery (port + hostname) |
+| **PTR** | Reverse lookup (IP→name) | Email reputation, diagnostics |
+| **CAA** | Certificate Authority Authorization | Which CAs can issue certs |
+
+### TTL: The Engineering Trade-off
+
+```
+Low TTL (60s):  ↑ DNS queries, ↑ cost,   ↑ agility (fast failover)
+High TTL (86400s): ↓ DNS queries, ↓ cost, ↓ agility (slow propagation)
+```
+
+<ProductionNote>
+
+### CloudNova Incident: "The TTL Trap"
+
+**Incident #IN-312 — "50% of users can't reach the new API endpoint"**
+
+CloudNova migrated its inventory API from `old-api.cloudnova.io` to `api.cloudnova.io`. The DevOps team updated the DNS A record and declared migration complete. Ten minutes later, PagerDuty exploded.
+
+**Root cause:** The old record had TTL=86400 (24 hours). Half of users' recursive resolvers still had the cached old IP. Only users whose TTL had expired got the new IP.
+
+**Fix:** 
+1. Changed TTL to 60 seconds — then waited 24 hours for old TTL to expire
+2. Ran both old and new endpoints simultaneously for 48 hours
+3. Only after new endpoint was proven stable, decommissioned the old one
+
+**Lesson:** Never change a production DNS record without first lowering TTL to 60s and waiting for old TTL to expire. DNS is *eventually consistent*.
+
+</ProductionNote>
+
+---
+
+## Production Explanation
+
+### Azure DNS Architecture
+
+<Mermaid>
+graph TB
+    subgraph "Azure DNS"
+        PublicZone["Public DNS Zone<br/>cloudnova.io"]
+        PrivateZone["Private DNS Zone<br/>cloudnova.internal"]
+    end
+    
+    subgraph "VNets"
+        VNet1["Production VNet<br/>(linked to private zone)"]
+        VNet2["Staging VNet<br/>(linked to private zone)"]
+    end
+    
+    subgraph "Resources"
+        VM1["VM: app-01<br/>(auto-registers)"]
+        SQL1["Private Endpoint<br/>sql.cloudnova.internal → 10.0.2.5"]
+    end
+    
+    PublicZone -->|"api.cloudnova.io → Public IP"| Internet
+    VNet1 --> PrivateZone
+    VNet2 --> PrivateZone
+    VM1 -.->|"app-01.cloudnova.internal → 10.0.1.15"| PrivateZone
+    SQL1 -.->|auto-register| PrivateZone
+
+    style PublicZone fill:#0ea5e9,color:#fff
+    style PrivateZone fill:#8b5cf6,color:#fff
+</Mermaid>
+
+**Key Azure DNS concepts:**
+
+1. **Public DNS Zones:** Host your domain's DNS in Azure. $0.50/month per zone + $0.40/million queries.
+2. **Private DNS Zones:** Resolve names inside VNets. Critical for private endpoints — `sql.cloudnova.internal` resolves to private IP `10.0.2.5`.
+3. **Private Endpoints:** A NIC in your VNet that maps to a PaaS service's private IP. DNS plays a crucial role — without private DNS, your app would resolve the public endpoint instead.
+
+<CodeBlock language="bash">
+
+```bash
+# Create a Private DNS Zone linked to VNet
+az network private-dns zone create \
+  --resource-group cloudnova-prod \
+  --name cloudnova.internal
+
+az network private-dns link vnet create \
+  --resource-group cloudnova-prod \
+  --zone-name cloudnova.internal \
+  --name prod-vnet-link \
+  --virtual-network prod-vnet \
+  --registration-enabled true
+
+# Create A record for a private endpoint
+az network private-dns record-set a create \
+  --resource-group cloudnova-prod \
+  --zone-name cloudnova.internal \
+  --name sql-primary
+
+az network private-dns record-set a add-record \
+  --resource-group cloudnova-prod \
+  --zone-name cloudnova.internal \
+  --record-set-name sql-primary \
+  --ipv4-address 10.0.2.5
+```
+
+</CodeBlock>
+
+---
+
+## Architect Explanation
+
+### DNS-Based Traffic Management
+
+DNS isn't just for name resolution — it's a traffic routing layer:
+
+<Mermaid>
+graph TB
+    User1["User in Europe"]
+    User2["User in Asia"]
+    
+    subgraph "Traffic Manager / Route53"
+        DNS["DNS: api.cloudnova.io<br/>⤷ Europe: 13.69.a.b<br/>⤷ Asia: 20.195.c.d<br/>⤷ Failover: 52.178.e.f"]
+    end
+    
+    subgraph "Regions"
+        Europe["West Europe<br/>Azure Front Door + App GW"]
+        Asia["Southeast Asia<br/>Azure Front Door + App GW"]
+        DR["North Europe (DR)<br/>Standby"]
+    end
+    
+    User1 --> DNS
+    User2 --> DNS
+    DNS -->|"Performance routing"| Europe
+    DNS -->|"Performance routing"| Asia
+    DNS -.->|"Failover"| DR
+
+    style DNS fill:#f59e0b,color:#000
+</Mermaid>
+
+**Traffic routing strategies:**
+
+| Strategy | How it works | When to use |
+|----------|-------------|------------|
+| **Latency-based** | DNS returns closest healthy endpoint | Multi-region, global user base |
+| **Geographic** | Route based on user location | Data sovereignty, GDPR |
+| **Weighted** | Percentage split (80%/20%) | Canary deployments, A/B testing |
+| **Priority/Failover** | Primary → Secondary → Tertiary | Disaster recovery |
+| **Multi-value** | Return multiple healthy IPs | Active-active, client-side load balancing |
+
+<ArchitectureNote>
+
+### DNS in Microservices
+
+In Kubernetes, CoreDNS provides service discovery:
+```
+service-name.namespace.svc.cluster.local
+```
+
+Example: `inventory-service.production.svc.cluster.local`
+
+This is DNS-driven service discovery — no hardcoded IPs. Move a pod? DNS updates automatically (within TTL).
+
+For cross-cluster communication in Azure:
+```
+myapp.westeurope.cloudapp.azure.com
+```
+Azure provides built-in DNS for VMs, but for AKS, consider Azure Private DNS Zones for cluster-to-cluster resolution.
+
+</ArchitectureNote>
+
+---
+
+## Hands-On Exercise
+
+<Exercise>
+
+### Lab: Configure Azure Private DNS
+
+**Prerequisites:** Azure subscription, Azure CLI  
+**Time:** 20 minutes
+
+1. Create a Private DNS Zone:
+```bash
+az network private-dns zone create \
+  --resource-group cloudnova-lab \
+  --name lab.internal
+```
+
+2. Link to your VNet:
+```bash
+az network private-dns link vnet create \
+  --resource-group cloudnova-lab \
+  --zone-name lab.internal \
+  --name lab-link \
+  --virtual-network lab-vnet \
+  --registration-enabled true
+```
+
+3. Create a test VM and verify auto-registration:
+```bash
+az vm create --name test-vm --resource-group cloudnova-lab --vnet-name lab-vnet
+# Connect and run: nslookup test-vm.lab.internal
+# You should see the VM's private IP
+```
+
+</Exercise>
+
+---
+
+<Debugging>
+
+### DNS Troubleshooting Decision Tree
+
+<Mermaid>
+graph TD
+    Start(["Can't resolve hostname"]) --> Step1{nslookup works?}
+    Step1 -->|Yes| Cache["Check TTL<br/>Maybe cache is stale?"]
+    Step1 -->|No| Step2{Can ping 8.8.8.8?}
+    Step2 -->|No| Network["Network issue<br/>Check VNet, NSG, firewall"]
+    Step2 -->|Yes| Step3{dig +trace shows<br/>the chain?}
+    Step3 -->|Fails at root| DNS_Settings["Check /etc/resolv.conf<br/>or VNet DNS settings"]
+    Step3 -->|Fails at TLD| Delegation["NS delegation broken<br/>Check registrar/zone NS records"]
+    Step3 -->|Fails at auth| Auth_Server["Check authoritative server<br/>Is Azure DNS zone correct?"]
+    Step3 -->|Works!| App["DNS is fine.<br/>Check application/TLS"]
+</Mermaid>
+
+</Debugging>
+
+---
+
+<CommonMistake>
+
+### Top DNS Mistakes in Azure
+
+1. **Forgetting Private DNS for Private Endpoints.** Without a Private DNS Zone, `sql.cloudnova.internal` resolves to a public IP. Your traffic goes over the internet. Private endpoints are useless without private DNS.
+
+2. **CNAME at apex.** You can't CNAME `cloudnova.io` — it must be an A record. This is a DNS protocol rule. Use Azure Front Door or Traffic Manager (supports apex with alias records).
+
+3. **TTL too high for failover.** If TTL is 3600s (1 hour) and primary region fails, users who resolved before the failure will keep hitting the dead endpoint for up to 1 hour. Use 60s TTL for critical services.
+
+</CommonMistake>
+
+---
+
+<Flashcard
+  front="What's the difference between a recursive resolver and an authoritative nameserver?"
+  back="Recursive resolver: Does the heavy lifting — walks the DNS tree (root → TLD → authoritative) to find the answer for you (e.g., 8.8.8.8). Authoritative nameserver: Has the actual DNS records for a domain and gives definitive answers (e.g., ns1.cloudnova.io knows all cloudnova.io records)."
+/>
+
+<Flashcard
+  front="Why does DNS use UDP (port 53) instead of TCP?"
+  back="DNS queries are small (typically < 512 bytes), and UDP is connectionless — no handshake overhead. Speed matters: 1 RTT vs TCP's 3-way handshake. TCP is used for zone transfers (AXFR) and responses > 512 bytes."
+/>
+
+<Flashcard
+  front="What's the DNS purpose of a private endpoint in Azure?"
+  back="A private endpoint maps a PaaS service (e.g., Azure SQL) to a private IP in your VNet. Private DNS ensures that when your app resolves the FQDN, it gets the private IP, not the public one — keeping traffic on the Azure backbone."
+/>
+
+<Quiz
+  question="You've lowered TTL from 86400 to 60 seconds. How long until ALL clients see the new TTL?"
+  options={[
+    "60 seconds",
+    "300 seconds",
+    "86400 seconds (24 hours) — the old TTL must expire first",
+    "Immediately — DNS is real-time"
+  ]}
+  correct={2}
+  explanation="DNS resolvers that already cached the record will keep it for the *old* TTL (86400s). The new 60s TTL only applies to new lookups. You must wait for the old TTL to expire before making production changes."
+/>
+
+---
+
+<InterviewQuestion>
+
+**Q:** "How would you design DNS failover for a multi-region application?"
+**A:** Use Azure Traffic Manager (DNS-based) or Front Door (L7 with anycast):
+1. Deploy identical backends in West Europe and Southeast Asia
+2. Configure Traffic Manager with performance routing (routes users to nearest healthy region)
+3. Set TTL to 60 seconds for fast failover
+4. Health probes check `/health` every 30 seconds
+5. If West Europe fails health checks, Traffic Manager stops returning its IP
+6. Users automatically route to Southeast Asia (within 60s TTL window)
+7. Additional consideration: ensure database is also multi-region (or accept read-only failover)
+
+**Q:** "What happens when you delete an Azure Private DNS Zone without deleting the VNet links first?"
+**A:** The zone deletion will fail. Azure deliberately prevents deletion of a Private DNS Zone that has active VNet links to prevent accidental outages. You must delete all VNet links first, then delete the zone.
+
+</InterviewQuestion>
+
+---
+
+<CheatSheet title="DNS Quick Reference">
+
+| Command | Purpose |
+|---------|---------|
+| `nslookup hostname` | Simple DNS lookup |
+| `dig hostname` | Detailed DNS query |
+| `dig +trace hostname` | Trace full resolution chain |
+| `dig -x 10.0.1.5` | Reverse DNS lookup |
+| `dig hostname ANY` | All record types |
+| `host -t MX domain.com` | Query specific record type |
+| `az network dns record-set list -g RG -z zone.com` | List Azure DNS records |
+
+</CheatSheet>
+
+---
+
+**Next:** [HTTP/HTTPS & TLS Deep Dive](./03-https-tls) • **Previous:** [TCP/IP Demystified](./01-tcpip-demystified)
