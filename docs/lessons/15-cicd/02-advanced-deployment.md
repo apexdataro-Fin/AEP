@@ -10,11 +10,11 @@ description: "استراتيجيات النشر: Blue-Green، Canary، Feature F
 
 ## استراتيجيات النشر
 
-| الاستراتيجية | كيف تعمل | الأنسب لـ |
-|---|---|---|
-| **Rolling** | استبدل النسخ واحدة تلو الأخرى | النشر العادي اليومي |
-| **Blue-Green** | بيئتان — بدل الحركة فوراً | تراجع فوري مضمون |
-| **Canary** | ١٠٪ من المستخدمين للجديد | اختبار حقيقي في الإنتاج |
+| الاستراتيجية   | كيف تعمل                      | الأنسب لـ               |
+| -------------- | ----------------------------- | ----------------------- |
+| **Rolling**    | استبدل النسخ واحدة تلو الأخرى | النشر العادي اليومي     |
+| **Blue-Green** | بيئتان — بدل الحركة فوراً     | تراجع فوري مضمون        |
+| **Canary**     | ١٠٪ من المستخدمين للجديد      | اختبار حقيقي في الإنتاج |
 
 ## Blue-Green Deployment
 
@@ -39,15 +39,15 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 spec:
   http:
-  - route:
-    - destination:
-        host: api
-        subset: v2
-      weight: 10    # ١٠٪ فقط للجديد
-    - destination:
-        host: api
-        subset: v1
-      weight: 90
+    - route:
+        - destination:
+            host: api
+            subset: v2
+          weight: 10 # ١٠٪ فقط للجديد
+        - destination:
+            host: api
+            subset: v1
+          weight: 90
 ```
 
 ## Feature Flags — نشر بدون نشر

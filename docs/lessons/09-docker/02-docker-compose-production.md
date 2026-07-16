@@ -65,10 +65,10 @@ REDIS_PASSWORD=RedisSecret456
 deploy:
   resources:
     limits:
-      memory: 512M    # أقصى حد
+      memory: 512M # أقصى حد
       cpus: "1.0"
     reservations:
-      memory: 256M    # الحد الأدنى المضمون
+      memory: 256M # الحد الأدنى المضمون
 ```
 
 ---

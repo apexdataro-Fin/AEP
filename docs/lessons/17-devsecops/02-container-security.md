@@ -10,12 +10,12 @@ description: "Pod Security، Network Policies، RBAC، Secrets Management في K
 
 ## طبقات أمان Kubernetes
 
-| الطبقة | التقنية | ماذا تحمي |
-|---|---|---|
-| **الصورة** | Trivy, Aqua | ثغرات في صور الحاويات |
-| **الـ Pod** | Pod Security Standards | صلاحيات الحاوية |
-| **الشبكة** | Network Policies | الاتصالات بين الخدمات |
-| **الوصول** | RBAC | من يفعل ماذا |
+| الطبقة      | التقنية                   | ماذا تحمي              |
+| ----------- | ------------------------- | ---------------------- |
+| **الصورة**  | Trivy, Aqua               | ثغرات في صور الحاويات  |
+| **الـ Pod** | Pod Security Standards    | صلاحيات الحاوية        |
+| **الشبكة**  | Network Policies          | الاتصالات بين الخدمات  |
+| **الوصول**  | RBAC                      | من يفعل ماذا           |
 | **الأسرار** | External Secrets Operator | كلمات المرور والمفاتيح |
 
 ## Pod Security
@@ -29,12 +29,12 @@ spec:
     runAsUser: 1000
     fsGroup: 1000
   containers:
-  - name: api
-    securityContext:
-      allowPrivilegeEscalation: false
-      readOnlyRootFilesystem: true
-      capabilities:
-        drop: ["ALL"]
+    - name: api
+      securityContext:
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: ["ALL"]
 ```
 
 ## RBAC
@@ -46,9 +46,9 @@ metadata:
   namespace: prod
   name: developer
 rules:
-- apiGroups: [""]
-  resources: ["pods", "pods/log"]
-  verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list"]
 # لا يمكنه: delete, create, exec إلى pods
 ```
 

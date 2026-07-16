@@ -70,16 +70,16 @@ kind: Job
 metadata:
   name: "{{ .Release.Name }}-db-migrate"
   annotations:
-    "helm.sh/hook": pre-upgrade       # ينفذ قبل الترقية
-    "helm.sh/hook-weight": "5"        # ترتيب التنفيذ
-    "helm.sh/hook-delete-policy": hook-succeeded  # يحذف بعد النجاح
+    "helm.sh/hook": pre-upgrade # ينفذ قبل الترقية
+    "helm.sh/hook-weight": "5" # ترتيب التنفيذ
+    "helm.sh/hook-delete-policy": hook-succeeded # يحذف بعد النجاح
 spec:
   template:
     spec:
       containers:
-      - name: migrate
-        image: cloudnova/migrate:{{ .Values.image.tag }}
-        command: ["python", "manage.py", "migrate"]
+        - name: migrate
+          image: cloudnova/migrate:{{ .Values.image.tag }}
+          command: ["python", "manage.py", "migrate"]
       restartPolicy: Never
 ```
 

@@ -10,13 +10,13 @@ description: "Terraform، Ansible، Packer — مجموعة أدوات DevOps ا
 
 ## مجموعة الأدوات المتكاملة
 
-| الأداة | الغرض | بديل |
-|---|---|---|
-| **Terraform** | بنية تحتية ككود | Pulumi, Bicep |
-| **Ansible** | إدارة التكوين | Chef, Puppet, Salt |
-| **Packer** | بناء صور الآلات | Dockerfiles (للحاويات) |
-| **Vault** | إدارة الأسرار | Azure Key Vault, AWS Secrets Manager |
-| **Consul** | اكتشاف الخدمات | Kubernetes DNS, Istio |
+| الأداة        | الغرض           | بديل                                 |
+| ------------- | --------------- | ------------------------------------ |
+| **Terraform** | بنية تحتية ككود | Pulumi, Bicep                        |
+| **Ansible**   | إدارة التكوين   | Chef, Puppet, Salt                   |
+| **Packer**    | بناء صور الآلات | Dockerfiles (للحاويات)               |
+| **Vault**     | إدارة الأسرار   | Azure Key Vault, AWS Secrets Manager |
+| **Consul**    | اكتشاف الخدمات  | Kubernetes DNS, Istio                |
 
 ## Ansible — إدارة التكوين
 

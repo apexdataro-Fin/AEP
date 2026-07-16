@@ -27,12 +27,12 @@ graph TD
 
 ## المكونات الأساسية
 
-| المكون | الوظيفة | مثال |
-|---|---|---|
-| **النموذج (LLM)** | العقل — يفكر ويخطط | GPT-4, Claude |
-| **الأدوات (Tools)** | الأيدي — تنفذ | API, Code executor, Search |
-| **الذاكرة (Memory)** | تتذكر السياق | Vector DB, Conversation history |
-| **التخطيط (Planning)** | تقسم المهمة لخطوات | Chain-of-thought, ReAct |
+| المكون                 | الوظيفة            | مثال                            |
+| ---------------------- | ------------------ | ------------------------------- |
+| **النموذج (LLM)**      | العقل — يفكر ويخطط | GPT-4, Claude                   |
+| **الأدوات (Tools)**    | الأيدي — تنفذ      | API, Code executor, Search      |
+| **الذاكرة (Memory)**   | تتذكر السياق       | Vector DB, Conversation history |
+| **التخطيط (Planning)** | تقسم المهمة لخطوات | Chain-of-thought, ReAct         |
 
 ## نمط ReAct
 
@@ -50,12 +50,12 @@ graph TD
 
 ## أطر العمل
 
-| الإطار | اللغة | القوة |
-|---|---|---|
-| **LangChain** | Python/JS | مرونة عالية، مجتمع كبير |
-| **AutoGen** (Microsoft) | Python | وكلاء متعددون يتحدثون معاً |
-| **CrewAI** | Python | وكلاء بأدوار (مدير، باحث، كاتب) |
-| **Semantic Kernel** | .NET/Python | تكامل مؤسسي مع Azure |
+| الإطار                  | اللغة       | القوة                           |
+| ----------------------- | ----------- | ------------------------------- |
+| **LangChain**           | Python/JS   | مرونة عالية، مجتمع كبير         |
+| **AutoGen** (Microsoft) | Python      | وكلاء متعددون يتحدثون معاً      |
+| **CrewAI**              | Python      | وكلاء بأدوار (مدير، باحث، كاتب) |
+| **Semantic Kernel**     | .NET/Python | تكامل مؤسسي مع Azure            |
 
 ## سيناريو CloudNova: وكيل تشخيص الأعطال
 

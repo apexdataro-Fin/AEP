@@ -48,14 +48,14 @@ az keyvault create --name cloudnova-kv \
 
 ## التكلفة التقديرية
 
-| المورد | المستوى | التكلفة/شهر |
-|---|---|---|
-| App Service Plan | P1v2 | ~$١٤٦ |
-| Azure SQL | General Purpose | ~$٣٧٥ |
-| Key Vault | Standard | ~$٠.٣٠ |
-| Application Gateway | WAF v2 | ~$٣٥٠ |
-| CDN | Standard | ~$٢٠ |
-| **الإجمالي** | | **~$٨٩١** |
+| المورد              | المستوى         | التكلفة/شهر |
+| ------------------- | --------------- | ----------- |
+| App Service Plan    | P1v2            | ~$١٤٦       |
+| Azure SQL           | General Purpose | ~$٣٧٥       |
+| Key Vault           | Standard        | ~$٠.٣٠      |
+| Application Gateway | WAF v2          | ~$٣٥٠       |
+| CDN                 | Standard        | ~$٢٠        |
+| **الإجمالي**        |                 | **~$٨٩١**   |
 
 ---
 
