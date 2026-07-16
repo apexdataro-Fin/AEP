@@ -12,32 +12,32 @@ The complete Cloud Engineering learning path. From Linux fundamentals to AI infr
 
 ## 🚀 Start Learning
 
-- **Beginners** → Start at [01 — Engineering Foundations](01-foundations)
-- **Intermediate** → Jump to [07 — Azure Core Services](07-azure-core)
-- **Advanced** → Dive into [12 — Terraform](12-terraform)
-- **Expert** → Explore [24 — Azure AI](24-azure-ai)
+- **Beginners** → Start at [🧠 Engineering Foundations](foundations)
+- **Intermediate** → Jump to [🟦 Azure Core Services](azure-core)
+- **Advanced** → Dive into [🏗️ Terraform](terraform)
+- **Expert** → Explore [🤖 Azure AI](azure-ai)
 
 ## 📚 All 33 Modules
 
-| #   | Module                                         | #   | Module                                   |
-| --- | ---------------------------------------------- | --- | ---------------------------------------- |
-| 01  | [🧠 Engineering Foundations](01-foundations)   | 18  | [🚀 GitOps](18-gitops)                   |
-| 02  | [🐧 Linux Mastery](02-linux)                   | 19  | [⚙️ Platform Engineering](19-platform)   |
-| 03  | [🌐 Networking Deep Dive](03-networking)       | 20  | [📊 Monitoring](20-monitoring)           |
-| 04  | [🔒 Security & IAM](04-security)               | 21  | [🔍 Observability](21-observability)     |
-| 05  | [🐍 Python for Cloud](05-python)               | 22  | [💰 FinOps](22-finops)                   |
-| 06  | [☁️ Cloud Fundamentals](06-cloud-fundamentals) | 23  | [🪪 Identity](23-identity)               |
-| 07  | [🟦 Azure Core Services](07-azure-core)        | 24  | [🤖 Azure AI](24-azure-ai)               |
-| 08  | [📦 Containers](08-containers)                 | 25  | [🧬 Vector Databases](25-vector-db)      |
-| 09  | [🐳 Docker](09-docker)                         | 26  | [🧩 RAG Architecture](26-rag)            |
-| 10  | [☸️ Kubernetes](10-kubernetes)                 | 27  | [🕴️ AI Agents](27-ai-agents)             |
-| 11  | [⛵ Helm](11-helm)                             | 28  | [📈 MLOps](28-mlops)                     |
-| 12  | [🏗️ Terraform](12-terraform)                   | 29  | [💬 LLMOps](29-llmops)                   |
-| 13  | [🔀 Git](13-git)                               | 30  | [🖥️ AI Infrastructure](30-ai-infra)      |
-| 14  | [🐙 GitHub](14-github)                         | 31  | [💼 Portfolio Building](31-portfolio)    |
-| 15  | [🔄 CI/CD](15-cicd)                            | 32  | [🎤 Interview Preparation](32-interview) |
-| 16  | [♾️ DevOps](16-devops)                         | 33  | [🎯 Career Paths](33-career)             |
-| 17  | [🛡️ DevSecOps](17-devsecops)                   |     |                                          |
+| #   | Module                                      | #   | Module                                |
+| --- | ------------------------------------------- | --- | ------------------------------------- |
+| 01  | [🧠 Engineering Foundations](foundations)   | 18  | [🚀 GitOps](gitops)                   |
+| 02  | [🐧 Linux Mastery](linux)                   | 19  | [⚙️ Platform Engineering](platform)   |
+| 03  | [🌐 Networking Deep Dive](networking)       | 20  | [📊 Monitoring](monitoring)           |
+| 04  | [🔒 Security & IAM](security)               | 21  | [🔍 Observability](observability)     |
+| 05  | [🐍 Python for Cloud](python)               | 22  | [💰 FinOps](finops)                   |
+| 06  | [☁️ Cloud Fundamentals](cloud-fundamentals) | 23  | [🪪 Identity](identity)               |
+| 07  | [🟦 Azure Core Services](azure-core)        | 24  | [🤖 Azure AI](azure-ai)               |
+| 08  | [📦 Containers](containers)                 | 25  | [🧬 Vector Databases](vector-db)      |
+| 09  | [🐳 Docker](docker)                         | 26  | [🧩 RAG Architecture](rag)            |
+| 10  | [☸️ Kubernetes](kubernetes)                 | 27  | [🕴️ AI Agents](ai-agents)             |
+| 11  | [⛵ Helm](helm)                             | 28  | [📈 MLOps](mlops)                     |
+| 12  | [🏗️ Terraform](terraform)                   | 29  | [💬 LLMOps](llmops)                   |
+| 13  | [🔀 Git](git)                               | 30  | [🖥️ AI Infrastructure](ai-infra)      |
+| 14  | [🐙 GitHub](github)                         | 31  | [💼 Portfolio Building](portfolio)    |
+| 15  | [🔄 CI/CD](cicd)                            | 32  | [🎤 Interview Preparation](interview) |
+| 16  | [♾️ DevOps](devops)                         | 33  | [🎯 Career Paths](career)             |
+| 17  | [🛡️ DevSecOps](devsecops)                   |     |                                       |
 
 ## 🏆 Certification Mapping
 

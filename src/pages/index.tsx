@@ -6,39 +6,39 @@ import Heading from "@theme/Heading";
 import styles from "./index.module.css";
 
 const modules = [
-  { num: "01", name: "Engineering Foundations", slug: "01-foundations", emoji: "🧠" },
-  { num: "02", name: "Linux Mastery", slug: "02-linux", emoji: "🐧" },
-  { num: "03", name: "Networking Deep Dive", slug: "03-networking", emoji: "🌐" },
-  { num: "04", name: "Security & IAM", slug: "04-security", emoji: "🔒" },
-  { num: "05", name: "Python for Cloud", slug: "05-python", emoji: "🐍" },
-  { num: "06", name: "Cloud Fundamentals", slug: "06-cloud-fundamentals", emoji: "☁️" },
-  { num: "07", name: "Azure Core Services", slug: "07-azure-core", emoji: "🟦" },
-  { num: "08", name: "Containers", slug: "08-containers", emoji: "📦" },
-  { num: "09", name: "Docker", slug: "09-docker", emoji: "🐳" },
-  { num: "10", name: "Kubernetes", slug: "10-kubernetes", emoji: "☸️" },
-  { num: "11", name: "Helm", slug: "11-helm", emoji: "⛵" },
-  { num: "12", name: "Terraform", slug: "12-terraform", emoji: "🏗️" },
-  { num: "13", name: "Git", slug: "13-git", emoji: "🔀" },
-  { num: "14", name: "GitHub", slug: "14-github", emoji: "🐙" },
-  { num: "15", name: "CI/CD", slug: "15-cicd", emoji: "🔄" },
-  { num: "16", name: "DevOps", slug: "16-devops", emoji: "♾️" },
-  { num: "17", name: "DevSecOps", slug: "17-devsecops", emoji: "🛡️" },
-  { num: "18", name: "GitOps", slug: "18-gitops", emoji: "🚀" },
-  { num: "19", name: "Platform Engineering", slug: "19-platform", emoji: "⚙️" },
-  { num: "20", name: "Monitoring", slug: "20-monitoring", emoji: "📊" },
-  { num: "21", name: "Observability", slug: "21-observability", emoji: "🔍" },
-  { num: "22", name: "FinOps", slug: "22-finops", emoji: "💰" },
-  { num: "23", name: "Identity", slug: "23-identity", emoji: "🪪" },
-  { num: "24", name: "Azure AI", slug: "24-azure-ai", emoji: "🤖" },
-  { num: "25", name: "Vector Databases", slug: "25-vector-db", emoji: "🧬" },
-  { num: "26", name: "RAG Architecture", slug: "26-rag", emoji: "🧩" },
-  { num: "27", name: "AI Agents", slug: "27-ai-agents", emoji: "🕴️" },
-  { num: "28", name: "MLOps", slug: "28-mlops", emoji: "📈" },
-  { num: "29", name: "LLMOps", slug: "29-llmops", emoji: "💬" },
-  { num: "30", name: "AI Infrastructure", slug: "30-ai-infra", emoji: "🖥️" },
-  { num: "31", name: "Portfolio Building", slug: "31-portfolio", emoji: "💼" },
-  { num: "32", name: "Interview Preparation", slug: "32-interview", emoji: "🎤" },
-  { num: "33", name: "Career Paths", slug: "33-career", emoji: "🎯" },
+  { num: "01", name: "Engineering Foundations", slug: "foundations", emoji: "🧠" },
+  { num: "02", name: "Linux Mastery", slug: "linux", emoji: "🐧" },
+  { num: "03", name: "Networking Deep Dive", slug: "networking", emoji: "🌐" },
+  { num: "04", name: "Security & IAM", slug: "security", emoji: "🔒" },
+  { num: "05", name: "Python for Cloud", slug: "python", emoji: "🐍" },
+  { num: "06", name: "Cloud Fundamentals", slug: "cloud-fundamentals", emoji: "☁️" },
+  { num: "07", name: "Azure Core Services", slug: "azure-core", emoji: "🟦" },
+  { num: "08", name: "Containers", slug: "containers", emoji: "📦" },
+  { num: "09", name: "Docker", slug: "docker", emoji: "🐳" },
+  { num: "10", name: "Kubernetes", slug: "kubernetes", emoji: "☸️" },
+  { num: "11", name: "Helm", slug: "helm", emoji: "⛵" },
+  { num: "12", name: "Terraform", slug: "terraform", emoji: "🏗️" },
+  { num: "13", name: "Git", slug: "git", emoji: "🔀" },
+  { num: "14", name: "GitHub", slug: "github", emoji: "🐙" },
+  { num: "15", name: "CI/CD", slug: "cicd", emoji: "🔄" },
+  { num: "16", name: "DevOps", slug: "devops", emoji: "♾️" },
+  { num: "17", name: "DevSecOps", slug: "devsecops", emoji: "🛡️" },
+  { num: "18", name: "GitOps", slug: "gitops", emoji: "🚀" },
+  { num: "19", name: "Platform Engineering", slug: "platform", emoji: "⚙️" },
+  { num: "20", name: "Monitoring", slug: "monitoring", emoji: "📊" },
+  { num: "21", name: "Observability", slug: "observability", emoji: "🔍" },
+  { num: "22", name: "FinOps", slug: "finops", emoji: "💰" },
+  { num: "23", name: "Identity", slug: "identity", emoji: "🪪" },
+  { num: "24", name: "Azure AI", slug: "azure-ai", emoji: "🤖" },
+  { num: "25", name: "Vector Databases", slug: "vector-db", emoji: "🧬" },
+  { num: "26", name: "RAG Architecture", slug: "rag", emoji: "🧩" },
+  { num: "27", name: "AI Agents", slug: "ai-agents", emoji: "🕴️" },
+  { num: "28", name: "MLOps", slug: "mlops", emoji: "📈" },
+  { num: "29", name: "LLMOps", slug: "llmops", emoji: "💬" },
+  { num: "30", name: "AI Infrastructure", slug: "ai-infra", emoji: "🖥️" },
+  { num: "31", name: "Portfolio Building", slug: "portfolio", emoji: "💼" },
+  { num: "32", name: "Interview Preparation", slug: "interview", emoji: "🎤" },
+  { num: "33", name: "Career Paths", slug: "career", emoji: "🎯" },
 ];
 
 const simulators = [
@@ -85,7 +85,7 @@ function HeroSection() {
           <Link className={styles.heroPrimary} to="/docs/lessons">
             Start Learning →
           </Link>
-          <Link className={styles.heroSecondary} to="/docs/lessons/01-foundations">
+          <Link className={styles.heroSecondary} to="/docs/lessons/foundations">
             Browse Curriculum
           </Link>
         </div>
