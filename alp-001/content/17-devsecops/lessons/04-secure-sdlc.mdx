@@ -22,10 +22,19 @@ tags: [security, sdlc, threat-modeling, stride]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, Flashcard,
-  SecurityNote, ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  Flashcard,
+  SecurityNote,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Secure SDLC & Threat Modeling
 
@@ -51,13 +60,13 @@ The **Secure SDLC** (Software Development Lifecycle) embeds security activities 
 
 ```mermaid
 graph LR
-    REQ[Requirements: Security stories, threat model] --> 
+    REQ[Requirements: Security stories, threat model] -->
     DESIGN[Design: Architecture review, STRIDE] -->
     DEV[Development: Secure coding, pre-commit hooks] -->
     TEST[Testing: SAST, DAST, pen testing] -->
     DEPLOY[Deployment: Secure config, scanning] -->
     MAINTAIN[Maintenance: Patching, monitoring]
-    
+
     style REQ fill:#0ea5e9,color:#fff
     style DESIGN fill:#0ea5e9,color:#fff
     style TEST fill:#f59e0b,color:#fff
@@ -70,14 +79,14 @@ graph LR
 
 ### STRIDE Threat Modeling
 
-| Threat | What it means | Cloud Example |
-|--------|---------------|---------------|
-| **S**poofing | Impersonating identity | Stolen API keys, fake managed identity |
-| **T**ampering | Modifying data/code | Unauthorized Terraform apply, altered container image |
-| **R**epudiation | Denying an action | No audit logs for who deleted a resource |
-| **I**nfo Disclosure | Data leak | Public S3 bucket, exposed connection string |
-| **D**enial of Service | Overwhelming the service | DDoS, resource exhaustion |
-| **E**levation of Privilege | Getting higher access | Exploiting RBAC misconfiguration |
+| Threat                     | What it means            | Cloud Example                                         |
+| -------------------------- | ------------------------ | ----------------------------------------------------- |
+| **S**poofing               | Impersonating identity   | Stolen API keys, fake managed identity                |
+| **T**ampering              | Modifying data/code      | Unauthorized Terraform apply, altered container image |
+| **R**epudiation            | Denying an action        | No audit logs for who deleted a resource              |
+| **I**nfo Disclosure        | Data leak                | Public S3 bucket, exposed connection string           |
+| **D**enial of Service      | Overwhelming the service | DDoS, resource exhaustion                             |
+| **E**levation of Privilege | Getting higher access    | Exploiting RBAC misconfiguration                      |
 
 <SecurityNote>
 
@@ -105,6 +114,7 @@ Acceptance Criteria:
 - [ ] OPA policy blocks any override to allow public access
 - [ ] Azure Policy audits all storage accounts for compliance
 ```
+
 </BestPractice>
 
 ---
@@ -131,7 +141,7 @@ Acceptance Criteria:
     options={["Deployment", "Design/Requirements", "Testing", "After an incident"]}
     correct={1}
   />
-  
+
   <Question
     question="Which STRIDE category involves a public S3 bucket exposing customer data?"
     options={["Spoofing", "Tampering", "Information Disclosure", "Denial of Service"]}
@@ -143,9 +153,9 @@ Acceptance Criteria:
 
 ## 📋 Summary
 
-| Principle | Practice |
-|-----------|----------|
-| **Secure SDLC** | Security in every phase |
-| **STRIDE** | Systematic threat identification |
-| **Threat Model** | Design-phase, not post-incident |
+| Principle            | Practice                         |
+| -------------------- | -------------------------------- |
+| **Secure SDLC**      | Security in every phase          |
+| **STRIDE**           | Systematic threat identification |
+| **Threat Model**     | Design-phase, not post-incident  |
 | **Security Stories** | Acceptance criteria for security |

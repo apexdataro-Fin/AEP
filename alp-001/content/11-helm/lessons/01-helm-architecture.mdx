@@ -48,6 +48,7 @@ That's **~200 lines of YAML** for a simple app. Now multiply by 50 microservices
 **Helm solves this by packaging all of that into a single installable unit** — a chart.
 
 One command replaces 200 lines:
+
 ```bash
 helm install my-blog bitnami/wordpress
 ```
@@ -77,15 +78,15 @@ graph LR
 
 Helm's release lifecycle is critical for production operations:
 
-| Action | Command | What Happens |
-|--------|---------|-------------|
-| **Install** | `helm install` | First deploy of a release |
-| **Upgrade** | `helm upgrade` | Apply changes to existing release |
-| **Rollback** | `helm rollback` | Revert to previous revision |
+| Action        | Command          | What Happens                            |
+| ------------- | ---------------- | --------------------------------------- |
+| **Install**   | `helm install`   | First deploy of a release               |
+| **Upgrade**   | `helm upgrade`   | Apply changes to existing release       |
+| **Rollback**  | `helm rollback`  | Revert to previous revision             |
 | **Uninstall** | `helm uninstall` | Remove release + optionally its history |
-| **List** | `helm list` | See all releases in namespace |
-| **History** | `helm history` | View all revisions of a release |
-| **Test** | `helm test` | Run chart-defined tests |
+| **List**      | `helm list`      | See all releases in namespace           |
+| **History**   | `helm history`   | View all revisions of a release         |
+| **Test**      | `helm test`      | Run chart-defined tests                 |
 
 Revisions are stored as Kubernetes Secrets (by default) — one per revision. This is why you can always rollback.
 
@@ -118,7 +119,7 @@ graph TD
   C --> D[GitOps Tool: ArgoCD / Flux]
   D --> E[Kubernetes Cluster]
   E --> F[Cloud Infrastructure: Terraform]
-  
+
   C --> G[Helm Release]
   G --> H[Release History Secrets]
 ```
@@ -162,6 +163,7 @@ spec:
 ```
 
 **Key template functions:**
+
 - `{{ .Values.x }}` — access values
 - `{{ include "named-template" . }}` — reuse named templates
 - `{{-` vs `{{` — dash trims whitespace

@@ -22,10 +22,19 @@ tags: [azure, monitoring, kql, dashboards]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Azure Monitor & Log Analytics
 
@@ -70,6 +79,7 @@ StorageBlobLogs
 | where TimeGenerated > ago(1h)
 | summarize Count = count() by OperationName, AuthenticationType
 | order by Count desc
+
 </CodeBlock>
 
 <Tip>
@@ -140,14 +150,14 @@ Every dashboard has: time range picker, auto-refresh, and a link to the runbook.
     options={["where", "summarize", "order", "take"]}
     correct={1}
   />
-  
+
   <Question
     question="What should the top row of a monitoring dashboard show?"
     options={[
       "Raw log data",
       "Service health at a glance — Red/Green status",
       "Detailed resource metrics",
-      "Cost reports"
+      "Cost reports",
     ]}
     correct={1}
   />
@@ -157,9 +167,9 @@ Every dashboard has: time range picker, auto-refresh, and a link to the runbook.
 
 ## 📋 Summary
 
-| Component | Purpose |
-|-----------|---------|
-| **KQL** | Query language for Azure logs |
-| **Alert Rules** | Signal → condition → action group |
-| **Dashboards** | Visualize operational state |
-| **Workbooks** | Interactive reports and investigations |
+| Component       | Purpose                                |
+| --------------- | -------------------------------------- |
+| **KQL**         | Query language for Azure logs          |
+| **Alert Rules** | Signal → condition → action group      |
+| **Dashboards**  | Visualize operational state            |
+| **Workbooks**   | Interactive reports and investigations |

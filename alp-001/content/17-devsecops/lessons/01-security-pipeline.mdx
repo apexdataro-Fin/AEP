@@ -22,10 +22,21 @@ tags: [devsecops, security, ci-cd, shift-left]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  SecurityNote, ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  SecurityNote,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # DevSecOps: Security in the Pipeline
 
@@ -59,7 +70,7 @@ graph LR
     IMAGE --> DAST[DAST: Dynamic Analysis]
     DAST --> COMPLIANCE[Compliance Check]
     COMPLIANCE --> DEPLOY[Deploy]
-    
+
     style PRE fill:#10b981,color:#fff
     style SAST fill:#10b981,color:#fff
     style SCA fill:#f59e0b,color:#fff
@@ -68,14 +79,14 @@ graph LR
     style COMPLIANCE fill:#ef4444,color:#fff
 ```
 
-| Stage | Tool | What it catches |
-|-------|------|----------------|
-| **Pre-commit** | `detect-secrets`, `pre-commit` | Secrets in code |
-| **SAST** | CodeQL, SonarQube, Semgrep | Code vulnerabilities |
-| **SCA** | Dependabot, Snyk, Trivy | Vulnerable dependencies |
-| **Container** | Trivy, Aqua, Prisma Cloud | Image CVEs |
-| **DAST** | OWASP ZAP, Burp Suite | Runtime vulnerabilities |
-| **Compliance** | Checkov, tfsec, OPA | IaC misconfigurations |
+| Stage          | Tool                           | What it catches         |
+| -------------- | ------------------------------ | ----------------------- |
+| **Pre-commit** | `detect-secrets`, `pre-commit` | Secrets in code         |
+| **SAST**       | CodeQL, SonarQube, Semgrep     | Code vulnerabilities    |
+| **SCA**        | Dependabot, Snyk, Trivy        | Vulnerable dependencies |
+| **Container**  | Trivy, Aqua, Prisma Cloud      | Image CVEs              |
+| **DAST**       | OWASP ZAP, Burp Suite          | Runtime vulnerabilities |
+| **Compliance** | Checkov, tfsec, OPA            | IaC misconfigurations   |
 
 ---
 
@@ -94,47 +105,39 @@ name: Security Pipeline
 on: [pull_request]
 
 jobs:
-  secret-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-          pip install detect-secrets
-          detect-secrets scan --all-files | \
-            detect-secrets audit --report
-  
-  sast:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: github/codeql-action/analyze@v3
-        with:
-          languages: python
-  
-  sca:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-          pip install safety
-          safety check
-  
-  iac-scan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: bridgecrewio/checkov-action@master
-        with:
-          directory: terraform/
-          framework: terraform
-  
-  container-scan:
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - run: |
-          docker build -t app:${{ github.sha }} .
+secret-scan:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4 - run: |
+pip install detect-secrets
+detect-secrets scan --all-files | \
+ detect-secrets audit --report
+
+sast:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4 - uses: github/codeql-action/analyze@v3
+with:
+languages: python
+
+sca:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4 - run: |
+pip install safety
+safety check
+
+iac-scan:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4 - uses: bridgecrewio/checkov-action@master
+with:
+directory: terraform/
+framework: terraform
+
+container-scan:
+needs: [build]
+runs-on: ubuntu-latest
+steps: - run: |
+docker build -t app:${{ github.sha }} .
           trivy image --severity HIGH,CRITICAL app:${{ github.sha }}
+
 </CodeBlock>
 
 ---
@@ -150,15 +153,9 @@ jobs:
 </SecurityNote>
 
 <CodeBlock language="yaml" title="Conditional Deployment Gate">
-deploy:
-  needs: [container-scan, sast, sca, iac-scan]
-  if: |
-    needs.container-scan.result == 'success' &&
-    needs.sast.result == 'success' &&
-    needs.sca.result == 'success'
-  environment: production
-  steps:
-    - run: terraform apply tfplan
+  deploy: needs: [container-scan, sast, sca, iac-scan] if: | needs.container-scan.result ==
+  'success' && needs.sast.result == 'success' && needs.sca.result == 'success' environment:
+  production steps: - run: terraform apply tfplan
 </CodeBlock>
 
 <Warning>
@@ -186,20 +183,21 @@ security-scan:
   steps:
     - run: checkov -d terraform/ --framework terraform
       # Fails on: public storage, missing encryption, open NSGs
-    
+
     - run: terrascan scan -d terraform/
       # Fails on: non-compliant resources
-    
+
     - run: opa eval --data policies/ --input terraform/
       # Fails on: custom CloudNova policies
 ```
 
 Key policies:
+
 1. `prevent_destroy = true` on all databases
 2. Storage accounts: `default_action = "Deny"` on network rules
 3. All resources must have `environment` and `cost_center` tags
 4. VMs must use managed identities, not passwords
-</details>
+   </details>
 </Challenge>
 
 ---
@@ -232,14 +230,14 @@ Key policies:
     correct={2}
     explanation="SAST (Static Application Security Testing) analyzes source code without executing it, catching patterns like SQL injection."
   />
-  
+
   <Question
     question="What should happen when a CRITICAL vulnerability is found in CI?"
     options={[
       "Log a warning and continue",
       "Block the pipeline — deployment must not proceed",
       "Send an email",
-      "Ignore it — fix it later"
+      "Ignore it — fix it later",
     ]}
     correct={1}
   />
@@ -249,11 +247,11 @@ Key policies:
 
 ## 📋 Summary
 
-| Stage | Tool | When |
-|-------|------|------|
-| **Pre-commit** | detect-secrets, git hooks | Before commit |
-| **SAST** | CodeQL, SonarQube, Semgrep | On PR |
-| **SCA** | Dependabot, Snyk, safety | On PR + schedule |
-| **Container** | Trivy, Aqua | After build |
-| **IaC** | Checkov, tfsec, OPA | On PR |
-| **DAST** | OWASP ZAP | Staging/pre-prod |
+| Stage          | Tool                       | When             |
+| -------------- | -------------------------- | ---------------- |
+| **Pre-commit** | detect-secrets, git hooks  | Before commit    |
+| **SAST**       | CodeQL, SonarQube, Semgrep | On PR            |
+| **SCA**        | Dependabot, Snyk, safety   | On PR + schedule |
+| **Container**  | Trivy, Aqua                | After build      |
+| **IaC**        | Checkov, tfsec, OPA        | On PR            |
+| **DAST**       | OWASP ZAP                  | Staging/pre-prod |

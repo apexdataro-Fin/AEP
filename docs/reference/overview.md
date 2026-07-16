@@ -15,8 +15,8 @@ ai_metadata:
 
 Quick-reference material for the platform.
 
-| Document                                          | Purpose                                |
-| ------------------------------------------------- | -------------------------------------- |
+| Document                                               | Purpose                                |
+| ------------------------------------------------------ | -------------------------------------- |
 | [Glossary](/docs/reference/glossary)                   | Definitions of cloud engineering terms |
 | [Roadmap](/docs/reference/roadmap)                     | Platform development roadmap           |
 | [Changelog](/docs/reference/changelog)                 | Version history and changes            |

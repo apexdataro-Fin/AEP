@@ -9,13 +9,21 @@ skills: ["k8s-monitoring", "prometheus", "grafana", "logging", "tracing"]
 certifications: ["CKA"]
 career_level: "cloud-engineer"
 prerequisites: ["k8s-architecture", "pods-workloads"]
-knowledge_nodes: ["kubernetes-observability", "prometheus", "logging-architecture", "distributed-tracing"]
+knowledge_nodes:
+  ["kubernetes-observability", "prometheus", "logging-architecture", "distributed-tracing"]
 tags: ["kubernetes", "observability", "prometheus", "grafana", "logging"]
 status: "published"
 version: "1.0.0"
 author: "ARES EDU PLATFORM"
 last_updated: "2026-07-15"
-search_keywords: ["kubernetes monitoring", "prometheus kubernetes", "k8s logging", "grafana dashboard", "distributed tracing"]
+search_keywords:
+  [
+    "kubernetes monitoring",
+    "prometheus kubernetes",
+    "k8s logging",
+    "grafana dashboard",
+    "distributed tracing",
+  ]
 learning_objectives:
   - "Deploy Prometheus and Grafana for cluster monitoring"
   - "Implement centralized logging with Fluentd/Loki"
@@ -28,12 +36,41 @@ active_recall:
 review_schedule: { "initial": "1 day", "next": "3 days", "interval": "spaced-repetition" }
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 export const CloudNova = ({ children }) => (
-  <div style={{ borderLeft: '4px solid #0ea5e9', padding: '1rem 1.5rem', margin: '1.5rem 0', background: 'var(--ifm-color-emphasis-100)', borderRadius: '0 8px 8px 0' }}>
-    <strong style={{ color: '#0ea5e9' }}>🏢 CloudNova Engineering</strong>
-    <div style={{ marginTop: '0.5rem' }}>{children}</div>
+  <div
+    style={{
+      borderLeft: "4px solid #0ea5e9",
+      padding: "1rem 1.5rem",
+      margin: "1.5rem 0",
+      background: "var(--ifm-color-emphasis-100)",
+      borderRadius: "0 8px 8px 0",
+    }}
+  >
+    <strong style={{ color: "#0ea5e9" }}>🏢 CloudNova Engineering</strong>
+    <div style={{ marginTop: "0.5rem" }}>{children}</div>
   </div>
 );
 
@@ -48,19 +85,27 @@ graph TB
         L[Logs<br/>WHY is it happening?]
         T[Traces<br/>WHERE is it happening?]
     end
-    
+
     M --> Prom[Prometheus]
     L --> Loki[Loki / ELK]
     T --> Tempo[Tempo / Jaeger]
-    
+
     Prom --> Grafana
     Loki --> Grafana
     Tempo --> Grafana
 ```
 
-<Definition term="Metrics">Numeric measurements over time: CPU usage, request rate, error count, latency percentiles. Answers **"what"**.</Definition>
-<Definition term="Logs">Timestamped event records: error messages, access logs, debug output. Answers **"why"**.</Definition>
-<Definition term="Traces">End-to-end request flows across services: spans, latency per service, bottlenecks. Answers **"where"**.</Definition>
+<Definition term="Metrics">
+  Numeric measurements over time: CPU usage, request rate, error count, latency percentiles. Answers
+  **"what"**.
+</Definition>
+<Definition term="Logs">
+  Timestamped event records: error messages, access logs, debug output. Answers **"why"**.
+</Definition>
+<Definition term="Traces">
+  End-to-end request flows across services: spans, latency per service, bottlenecks. Answers
+  **"where"**.
+</Definition>
 
 ---
 
@@ -84,9 +129,13 @@ metadata:
 # Duration - Latency distribution (p50, p95, p99)
 
 # USE Method (for every resource):
+
 # Utilization - % of capacity used
+
 # Saturation - Queue depth, pending work
-# Errors     - Hardware/software errors
+
+# Errors - Hardware/software errors
+
 </CodeBlock>
 
 ### Essential K8s Alerts
@@ -95,27 +144,27 @@ metadata:
 
 ```yaml
 groups:
-- name: kubernetes-critical
-  rules:
-  - alert: PodCrashLooping
-    expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      summary: "Pod {{ $labels.pod }} is crash looping"
+  - name: kubernetes-critical
+    rules:
+      - alert: PodCrashLooping
+        expr: rate(kube_pod_container_status_restarts_total[15m]) > 0
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Pod {{ $labels.pod }} is crash looping"
 
-  - alert: NodeDiskPressure
-    expr: kube_node_status_condition{condition="DiskPressure",status="true"} == 1
-    for: 5m
-    labels:
-      severity: warning
-      
-  - alert: PersistentVolumeFilling
-    expr: kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes < 0.15
-    for: 10m
-    labels:
-      severity: warning
+      - alert: NodeDiskPressure
+        expr: kube_node_status_condition{condition="DiskPressure",status="true"} == 1
+        for: 5m
+        labels:
+          severity: warning
+
+      - alert: PersistentVolumeFilling
+        expr: kubelet_volume_stats_available_bytes / kubelet_volume_stats_capacity_bytes < 0.15
+        for: 10m
+        labels:
+          severity: warning
 ```
 
 </ProductionNote>
@@ -161,12 +210,14 @@ rate({app="api"} |= "panic" [5m]) > 3                  # Panic rate alert
 At 03:47, CloudNova's payment service started failing. No alerts fired. Customers reported errors on Twitter before the team knew anything was wrong.
 
 **Root Cause Analysis:**
+
 1. No latency alert — requests got slower but never errored
 2. No error rate monitoring — errors were buried in logs, never surfaced
 3. Logs only on pods — when pods restarted, the evidence was gone
 4. No distributed tracing — couldn't find the bottleneck service
 
 **Your observability implementation:**
+
 1. Deploy Prometheus with RED alerts for all services (rate, errors, duration)
 2. Deploy Loki with Fluentd DaemonSet for centralized logging
 3. Set up Grafana dashboards showing real-time health
@@ -207,10 +258,11 @@ kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
         "CPU, Memory, Disk",
         "Metrics, Logs, Traces",
         "Pods, Services, Deployments",
-        "Alerts, Dashboards, Runbooks"
+        "Alerts, Dashboards, Runbooks",
       ],
       correct: 1,
-      explanation: "Metrics tell WHAT (rate, errors, duration), Logs tell WHY (error messages, stack traces), Traces tell WHERE (which service is slow)."
+      explanation:
+        "Metrics tell WHAT (rate, errors, duration), Logs tell WHY (error messages, stack traces), Traces tell WHERE (which service is slow).",
     },
     {
       question: "Why is `kubectl logs` insufficient for production?",
@@ -218,11 +270,12 @@ kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
         "It requires cluster-admin permissions",
         "Logs disappear when pods are deleted; no centralized search across hundreds of pods",
         "Kubernetes doesn't support logging",
-        "It only works on the control plane"
+        "It only works on the control plane",
       ],
       correct: 1,
-      explanation: "Pod logs are ephemeral and pod-specific. Production needs persistent, centralized, searchable logs across the entire cluster."
-    }
+      explanation:
+        "Pod logs are ephemeral and pod-specific. Production needs persistent, centralized, searchable logs across the entire cluster.",
+    },
   ]}
 />
 
@@ -245,7 +298,7 @@ kubectl port-forward -n monitoring svc/monitoring-grafana 3000:80
 ## Related
 
 <KnowledgeLinks>
-- **Next**: [Operators & CRDs](operators-crds)
-- **Previous**: [Resource Management](resource-scaling)
-- **Related**: [Monitoring & Observability Module](../../20-monitoring/)
+  - **Next**: [Operators & CRDs](operators-crds) - **Previous**: [Resource
+  Management](resource-scaling) - **Related**: [Monitoring & Observability
+  Module](../../20-monitoring/)
 </KnowledgeLinks>

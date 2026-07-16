@@ -82,7 +82,11 @@ export default function CoursesPage(): ReactNode {
                   <span className={coursesStyles.moduleMeta}>{m.lessons} lessons</span>
                 </div>
                 <span className={coursesStyles.moduleStatus}>
-                  {m.status === "completed" ? "✓ Completed" : m.status === "in-progress" ? "In Progress" : "Locked"}
+                  {m.status === "completed"
+                    ? "✓ Completed"
+                    : m.status === "in-progress"
+                      ? "In Progress"
+                      : "Locked"}
                 </span>
                 <Link className={styles.secondaryButton} to={`/docs/curriculum`}>
                   {m.status === "locked" ? "Preview" : "Continue"}

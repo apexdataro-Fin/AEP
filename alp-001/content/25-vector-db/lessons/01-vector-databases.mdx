@@ -22,10 +22,21 @@ tags: [vector-db, embeddings, semantic-search, ai]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Analogy,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ArchitectureNote, ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Analogy,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ArchitectureNote,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Vector Databases for AI Engineers
 
@@ -60,7 +71,7 @@ graph LR
     QUERY["Show me cloud cost optimization"] --> EMBED[Embedding Model<br/>text → 1536-dim vector]
     EMBED --> SEARCH[Vector DB<br/>cosine similarity search]
     SEARCH --> RESULTS[Top-K results<br/>• FinOps fundamentals<br/>• Cost optimization patterns<br/>• Azure reservations guide]
-    
+
     DB[Document Embeddings<br/>pre-computed & indexed] --> SEARCH
 ```
 
@@ -72,12 +83,13 @@ client = chromadb.Client()
 collection = client.create_collection("cloudnova-docs")
 
 # Embed and store documents
+
 for doc in documents:
-    embedding = azure_openai.embeddings.create(
-        model="text-embedding-3-small",
-        input=doc.text
-    ).data[0].embedding
-    
+embedding = azure_openai.embeddings.create(
+model="text-embedding-3-small",
+input=doc.text
+).data[0].embedding
+
     collection.add(
         ids=[doc.id],
         embeddings=[embedding],
@@ -85,15 +97,17 @@ for doc in documents:
     )
 
 # Semantic search
+
 query_embedding = azure_openai.embeddings.create(
-    model="text-embedding-3-small",
-    input="how to reduce azure costs"
+model="text-embedding-3-small",
+input="how to reduce azure costs"
 ).data[0].embedding
 
 results = collection.query(
-    query_embeddings=[query_embedding],
-    n_results=5
+query_embeddings=[query_embedding],
+n_results=5
 )
+
 </CodeBlock>
 
 ---
@@ -102,13 +116,13 @@ results = collection.query(
 
 ### Vector DB Landscape
 
-| Database | Type | Best For |
-|----------|------|----------|
-| **Chroma** | Open-source, embedded | Prototyping, small datasets |
-| **Pinecone** | Managed cloud | Production, scale, low latency |
-| **Weaviate** | Open-source, GraphQL | Hybrid search (vector + keyword) |
+| Database            | Type                  | Best For                          |
+| ------------------- | --------------------- | --------------------------------- |
+| **Chroma**          | Open-source, embedded | Prototyping, small datasets       |
+| **Pinecone**        | Managed cloud         | Production, scale, low latency    |
+| **Weaviate**        | Open-source, GraphQL  | Hybrid search (vector + keyword)  |
 | **Azure AI Search** | Managed, Azure-native | Enterprise, integrated with Azure |
-| **pgvector** | PostgreSQL extension | When you already have Postgres |
+| **pgvector**        | PostgreSQL extension  | When you already have Postgres    |
 
 <ArchitectureNote>
 
@@ -122,13 +136,13 @@ results = collection.query(
 
 ### When to Use Vector DBs
 
-| Use Case | Vector DB Approach | Traditional Approach |
-|----------|-------------------|---------------------|
-| **Semantic search** | ✅ Query by meaning, not keywords | ❌ Exact keyword matching |
-| **Recommendations** | ✅ Similar items via embedding distance | ⚠️ Collaborative filtering |
-| **RAG (Retrieval Augmented Generation)** | ✅ Find relevant context for LLM | ❌ Keyword search misses context |
-| **Image similarity** | ✅ Search by image content | ❌ Metadata tags only |
-| **Anomaly detection** | ✅ Detect outliers in embedding space | ⚠️ Statistical methods |
+| Use Case                                 | Vector DB Approach                      | Traditional Approach             |
+| ---------------------------------------- | --------------------------------------- | -------------------------------- |
+| **Semantic search**                      | ✅ Query by meaning, not keywords       | ❌ Exact keyword matching        |
+| **Recommendations**                      | ✅ Similar items via embedding distance | ⚠️ Collaborative filtering       |
+| **RAG (Retrieval Augmented Generation)** | ✅ Find relevant context for LLM        | ❌ Keyword search misses context |
+| **Image similarity**                     | ✅ Search by image content              | ❌ Metadata tags only            |
+| **Anomaly detection**                    | ✅ Detect outliers in embedding space   | ⚠️ Statistical methods           |
 
 ---
 
@@ -156,11 +170,16 @@ results = collection.query(
 <Quiz>
   <Question
     question="What algorithm makes vector search fast at scale?"
-    options={["B-tree", "HNSW (Hierarchical Navigable Small World)", "QuickSort", "Dijkstra's algorithm"]}
+    options={[
+      "B-tree",
+      "HNSW (Hierarchical Navigable Small World)",
+      "QuickSort",
+      "Dijkstra's algorithm",
+    ]}
     correct={1}
     explanation="HNSW creates a multi-layer graph for approximate nearest neighbor search in O(log n) time."
   />
-  
+
   <Question
     question="Which vector DB is best for an Azure-native enterprise deployment?"
     options={["Chroma", "Pinecone", "Azure AI Search", "pgvector"]}
@@ -173,9 +192,9 @@ results = collection.query(
 
 ## 📋 Summary
 
-| Component | Purpose |
-|-----------|---------|
-| **Embedding** | Convert text → vector |
-| **Vector DB** | Store + search vectors |
-| **HNSW** | Fast approximate nearest neighbor |
-| **Semantic Search** | Search by meaning, not keywords |
+| Component           | Purpose                           |
+| ------------------- | --------------------------------- |
+| **Embedding**       | Convert text → vector             |
+| **Vector DB**       | Store + search vectors            |
+| **HNSW**            | Fast approximate nearest neighbor |
+| **Semantic Search** | Search by meaning, not keywords   |

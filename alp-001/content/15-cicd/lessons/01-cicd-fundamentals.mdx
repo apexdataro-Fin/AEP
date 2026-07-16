@@ -22,11 +22,25 @@ tags: [ci-cd, devops, automation, pipelines]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, ArchitectureNote,
-  InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # CI/CD Fundamentals: The Delivery Pipeline
 
@@ -79,7 +93,7 @@ graph LR
     E2E --> APPROVAL{Approve?}
     APPROVAL -->|Yes| PROD[Deploy Prod]
     APPROVAL -->|No| ROLLBACK[Rollback]
-    
+
     style COMMIT fill:#0ea5e9,color:#fff
     style PROD fill:#10b981,color:#fff
     style APPROVAL fill:#f59e0b,color:#fff
@@ -95,60 +109,56 @@ graph LR
 name: CloudNova CI/CD Pipeline
 
 on:
-  push:
-    branches: [main, 'feature/**']
-  pull_request:
-    branches: [main]
+push:
+branches: [main, 'feature/**']
+pull_request:
+branches: [main]
 
 env:
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
 
 jobs:
-  # ── CI Phase ──────────────────────────
-  build-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run Tests
-        run: pytest tests/ -v
-      - name: SAST Scan
-        uses: github/codeql-action/analyze@v3
-  
-  terraform-plan:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Terraform Plan
-        run: |
-          terraform init
-          terraform plan -out=tfplan
-  
-  # ── CD Phase ──────────────────────────
-  deploy-dev:
-    if: github.ref == 'refs/heads/main'
-    needs: terraform-plan
-    environment: dev
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Dev
-        run: terraform apply -auto-approve tfplan
-  
-  deploy-staging:
-    needs: deploy-dev
-    environment: staging
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Staging
-        run: terraform apply -auto-approve
-  
-  deploy-prod:
-    needs: deploy-staging
-    environment: production
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to Production
-        run: terraform apply -auto-approve
+
+# ── CI Phase ──────────────────────────
+
+build-and-test:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4 - name: Run Tests
+run: pytest tests/ -v - name: SAST Scan
+uses: github/codeql-action/analyze@v3
+
+terraform-plan:
+needs: build-and-test
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4 - name: Terraform Plan
+run: |
+terraform init
+terraform plan -out=tfplan
+
+# ── CD Phase ──────────────────────────
+
+deploy-dev:
+if: github.ref == 'refs/heads/main'
+needs: terraform-plan
+environment: dev
+runs-on: ubuntu-latest
+steps: - name: Deploy to Dev
+run: terraform apply -auto-approve tfplan
+
+deploy-staging:
+needs: deploy-dev
+environment: staging
+runs-on: ubuntu-latest
+steps: - name: Deploy to Staging
+run: terraform apply -auto-approve
+
+deploy-prod:
+needs: deploy-staging
+environment: production
+runs-on: ubuntu-latest
+steps: - name: Deploy to Production
+run: terraform apply -auto-approve
+
 </CodeBlock>
 
 <ProductionNote>
@@ -163,14 +173,14 @@ jobs:
 
 ### Infrastructure vs Application CI/CD
 
-| Aspect | Application CI/CD | Infrastructure CI/CD |
-|--------|------------------|---------------------|
-| **Build** | Compile, bundle | `terraform plan` |
-| **Test** | Unit, integration, e2e | `terraform validate`, OPA policies |
-| **Artifact** | Container image, binary | Terraform plan file |
-| **Deploy** | Rolling update, blue-green | `terraform apply` |
-| **Rollback** | Revert deployment | `terraform apply` previous plan |
-| **Drift** | N/A | Detect & reconcile |
+| Aspect       | Application CI/CD          | Infrastructure CI/CD               |
+| ------------ | -------------------------- | ---------------------------------- |
+| **Build**    | Compile, bundle            | `terraform plan`                   |
+| **Test**     | Unit, integration, e2e     | `terraform validate`, OPA policies |
+| **Artifact** | Container image, binary    | Terraform plan file                |
+| **Deploy**   | Rolling update, blue-green | `terraform apply`                  |
+| **Rollback** | Revert deployment          | `terraform apply` previous plan    |
+| **Drift**    | N/A                        | Detect & reconcile                 |
 
 <Info>
 
@@ -185,11 +195,13 @@ jobs:
 <Challenge title="Design a Multi-Stage Pipeline">
 
 **Context:** CloudNova is deploying a new microservice with infrastructure:
+
 - Python API (Docker container)
 - Azure Container Apps hosting
 - Terraform for infrastructure
 
 Design a CI/CD pipeline that:
+
 1. Tests the Python code
 2. Builds and scans the Docker image
 3. Validates the Terraform changes
@@ -205,20 +217,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: pytest --cov
-  
+
   build-image:
     needs: test-python
     steps:
       - run: docker build -t cloudnova-api:${{ github.sha }}
       - run: docker scan cloudnova-api:${{ github.sha }}
       - run: docker push cloudnova-api:${{ github.sha }}
-  
+
   # ── Infrastructure CI ──
   terraform-plan:
     runs-on: ubuntu-latest
     steps:
       - run: terraform plan -out=tfplan
-  
+
   # ── CD ──
   deploy-dev:
     needs: [build-image, terraform-plan]
@@ -227,6 +239,7 @@ jobs:
       - run: terraform apply tfplan
       - run: az containerapp update --image cloudnova-api:${{ github.sha }}
 ```
+
 </details>
 </Challenge>
 
@@ -260,18 +273,18 @@ jobs:
       "Deploying to production every day",
       "Automatically building and testing every code change",
       "Manually integrating code once per sprint",
-      "Installing dependencies continuously"
+      "Installing dependencies continuously",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="In a pipeline, what is an 'artifact'?"
     options={[
       "A bug in the code",
       "A packaged, versioned output (image, binary, plan file) passed between stages",
       "The CI/CD configuration file",
-      "A failed test result"
+      "A failed test result",
     ]}
     correct={1}
   />
@@ -293,10 +306,10 @@ jobs:
 
 ## 📋 Summary
 
-| Concept | Key Point |
-|---------|-----------|
-| **CI** | Automate build + test on every commit |
-| **CD (Delivery)** | Automate deployment readiness, manual prod approval |
-| **CD (Deployment)** | Automate everything including production |
-| **Pipeline as Code** | CI/CD config in Git, reviewed like code |
-| **Infra CI/CD** | Plan-as-artifact, state-aware, drift detection |
+| Concept              | Key Point                                           |
+| -------------------- | --------------------------------------------------- |
+| **CI**               | Automate build + test on every commit               |
+| **CD (Delivery)**    | Automate deployment readiness, manual prod approval |
+| **CD (Deployment)**  | Automate everything including production            |
+| **Pipeline as Code** | CI/CD config in Git, reviewed like code             |
+| **Infra CI/CD**      | Plan-as-artifact, state-aware, drift detection      |

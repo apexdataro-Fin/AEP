@@ -22,10 +22,19 @@ tags: [devops, postmortems, incidents, learning]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  CommonMistake, Exercise, Challenge, Quiz, Flashcard,
-  ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  CommonMistake,
+  Exercise,
+  Challenge,
+  Quiz,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Postmortems & Learning from Incidents
 
@@ -55,30 +64,36 @@ A **postmortem** (or incident retrospective) is a written analysis of an inciden
 # Incident: [Title]
 
 ## Timeline (UTC)
+
 - 14:32 — Automated alert: API error rate > 1%
 - 14:34 — On-call engineer acknowledges
 - 14:38 — Identified: database connection pool exhausted
 - 14:42 — Mitigated: increased pool size, restarted affected pods
 - 14:45 — Service restored
-**Duration:** 13 minutes | **Impact:** 2% of users affected
+  **Duration:** 13 minutes | **Impact:** 2% of users affected
 
 ## Root Cause
+
 The new release introduced a connection leak in the payment module.
 
 ## What Went Well
+
 - Alert fired within 2 minutes of threshold breach
 - Automated rollback was triggered but not needed (mitigation worked)
 - On-call response time under 3 minutes
 
 ## What Went Wrong
+
 - Connection pool exhaustion wasn't caught in staging (low traffic)
 - No connection pool monitoring dashboard
 
 ## Action Items
+
 1. [P0] Fix connection leak in payment module — @dev-team
 2. [P1] Add connection pool monitoring to dashboards — @sre-team
 3. [P2] Add load testing to staging deployment pipeline — @qa-team
 ```
+
 </BestPractice>
 
 ---
@@ -87,12 +102,12 @@ The new release introduced a connection leak in the payment module.
 
 ### Blameless Culture
 
-| Blameful | Blameless |
-|----------|-----------|
-| "Who caused this?" | "What caused this?" |
+| Blameful                  | Blameless                                                 |
+| ------------------------- | --------------------------------------------------------- |
+| "Who caused this?"        | "What caused this?"                                       |
 | "Alex wrote the bad code" | "The code passed review — how did our process miss this?" |
-| Punishment | Learning |
-| Fear of reporting | Psychological safety |
+| Punishment                | Learning                                                  |
+| Fear of reporting         | Psychological safety                                      |
 
 <Warning>
 
@@ -115,7 +130,7 @@ flowchart LR
     PM --> ACTIONS[Action Items]
     ACTIONS --> PREVENT[Prevention]
     PREVENT --> INCIDENT
-    
+
     style PM fill:#f59e0b,color:#fff
     style PREVENT fill:#10b981,color:#fff
 ```
@@ -143,29 +158,35 @@ Write a blameless postmortem.
 # Incident: Staging DB Accidental Deletion
 
 ## Timeline (UTC)
+
 - 10:15 — Terraform apply triggered via CI/CD
 - 10:18 — Alert: staging API returning 500 errors
 - 10:22 — Discovered DB was destroyed during apply
 - 10:25 — Initiated DB restore from latest backup
 - 10:55 — DB restored, API healthy
-**Duration:** 37 min | **Impact:** Staging environment only
+  **Duration:** 37 min | **Impact:** Staging environment only
 
 ## Root Cause
+
 `prevent_destroy = true` was removed from the DB module during refactoring. Code review did not flag this.
 
 ## What Went Well
+
 - Alerts detected the issue immediately
 - Backup restoration was tested and reliable
 
 ## What Went Wrong
+
 - `prevent_destroy` removal was not caught in review
 - No policy check (OPA/Sentinel) flagged the change
 
 ## Action Items
+
 1. [P0] Add OPA policy: `prevent_destroy = true` required for DB resources
 2. [P1] Add `terraform plan` diff highlighting for destructive changes in PR
 3. [P2] Implement `terraform apply` confirmation prompt for destroy operations
 ```
+
 </details>
 </Challenge>
 
@@ -203,18 +224,18 @@ Write a blameless postmortem.
       "To find who caused the incident",
       "To learn from the incident and prevent recurrence",
       "To document what happened for compliance",
-      "To assign blame"
+      "To assign blame",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="Why is blameless culture important?"
     options={[
       "It's not — blame is necessary",
       "It creates psychological safety so incidents get reported and fixed",
       "It's a legal requirement",
-      "It makes people happier but doesn't affect reliability"
+      "It makes people happier but doesn't affect reliability",
     ]}
     correct={1}
   />
@@ -224,10 +245,10 @@ Write a blameless postmortem.
 
 ## 📋 Summary
 
-| Principle | Practice |
-|-----------|----------|
-| **Blameless** | Focus on systems, not people |
-| **Timeline** | Document the sequence |
-| **Root Cause** | Ask "why" five times |
-| **Action Items** | Concrete, assigned, time-bound |
-| **Prevention** | Postmortem → Action → Improvement |
+| Principle        | Practice                          |
+| ---------------- | --------------------------------- |
+| **Blameless**    | Focus on systems, not people      |
+| **Timeline**     | Document the sequence             |
+| **Root Cause**   | Ask "why" five times              |
+| **Action Items** | Concrete, assigned, time-bound    |
+| **Prevention**   | Postmortem → Action → Improvement |

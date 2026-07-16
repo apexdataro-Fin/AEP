@@ -5,7 +5,8 @@ module: "04-security"
 lesson: 2
 difficulty: "core"
 estimated_time: "50 minutes"
-technologies: ["Azure AD", "RBAC", "Managed Identity", "Conditional Access", "Privileged Identity Management"]
+technologies:
+  ["Azure AD", "RBAC", "Managed Identity", "Conditional Access", "Privileged Identity Management"]
 skills: ["rbac", "managed-identity", "conditional-access", "pim", "service-principal"]
 certifications: ["AZ-104", "SC-300"]
 knowledge_nodes: ["iam", "rbac", "managed-identity", "privileged-access"]
@@ -13,11 +14,26 @@ prerequisites: ["04-security/lessons/01-security-fundamentals"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Understand Azure AD vs on-prem AD
 - Apply RBAC at management group, subscription, resource group, and resource scopes
 - Use Managed Identities to eliminate service principal secrets
@@ -40,13 +56,13 @@ Every request — from a user, a VM, a container, or a managed service — must 
 
 ### Azure AD: The Identity Backbone
 
-| Concept | What It Is |
-|---------|-----------|
-| **User** | A human with credentials (password, MFA, FIDO2) |
-| **Service Principal** | An identity for an application or automation |
-| **Managed Identity** | A service principal that Azure manages for you — **no secrets!** |
-| **Group** | Collection of users/service principals |
-| **Role** | A set of permissions (e.g., "Reader", "Contributor") |
+| Concept               | What It Is                                                       |
+| --------------------- | ---------------------------------------------------------------- |
+| **User**              | A human with credentials (password, MFA, FIDO2)                  |
+| **Service Principal** | An identity for an application or automation                     |
+| **Managed Identity**  | A service principal that Azure manages for you — **no secrets!** |
+| **Group**             | Collection of users/service principals                           |
+| **Role**              | A set of permissions (e.g., "Reader", "Contributor")             |
 
 ```mermaid
 graph TD
@@ -54,22 +70,23 @@ graph TD
     AAD --> SP["🤖 Service Principals<br/>App registrations"]
     AAD --> MI["🔑 Managed Identities<br/>System-assigned / User-assigned"]
     AAD --> GROUPS["👥 Groups<br/>Role assignments"]
-    
+
     style AAD fill:#0078d4,stroke:#333,color:#fff
 ```
 
 ### RBAC: Who Can Do What
 
 <BestPractice>
-**RBAC follows the principle of least privilege.** Assign the minimum role needed, at the narrowest scope possible.
+  **RBAC follows the principle of least privilege.** Assign the minimum role needed, at the
+  narrowest scope possible.
 </BestPractice>
 
-| Scope | Example | Use When |
-|-------|---------|----------|
-| Management Group | All subscriptions under "Production" | Policy for entire org |
-| Subscription | "CloudNova Production" | Billing, global settings |
-| Resource Group | "webapp-rg" | All resources of one app |
-| Resource | One specific VM | Granular access |
+| Scope            | Example                              | Use When                 |
+| ---------------- | ------------------------------------ | ------------------------ |
+| Management Group | All subscriptions under "Production" | Policy for entire org    |
+| Subscription     | "CloudNova Production"               | Billing, global settings |
+| Resource Group   | "webapp-rg"                          | All resources of one app |
+| Resource         | One specific VM                      | Granular access          |
 
 <CodeBlock language="bash">
 {`# Assign Reader role to a developer at resource group scope
@@ -79,7 +96,9 @@ az role assignment create \\
   --resource-group webapp-rg
 
 # Maria can see everything in webapp-rg but cannot modify anything
+
 # This is least privilege: she doesn't need write access to read logs`}
+
 </CodeBlock>
 
 ---
@@ -89,7 +108,8 @@ az role assignment create \\
 ### Managed Identities: The Secret Killer
 
 <ProductionNote>
-**Never store credentials in code or config files.** The #1 cloud security mistake is hardcoded connection strings and API keys. Managed Identities eliminate this problem entirely.
+  **Never store credentials in code or config files.** The #1 cloud security mistake is hardcoded
+  connection strings and API keys. Managed Identities eliminate this problem entirely.
 </ProductionNote>
 
 ```mermaid
@@ -98,21 +118,21 @@ sequenceDiagram
     participant IMDS as Azure Instance Metadata Service<br/>(169.254.169.254)
     participant AAD as Azure AD
     participant KV as Key Vault
-    
+
     VM->>IMDS: "Who am I? Give me a token for Key Vault"
     IMDS->>AAD: Request token for VM's identity
     AAD-->>IMDS: JWT access token
     IMDS-->>VM: Here's your token
     VM->>KV: "GET /secrets/db-password"<br/>Authorization: Bearer &lt;token&gt;
     KV-->>VM: db-password: "xYz..."
-    
+
     Note over VM,KV: No secrets stored anywhere!<br/>Azure handles authentication transparently.
 ```
 
-| Type | Lifecycle | Use Case |
-|------|-----------|----------|
-| **System-assigned** | Tied to resource lifecycle | One resource = one identity |
-| **User-assigned** | Independent lifecycle | Share identity across resources |
+| Type                | Lifecycle                  | Use Case                        |
+| ------------------- | -------------------------- | ------------------------------- |
+| **System-assigned** | Tied to resource lifecycle | One resource = one identity     |
+| **User-assigned**   | Independent lifecycle      | Share identity across resources |
 
 <CodeBlock language="bash">
 {`# Enable system-assigned managed identity on a VM
@@ -121,13 +141,16 @@ az vm identity assign \\
   --resource-group cloudnova-prod
 
 # Now grant it access to Key Vault
+
 az keyvault set-policy \\
-  --name cloudnova-kv \\
-  --object-id <vm-principal-id> \\
-  --secret-permissions get list
+--name cloudnova-kv \\
+--object-id <vm-principal-id> \\
+--secret-permissions get list
 
 # The VM can now read secrets from Key Vault
+
 # WITHOUT any connection string, password, or certificate in its code!`}
+
 </CodeBlock>
 
 ---
@@ -137,11 +160,9 @@ az keyvault set-policy \\
 ### CloudNova: Securing Developer Access
 
 <ArchitectureNote title="CloudNova Developer Access Flow">
-CloudNova has 50 developers. They need:
-- Read access to production logs (but NOT to customer data)
-- Write access to development resources
-- No standing access to production resources
-- All access must be logged for SOC 2 compliance
+  CloudNova has 50 developers. They need: - Read access to production logs (but NOT to customer
+  data) - Write access to development resources - No standing access to production resources - All
+  access must be logged for SOC 2 compliance
 </ArchitectureNote>
 
 ```mermaid
@@ -155,13 +176,13 @@ flowchart LR
 
 ### Conditional Access Policies
 
-| Policy Component | CloudNova Configuration |
-|-----------------|----------------------|
-| **Assignments** | All developers |
-| **Cloud apps** | Azure Management, Azure DevOps |
-| **Conditions** | Require managed device, compliant device, trusted IP |
-| **Grant** | Require MFA |
-| **Session** | Sign-in frequency: every 8 hours |
+| Policy Component | CloudNova Configuration                              |
+| ---------------- | ---------------------------------------------------- |
+| **Assignments**  | All developers                                       |
+| **Cloud apps**   | Azure Management, Azure DevOps                       |
+| **Conditions**   | Require managed device, compliant device, trusted IP |
+| **Grant**        | Require MFA                                          |
+| **Session**      | Sign-in frequency: every 8 hours                     |
 
 <TerminalBlock>
 {`# CloudNova Incident #CN-2024-0402
@@ -169,27 +190,37 @@ flowchart LR
 # Troubleshooting RBAC:
 
 # Check Maria's role assignments
+
 az role assignment list \\
-  --assignee maria@cloudnova.com \\
-  --output table
+--assignee maria@cloudnova.com \\
+--output table
 
 # Output:
-# Scope                          Role
-# /subscriptions/.../dev-rg      Contributor      ✅
-# /subscriptions/.../prod-rg     Reader           ✅
+
+# Scope Role
+
+# /subscriptions/.../dev-rg Contributor ✅
+
+# /subscriptions/.../prod-rg Reader ✅
 
 # Looks correct. Check if the storage account has a deny assignment:
+
 az role assignment list \\
-  --scope /subscriptions/.../prod-rg/providers/Microsoft.Storage/storageAccounts/prodlogs \\
-  --output table
+--scope /subscriptions/.../prod-rg/providers/Microsoft.Storage/storageAccounts/prodlogs \\
+--output table
 
 # No role assignments! The Reader role was assigned at RG level
+
 # but storage account data plane requires explicit data role!
+
 # Fix: Assign "Storage Blob Data Reader" at the storage account scope`}
+
 </TerminalBlock>
 
 <Warning>
-**Control plane vs Data plane.** RBAC roles like "Reader" grant access to Azure resource metadata (names, settings, tags). Accessing actual data (blobs, SQL rows, Key Vault secrets) requires **data plane roles** like "Storage Blob Data Reader".
+  **Control plane vs Data plane.** RBAC roles like "Reader" grant access to Azure resource metadata
+  (names, settings, tags). Accessing actual data (blobs, SQL rows, Key Vault secrets) requires
+  **data plane roles** like "Storage Blob Data Reader".
 </Warning>
 
 ---
@@ -199,20 +230,20 @@ az role assignment list \\
 <Exercise title="Design IAM for CloudNova Microservice" time="25 minutes">
 
 A new microservice at CloudNova needs:
+
 1. Read secrets from Key Vault
 2. Write blobs to Storage Account
 3. Query an Azure SQL Database
 
 **Tasks:**
+
 1. What type of identity should the microservice use? (System-assigned MI? User-assigned MI? Service Principal with secret?)
 2. What RBAC roles does it need at each resource?
 3. Write the Azure CLI commands to grant these permissions.
 
 <Quiz question="The best identity type for an AKS pod that needs Key Vault access is:">
-- Service Principal with client secret
-- *Workload Identity (federated Managed Identity)*
-- Storage account key
-- Connection string in ConfigMap
+  - Service Principal with client secret - *Workload Identity (federated Managed Identity)* -
+  Storage account key - Connection string in ConfigMap
 </Quiz>
 
 </Exercise>
@@ -221,11 +252,20 @@ A new microservice at CloudNova needs:
 
 ## Flashcard Review
 
-<Flashcard front="Control plane vs Data plane access" back="Control plane (Reader/Contributor) manages Azure resources. Data plane (Storage Blob Data Reader) accesses data stored inside the resource. They are SEPARATE permissions." />
+<Flashcard
+  front="Control plane vs Data plane access"
+  back="Control plane (Reader/Contributor) manages Azure resources. Data plane (Storage Blob Data Reader) accesses data stored inside the resource. They are SEPARATE permissions."
+/>
 
-<Flashcard front="Why use Managed Identity instead of a service principal secret?" back="No secret to store, rotate, or leak. Azure handles authentication transparently via the IMDS endpoint." />
+<Flashcard
+  front="Why use Managed Identity instead of a service principal secret?"
+  back="No secret to store, rotate, or leak. Azure handles authentication transparently via the IMDS endpoint."
+/>
 
-<Flashcard front="What is PIM?" back="Privileged Identity Management — time-bound, approval-based elevation to privileged roles. No standing access." />
+<Flashcard
+  front="What is PIM?"
+  back="Privileged Identity Management — time-bound, approval-based elevation to privileged roles. No standing access."
+/>
 
 ---
 
@@ -243,8 +283,8 @@ A new microservice at CloudNova needs:
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Previous lesson: Security Fundamentals | [Lesson 1](01-security-fundamentals) |
-| Next lesson: Network Security | [Lesson 3](03-network-security) |
-| AZ-104: Manage Identities | [Exam objective](../../certifications/az-104/identity) |
+| Resource                               | Link                                                   |
+| -------------------------------------- | ------------------------------------------------------ |
+| Previous lesson: Security Fundamentals | [Lesson 1](01-security-fundamentals)                   |
+| Next lesson: Network Security          | [Lesson 3](03-network-security)                        |
+| AZ-104: Manage Identities              | [Exam objective](../../certifications/az-104/identity) |

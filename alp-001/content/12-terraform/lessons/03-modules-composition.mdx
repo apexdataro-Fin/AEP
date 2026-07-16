@@ -114,12 +114,12 @@ module "petclinic" {
 
 **Module sources:**
 
-| Source Type | Example |
-|-------------|---------|
-| Local | `source = "./modules/network"` |
-| Git | `source = "github.com/cloudnova/terraform-modules//aks?ref=v2.0"` |
-| Registry | `source = "Azure/aks/azurerm"` |
-| S3/GCS | `source = "s3::https://..."` |
+| Source Type | Example                                                           |
+| ----------- | ----------------------------------------------------------------- |
+| Local       | `source = "./modules/network"`                                    |
+| Git         | `source = "github.com/cloudnova/terraform-modules//aks?ref=v2.0"` |
+| Registry    | `source = "Azure/aks/azurerm"`                                    |
+| S3/GCS      | `source = "s3::https://..."`                                      |
 
 ### Production
 
@@ -139,7 +139,7 @@ variable "node_count" {
   type        = number
   description = "Number of AKS worker nodes"
   default     = 3
-  
+
   validation {
     condition     = var.node_count >= 1 && var.node_count <= 100
     error_message = "Node count must be between 1 and 100."
@@ -149,7 +149,7 @@ variable "node_count" {
 variable "environment" {
   type        = string
   description = "Deployment environment"
-  
+
   validation {
     condition     = can(regex("^(dev|staging|prod)$", var.environment))
     error_message = "Environment must be dev, staging, or prod."
@@ -192,13 +192,13 @@ resource "azurerm_kubernetes_cluster" "main" {
   resource_group_name = var.resource_group_name
   dns_prefix          = "aks-${var.environment}"
   kubernetes_version  = var.kubernetes_version
-  
+
   default_node_pool {
     name       = "default"
     node_count = var.node_count
     vm_size    = var.vm_size
   }
-  
+
   identity { type = "SystemAssigned" }
 }
 EOF

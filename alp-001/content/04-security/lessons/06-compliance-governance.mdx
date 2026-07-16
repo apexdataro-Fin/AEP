@@ -5,19 +5,48 @@ module: "04-security"
 lesson: 6
 difficulty: "professional"
 estimated_time: "45 minutes"
-technologies: ["Azure Policy", "Azure Blueprints", "Microsoft Purview", "Azure Resource Graph", "Defender for Cloud Regulatory Compliance"]
-skills: ["azure-policy", "regulatory-compliance", "resource-tagging", "audit-logging", "governance-framework"]
+technologies:
+  [
+    "Azure Policy",
+    "Azure Blueprints",
+    "Microsoft Purview",
+    "Azure Resource Graph",
+    "Defender for Cloud Regulatory Compliance",
+  ]
+skills:
+  [
+    "azure-policy",
+    "regulatory-compliance",
+    "resource-tagging",
+    "audit-logging",
+    "governance-framework",
+  ]
 certifications: ["AZ-104", "AZ-500"]
 knowledge_nodes: ["compliance", "governance", "azure-policy", "regulatory-standards"]
 prerequisites: ["04-security/lessons/05-security-monitoring"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Write and assign Azure Policies to enforce compliance
 - Use Azure Blueprints for standardized deployments
 - Understand regulatory compliance frameworks (PCI-DSS, HIPAA, SOC 2, ISO 27001)
@@ -51,19 +80,19 @@ graph TD
     AUDIT -->|Compliant| OK["✅ Resource created"]
     EVAL --> DEPLOYIF{"DeployIfNotExists?"}
     DEPLOYIF -->|Missing something| FIX["🔧 Auto-deploy missing config"]
-    
+
     style DENY fill:#d13438,stroke:#333,color:#fff
     style DEPLOY fill:#107c10,stroke:#333,color:#fff
     style FIX fill:#0078d4,stroke:#333,color:#fff
 ```
 
-| Effect | What Happens | Use Case |
-|--------|-------------|----------|
-| **Deny** | Blocks non-compliant request | No storage accounts without encryption |
-| **Audit** | Logs non-compliance, allows creation | Track resources missing tags |
-| **AuditIfNotExists** | Checks for related resource | Is diagnostic logging enabled? |
-| **DeployIfNotExists** | Auto-deploys missing config | Auto-enable Defender on new VMs |
-| **Modify** | Changes resource properties | Add tag with creation date |
+| Effect                | What Happens                         | Use Case                               |
+| --------------------- | ------------------------------------ | -------------------------------------- |
+| **Deny**              | Blocks non-compliant request         | No storage accounts without encryption |
+| **Audit**             | Logs non-compliance, allows creation | Track resources missing tags           |
+| **AuditIfNotExists**  | Checks for related resource          | Is diagnostic logging enabled?         |
+| **DeployIfNotExists** | Auto-deploys missing config          | Auto-enable Defender on new VMs        |
+| **Modify**            | Changes resource properties          | Add tag with creation date             |
 
 <CodeBlock language="bash">
 {`# Policy: Deny storage accounts that don't enforce HTTPS
@@ -80,12 +109,14 @@ az policy definition create \\
   }'
 
 az policy assignment create \\
-  --name enforce-https-storage \\
-  --policy deny-non-https-storage \\
-  --scope /subscriptions/cloudnova-prod
+--name enforce-https-storage \\
+--policy deny-non-https-storage \\
+--scope /subscriptions/cloudnova-prod
 
 # Now: any ARM template or CLI command creating a storage account
+
 # with HTTPS disabled will be REJECTED at the API level`}
+
 </CodeBlock>
 
 ---
@@ -95,16 +126,18 @@ az policy assignment create \\
 ### Regulatory Compliance Dashboard
 
 <ProductionNote>
-**Defender for Cloud's Regulatory Compliance dashboard** maps Azure resources to specific compliance controls. For PCI-DSS, it shows exactly which VMs need encryption, which NSGs need tightening, and which storage accounts need auditing — all mapped to PCI-DSS section numbers.
+  **Defender for Cloud's Regulatory Compliance dashboard** maps Azure resources to specific
+  compliance controls. For PCI-DSS, it shows exactly which VMs need encryption, which NSGs need
+  tightening, and which storage accounts need auditing — all mapped to PCI-DSS section numbers.
 </ProductionNote>
 
-| Framework | Controls Tracked | Common Findings |
-|-----------|-----------------|-----------------|
-| **PCI-DSS** | 12 requirements | Storage without encryption, NSGs too permissive |
-| **SOC 2** | 5 Trust Service Criteria | Missing MFA, no audit logging, unmanaged identities |
-| **HIPAA** | Privacy + Security Rules | PHI in unencrypted storage, excessive access |
-| **ISO 27001** | 114 controls in Annex A | Missing asset management, no change control |
-| **CIS Benchmark** | 200+ Azure-specific controls | Default settings, excessive permissions |
+| Framework         | Controls Tracked             | Common Findings                                     |
+| ----------------- | ---------------------------- | --------------------------------------------------- |
+| **PCI-DSS**       | 12 requirements              | Storage without encryption, NSGs too permissive     |
+| **SOC 2**         | 5 Trust Service Criteria     | Missing MFA, no audit logging, unmanaged identities |
+| **HIPAA**         | Privacy + Security Rules     | PHI in unencrypted storage, excessive access        |
+| **ISO 27001**     | 114 controls in Annex A      | Missing asset management, no change control         |
+| **CIS Benchmark** | 200+ Azure-specific controls | Default settings, excessive permissions             |
 
 ### Azure Resource Graph: Query Everything
 
@@ -120,12 +153,17 @@ Resources
 ' --output table
 
 # Output:
-# Name             ResourceGroup       isPublic
-# cloudnovadata    prod-rg             YES ❌
-# cloudnovabackup  prod-rg             YES ❌
-# devlogs          dev-rg              YES ❌
+
+# Name ResourceGroup isPublic
+
+# cloudnovadata prod-rg YES ❌
+
+# cloudnovabackup prod-rg YES ❌
+
+# devlogs dev-rg YES ❌
 
 # 3 storage accounts exposed — need immediate remediation!`}
+
 </TerminalBlock>
 
 ---
@@ -135,7 +173,8 @@ Resources
 ### CloudNova Governance Framework
 
 <ArchitectureNote title="CloudNova's Three-Tier Governance">
-CloudNova implemented governance at three levels: Management Group (org-wide), Subscription (environment-specific), Resource Group (application-specific).
+  CloudNova implemented governance at three levels: Management Group (org-wide), Subscription
+  (environment-specific), Resource Group (application-specific).
 </ArchitectureNote>
 
 ```mermaid
@@ -143,7 +182,7 @@ graph TD
     MG["🏢 CloudNova Root MG"] --> TIER["Tier 1: Org-Wide Policies<br/>- Require MFA for all users<br/>- Deny public blob access<br/>- Require resource tags (owner, cost-center, environment)"]
     MG --> PROD["Production Subscription"] --> TIER2["Tier 2: Production Policies<br/>- Deny VMs without disk encryption<br/>- Require Private Link for SQL<br/>- Deny deletion of Key Vaults"]
     MG --> DEV["Development Subscription"] --> TIER3["Tier 3: Dev Policies<br/>- Audit (not deny) encryption<br/>- Allow public endpoints (dev only)<br/>- Auto-shutdown VMs at 8 PM"]
-    
+
     style MG fill:#0078d4,stroke:#333,color:#fff
 ```
 
@@ -157,6 +196,7 @@ graph TD
 - `application` — which app this supports
 
 Enforce with Azure Policy **before** you have 10,000 untagged resources.
+
 </BestPractice>
 
 <TerminalBlock>
@@ -177,7 +217,9 @@ az policy definition create \\
   }'
 
 # Now: creating an RG without these tags → DENIED
+
 # az group create --name test-rg → ❌ "Missing required tag: owner"`}
+
 </TerminalBlock>
 
 ---
@@ -194,10 +236,7 @@ az policy definition create \\
 4. **Map** three PCI-DSS requirements to their Azure Policy implementations
 
 <Quiz question="Which policy effect blocks a non-compliant resource BEFORE it's created?">
-- *Deny*
-- Audit
-- DeployIfNotExists
-- Modify
+  - *Deny* - Audit - DeployIfNotExists - Modify
 </Quiz>
 
 </Exercise>
@@ -206,18 +245,27 @@ az policy definition create \\
 
 ## Flashcard Review
 
-<Flashcard front="Deny vs Audit policy effects" back="Deny: blocks the request entirely (preventive). Audit: allows creation but logs non-compliance (detective). Use Deny for security, Audit for tracking." />
+<Flashcard
+  front="Deny vs Audit policy effects"
+  back="Deny: blocks the request entirely (preventive). Audit: allows creation but logs non-compliance (detective). Use Deny for security, Audit for tracking."
+/>
 
-<Flashcard front="What is Azure Resource Graph?" back="Query engine that searches across ALL subscriptions and resource types in a single KQL query. Much faster than looping through each subscription." />
+<Flashcard
+  front="What is Azure Resource Graph?"
+  back="Query engine that searches across ALL subscriptions and resource types in a single KQL query. Much faster than looping through each subscription."
+/>
 
-<Flashcard front="Three tiers of CloudNova's governance framework" back="1) Management Group (org-wide policies), 2) Subscription (environment-specific: prod stricter than dev), 3) Resource Group (app-specific)" />
+<Flashcard
+  front="Three tiers of CloudNova's governance framework"
+  back="1) Management Group (org-wide policies), 2) Subscription (environment-specific: prod stricter than dev), 3) Resource Group (app-specific)"
+/>
 
 ---
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Previous: Security Monitoring | [Lesson 5](05-security-monitoring) |
-| Next: Security Operations Lab | [Lesson 7](07-security-ops-lab) |
-| AZ-104: Governance | [Exam objective](../../certifications/az-104/governance) |
+| Resource                      | Link                                                     |
+| ----------------------------- | -------------------------------------------------------- |
+| Previous: Security Monitoring | [Lesson 5](05-security-monitoring)                       |
+| Next: Security Operations Lab | [Lesson 7](07-security-ops-lab)                          |
+| AZ-104: Governance            | [Exam objective](../../certifications/az-104/governance) |

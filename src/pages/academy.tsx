@@ -10,7 +10,8 @@ const academies = [
     id: "alp-001",
     title: "Cloud Engineering",
     subtitle: "ALP-001",
-    description: "From zero to production cloud engineer. Linux, networking, Azure, Docker, Kubernetes, Terraform, DevOps, and AI infrastructure.",
+    description:
+      "From zero to production cloud engineer. Linux, networking, Azure, Docker, Kubernetes, Terraform, DevOps, and AI infrastructure.",
     modules: 33,
     lessons: 121,
     projects: 10,
@@ -24,7 +25,8 @@ const academies = [
     id: "alp-002",
     title: "Cybersecurity",
     subtitle: "ALP-002",
-    description: "Coming soon. Security fundamentals, threat modeling, incident response, and cloud security architecture.",
+    description:
+      "Coming soon. Security fundamentals, threat modeling, incident response, and cloud security architecture.",
     modules: 0,
     lessons: 0,
     projects: 0,
@@ -38,7 +40,8 @@ const academies = [
     id: "alp-003",
     title: "AI Engineering",
     subtitle: "ALP-003",
-    description: "Coming soon. Machine learning operations, LLM deployment, vector databases, and AI infrastructure.",
+    description:
+      "Coming soon. Machine learning operations, LLM deployment, vector databases, and AI infrastructure.",
     modules: 0,
     lessons: 0,
     projects: 0,
@@ -67,7 +70,10 @@ export default function AcademyPage(): ReactNode {
 
           <div className={academyStyles.grid}>
             {academies.map((a) => (
-              <div key={a.id} className={`${academyStyles.card} ${a.featured ? academyStyles.featured : ""}`}>
+              <div
+                key={a.id}
+                className={`${academyStyles.card} ${a.featured ? academyStyles.featured : ""}`}
+              >
                 <div className={academyStyles.cardHeader}>
                   <span className={academyStyles.id}>{a.id}</span>
                   {a.featured && <span className={academyStyles.activeBadge}>Active</span>}

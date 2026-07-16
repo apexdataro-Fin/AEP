@@ -15,7 +15,8 @@ status: "published"
 version: "1.0.0"
 author: "ARES EDU PLATFORM"
 last_updated: "2026-07-15"
-search_keywords: ["cka exam preparation", "ckad study guide", "kubernetes certification", "cka tips"]
+search_keywords:
+  ["cka exam preparation", "ckad study guide", "kubernetes certification", "cka tips"]
 learning_objectives:
   - "Understand the CKA and CKAD exam formats"
   - "Practice time management strategies"
@@ -28,20 +29,39 @@ active_recall:
 review_schedule: { "initial": "2 days", "next": "5 days", "interval": "spaced-repetition" }
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion, CheatSheet } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+  CheatSheet,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # CKA/CKAD Exam Preparation
 
 ## Exam Overview
 
-| | CKA | CKAD |
-|---|-----|------|
-| **Focus** | Cluster administration | Application development |
-| **Duration** | 2 hours | 2 hours |
-| **Format** | Hands-on, performance-based | Hands-on, performance-based |
-| **Environment** | Remote Linux command line | Remote Linux command line |
-| **Passing Score** | ~66% | ~66% |
-| **Cost** | $395 (includes 1 retake) | $395 |
+|                   | CKA                         | CKAD                        |
+| ----------------- | --------------------------- | --------------------------- |
+| **Focus**         | Cluster administration      | Application development     |
+| **Duration**      | 2 hours                     | 2 hours                     |
+| **Format**        | Hands-on, performance-based | Hands-on, performance-based |
+| **Environment**   | Remote Linux command line   | Remote Linux command line   |
+| **Passing Score** | ~66%                        | ~66%                        |
+| **Cost**          | $395 (includes 1 retake)    | $395                        |
 
 <Definition term="CKA (Certified Kubernetes Administrator)">
 
@@ -85,6 +105,7 @@ kubectl create deployment nginx --image=nginx --replicas=3 --dry-run=client -o y
 ```
 
 **2. Master `kubectl` dry-run + output**
+
 ```bash
 kubectl run pod --image=nginx --dry-run=client -o yaml  # Pod
 kubectl create deployment dep --image=nginx --dry-run=client -o yaml  # Deployment
@@ -92,6 +113,7 @@ kubectl create service clusterip svc --tcp=80:80 --dry-run=client -o yaml  # Ser
 ```
 
 **3. Set up aliases and autocomplete BEFORE the exam starts**
+
 ```bash
 alias k=kubectl
 export do="--dry-run=client -o yaml"
@@ -100,6 +122,7 @@ source <(kubectl completion bash)
 ```
 
 **4. Use `kubectl explain` instead of searching docs**
+
 ```bash
 kubectl explain deployment.spec.strategy
 kubectl explain pod.spec.containers.resources --recursive
@@ -180,12 +203,12 @@ kubectl apply -f pod.yaml
 
 **30-Day Study Plan:**
 
-| Week | Focus | Activities |
-|------|-------|------------|
-| 1 | Core concepts | Pods, Deployments, Services, ConfigMaps |
-| 2 | Advanced | Storage, RBAC, NetworkPolicies, Ingress |
-| 3 | Cluster ops | etcd backup, cluster upgrade, node management |
-| 4 | Practice | Timed exams, troubleshooting drills, speed practice |
+| Week | Focus         | Activities                                          |
+| ---- | ------------- | --------------------------------------------------- |
+| 1    | Core concepts | Pods, Deployments, Services, ConfigMaps             |
+| 2    | Advanced      | Storage, RBAC, NetworkPolicies, Ingress             |
+| 3    | Cluster ops   | etcd backup, cluster upgrade, node management       |
+| 4    | Practice      | Timed exams, troubleshooting drills, speed practice |
 
 **Daily practice**: Killercoda, Play with Kubernetes, or local `kind` cluster.
 
@@ -203,16 +226,18 @@ kubectl apply -f pod.yaml
         "Writing YAML from scratch correctly",
         "Using kubectl imperative commands with --dry-run to generate YAML",
         "Reading the Kubernetes documentation",
-        "Using the Kubernetes dashboard"
+        "Using the Kubernetes dashboard",
       ],
       correct: 1,
-      explanation: "Imperative commands with `--dry-run=client -o yaml` save enormous time. You generate the skeleton and tweak it, rather than writing 20+ lines from memory."
+      explanation:
+        "Imperative commands with `--dry-run=client -o yaml` save enormous time. You generate the skeleton and tweak it, rather than writing 20+ lines from memory.",
     },
     {
       question: "Which exam domain has the highest weight in CKA?",
       options: ["Storage", "Troubleshooting", "Workloads", "Cluster Architecture"],
       correct: 1,
-      explanation: "Troubleshooting is 30% of the CKA exam — the largest single domain. Practice diagnosing broken clusters, pods, and networking issues extensively."
+      explanation:
+        "Troubleshooting is 30% of the CKA exam — the largest single domain. Practice diagnosing broken clusters, pods, and networking issues extensively.",
     },
     {
       question: "Before starting any exam question, what should you ALWAYS do first?",
@@ -220,11 +245,12 @@ kubectl apply -f pod.yaml
         "Read the Kubernetes docs",
         "Switch to the correct cluster context",
         "Create a backup",
-        "Check the node status"
+        "Check the node status",
       ],
       correct: 1,
-      explanation: "Every question specifies a context. If you answer in the wrong context, you get zero points even if your solution is perfect."
-    }
+      explanation:
+        "Every question specifies a context. If you answer in the wrong context, you get zero points even if your solution is perfect.",
+    },
   ]}
 />
 
@@ -260,7 +286,8 @@ This generates the YAML skeleton in seconds. Never hand-type YAML from scratch."
 
 **Question**: "You notice one node in your cluster is NotReady. Walk me through your troubleshooting process."
 
-**Answer**: 
+**Answer**:
+
 1. `kubectl describe node <name>` — check Conditions section
 2. SSH to node, check `systemctl status kubelet` and `journalctl -u kubelet`
 3. Check disk (`df -h`), memory (`free -m`), CPU (`top`)
@@ -275,8 +302,7 @@ This generates the YAML skeleton in seconds. Never hand-type YAML from scratch."
 ## Related
 
 <KnowledgeLinks>
-- **Previous**: [Operators & CRDs](operators-crds)
-- **Start of Module**: [Kubernetes Architecture](k8s-architecture)
-- **Related**: [Certification Center](/certifications)
-- **Practice**: [Killer.sh](https://killer.sh) — official exam simulator
+  - **Previous**: [Operators & CRDs](operators-crds) - **Start of Module**: [Kubernetes
+  Architecture](k8s-architecture) - **Related**: [Certification Center](/certifications) -
+  **Practice**: [Killer.sh](https://killer.sh) — official exam simulator
 </KnowledgeLinks>

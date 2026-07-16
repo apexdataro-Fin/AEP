@@ -22,10 +22,21 @@ tags: [rag, llm, retrieval, embeddings, ai]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Analogy,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ArchitectureNote, ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Analogy,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ArchitectureNote,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Retrieval-Augmented Generation (RAG) Architecture
 
@@ -60,7 +71,7 @@ graph LR
     DOCUMENTS[Documents] --> CHUNK[Chunk: Split into paragraphs]
     CHUNK --> EMBED[Embed: Convert to vectors]
     EMBED --> STORE[Store: Vector database]
-    
+
     QUERY[User Question] --> EMBED2[Embed query]
     EMBED2 --> RETRIEVE[Retrieve: Find similar chunks]
     RETRIEVE --> CONTEXT[Context: Retrieved documents]
@@ -75,12 +86,12 @@ graph LR
 
 ### Chunking Strategies
 
-| Strategy | Best For | Trade-off |
-|----------|----------|-----------|
-| **Fixed-size (500 tokens)** | General docs, equal length | May split sentences mid-thought |
-| **Semantic (by paragraph/section)** | Well-structured docs | Variable chunk sizes |
-| **Recursive (split by \n\n → \n → .)** | Code + text mixed | Good balance |
-| **Sliding window (overlap)** | Dense technical docs | Redundancy but preserves context |
+| Strategy                               | Best For                   | Trade-off                        |
+| -------------------------------------- | -------------------------- | -------------------------------- |
+| **Fixed-size (500 tokens)**            | General docs, equal length | May split sentences mid-thought  |
+| **Semantic (by paragraph/section)**    | Well-structured docs       | Variable chunk sizes             |
+| **Recursive (split by \n\n → \n → .)** | Code + text mixed          | Good balance                     |
+| **Sliding window (overlap)**           | Dense technical docs       | Redundancy but preserves context |
 
 <CodeBlock language="python" title="RAG Implementation with LangChain">
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -89,25 +100,30 @@ from langchain.vectorstores import Chroma
 from langchain.chains import RetrievalQA
 
 # 1. Chunk documents
+
 splitter = RecursiveCharacterTextSplitter(
-    chunk_size=500,
-    chunk_overlap=50
+chunk_size=500,
+chunk_overlap=50
 )
 chunks = splitter.split_documents(documents)
 
 # 2. Embed and store
+
 embeddings = AzureOpenAIEmbeddings(
-    model="text-embedding-3-small"
+model="text-embedding-3-small"
 )
 vectorstore = Chroma.from_documents(chunks, embeddings)
 
 # 3. Retrieve and generate
+
 qa_chain = RetrievalQA.from_chain_type(
-    llm=azure_llm,
-    retriever=vectorstore.as_retriever(search_kwargs={"k": 5})
+llm=azure_llm,
+retriever=vectorstore.as_retriever(search_kwargs={"k": 5})
 )
 answer = qa_chain.run("How does CloudNova handle cost optimization?")
+
 # Answer includes citations from retrieved documents
+
 </CodeBlock>
 
 ---
@@ -116,13 +132,13 @@ answer = qa_chain.run("How does CloudNova handle cost optimization?")
 
 ### RAG vs Fine-Tuning
 
-| Aspect | RAG | Fine-Tuning |
-|--------|-----|------------|
-| **Knowledge source** | External documents (dynamic) | Baked into model weights (static) |
-| **Update knowledge** | Add/remove documents instantly | Retrain model (hours/days) |
-| **Cost** | Embedding + inference | Training + inference |
-| **Hallucination** | Lower (grounded in docs) | Higher (relies on training) |
-| **Best for** | Customer docs, FAQs, knowledge bases | Domain-specific style/tone |
+| Aspect               | RAG                                  | Fine-Tuning                       |
+| -------------------- | ------------------------------------ | --------------------------------- |
+| **Knowledge source** | External documents (dynamic)         | Baked into model weights (static) |
+| **Update knowledge** | Add/remove documents instantly       | Retrain model (hours/days)        |
+| **Cost**             | Embedding + inference                | Training + inference              |
+| **Hallucination**    | Lower (grounded in docs)             | Higher (relies on training)       |
+| **Best for**         | Customer docs, FAQs, knowledge bases | Domain-specific style/tone        |
 
 <ProductionNote>
 
@@ -163,19 +179,19 @@ answer = qa_chain.run("How does CloudNova handle cost optimization?")
       "It's faster",
       "It grounds answers in your actual documents, reducing hallucinations and enabling private data Q&A",
       "It's cheaper than any other approach",
-      "It replaces the LLM entirely"
+      "It replaces the LLM entirely",
     ]}
     correct={1}
     explanation="RAG bridges the gap between LLM's general knowledge and your specific, private documents. The LLM generates answers grounded in retrieved context."
   />
-  
+
   <Question
     question="Why use chunk overlap in document splitting?"
     options={[
       "To make chunks larger",
       "To preserve context across chunk boundaries — a sentence split mid-thought in one chunk is complete in the next",
       "To reduce storage costs",
-      "It's a bug, not a feature"
+      "It's a bug, not a feature",
     ]}
     correct={1}
   />
@@ -185,9 +201,9 @@ answer = qa_chain.run("How does CloudNova handle cost optimization?")
 
 ## 📋 Summary
 
-| Step | Purpose |
-|------|---------|
-| **Chunk** | Split docs for context window |
-| **Embed** | Convert to searchable vectors |
-| **Retrieve** | Find relevant context |
-| **Generate** | LLM answers with context |
+| Step         | Purpose                       |
+| ------------ | ----------------------------- |
+| **Chunk**    | Split docs for context window |
+| **Embed**    | Convert to searchable vectors |
+| **Retrieve** | Find relevant context         |
+| **Generate** | LLM answers with context      |

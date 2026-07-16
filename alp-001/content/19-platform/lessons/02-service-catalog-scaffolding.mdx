@@ -22,10 +22,20 @@ tags: [platform, backstage, catalog, scaffolding]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Service Catalog & Developer Self-Service
 
@@ -49,14 +59,14 @@ The **Service Catalog** is the heart of an Internal Developer Platform — a uni
 
 ### What Makes a Good Service Catalog?
 
-| Must Have | Why |
-|-----------|-----|
-| **Ownership** | Who's on-call at 3 AM? |
-| **Dependencies** | If Database-A goes down, what breaks? |
-| **API docs** | How do I call this service? |
-| **CI/CD status** | Is the latest build green? |
-| **Deployment info** | What version is in production? |
-| **Runbooks** | How do I respond to its alerts? |
+| Must Have           | Why                                   |
+| ------------------- | ------------------------------------- |
+| **Ownership**       | Who's on-call at 3 AM?                |
+| **Dependencies**    | If Database-A goes down, what breaks? |
+| **API docs**        | How do I call this service?           |
+| **CI/CD status**    | Is the latest build green?            |
+| **Deployment info** | What version is in production?        |
+| **Runbooks**        | How do I respond to its alerts?       |
 
 <BestPractice>
 
@@ -116,13 +126,13 @@ spec:
 
 ## 🏭 Measuring Platform Success
 
-| Metric | Target |
-|--------|--------|
-| **Time to First Commit** | < 10 minutes from template |
-| **Time to Production** | < 1 day for new services |
-| **Platform NPS** | > 50 (developers recommend it) |
-| **Template Usage** | > 80% of new services use templates |
-| **Support Tickets** | Decreasing week-over-week |
+| Metric                   | Target                              |
+| ------------------------ | ----------------------------------- |
+| **Time to First Commit** | < 10 minutes from template          |
+| **Time to Production**   | < 1 day for new services            |
+| **Platform NPS**         | > 50 (developers recommend it)      |
+| **Template Usage**       | > 80% of new services use templates |
+| **Support Tickets**      | Decreasing week-over-week           |
 
 ---
 
@@ -149,18 +159,18 @@ spec:
       "Just a GitHub repo",
       "A fully operational service: repo + CI/CD + Kubernetes manifests + monitoring + docs",
       "Only documentation",
-      "A Dockerfile"
+      "A Dockerfile",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="Why do manually-maintained service catalogs fail?"
     options={[
       "They're too expensive",
       "They become stale because humans don't update them reliably",
       "They're technically impossible",
-      "Developers refuse to use them"
+      "Developers refuse to use them",
     ]}
     correct={1}
   />
@@ -170,8 +180,8 @@ spec:
 
 ## 📋 Summary
 
-| Component | Purpose |
-|-----------|---------|
-| **Service Catalog** | Unified registry — auto-discovered, always fresh |
-| **Software Templates** | 5-minute service creation with best practices |
-| **Platform Metrics** | Measure time-to-production, NPS, adoption |
+| Component              | Purpose                                          |
+| ---------------------- | ------------------------------------------------ |
+| **Service Catalog**    | Unified registry — auto-discovered, always fresh |
+| **Software Templates** | 5-minute service creation with best practices    |
+| **Platform Metrics**   | Measure time-to-production, NPS, adoption        |

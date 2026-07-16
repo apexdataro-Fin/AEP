@@ -22,10 +22,20 @@ tags: [gitops, terraform, flux, atlantis, drift]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # GitOps for Terraform & Infrastructure
 
@@ -51,12 +61,12 @@ import {
 
 Terraform is fundamentally push-based (`terraform apply`). Making it work with GitOps (pull-based reconciliation) requires a different approach:
 
-| Challenge | GitOps Solution |
-|-----------|----------------|
-| **Push-based apply** | Controller runs `terraform plan/apply` on interval |
-| **State management** | Remote state backend (Azure Storage) |
-| **Plan review** | PR triggers plan; merge triggers apply via controller |
-| **Drift detection** | Controller compares Git vs actual state periodically |
+| Challenge            | GitOps Solution                                       |
+| -------------------- | ----------------------------------------------------- |
+| **Push-based apply** | Controller runs `terraform plan/apply` on interval    |
+| **State management** | Remote state backend (Azure Storage)                  |
+| **Plan review**      | PR triggers plan; merge triggers apply via controller |
+| **Drift detection**  | Controller compares Git vs actual state periodically  |
 
 ```mermaid
 sequenceDiagram
@@ -65,19 +75,19 @@ sequenceDiagram
     participant PR as Pull Request
     participant TF as TF Controller
     participant Azure as Azure
-    
+
     Dev->>Git: Push Terraform changes
     Dev->>PR: Open Pull Request
     PR->>TF: Trigger terraform plan
     TF-->>PR: Post plan as comment
-    
+
     Note over PR: Human review
-    
+
     Dev->>Git: Merge PR
     Git->>TF: Detect change
     TF->>TF: terraform plan
     TF->>Azure: terraform apply
-    
+
     Note over TF,Azure: Continuous reconciliation
     loop Every 10 minutes
         TF->>TF: Compare Git vs Azure state
@@ -91,11 +101,11 @@ sequenceDiagram
 
 ### Three Approaches Compared
 
-| Approach | How it works | Drift Detection | Best For |
-|----------|-------------|----------------|----------|
-| **CI/CD Pipeline** | GitHub Actions pushes apply | ❌ None | Simple setups |
-| **Atlantis** | PR comments trigger plan/apply | ❌ None | Teams wanting PR-driven workflow |
-| **Flux TF Controller** | Controller reconciles on interval | ✅ Built-in | Full GitOps with drift detection |
+| Approach               | How it works                      | Drift Detection | Best For                         |
+| ---------------------- | --------------------------------- | --------------- | -------------------------------- |
+| **CI/CD Pipeline**     | GitHub Actions pushes apply       | ❌ None         | Simple setups                    |
+| **Atlantis**           | PR comments trigger plan/apply    | ❌ None         | Teams wanting PR-driven workflow |
+| **Flux TF Controller** | Controller reconciles on interval | ✅ Built-in     | Full GitOps with drift detection |
 
 <ArchitectureNote>
 
@@ -110,36 +120,13 @@ sequenceDiagram
 ### Flux TF Controller Setup
 
 <CodeBlock language="yaml" title="Flux Terraform Controller">
-apiVersion: infra.contrib.fluxcd.io/v1alpha2
-kind: Terraform
-metadata:
-  name: cloudnova-core
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: ./terraform/environments/production
-  sourceRef:
-    kind: GitRepository
-    name: cloudnova-infra
-  
-  # Drift detection: plan every interval, detect changes
-  # If drift detected and approvePlan=auto → auto-apply
-  
-  approvePlan: auto
-  
-  # Store plan output in ConfigMap for audit
-  storeReadablePlan: human
-  
-  # Variables from Kubernetes Secrets
-  varsFrom:
-    - kind: Secret
-      name: terraform-vars
-  
-  # Force unlock if state is stuck
-  forceUnlock: false
-  
-  # Don't destroy resources when Terraform object is deleted
-  destroyResourcesOnDeletion: false
+  apiVersion: infra.contrib.fluxcd.io/v1alpha2 kind: Terraform metadata: name: cloudnova-core
+  namespace: flux-system spec: interval: 10m path: ./terraform/environments/production sourceRef:
+  kind: GitRepository name: cloudnova-infra # Drift detection: plan every interval, detect changes #
+  If drift detected and approvePlan=auto → auto-apply approvePlan: auto # Store plan output in
+  ConfigMap for audit storeReadablePlan: human # Variables from Kubernetes Secrets varsFrom: - kind:
+  Secret name: terraform-vars # Force unlock if state is stuck forceUnlock: false # Don't destroy
+  resources when Terraform object is deleted destroyResourcesOnDeletion: false
 </CodeBlock>
 
 <ProductionNote>
@@ -157,6 +144,7 @@ spec:
 <Warning title="Don't Mix Push and Pull">
 
 Using both a CI/CD pipeline AND a GitOps controller for the same Terraform state leads to race conditions. Choose one model per environment:
+
 - **Pipeline (push)**: Good for simple setups, CI/CD integration
 - **Controller (pull)**: Good for drift detection, self-healing, GitOps purity
 
@@ -179,6 +167,7 @@ CloudNova Standard: Flux TF Controller for infrastructure, ArgoCD for applicatio
 
 **Detection (within 10 minutes):**
 Flux TF Controller runs `terraform plan`. It detects:
+
 ```
 ~ network_rules {
     ~ default_action = "Deny" → "Allow"
@@ -186,6 +175,7 @@ Flux TF Controller runs `terraform plan`. It detects:
 ```
 
 **Response (production — approvePlan: manual):**
+
 1. Flux creates a DriftDetection alert
 2. On-call engineer reviews the drift
 3. If the manual change was intentional → update Git to match
@@ -194,6 +184,7 @@ Flux TF Controller runs `terraform plan`. It detects:
 
 **Response (dev — approvePlan: auto):**
 Flux auto-corrects immediately — no human needed.
+
 </details>
 </Challenge>
 
@@ -223,18 +214,23 @@ Flux auto-corrects immediately — no human needed.
 <Quiz>
   <Question
     question="How often does Flux TF Controller check for drift by default?"
-    options={["Every push", "On a configurable interval (e.g., every 10 minutes)", "Only on PR merge", "Never — drift detection is manual"]}
+    options={[
+      "Every push",
+      "On a configurable interval (e.g., every 10 minutes)",
+      "Only on PR merge",
+      "Never — drift detection is manual",
+    ]}
     correct={1}
     explanation="The `interval` field controls how often Flux reconciles. Default 10 minutes is typical for infrastructure."
   />
-  
+
   <Question
     question="What happens if someone changes a resource manually in Azure Portal under GitOps management?"
     options={[
       "Nothing — the change persists",
       "The GitOps controller detects drift and alerts or auto-corrects",
       "The change is automatically committed to Git",
-      "Azure Portal blocks the change"
+      "Azure Portal blocks the change",
     ]}
     correct={1}
     explanation="The controller detects drift on the next reconciliation interval and responds according to `approvePlan` setting."
@@ -245,10 +241,10 @@ Flux auto-corrects immediately — no human needed.
 
 ## 📋 Summary
 
-| Approach | Drift Detection | Best Environment |
-|----------|----------------|-----------------|
-| **CI/CD Pipeline** | ❌ | Simple, small-scale |
-| **Atlantis** | ❌ (PR-driven) | Teams needing PR workflow |
+| Approach               | Drift Detection     | Best Environment                 |
+| ---------------------- | ------------------- | -------------------------------- |
+| **CI/CD Pipeline**     | ❌                  | Simple, small-scale              |
+| **Atlantis**           | ❌ (PR-driven)      | Teams needing PR workflow        |
 | **Flux TF Controller** | ✅ (interval-based) | Full GitOps with drift detection |
-| **Prod setting** | Manual approval | `approvePlan: manual` |
-| **Dev setting** | Auto-correct | `approvePlan: auto` |
+| **Prod setting**       | Manual approval     | `approvePlan: manual`            |
+| **Dev setting**        | Auto-correct        | `approvePlan: auto`              |

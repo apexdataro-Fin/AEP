@@ -22,10 +22,21 @@ tags: [identity, entra-id, rbac, security]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  SecurityNote, ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  SecurityNote,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Identity & Access Management Mastery
 
@@ -57,12 +68,12 @@ graph TD
     SCOPE --> ACTION{Allow / Deny}
 ```
 
-| Component | Azure Service | What it does |
-|-----------|--------------|-------------|
-| **Authentication** | Entra ID (formerly Azure AD) | Verifies identity |
-| **Authorization** | RBAC | Checks permissions at scope |
-| **Identity for Apps** | Managed Identities | Passwordless workload auth |
-| **Privileged Access** | PIM | Just-in-time admin roles |
+| Component             | Azure Service                | What it does                |
+| --------------------- | ---------------------------- | --------------------------- |
+| **Authentication**    | Entra ID (formerly Azure AD) | Verifies identity           |
+| **Authorization**     | RBAC                         | Checks permissions at scope |
+| **Identity for Apps** | Managed Identities           | Passwordless workload auth  |
+| **Privileged Access** | PIM                          | Just-in-time admin roles    |
 
 ---
 
@@ -81,17 +92,19 @@ resource "azurerm_linux_virtual_machine" "app" {
 }
 
 # User-Assigned: One identity, many resources
+
 resource "azurerm_user_assigned_identity" "app_identity" {
-  name                = "cloudnova-app-id"
-  resource_group_name = azurerm_resource_group.main.name
-  location            = azurerm_resource_group.main.location
+name = "cloudnova-app-id"
+resource_group_name = azurerm_resource_group.main.name
+location = azurerm_resource_group.main.location
 }
 
 resource "azurerm_role_assignment" "keyvault_reader" {
-  scope                = azurerm_key_vault.main.id
-  role_definition_name = "Key Vault Secrets User"
-  principal_id         = azurerm_user_assigned_identity.app_identity.principal_id
+scope = azurerm_key_vault.main.id
+role_definition_name = "Key Vault Secrets User"
+principal_id = azurerm_user_assigned_identity.app_identity.principal_id
 }
+
 </CodeBlock>
 
 <SecurityNote>
@@ -112,7 +125,7 @@ sequenceDiagram
     participant PIM as Privileged Identity Management
     participant Entra as Entra ID
     participant Azure
-    
+
     Engineer->>PIM: Request "Contributor" for 4 hours
     PIM->>Engineer: Why do you need this?
     Engineer->>PIM: "Fixing incident #1234 — ticket attached"
@@ -156,17 +169,22 @@ sequenceDiagram
 <Quiz>
   <Question
     question="Which identity type should a VM use to access Key Vault?"
-    options={["Service Principal with client secret", "Managed Identity", "Username and password in environment variables", "Storage account key"]}
+    options={[
+      "Service Principal with client secret",
+      "Managed Identity",
+      "Username and password in environment variables",
+      "Storage account key",
+    ]}
     correct={1}
   />
-  
+
   <Question
     question="What is the primary advantage of PIM?"
     options={[
       "It's free",
       "No standing admin access — roles are activated just-in-time and auto-expire",
       "It makes Azure faster",
-      "It replaces RBAC entirely"
+      "It replaces RBAC entirely",
     ]}
     correct={1}
   />
@@ -176,9 +194,9 @@ sequenceDiagram
 
 ## 📋 Summary
 
-| Concept | Practice |
-|---------|----------|
-| **Managed Identity** | Passwordless, no rotation |
-| **RBAC** | Least privilege at narrowest scope |
-| **PIM** | Just-in-time, time-bound, audited |
+| Concept                | Practice                               |
+| ---------------------- | -------------------------------------- |
+| **Managed Identity**   | Passwordless, no rotation              |
+| **RBAC**               | Least privilege at narrowest scope     |
+| **PIM**                | Just-in-time, time-bound, audited      |
 | **Identity Perimeter** | AuthN/AuthZ replaces network perimeter |

@@ -23,11 +23,28 @@ tags: [git, version-control, fundamentals]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example, Analogy,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, ArchitectureNote,
-  SecurityNote, CostNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Git Fundamentals: Beyond the Basics
 
@@ -58,7 +75,7 @@ By the end of this lesson, you will:
 
 ## 🧠 Simple Explanation
 
-Git remembers every version of every file you've ever told it to care about. Instead of saving *what changed* between versions (like a list of edits), it saves a complete snapshot of all files each time you commit. This makes operations like branching, merging, and reverting incredibly fast.
+Git remembers every version of every file you've ever told it to care about. Instead of saving _what changed_ between versions (like a list of edits), it saves a complete snapshot of all files each time you commit. This makes operations like branching, merging, and reverting incredibly fast.
 
 When you type `git add`, you're telling Git: "Remember this version of this file." When you type `git commit`, you're saying: "Take a permanent snapshot of everything I've added."
 
@@ -85,12 +102,12 @@ graph TD
     T1 --> B2["Blob<br/>main.py"]
     T1 --> T2["Tree<br/>src/"]
     T2 --> B3["Blob<br/>app.py"]
-    
+
     C2["Commit<br/>def456"] --> T3["Tree<br/>Root"]
     T3 --> B1
     T3 --> B4["Blob<br/>main.py (updated)"]
     T3 --> T2
-    
+
     style C1 fill:#0ea5e9,color:#fff
     style C2 fill:#0ea5e9,color:#fff
     style B1 fill:#10b981,color:#fff
@@ -101,18 +118,18 @@ graph TD
 
 ### The Three States
 
-| State | Location | Command | Description |
-|-------|----------|---------|-------------|
-| **Working Directory** | Your disk | edit files | Files you're actively editing |
-| **Staging Area** | `.git/index` | `git add` | Snapshot ready for next commit |
-| **Repository** | `.git/objects/` | `git commit` | Permanent snapshot history |
+| State                 | Location        | Command      | Description                    |
+| --------------------- | --------------- | ------------ | ------------------------------ |
+| **Working Directory** | Your disk       | edit files   | Files you're actively editing  |
+| **Staging Area**      | `.git/index`    | `git add`    | Snapshot ready for next commit |
+| **Repository**        | `.git/objects/` | `git commit` | Permanent snapshot history     |
 
 ```mermaid
 sequenceDiagram
     participant WD as Working Directory
     participant SA as Staging Area (Index)
     participant REPO as Repository (.git)
-    
+
     Note over WD: Edit files
     WD->>SA: git add
     Note over SA: Snapshot staged
@@ -128,12 +145,9 @@ sequenceDiagram
 ### Essential Git Configuration
 
 <CodeBlock language="bash" title="First-Time Git Setup">
-git config --global user.name "Alex Chen"
-git config --global user.email "alex.chen@cloudnova.io"
-git config --global core.editor "code --wait"
-git config --global init.defaultBranch main
-git config --global pull.rebase true
-git config --global fetch.prune true
+  git config --global user.name "Alex Chen" git config --global user.email "alex.chen@cloudnova.io"
+  git config --global core.editor "code --wait" git config --global init.defaultBranch main git
+  config --global pull.rebase true git config --global fetch.prune true
 </CodeBlock>
 
 <Tip>
@@ -150,33 +164,41 @@ mkdir cloudnova-infra
 cd cloudnova-infra
 
 # Initialize Git
+
 git init
 
 # Create .gitignore BEFORE first commit
+
 cat > .gitignore << 'EOF'
+
 # Python
-__pycache__/
-*.pyc
+
+**pycache**/
+\*.pyc
 .venv/
 
 # Terraform
+
 .terraform/
-*.tfstate*
-*.tfvars
+_.tfstate_
+\*.tfvars
 .terraform.lock.hcl
 
 # IDE
+
 .vscode/
 .idea/
 
 # Secrets
-*.pem
+
+\*.pem
 .env
 credentials.json
 EOF
 
 git add .gitignore
 git commit -m "chore: initial commit with .gitignore"
+
 </CodeBlock>
 
 <BestPractice>
@@ -196,23 +218,33 @@ git commit -m "chore: initial commit with .gitignore"
 echo "print('Hello CloudNova')" > app.py
 
 # 2. What's in the working directory?
+
 git status
+
 # Untracked files: app.py
 
 # 3. Hash the file content (blob hash)
+
 git hash-object app.py
+
 # e.g., 8d0e412...
 
 # 4. Stage the file
+
 git add app.py
 
 # 5. Now it's in .git/index as a staged entry
+
 git ls-files --stage
-# 100644 8d0e412... 0  app.py
+
+# 100644 8d0e412... 0 app.py
 
 # 6. The object already exists in .git/objects/
+
 git cat-file -p 8d0e412
+
 # print('Hello CloudNova')
+
 </CodeBlock>
 
 <ProductionNote>
@@ -251,10 +283,10 @@ git log -1 --format=raw
 
 ### Why Snapshots Beat Diffs
 
-| Approach | Tool | Branch Switch | History Rewrite | Storage |
-|----------|------|---------------|-----------------|---------|
-| **Snapshot** | Git | O(1) — just update HEAD | Fast — recompute tree | Packfiles compress well |
-| **Delta/Diff** | SVN, CVS | O(n) — replay all changes | Slow — recalculate deltas | Smaller per-revision |
+| Approach       | Tool     | Branch Switch             | History Rewrite           | Storage                 |
+| -------------- | -------- | ------------------------- | ------------------------- | ----------------------- |
+| **Snapshot**   | Git      | O(1) — just update HEAD   | Fast — recompute tree     | Packfiles compress well |
+| **Delta/Diff** | SVN, CVS | O(n) — replay all changes | Slow — recalculate deltas | Smaller per-revision    |
 
 Git's snapshot model is the reason `git checkout` takes milliseconds regardless of project size — it just updates the working tree to match the target commit's tree.
 
@@ -345,6 +377,7 @@ git commit -m "chore: initial repository setup
 - Add .gitignore for Terraform/Python/IDE
 - Add README with project overview"
 ```
+
 </details>
 </Exercise>
 
@@ -365,6 +398,7 @@ echo ".env" >> .gitignore
 git rm --cached .env
 git commit -m "chore: remove .env from tracking"
 ```
+
 </CommonMistake>
 
 <CommonMistake title="Committing Large Binary Files">
@@ -446,19 +480,19 @@ git cherry-pick def5678
       "Only file names",
       "Complete copies of files ready for the next commit",
       "Differences from the last commit",
-      "References to the working directory"
+      "References to the working directory",
     ]}
     correct={1}
     explanation="The staging area holds complete file snapshots, not diffs. These are the exact file versions that will be in the next commit."
   />
-  
+
   <Question
     question="Which Git object type represents a directory?"
     options={["Blob", "Tree", "Commit", "Tag"]}
     correct={1}
     explanation="A tree object represents a directory and contains pointers to blobs (files) and other trees (subdirectories), along with file names and modes."
   />
-  
+
   <Question
     question="When is the blob object created — during `git add` or `git commit`?"
     options={["git add", "git commit", "git push", "Neither"]}
@@ -476,6 +510,7 @@ git cherry-pick def5678
 **Q:** "Explain how Git stores data internally. Why is it called a content-addressable filesystem?"
 
 **A:** Git stores every piece of data as an object identified by its SHA-1 hash. There are four object types:
+
 - **Blobs** — file contents
 - **Trees** — directory listings
 - **Commits** — snapshots with metadata
@@ -490,12 +525,14 @@ It's "content-addressable" because the content determines the address (hash). Gi
 **Q:** "What happens internally when you run `git add` followed by `git commit`?"
 
 **A:** `git add`:
+
 1. Computes SHA-1 hash of file content
 2. Creates a blob object in `.git/objects/`
 3. Compresses it with zlib
 4. Updates `.git/index` with the file path, mode, and blob hash
 
 `git commit`:
+
 1. Creates a tree object from the current index
 2. Creates a commit object referencing the tree, parent commit(s), author, committer, timestamp, and message
 3. Updates the current branch reference (e.g., `.git/refs/heads/main`)
@@ -532,10 +569,10 @@ Try these prompts with your favorite AI assistant:
 
 ## 📋 Summary
 
-| Concept | Key Takeaway |
-|---------|-------------|
-| **Data Model** | Git stores snapshots, not diffs |
-| **Three States** | Working dir → Staging (index) → Repository |
-| **Object Types** | Blob (file), Tree (directory), Commit (snapshot), Tag (label) |
-| **Content Addressing** | SHA-1 hash of content = object address |
-| **Best Practice** | `.gitignore` before first commit, conventional commits, Git LFS for binaries |
+| Concept                | Key Takeaway                                                                 |
+| ---------------------- | ---------------------------------------------------------------------------- |
+| **Data Model**         | Git stores snapshots, not diffs                                              |
+| **Three States**       | Working dir → Staging (index) → Repository                                   |
+| **Object Types**       | Blob (file), Tree (directory), Commit (snapshot), Tag (label)                |
+| **Content Addressing** | SHA-1 hash of content = object address                                       |
+| **Best Practice**      | `.gitignore` before first commit, conventional commits, Git LFS for binaries |

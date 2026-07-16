@@ -6,18 +6,41 @@ lesson: 7
 difficulty: "professional"
 estimated_time: "60 minutes"
 technologies: ["Azure VNet", "VPN Gateway", "ExpressRoute", "Azure Bastion", "Private Link"]
-skills: ["vnet-peering", "site-to-site-vpn", "expressroute", "private-endpoints", "hub-spoke-architecture"]
+skills:
+  [
+    "vnet-peering",
+    "site-to-site-vpn",
+    "expressroute",
+    "private-endpoints",
+    "hub-spoke-architecture",
+  ]
 certifications: ["AZ-104", "AZ-700"]
 knowledge_nodes: ["hybrid-networking", "vnet-peering", "expressroute", "private-link"]
-prerequisites: ["03-networking/lessons/04-subnetting-cidr", "03-networking/lessons/06-network-security"]
+prerequisites:
+  ["03-networking/lessons/04-subnetting-cidr", "03-networking/lessons/06-network-security"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Design hub-spoke network architectures in Azure
 - Configure VNet peering and understand transit routing
 - Differentiate VPN Gateway from ExpressRoute
@@ -31,6 +54,7 @@ By the end of this lesson, you will:
 **Think of hybrid networking like a company with multiple office buildings.**
 
 Your on-premises data center is the **headquarters**. Azure is a **new branch office**. You need:
+
 1. **Private roads** between buildings (VNet Peering)
 2. **Secure tunnels** under public streets (VPN Gateway)
 3. **Dedicated fiber lines** for critical traffic (ExpressRoute)
@@ -50,7 +74,7 @@ graph TD
     H --> S2["🟢 Spoke: Development<br/>10.2.0.0/16"]
     H --> S3["🟠 Spoke: Shared Services<br/>10.3.0.0/16"]
     H --> ON["🏭 On-Premises<br/>via VPN/ExpressRoute"]
-    
+
     style H fill:#ff6b35,stroke:#333,color:#fff
     style S1 fill:#0078d4,stroke:#333,color:#fff
     style S2 fill:#107c10,stroke:#333,color:#fff
@@ -61,16 +85,16 @@ The hub VNet hosts **shared services**: Azure Firewall, VPN Gateway, Azure Basti
 
 ### VNet Peering
 
-| Feature | Description |
-|---------|-------------|
+| Feature              | Description                    |
+| -------------------- | ------------------------------ |
 | **Regional Peering** | VNets in the same Azure region |
-| **Global Peering** | VNets in different regions |
-| **Gateway Transit** | Spoke uses hub's VPN Gateway |
-| **Service Chaining** | Route traffic through an NVA |
-| **Cost** | Ingress + egress data transfer |
+| **Global Peering**   | VNets in different regions     |
+| **Gateway Transit**  | Spoke uses hub's VPN Gateway   |
+| **Service Chaining** | Route traffic through an NVA   |
+| **Cost**             | Ingress + egress data transfer |
 
 <CodeBlock language="bash">
-{`# Create VNet peering with Azure CLI
+  {`# Create VNet peering with Azure CLI
 az network vnet peering create \\
   --name hub-to-spoke-prod \\
   --resource-group cloudnova-networking \\
@@ -90,33 +114,35 @@ az network vnet peering create \\
 flowchart LR
     ON["🏭 On-Premises"] --> VPN["🔒 VPN Gateway<br/>Over Internet<br/>Encrypted (IPsec)"] --> AZURE["☁️ Azure"]
     ON --> ER["⚡ ExpressRoute<br/>Dedicated Fiber<br/>Private Connection"] --> AZURE
-    
+
     style VPN fill:#0078d4,stroke:#333,color:#fff
     style ER fill:#ff6b35,stroke:#333,color:#fff
 ```
 
-| Aspect | VPN Gateway | ExpressRoute |
-|--------|------------|--------------|
-| **Path** | Public internet | Private fiber |
-| **Bandwidth** | Up to 10 Gbps | Up to 100 Gbps |
-| **Latency** | Variable | Consistent, low |
-| **SLA** | 99.9% | 99.95% |
-| **Setup time** | Minutes | Weeks (carrier) |
-| **Cost** | Pay-as-you-go | Monthly commitment |
-| **Use case** | Dev/test, backup | Production, mission-critical |
+| Aspect         | VPN Gateway      | ExpressRoute                 |
+| -------------- | ---------------- | ---------------------------- |
+| **Path**       | Public internet  | Private fiber                |
+| **Bandwidth**  | Up to 10 Gbps    | Up to 100 Gbps               |
+| **Latency**    | Variable         | Consistent, low              |
+| **SLA**        | 99.9%            | 99.95%                       |
+| **Setup time** | Minutes          | Weeks (carrier)              |
+| **Cost**       | Pay-as-you-go    | Monthly commitment           |
+| **Use case**   | Dev/test, backup | Production, mission-critical |
 
 ### Private Link vs Service Endpoints
 
 <ProductionNote>
-**Real-world distinction:** Service Endpoints extend your VNet to Azure services over the Azure backbone (still a public endpoint). Private Link brings the service **into** your VNet with a private IP. Private Link is the gold standard for security-sensitive workloads.
+  **Real-world distinction:** Service Endpoints extend your VNet to Azure services over the Azure
+  backbone (still a public endpoint). Private Link brings the service **into** your VNet with a
+  private IP. Private Link is the gold standard for security-sensitive workloads.
 </ProductionNote>
 
-| Feature | Service Endpoint | Private Link |
-|---------|-----------------|--------------|
-| **Connectivity** | Azure backbone | Private IP in VNet |
-| **Access from on-prem?** | Only via forced tunneling | Yes, natively |
-| **Data exfiltration risk** | Possible | Eliminated |
-| **Cost** | Free | Per endpoint + data |
+| Feature                    | Service Endpoint          | Private Link        |
+| -------------------------- | ------------------------- | ------------------- |
+| **Connectivity**           | Azure backbone            | Private IP in VNet  |
+| **Access from on-prem?**   | Only via forced tunneling | Yes, natively       |
+| **Data exfiltration risk** | Possible                  | Eliminated          |
+| **Cost**                   | Free                      | Per endpoint + data |
 
 ---
 
@@ -128,11 +154,13 @@ flowchart LR
 **Scenario:** CloudNova needs to migrate their customer-facing applications to Azure while keeping their legacy billing system on-premises.
 
 **Requirements:**
+
 - Billing system (on-prem) must communicate with Azure databases securely
 - Developers need secure access to VMs without public IPs
 - Production and development environments must be isolated
 
 **Solution:** Hub-spoke with ExpressRoute + Azure Bastion + Private Link
+
 </ArchitectureNote>
 
 ```mermaid
@@ -141,22 +169,22 @@ graph TD
         BILL["💰 Legacy Billing<br/>192.168.10.0/24"]
         DEV["👩‍💻 Developer<br/>192.168.20.0/24"]
     end
-    
+
     subgraph "Azure: Hub VNet"
         FW["🔥 Azure Firewall"]
         ERGW["⚡ ExpressRoute GW"]
         BASTION["🏰 Azure Bastion"]
     end
-    
+
     subgraph "Azure: Prod Spoke"
         SQL["🗄️ Azure SQL<br/>Private Link"]
         AKS["☸️ AKS Cluster"]
     end
-    
+
     subgraph "Azure: Dev Spoke"
         DEVSQL["🗄️ Dev SQL<br/>Private Link"]
     end
-    
+
     BILL --> ERGW
     DEV --> ERGW
     ERGW --> FW
@@ -178,19 +206,22 @@ az network express-route create \\
   --location "East US"
 
 # 2. Create ExpressRoute Gateway in the hub VNet
+
 az network vnet-gateway create \\
-  --name hub-er-gateway \\
-  --resource-group cloudnova-networking \\
-  --vnet hub-vnet \\
-  --gateway-type ExpressRoute \\
-  --sku ErGw1AZ
+--name hub-er-gateway \\
+--resource-group cloudnova-networking \\
+--vnet hub-vnet \\
+--gateway-type ExpressRoute \\
+--sku ErGw1AZ
 
 # 3. Link circuit to gateway
+
 az network express-route gateway-connection create \\
-  --name CloudNova-to-Azure \\
-  --resource-group cloudnova-networking \\
-  --gateway-name hub-er-gateway \\
-  --express-route-circuit-name CloudNova-ER`}
+--name CloudNova-to-Azure \\
+--resource-group cloudnova-networking \\
+--gateway-name hub-er-gateway \\
+--express-route-circuit-name CloudNova-ER`}
+
 </TerminalBlock>
 
 ---
@@ -206,39 +237,41 @@ graph TD
         FW["Azure Firewall"]
         DNS["Private DNS Resolver"]
     end
-    
+
     subgraph "Identity Subscription"
         DC["Domain Controllers"]
     end
-    
+
     subgraph "Management Subscription"
         LOG["Log Analytics"]
         SEC["Security Center"]
     end
-    
+
     subgraph "Workload Subscription A"
         SPOKE1["App A VNet"]
     end
-    
+
     subgraph "Workload Subscription B"
         SPOKE2["App B VNet"]
     end
-    
+
     HUB --> SPOKE1
     HUB --> SPOKE2
     HUB --> DC
-    
+
     style HUB fill:#ff6b35,stroke:#333,color:#fff
 ```
 
 **Key principles:**
+
 1. **Subscription segmentation** — connectivity, identity, management, workloads
 2. **Hub-spoke across subscriptions** — hub in connectivity sub, spokes in workload subs
 3. **Route tables enforce** — all traffic through Azure Firewall
 4. **Private DNS zones** — linked to hub for centralized name resolution
 
 <BestPractice>
-**Azure Virtual WAN** is the evolution of hub-spoke for large enterprises. It provides any-to-any transitive connectivity, automated spoke configuration, and integrated routing.
+  **Azure Virtual WAN** is the evolution of hub-spoke for large enterprises. It provides any-to-any
+  transitive connectivity, automated spoke configuration, and integrated routing.
 </BestPractice>
 
 ---
@@ -250,28 +283,25 @@ graph TD
 Your task at CloudNova: Design the hybrid network for a new microservices application.
 
 **Requirements:**
+
 1. Production AKS cluster in East US, DR in West Europe
 2. On-premises CI/CD server must deploy to both
 3. PostgreSQL must be accessible only from AKS (not public internet)
 4. Developers need SSH access without exposing VMs to internet
 
 **Deliverables:**
+
 1. Architecture diagram (Mermaid or draw.io)
 2. List of Azure networking resources needed
 3. Estimated monthly networking cost
 
 <Quiz question="Which connectivity option should CloudNova use between their on-prem CI/CD and Azure for production deployments requiring consistent low latency?">
-- VPN Gateway (site-to-site)
-- *ExpressRoute*
-- VNet Peering
-- Azure Bastion
+  - VPN Gateway (site-to-site) - *ExpressRoute* - VNet Peering - Azure Bastion
 </Quiz>
 
 <Quiz question="How should CloudNova secure PostgreSQL access from AKS?">
-- Network Security Group rule allowing AKS subnet
-- Public endpoint with firewall rules
-- *Private Link with private endpoint in AKS subnet*
-- Service Endpoint with VNet ACL
+  - Network Security Group rule allowing AKS subnet - Public endpoint with firewall rules - *Private
+  Link with private endpoint in AKS subnet* - Service Endpoint with VNet ACL
 </Quiz>
 
 </Exercise>
@@ -309,11 +339,20 @@ For a dev/test environment, VPN is fine. For production trading platforms, Expre
 
 ## Flashcard Review
 
-<Flashcard front="What is VNet peering gateway transit?" back="A hub VNet with a VPN/ExpressRoute gateway can share it with peered spoke VNets, allowing spokes to reach on-premises through the hub's gateway." />
+<Flashcard
+  front="What is VNet peering gateway transit?"
+  back="A hub VNet with a VPN/ExpressRoute gateway can share it with peered spoke VNets, allowing spokes to reach on-premises through the hub's gateway."
+/>
 
-<Flashcard front="ExpressRoute vs VPN: which has better SLA?" back="ExpressRoute: 99.95% (dedicated fiber). VPN Gateway: 99.9% for active-passive, 99.95% for active-active." />
+<Flashcard
+  front="ExpressRoute vs VPN: which has better SLA?"
+  back="ExpressRoute: 99.95% (dedicated fiber). VPN Gateway: 99.9% for active-passive, 99.95% for active-active."
+/>
 
-<Flashcard front="What does Azure Private Link eliminate?" back="Data exfiltration risk — the PaaS service gets a private IP in your VNet with no public exposure." />
+<Flashcard
+  front="What does Azure Private Link eliminate?"
+  back="Data exfiltration risk — the PaaS service gets a private IP in your VNet with no public exposure."
+/>
 
 ---
 
@@ -336,9 +375,9 @@ Write your explanation in 3-4 sentences. Use no networking jargon beyond "IP add
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Previous lesson: Network Security | [Lesson 6](06-network-security) |
-| Next lesson: Troubleshooting Lab | [Lesson 8](08-troubleshooting-lab) |
+| Resource                                 | Link                                                |
+| ---------------------------------------- | --------------------------------------------------- |
+| Previous lesson: Network Security        | [Lesson 6](06-network-security)                     |
+| Next lesson: Troubleshooting Lab         | [Lesson 8](08-troubleshooting-lab)                  |
 | Project: CloudNova Secure Infrastructure | [Project 3](../../projects/03-azure-infrastructure) |
-| AZ-104: Implement Virtual Networks | [Exam objective](../../certifications/az-104/vnet) |
+| AZ-104: Implement Virtual Networks       | [Exam objective](../../certifications/az-104/vnet)  |

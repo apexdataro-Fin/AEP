@@ -6,7 +6,12 @@ import styles from "./index.module.css";
 import careerStyles from "./career.module.css";
 
 const tickets = [
-  { id: "T-284", title: "Investigate API gateway latency", priority: "High", status: "In Progress" },
+  {
+    id: "T-284",
+    title: "Investigate API gateway latency",
+    priority: "High",
+    status: "In Progress",
+  },
   { id: "T-285", title: "Rotate expired TLS certificate", priority: "Critical", status: "Open" },
   { id: "T-283", title: "Review Terraform module PR", priority: "Medium", status: "Open" },
 ];
@@ -33,7 +38,8 @@ export default function CareerPage(): ReactNode {
               Career Mode
             </Heading>
             <p className={careerStyles.subtitle}>
-              Work as a Junior Cloud Engineer, handle tickets, respond to incidents, and earn promotions.
+              Work as a Junior Cloud Engineer, handle tickets, respond to incidents, and earn
+              promotions.
             </p>
           </header>
 
@@ -68,7 +74,9 @@ export default function CareerPage(): ReactNode {
                       <span className={careerStyles.itemTitle}>{t.title}</span>
                     </div>
                     <div className={careerStyles.itemMeta}>
-                      <span className={`${careerStyles.priority} ${careerStyles[t.priority.toLowerCase()]}`}>
+                      <span
+                        className={`${careerStyles.priority} ${careerStyles[t.priority.toLowerCase()]}`}
+                      >
                         {t.priority}
                       </span>
                       <span>{t.status}</span>
@@ -93,7 +101,9 @@ export default function CareerPage(): ReactNode {
                       <span className={careerStyles.itemTitle}>{inc.title}</span>
                     </div>
                     <div className={careerStyles.itemMeta}>
-                      <span className={`${careerStyles.severity} ${careerStyles[inc.severity.toLowerCase()]}`}>
+                      <span
+                        className={`${careerStyles.severity} ${careerStyles[inc.severity.toLowerCase()]}`}
+                      >
                         {inc.severity}
                       </span>
                       <span>{inc.status}</span>

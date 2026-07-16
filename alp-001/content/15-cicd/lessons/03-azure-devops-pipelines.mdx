@@ -22,10 +22,21 @@ tags: [azure-devops, pipelines, ci-cd, enterprise]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Azure DevOps Pipelines
 
@@ -49,14 +60,14 @@ import {
 
 ### Azure DevOps vs GitHub Actions
 
-| Feature | Azure DevOps | GitHub Actions |
-|---------|-------------|----------------|
-| **YAML syntax** | Azure Pipelines YAML | GitHub Actions YAML |
-| **Triggers** | CI, PR, scheduled, manual | push, PR, schedule, workflow_dispatch |
-| **Environments** | Environments + Approvals | Environments + Required reviewers |
-| **Secrets** | Variable Groups + Key Vault | Repository/Environment secrets |
-| **Azure auth** | Service Connections | OIDC federation |
-| **Best for** | Enterprise, compliance, Azure-heavy | Open source, GitHub-native, simpler |
+| Feature          | Azure DevOps                        | GitHub Actions                        |
+| ---------------- | ----------------------------------- | ------------------------------------- |
+| **YAML syntax**  | Azure Pipelines YAML                | GitHub Actions YAML                   |
+| **Triggers**     | CI, PR, scheduled, manual           | push, PR, schedule, workflow_dispatch |
+| **Environments** | Environments + Approvals            | Environments + Required reviewers     |
+| **Secrets**      | Variable Groups + Key Vault         | Repository/Environment secrets        |
+| **Azure auth**   | Service Connections                 | OIDC federation                       |
+| **Best for**     | Enterprise, compliance, Azure-heavy | Open source, GitHub-native, simpler   |
 
 ---
 
@@ -74,61 +85,60 @@ trigger:
       - terraform/**
 
 pool:
-  vmImage: ubuntu-latest
+vmImage: ubuntu-latest
 
 variables:
-  - group: terraform-common    # Variable group
-  - name: environment
-    value: dev
+
+- group: terraform-common # Variable group
+- name: environment
+  value: dev
 
 stages:
-  - stage: Validate
-    displayName: 'Validate Infrastructure'
-    jobs:
-      - job: TerraformValidate
-        steps:
-          - task: TerraformInstaller@1
-            inputs:
-              terraformVersion: '1.7'
-          
-          - script: |
-              terraform init -backend=false
-              terraform validate
-            displayName: 'Terraform Validate'
-  
-  - stage: Plan
-    dependsOn: Validate
-    displayName: 'Plan Infrastructure'
-    jobs:
-      - job: TerraformPlan
-        steps:
-          - task: AzureCLI@2
-            inputs:
-              azureSubscription: 'cloudnova-service-connection'
-              scriptType: 'bash'
-              scriptLocation: 'inlineScript'
-              inlineScript: |
-                terraform init
-                terraform plan -out=tfplan
-  
-  - stage: Deploy
-    dependsOn: Plan
-    displayName: 'Deploy to $(environment)'
-    condition: succeeded()
-    jobs:
-      - deployment: DeployTerraform
-        environment: $(environment)
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-                - task: AzureCLI@2
-                  inputs:
-                    azureSubscription: 'cloudnova-service-connection'
-                    scriptType: 'bash'
-                    inlineScript: |
-                      terraform apply -auto-approve tfplan
-</CodeBlock>
+
+- stage: Validate
+  displayName: 'Validate Infrastructure'
+  jobs:
+  - job: TerraformValidate
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+      terraformVersion: '1.7'
+    - script: |
+      terraform init -backend=false
+      terraform validate
+      displayName: 'Terraform Validate'
+
+- stage: Plan
+  dependsOn: Validate
+  displayName: 'Plan Infrastructure'
+  jobs:
+  - job: TerraformPlan
+    steps:
+    - task: AzureCLI@2
+      inputs:
+      azureSubscription: 'cloudnova-service-connection'
+      scriptType: 'bash'
+      scriptLocation: 'inlineScript'
+      inlineScript: |
+      terraform init
+      terraform plan -out=tfplan
+
+- stage: Deploy
+  dependsOn: Plan
+  displayName: 'Deploy to $(environment)'
+  condition: succeeded()
+  jobs: - deployment: DeployTerraform
+  environment: $(environment)
+  strategy:
+  runOnce:
+  deploy:
+  steps: - task: AzureCLI@2
+  inputs:
+  azureSubscription: 'cloudnova-service-connection'
+  scriptType: 'bash'
+  inlineScript: |
+  terraform apply -auto-approve tfplan
+  </CodeBlock>
 
 ---
 
@@ -137,13 +147,9 @@ stages:
 ### Variable Groups & Key Vault Integration
 
 <CodeBlock language="yaml" title="Key Vault Variable Group">
-variables:
-  - group: terraform-common        # Static variables
-  - group: cloudnova-keyvault      # Linked to Azure Key Vault
-    # Variables like:
-    #   database-password (from KV secret)
-    #   api-key (from KV secret)
-    # Automatically rotated — no pipeline changes needed
+  variables: - group: terraform-common # Static variables - group: cloudnova-keyvault # Linked to
+  Azure Key Vault # Variables like: # database-password (from KV secret) # api-key (from KV secret)
+  # Automatically rotated — no pipeline changes needed
 </CodeBlock>
 
 <ProductionNote>
@@ -159,6 +165,7 @@ variables:
 <Challenge title="Enterprise Pipeline Setup">
 
 **Context:** CloudNova's compliance team requires:
+
 - All deployments must go through Azure DevOps (not GitHub Actions)
 - Secrets must be in Azure Key Vault, never in pipeline variables
 - Production deployments require two approvals: team lead + security
@@ -170,17 +177,18 @@ variables:
 
 ```yaml
 stages:
-  - stage: Validate  # No secrets needed
-  - stage: Plan      # Service connection auth only
+  - stage: Validate # No secrets needed
+  - stage: Plan # Service connection auth only
   - stage: DeployDev
-    environment: dev  # No approval needed
+    environment: dev # No approval needed
     variables:
       - group: cloudnova-keyvault-dev
   - stage: DeployProd
-    environment: production  # Approvals configured in Azure DevOps UI
+    environment: production # Approvals configured in Azure DevOps UI
     variables:
       - group: cloudnova-keyvault-prod
 ```
+
 </details>
 </Challenge>
 
@@ -209,11 +217,11 @@ stages:
       "A YAML section defining variables",
       "A reusable collection of variables shared across pipelines",
       "A group of build agents",
-      "A deployment environment"
+      "A deployment environment",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="What's the equivalent of GitHub Environments in Azure DevOps?"
     options={["Variable Groups", "Service Connections", "Environments", "Agent Pools"]}
@@ -225,10 +233,10 @@ stages:
 
 ## 📋 Summary
 
-| Component | Purpose |
-|-----------|---------|
-| **Pipeline YAML** | Pipeline-as-code definition |
-| **Variable Groups** | Shared variables/secrets |
-| **Service Connections** | Azure authentication |
-| **Environments** | Deployment targets with approvals |
-| **Key Vault** | Secret management at runtime |
+| Component               | Purpose                           |
+| ----------------------- | --------------------------------- |
+| **Pipeline YAML**       | Pipeline-as-code definition       |
+| **Variable Groups**     | Shared variables/secrets          |
+| **Service Connections** | Azure authentication              |
+| **Environments**        | Deployment targets with approvals |
+| **Key Vault**           | Secret management at runtime      |

@@ -22,10 +22,19 @@ tags: [devops, culture, principles, calms]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Analogy,
-  Exercise, Challenge, Quiz, Flashcard,
-  ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Analogy,
+  Exercise,
+  Challenge,
+  Quiz,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # DevOps Culture & Principles
 
@@ -55,13 +64,13 @@ import {
 
 ### The CALMS Framework
 
-| Dimension | What it means | CloudNova Example |
-|-----------|---------------|-------------------|
-| **C**ulture | Shared responsibility, blameless postmortems | Devs on-call for their services |
-| **A**utomation | CI/CD, IaC, automated testing | Terraform + GitHub Actions |
-| **L**ean | Eliminate waste, small batches | Short-lived feature branches |
-| **M**easurement | Metrics, monitoring, feedback | MTTR, deployment frequency |
-| **S**haring | Knowledge sharing, documentation | Runbooks, postmortems, pair programming |
+| Dimension       | What it means                                | CloudNova Example                       |
+| --------------- | -------------------------------------------- | --------------------------------------- |
+| **C**ulture     | Shared responsibility, blameless postmortems | Devs on-call for their services         |
+| **A**utomation  | CI/CD, IaC, automated testing                | Terraform + GitHub Actions              |
+| **L**ean        | Eliminate waste, small batches               | Short-lived feature branches            |
+| **M**easurement | Metrics, monitoring, feedback                | MTTR, deployment frequency              |
+| **S**haring     | Knowledge sharing, documentation             | Runbooks, postmortems, pair programming |
 
 ```mermaid
 graph TD
@@ -71,7 +80,7 @@ graph TD
     CALMS --> L[Lean: Small batches, reduce waste]
     CALMS --> M[Measurement: MTTR, DORA metrics]
     CALMS --> S[Sharing: Runbooks, postmortems]
-    
+
     C --> TRUST[Trust & Psychological Safety]
     A --> SPEED[Deployment Speed]
     L --> EFF[Efficiency]
@@ -85,12 +94,12 @@ graph TD
 
 ### DevOps Anti-Patterns
 
-| Anti-Pattern | Why it fails | Fix |
-|-------------|-------------|-----|
-| **"DevOps Team"** | Creates another silo | Embed ops skills in dev teams |
-| **"Throw it over the wall"** | No shared ownership | Devs own production, ops consults |
-| **"Our tools will fix it"** | Tools without culture = faster chaos | Culture first, then tooling |
-| **"We do DevOps because we use Kubernetes"** | Confusing tooling with philosophy | DevOps is about flow, not specific tools |
+| Anti-Pattern                                 | Why it fails                         | Fix                                      |
+| -------------------------------------------- | ------------------------------------ | ---------------------------------------- |
+| **"DevOps Team"**                            | Creates another silo                 | Embed ops skills in dev teams            |
+| **"Throw it over the wall"**                 | No shared ownership                  | Devs own production, ops consults        |
+| **"Our tools will fix it"**                  | Tools without culture = faster chaos | Culture first, then tooling              |
+| **"We do DevOps because we use Kubernetes"** | Confusing tooling with philosophy    | DevOps is about flow, not specific tools |
 
 <Warning>
 
@@ -104,12 +113,12 @@ graph TD
 
 ### DORA Metrics — How to Measure DevOps
 
-| Metric | Elite | High | Medium | Low |
-|--------|-------|------|--------|-----|
-| **Deployment Frequency** | On-demand | Daily | Weekly | Monthly |
-| **Lead Time for Changes** | < 1 hour | < 1 day | < 1 week | > 1 month |
-| **Mean Time to Restore (MTTR)** | < 1 hour | < 1 day | < 1 week | > 1 month |
-| **Change Failure Rate** | < 5% | < 10% | < 15% | > 15% |
+| Metric                          | Elite     | High    | Medium   | Low       |
+| ------------------------------- | --------- | ------- | -------- | --------- |
+| **Deployment Frequency**        | On-demand | Daily   | Weekly   | Monthly   |
+| **Lead Time for Changes**       | < 1 hour  | < 1 day | < 1 week | > 1 month |
+| **Mean Time to Restore (MTTR)** | < 1 hour  | < 1 day | < 1 week | > 1 month |
+| **Change Failure Rate**         | < 5%      | < 10%   | < 15%    | > 15%     |
 
 <ProductionNote>
 
@@ -131,16 +140,18 @@ A team at CloudNova says: "We're doing DevOps! We hired two DevOps engineers and
 <summary>Analysis</summary>
 
 **Anti-patterns:**
+
 1. "Hired DevOps engineers" → Created a separate team, which is a new silo
 2. "They handle all deployments for us" → Devs aren't owning production
 3. "Bought a Kubernetes cluster" → Confusing tools with DevOps
 
 **Fix:**
+
 1. Embed the DevOps engineers into development teams as enablers
 2. Train developers to own their CI/CD pipelines and deployments
 3. Build shared responsibility — devs on-call for their services
 4. Use Kubernetes because it solves a problem, not because "it's DevOps"
-</details>
+   </details>
 </Challenge>
 
 ---
@@ -180,19 +191,19 @@ A team at CloudNova says: "We're doing DevOps! We hired two DevOps engineers and
       "Using Kubernetes and Terraform",
       "A cultural movement for collaboration between dev and ops",
       "Hiring DevOps engineers",
-      "Automating everything"
+      "Automating everything",
     ]}
     correct={1}
     explanation="DevOps is a cultural philosophy first. Tools support the culture, not define it."
   />
-  
+
   <Question
     question="What does MTTR measure?"
     options={[
       "How often you deploy",
       "Time from failure detection to recovery",
       "Time from commit to production",
-      "Number of failing deployments"
+      "Number of failing deployments",
     ]}
     correct={1}
   />
@@ -214,9 +225,9 @@ A team at CloudNova says: "We're doing DevOps! We hired two DevOps engineers and
 
 ## 📋 Summary
 
-| Principle | Practice |
-|-----------|----------|
-| **Culture first** | Shared responsibility, blameless postmortems |
-| **Automation** | CI/CD, IaC, automated everything |
-| **Measurement** | Track DORA metrics, improve continuously |
-| **No silos** | Cross-functional teams own the full lifecycle |
+| Principle         | Practice                                      |
+| ----------------- | --------------------------------------------- |
+| **Culture first** | Shared responsibility, blameless postmortems  |
+| **Automation**    | CI/CD, IaC, automated everything              |
+| **Measurement**   | Track DORA metrics, improve continuously      |
+| **No silos**      | Cross-functional teams own the full lifecycle |

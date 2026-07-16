@@ -23,10 +23,22 @@ tags: [github, security, scanning, automation]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  CommonMistake, Exercise, Challenge, Quiz, CodeBlock,
-  SecurityNote, ProductionNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  CommonMistake,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  SecurityNote,
+  ProductionNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # GitHub Advanced Security & Secret Scanning
 
@@ -68,18 +80,18 @@ name: Secret Scan
 on: [push, pull_request]
 
 jobs:
-  trufflehog:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      
+trufflehog:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4
+with:
+fetch-depth: 0
+
       - uses: trufflesecurity/trufflehog@main
         with:
           path: ./
           base: ${{ github.event.before }}
           head: ${{ github.sha }}
+
 </CodeBlock>
 
 <SecurityNote>
@@ -100,7 +112,7 @@ graph TD
     DB --> QUERY[CodeQL Queries]
     QUERY --> CWE[CWE Categories]
     CWE --> ALERT[Security Alerts]
-    
+
     subgraph "CWE Coverage"
         CWE1[CWE-89: SQL Injection]
         CWE2[CWE-79: XSS]
@@ -120,19 +132,20 @@ on:
     - cron: '0 8 * * 1'  # Weekly scan
 
 jobs:
-  analyze:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-    
+analyze:
+runs-on: ubuntu-latest
+permissions:
+security-events: write
+
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: github/codeql-action/init@v3
         with:
           languages: python, javascript
-      
+
       - uses: github/codeql-action/analyze@v3
+
 </CodeBlock>
 
 ---
@@ -142,32 +155,11 @@ jobs:
 ### Dependabot — Never Miss a Patch
 
 <CodeBlock language="yaml" title=".github/dependabot.yml">
-version: 2
-updates:
-  # Terraform modules
-  - package-ecosystem: "terraform"
-    directory: "/terraform"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    labels:
-      - "dependencies"
-      - "terraform"
-    reviewers:
-      - "team/platform"
-  
-  # Python dependencies
-  - package-ecosystem: "pip"
-    directory: "/scripts"
-    schedule:
-      interval: "daily"
-    open-pull-requests-limit: 5
-  
-  # GitHub Actions themselves
-  - package-ecosystem: "github-actions"
-    directory: "/"
-    schedule:
-      interval: "weekly"
+  version: 2 updates: # Terraform modules - package-ecosystem: "terraform" directory: "/terraform"
+  schedule: interval: "weekly" day: "monday" labels: - "dependencies" - "terraform" reviewers: -
+  "team/platform" # Python dependencies - package-ecosystem: "pip" directory: "/scripts" schedule:
+  interval: "daily" open-pull-requests-limit: 5 # GitHub Actions themselves - package-ecosystem:
+  "github-actions" directory: "/" schedule: interval: "weekly"
 </CodeBlock>
 
 <ProductionNote>
@@ -180,16 +172,16 @@ updates:
 
 ## 🏛️ Branch Protection Rules
 
-| Rule | Recommendation |
-|------|---------------|
-| **Require PR before merging** | ✅ Always enabled |
-| **Require approvals** | ✅ At least 1 (2 for production) |
-| **Dismiss stale approvals** | ✅ When new commits are pushed |
-| **Require status checks** | ✅ `terraform validate`, `terraform plan` |
-| **Require conversation resolution** | ✅ All review threads resolved |
-| **Require signed commits** | ✅ For compliance |
-| **Require linear history** | ✅ For clean git history |
-| **Do not allow bypass** | ✅ Include administrators |
+| Rule                                | Recommendation                            |
+| ----------------------------------- | ----------------------------------------- |
+| **Require PR before merging**       | ✅ Always enabled                         |
+| **Require approvals**               | ✅ At least 1 (2 for production)          |
+| **Dismiss stale approvals**         | ✅ When new commits are pushed            |
+| **Require status checks**           | ✅ `terraform validate`, `terraform plan` |
+| **Require conversation resolution** | ✅ All review threads resolved            |
+| **Require signed commits**          | ✅ For compliance                         |
+| **Require linear history**          | ✅ For clean git history                  |
+| **Do not allow bypass**             | ✅ Include administrators                 |
 
 ---
 
@@ -224,6 +216,7 @@ git commit -m "chore: prevent .tfvars from being committed"
 # 5. Enable push protection in GitHub
 # Settings → Code Security → Secret scanning → Push protection
 ```
+
 </details>
 </Challenge>
 
@@ -254,18 +247,18 @@ git commit -m "chore: prevent .tfvars from being committed"
       "Scans for secrets",
       "Automatically opens PRs to update dependencies",
       "Runs code quality analysis",
-      "Deploys to production"
+      "Deploys to production",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="After a secret is detected in a commit, what is the FIRST action?"
     options={[
       "Delete the repository",
       "Rotate the exposed credential immediately",
       "Rewrite git history",
-      "Email the security team"
+      "Email the security team",
     ]}
     correct={1}
   />
@@ -275,9 +268,9 @@ git commit -m "chore: prevent .tfvars from being committed"
 
 ## 📋 Summary
 
-| Tool | Purpose |
-|------|---------|
-| **Secret Scanning** | Catch credentials before/after commit |
-| **CodeQL** | Find vulnerabilities in source code |
-| **Dependabot** | Auto-update outdated dependencies |
-| **Branch Protection** | Enforce review + checks before merge |
+| Tool                  | Purpose                               |
+| --------------------- | ------------------------------------- |
+| **Secret Scanning**   | Catch credentials before/after commit |
+| **CodeQL**            | Find vulnerabilities in source code   |
+| **Dependabot**        | Auto-update outdated dependencies     |
+| **Branch Protection** | Enforce review + checks before merge  |

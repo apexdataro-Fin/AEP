@@ -6,18 +6,41 @@ lesson: 7
 difficulty: "professional"
 estimated_time: "75 minutes"
 technologies: ["Sentinel", "KQL", "Key Vault", "NSG", "Defender for Cloud"]
-skills: ["incident-response", "kql-hunting", "forensic-analysis", "playbook-automation", "security-hardening"]
+skills:
+  [
+    "incident-response",
+    "kql-hunting",
+    "forensic-analysis",
+    "playbook-automation",
+    "security-hardening",
+  ]
 certifications: ["AZ-500", "SC-200"]
 knowledge_nodes: ["incident-response", "forensic-analysis", "security-hardening-lab"]
-prerequisites: ["04-security/lessons/05-security-monitoring", "04-security/lessons/06-compliance-governance"]
+prerequisites:
+  ["04-security/lessons/05-security-monitoring", "04-security/lessons/06-compliance-governance"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lab, you will:
+
 - Investigate a real-world security incident end-to-end
 - Use KQL for forensic analysis of sign-in and activity logs
 - Harden an Azure environment based on attack findings
@@ -34,6 +57,7 @@ By the end of this lab, you will:
 **Your Role:** Lead Security Engineer. You have full access to Sentinel, Log Analytics, and Azure Activity logs.
 
 **Timeline:** You have 60 minutes to investigate, contain, and report.
+
 </ProductionNote>
 
 ---
@@ -43,7 +67,7 @@ By the end of this lab, you will:
 ### 1.1 Verify the Impossible Travel Alert
 
 <TerminalBlock>
-{`// KQL: Full sign-in timeline for compromised user
+  {`// KQL: Full sign-in timeline for compromised user
 SigninLogs
 | where UserPrincipalName == "ops-admin@cloudnova.com"
 | where TimeGenerated > ago(12h)
@@ -53,21 +77,22 @@ SigninLogs
 | order by TimeGenerated asc`}
 </TerminalBlock>
 
-| Time | Location | IP | Device | Result |
-|------|----------|-----|--------|--------|
-| 08:15 | Seattle, WA | 203.0.113.45 | CORP-LAPTOP-042 | ✅ Success (MFA) |
-| 08:23 | Moscow, RU | 185.220.101.34 | Unknown | ✅ Success (MFA?!) |
-| 08:27 | Moscow, RU | 185.220.101.34 | Unknown | ✅ Elevated to Global Admin |
-| 08:31 | (Azure) | — | ops-admin | 📝 Created 5 new subscriptions |
+| Time  | Location    | IP             | Device          | Result                         |
+| ----- | ----------- | -------------- | --------------- | ------------------------------ |
+| 08:15 | Seattle, WA | 203.0.113.45   | CORP-LAPTOP-042 | ✅ Success (MFA)               |
+| 08:23 | Moscow, RU  | 185.220.101.34 | Unknown         | ✅ Success (MFA?!)             |
+| 08:27 | Moscow, RU  | 185.220.101.34 | Unknown         | ✅ Elevated to Global Admin    |
+| 08:31 | (Azure)     | —              | ops-admin       | 📝 Created 5 new subscriptions |
 
 <Warning>
-**This is bad.** The attacker not only signed in — they **passed MFA** and **elevated to Global Admin**. How? Possibly: MFA fatigue attack, SIM swap, or session token theft.
+  **This is bad.** The attacker not only signed in — they **passed MFA** and **elevated to Global
+  Admin**. How? Possibly: MFA fatigue attack, SIM swap, or session token theft.
 </Warning>
 
 ### 1.2 Check What the Attacker Did
 
 <TerminalBlock>
-{`// KQL: All Azure activity by the compromised user since 08:15
+  {`// KQL: All Azure activity by the compromised user since 08:15
 AzureActivity
 | where Caller == "ops-admin@cloudnova.com"
 | where TimeGenerated > datetime(2024-01-15 08:15:00)
@@ -78,6 +103,7 @@ AzureActivity
 </TerminalBlock>
 
 **Findings:**
+
 1. **08:27** — Attacker added themselves to `Global Administrator` role
 2. **08:31-08:38** — Created 5 subscriptions in different regions
 3. **08:42** — Opened NSG rule allowing `0.0.0.0/0` to port 3389 on production VMs
@@ -98,32 +124,34 @@ az ad user update \\
   --force-change-password-next-sign-in true
 
 # ACTION 2: Remove from Global Admin role
+
 az role assignment delete \\
-  --assignee ops-admin@cloudnova.com \\
-  --role "Global Administrator"
+--assignee ops-admin@cloudnova.com \\
+--role "Global Administrator"
 
 # ACTION 3: Block the attacker's IP at the NSG level
+
 az network nsg rule create \\
-  --nsg-name prod-subnet-nsg \\
-  --name DENY-ATTACKER-IP \\
-  --priority 50 \\
-  --direction Inbound \\
-  --source-address-prefixes 185.220.101.34/32 \\
-  --access Deny \\
-  --protocol '*' \\
-  --destination-port-ranges '*'
+--nsg-name prod-subnet-nsg \\
+--name DENY-ATTACKER-IP \\
+--priority 50 \\
+--direction Inbound \\
+--source-address-prefixes 185.220.101.34/32 \\
+--access Deny \\
+--protocol '_' \\
+--destination-port-ranges '_'
 
 # ACTION 4: Delete the rogue subscriptions
+
 # Portal only — subscription deletion requires billing admin`}
+
 </TerminalBlock>
 
 <BestPractice>
-**Containment priority order:**
-1. **Credentials** — revoke sessions, reset passwords, revoke tokens
-2. **Privileges** — remove from admin roles
-3. **Network** — block attacker IPs, isolate compromised VMs
-4. **Persistence** — check for backdoors (new users, service principals, API keys)
-5. **Data** — assess what was accessed, trigger notification if PII breach
+  **Containment priority order:** 1. **Credentials** — revoke sessions, reset passwords, revoke
+  tokens 2. **Privileges** — remove from admin roles 3. **Network** — block attacker IPs, isolate
+  compromised VMs 4. **Persistence** — check for backdoors (new users, service principals, API keys)
+  5. **Data** — assess what was accessed, trigger notification if PII breach
 </BestPractice>
 
 ### 2.2 Check for Persistence Mechanisms
@@ -143,6 +171,7 @@ AzureActivity
 | where Caller == "ops-admin@cloudnova.com"
 | where OperationName contains "Create" or OperationName contains "Write"
 | where TimeGenerated > datetime(2024-01-15 08:15:00)`}
+
 </TerminalBlock>
 
 ---
@@ -171,20 +200,20 @@ timeline
 
 ### 3.2 Root Cause Analysis
 
-| Finding | Likely Cause | Remediation |
-|---------|-------------|-------------|
-| MFA bypassed | MFA fatigue attack (attacker spammed push notifications until user accepted) | Deploy passwordless auth (FIDO2), number-matching MFA |
-| Elevation to Global Admin | ops-admin had "Privileged Role Administrator" — could grant Global Admin to themselves | Remove standing privileged roles, use PIM with approval |
-| Rogue subscriptions | No subscription creation policy | Azure Policy: deny subscription creation except by billing team |
-| NSG opened | No Azure Policy blocking open NSG rules | Policy: deny NSG rules with source 0.0.0.0/0 to RDP/SSH |
-| Key Vault downloaded | Key Vault had no network restrictions | Private Link + firewall for all Key Vaults |
+| Finding                   | Likely Cause                                                                           | Remediation                                                     |
+| ------------------------- | -------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| MFA bypassed              | MFA fatigue attack (attacker spammed push notifications until user accepted)           | Deploy passwordless auth (FIDO2), number-matching MFA           |
+| Elevation to Global Admin | ops-admin had "Privileged Role Administrator" — could grant Global Admin to themselves | Remove standing privileged roles, use PIM with approval         |
+| Rogue subscriptions       | No subscription creation policy                                                        | Azure Policy: deny subscription creation except by billing team |
+| NSG opened                | No Azure Policy blocking open NSG rules                                                | Policy: deny NSG rules with source 0.0.0.0/0 to RDP/SSH         |
+| Key Vault downloaded      | Key Vault had no network restrictions                                                  | Private Link + firewall for all Key Vaults                      |
 
 ---
 
 ## Phase 4: Hardening (20 minutes)
 
 <ArchitectureNote title="Post-Incident Security Improvements">
-Based on the root cause analysis, CloudNova implemented these hardening measures.
+  Based on the root cause analysis, CloudNova implemented these hardening measures.
 </ArchitectureNote>
 
 <TerminalBlock>
@@ -205,26 +234,35 @@ az policy definition create \\
   }'
 
 # HARDENING 2: Require PIM for all privileged roles
+
 # Portal: Azure AD → Privileged Identity Management →
-#   Role settings → Global Administrator →
-#   Require approval, MFA, justification, 2-hour max
+
+# Role settings → Global Administrator →
+
+# Require approval, MFA, justification, 2-hour max
 
 # HARDENING 3: Key Vault network isolation
+
 az keyvault update \\
-  --name cloudnova-prod-kv \\
-  --default-action Deny \\
-  --bypass AzureServices
+--name cloudnova-prod-kv \\
+--default-action Deny \\
+--bypass AzureServices
 
 az keyvault network-rule add \\
-  --name cloudnova-prod-kv \\
-  --subnet /subscriptions/.../prod-subnet \\
-  --ip-address 10.0.0.0/8  # Internal only
+--name cloudnova-prod-kv \\
+--subnet /subscriptions/.../prod-subnet \\
+--ip-address 10.0.0.0/8 # Internal only
 
 # HARDENING 4: Sentinel playbook for auto-remediation
+
 # Logic App: When Sentinel creates high-severity incident →
-#   1. Revoke user sessions
-#   2. Remove from all privileged roles
-#   3. Post to Teams channel`}
+
+# 1. Revoke user sessions
+
+# 2. Remove from all privileged roles
+
+# 3. Post to Teams channel`}
+
 </TerminalBlock>
 
 ---
@@ -260,6 +298,7 @@ az keyvault network-rule add \\
 **Task 2:** Create an Azure Policy that requires MFA for all users with write permissions.
 
 **Task 3:** Design a Sentinel playbook that automatically:
+
 - Revokes sessions for compromised user
 - Removes from all privileged roles
 - Creates a ServiceNow ticket
@@ -267,10 +306,8 @@ az keyvault network-rule add \\
 **Task 4:** Write the post-incident report using the template above.
 
 <Quiz question="Which should you do FIRST during containment?">
-- *Revoke user sessions and reset credentials*
-- Block attacker IP
-- Delete compromised resources
-- Send email to the team
+  - *Revoke user sessions and reset credentials* - Block attacker IP - Delete compromised resources
+  - Send email to the team
 </Quiz>
 
 </Exercise>
@@ -288,9 +325,9 @@ az keyvault network-rule add \\
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Previous: Compliance & Governance | [Lesson 6](06-compliance-governance) |
-| Next module: Python for Cloud | [Module 05](../../05-python/index) |
-| AZ-500: Security Operations | [Certification](../../certifications/az-500) |
+| Resource                            | Link                                         |
+| ----------------------------------- | -------------------------------------------- |
+| Previous: Compliance & Governance   | [Lesson 6](06-compliance-governance)         |
+| Next module: Python for Cloud       | [Module 05](../../05-python/index)           |
+| AZ-500: Security Operations         | [Certification](../../certifications/az-500) |
 | SC-200: Security Operations Analyst | [Certification](../../certifications/sc-200) |

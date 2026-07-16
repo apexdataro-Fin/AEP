@@ -15,7 +15,14 @@ status: "published"
 version: "1.0.0"
 author: "ARES EDU PLATFORM"
 last_updated: "2026-07-15"
-search_keywords: ["kubernetes persistent volumes", "k8s pvc", "storage classes", "csi driver", "azure disk kubernetes"]
+search_keywords:
+  [
+    "kubernetes persistent volumes",
+    "k8s pvc",
+    "storage classes",
+    "csi driver",
+    "azure disk kubernetes",
+  ]
 learning_objectives:
   - "Understand the PV/PVC abstraction model"
   - "Configure dynamic provisioning with StorageClasses"
@@ -28,12 +35,44 @@ active_recall:
 review_schedule: { "initial": "1 day", "next": "3 days", "interval": "spaced-repetition" }
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, AIExplanation, AIQuiz, AIFlashcards } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  AIExplanation,
+  AIQuiz,
+  AIFlashcards,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 export const CloudNova = ({ children }) => (
-  <div style={{ borderLeft: '4px solid #0ea5e9', padding: '1rem 1.5rem', margin: '1.5rem 0', background: 'var(--ifm-color-emphasis-100)', borderRadius: '0 8px 8px 0' }}>
-    <strong style={{ color: '#0ea5e9' }}>🏢 CloudNova Engineering</strong>
-    <div style={{ marginTop: '0.5rem' }}>{children}</div>
+  <div
+    style={{
+      borderLeft: "4px solid #0ea5e9",
+      padding: "1rem 1.5rem",
+      margin: "1.5rem 0",
+      background: "var(--ifm-color-emphasis-100)",
+      borderRadius: "0 8px 8px 0",
+    }}
+  >
+    <strong style={{ color: "#0ea5e9" }}>🏢 CloudNova Engineering</strong>
+    <div style={{ marginTop: "0.5rem" }}>{children}</div>
   </div>
 );
 
@@ -113,15 +152,15 @@ metadata:
   name: postgres
 spec:
   containers:
-  - name: postgres
-    image: postgres:16
-    volumeMounts:
-    - name: pgdata
-      mountPath: /var/lib/postgresql/data
+    - name: postgres
+      image: postgres:16
+      volumeMounts:
+        - name: pgdata
+          mountPath: /var/lib/postgresql/data
   volumes:
-  - name: pgdata
-    persistentVolumeClaim:
-      claimName: my-pvc
+    - name: pgdata
+      persistentVolumeClaim:
+        claimName: my-pvc
 ```
 
 ---
@@ -145,55 +184,62 @@ sequenceDiagram
     K8s->>Dev: PVC is Bound!
 ```
 
-<CodeBlock language="yaml" title="storage-classes.yaml">
----
+## <CodeBlock language="yaml" title="storage-classes.yaml">
+
 # Azure Premium SSD (fast, expensive)
+
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: managed-premium
+name: managed-premium
 provisioner: disk.csi.azure.com
 parameters:
-  skuName: Premium_LRS
+skuName: Premium_LRS
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 
 ---
+
 # Azure Standard SSD (balanced)
+
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: managed-standard-ssd
+name: managed-standard-ssd
 provisioner: disk.csi.azure.com
 parameters:
-  skuName: StandardSSD_LRS
+skuName: StandardSSD_LRS
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 
 ---
+
 # Azure Files (shared across pods - ReadWriteMany)
+
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: azurefile-premium
+name: azurefile-premium
 provisioner: file.csi.azure.com
 parameters:
-  skuName: Premium_LRS
+skuName: Premium_LRS
 reclaimPolicy: Delete
+
 </CodeBlock>
 
 ### Access Modes
 
-| Mode | Abbreviation | Meaning | Use Case |
-|------|-------------|---------|----------|
-| ReadWriteOnce | RWO | One node can read/write | Standard DB, single pod |
-| ReadOnlyMany | ROX | Many nodes can read | Shared config, static assets |
-| ReadWriteMany | RWX | Many nodes can read/write | Shared file storage, CMS assets |
+| Mode          | Abbreviation | Meaning                   | Use Case                        |
+| ------------- | ------------ | ------------------------- | ------------------------------- |
+| ReadWriteOnce | RWO          | One node can read/write   | Standard DB, single pod         |
+| ReadOnlyMany  | ROX          | Many nodes can read       | Shared config, static assets    |
+| ReadWriteMany | RWX          | Many nodes can read/write | Shared file storage, CMS assets |
 
 <Info>
 
 **RWO vs RWX on Azure:**
+
 - Azure Disk supports **only RWO** (one node at a time)
 - Azure Files supports **RWX** (shared across multiple nodes)
 - For shared storage needs (multiple pods), always use Azure Files
@@ -209,10 +255,10 @@ graph TD
     Need[Need Storage?] --> Q1{Multiple pods<br/>need access?}
     Q1 -->|Yes| NeedRWX{Need POSIX<br/>filesystem?}
     Q1 -->|No| Q2{Performance<br/>critical?}
-    
+
     NeedRWX -->|Yes| AF[Azure Files<br/>Premium]
     NeedRWX -->|No| AB[Azure Blob<br/>NFSv3]
-    
+
     Q2 -->|Yes - low latency| AD[Azure Disk<br/>Premium SSD/Ultra]
     Q2 -->|No - throughput| AD2[Azure Disk<br/>Standard SSD]
 ```
@@ -220,11 +266,13 @@ graph TD
 <ProductionNote>
 
 **Volume Expansion**: StorageClasses with `allowVolumeExpansion: true` support growing PVCs without pod restart:
+
 ```bash
 kubectl patch pvc my-pvc -p '{"spec":{"resources":{"requests":{"storage":"20Gi"}}}}'
 ```
 
 **CSI Snapshots**: Create point-in-time snapshots for backup:
+
 ```yaml
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
@@ -243,6 +291,7 @@ spec:
 CloudNova's PostgreSQL on Kubernetes ran out of disk space at 2 AM, causing a production outage. The on-call engineer had to manually resize the disk and restart the pod — 45 minutes of downtime.
 
 **Your improvement plan:**
+
 1. Set up StorageClasses with `allowVolumeExpansion: true`
 2. Create a monitoring alert when PVC usage exceeds 80%
 3. Implement CSI snapshotting for hourly backups
@@ -303,16 +352,23 @@ kubectl run test-pod --image=nginx --dry-run=client -o yaml | \
         "They are the same thing",
         "PV is the storage; PVC is a request for storage",
         "PVC is the storage; PV is a request for storage",
-        "PV is for Linux; PVC is for Windows"
+        "PV is for Linux; PVC is for Windows",
       ],
       correct: 1,
-      explanation: "PV represents actual storage (like an Azure Disk). PVC is a user's request for storage that gets bound to a matching PV."
+      explanation:
+        "PV represents actual storage (like an Azure Disk). PVC is a user's request for storage that gets bound to a matching PV.",
     },
     {
       question: "Which Azure storage option supports ReadWriteMany (RWX) in Kubernetes?",
-      options: ["Azure Disk Premium", "Azure Disk Standard", "Azure Files", "Azure Blob (hot tier)"],
+      options: [
+        "Azure Disk Premium",
+        "Azure Disk Standard",
+        "Azure Files",
+        "Azure Blob (hot tier)",
+      ],
       correct: 2,
-      explanation: "Azure Files is the primary RWX option. Azure Disk only supports RWO (single node). Azure Blob can work with NFSv3 for RWX but Azure Files is simpler."
+      explanation:
+        "Azure Files is the primary RWX option. Azure Disk only supports RWO (single node). Azure Blob can work with NFSv3 for RWX but Azure Files is simpler.",
     },
     {
       question: "What does `volumeBindingMode: WaitForFirstConsumer` do?",
@@ -320,11 +376,12 @@ kubectl run test-pod --image=nginx --dry-run=client -o yaml | \
         "Waits until the first payment is processed",
         "Delays PV creation until a pod actually needs it, enabling topology-aware provisioning",
         "Creates the PV immediately regardless of use",
-        "Binds the PVC to the first available PV in any zone"
+        "Binds the PVC to the first available PV in any zone",
       ],
       correct: 1,
-      explanation: "This ensures the PV is provisioned in the same availability zone as the pod that will use it, avoiding zone-mismatch mounting failures."
-    }
+      explanation:
+        "This ensures the PV is provisioned in the same availability zone as the pod that will use it, avoiding zone-mismatch mounting failures.",
+    },
   ]}
 />
 
@@ -361,8 +418,7 @@ kubectl run test-pod --image=nginx --dry-run=client -o yaml | \
 ## Related
 
 <KnowledgeLinks>
-- **Next**: [RBAC & Security](rbac-security)
-- **Previous**: [Configuration & Secrets](configuration-secrets)
-- **Lab**: Stateful database on Kubernetes
-- **Certification**: CKA Domain 5 — Storage (10%)
+  - **Next**: [RBAC & Security](rbac-security) - **Previous**: [Configuration &
+  Secrets](configuration-secrets) - **Lab**: Stateful database on Kubernetes - **Certification**:
+  CKA Domain 5 — Storage (10%)
 </KnowledgeLinks>

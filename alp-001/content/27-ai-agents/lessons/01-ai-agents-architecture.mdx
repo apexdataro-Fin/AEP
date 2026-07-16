@@ -22,10 +22,21 @@ tags: [ai-agents, langchain, autogen, function-calling]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ArchitectureNote, ProductionNote, SecurityNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ArchitectureNote,
+  ProductionNote,
+  SecurityNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # AI Agents: Architecture & Patterns
 
@@ -49,12 +60,12 @@ An **AI Agent** is an LLM-powered system that can reason, plan, use tools (APIs,
 
 ### Agent vs Chatbot
 
-| Chatbot | AI Agent |
-|---------|----------|
-| Single Q&A turn | Multi-step reasoning |
-| No external tools | Calls APIs, queries DBs, runs code |
-| Stateless (or simple history) | Plans, reflects, retries |
-| "What's the weather?" | "Book me the cheapest flight to NYC next Tuesday, send confirmation to my email" |
+| Chatbot                       | AI Agent                                                                         |
+| ----------------------------- | -------------------------------------------------------------------------------- |
+| Single Q&A turn               | Multi-step reasoning                                                             |
+| No external tools             | Calls APIs, queries DBs, runs code                                               |
+| Stateless (or simple history) | Plans, reflects, retries                                                         |
+| "What's the weather?"         | "Book me the cheapest flight to NYC next Tuesday, send confirmation to my email" |
 
 ```mermaid
 graph TD
@@ -80,24 +91,27 @@ from langchain.agents import tool, AgentExecutor, create_react_agent
 
 @tool
 def check_azure_costs(resource_group: str) -> str:
-    """Check current Azure spending for a resource group."""
-    # Calls Azure Cost Management API
-    return f"Resource group {resource_group}: $1,250 this month"
+"""Check current Azure spending for a resource group.""" # Calls Azure Cost Management API
+return f"Resource group {resource_group}: $1,250 this month"
 
 @tool
 def deploy_terraform(module: str, environment: str) -> str:
-    """Deploy a Terraform module to an environment."""
-    return f"Deployed {module} to {environment}"
+"""Deploy a Terraform module to an environment."""
+return f"Deployed {module} to {environment}"
 
 # Agent with tools
+
 agent = create_react_agent(llm, [check_azure_costs, deploy_terraform])
 
 # Multi-step problem solving
+
 result = agent.run(
-    "Check costs for the 'production' resource group. "
-    "If spending is below $2,000, deploy the 'monitoring' module to production."
+"Check costs for the 'production' resource group. "
+"If spending is below $2,000, deploy the 'monitoring' module to production."
 )
+
 # Agent: checks costs → sees $1,250 < $2,000 → deploys monitoring
+
 </CodeBlock>
 
 <ArchitectureNote>
@@ -113,6 +127,7 @@ result = agent.run(
 <SecurityNote>
 
 **Never give an AI agent unrestricted power.** CloudNova's rules for production agents:
+
 1. **Least privilege** — agents have minimal RBAC for their specific task
 2. **Human approval** — destructive actions (deploy, delete) require human confirmation
 3. **Budget limits** — agents can't spend more than $X without approval
@@ -151,18 +166,23 @@ result = agent.run(
 <Quiz>
   <Question
     question="What enables an AI agent to interact with external systems?"
-    options={["Better prompting", "Tools / function calling", "Larger context windows", "Faster inference"]}
+    options={[
+      "Better prompting",
+      "Tools / function calling",
+      "Larger context windows",
+      "Faster inference",
+    ]}
     correct={1}
     explanation="Tools (function calling) allow the agent to call APIs, query databases, and execute code — moving from conversation to action."
   />
-  
+
   <Question
     question="What's the biggest risk of production AI agents?"
     options={[
       "They're too slow",
       "Autonomous destructive actions — agents with power but no guardrails can delete resources, spend money, or expose data",
       "They use too many tokens",
-      "They don't support multiple languages"
+      "They don't support multiple languages",
     ]}
     correct={1}
   />
@@ -172,9 +192,9 @@ result = agent.run(
 
 ## 📋 Summary
 
-| Concept | Practice |
-|---------|----------|
-| **Agent** | LLM + tools + planning |
-| **ReAct** | Interleaved reasoning and action |
-| **Function Calling** | LLM decides when to call tools |
-| **Guardrails** | Least privilege, human approval, audit |
+| Concept              | Practice                               |
+| -------------------- | -------------------------------------- |
+| **Agent**            | LLM + tools + planning                 |
+| **ReAct**            | Interleaved reasoning and action       |
+| **Function Calling** | LLM decides when to call tools         |
+| **Guardrails**       | Least privilege, human approval, audit |

@@ -22,10 +22,21 @@ tags: [deployment, strategies, zero-downtime, production]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Release Strategies: Blue-Green, Canary, Rolling
 
@@ -56,13 +67,13 @@ graph TD
         LB1 --> GREEN[Green (v2)]
         LB1 -.->|Switch| GREEN
     end
-    
+
     subgraph "Canary"
         LB2[Load Balancer] --> V1_90[v1: 90%]
         LB2 --> V2_10[v2: 10%]
         LB2 -.->|Gradually shift| V2_100[v2: 100%]
     end
-    
+
     subgraph "Rolling"
         LB3[Load Balancer] --> I1[Instance 1: v1→v2]
         LB3 --> I2[Instance 2: v1]
@@ -72,11 +83,11 @@ graph TD
     end
 ```
 
-| Strategy | How it works | Rollback | Cost | Best for |
-|----------|-------------|----------|------|----------|
-| **Blue-Green** | Two identical environments, switch traffic | Instant (switch back) | 2x infrastructure | Critical apps, DB migrations |
-| **Canary** | Gradual traffic shift to new version | Stop traffic shift | Slightly higher | APIs, web apps |
-| **Rolling** | Replace instances one at a time | Slow (reverse process) | Same as normal | Stateless services, K8s |
+| Strategy       | How it works                               | Rollback               | Cost              | Best for                     |
+| -------------- | ------------------------------------------ | ---------------------- | ----------------- | ---------------------------- |
+| **Blue-Green** | Two identical environments, switch traffic | Instant (switch back)  | 2x infrastructure | Critical apps, DB migrations |
+| **Canary**     | Gradual traffic shift to new version       | Stop traffic shift     | Slightly higher   | APIs, web apps               |
+| **Rolling**    | Replace instances one at a time            | Slow (reverse process) | Same as normal    | Stateless services, K8s      |
 
 ---
 
@@ -90,17 +101,21 @@ terraform workspace new green
 terraform apply -var="environment=green"
 
 # Run tests against green
+
 ./smoke-test.sh green.cloudnova.io
 
 # Switch traffic (Azure Front Door)
+
 az network front-door backend-pool update \
-  --resource-group cloudnova \
-  --name default-backend \
-  --address green.cloudnova.io
+ --resource-group cloudnova \
+ --name default-backend \
+ --address green.cloudnova.io
 
 # After verification, destroy blue
+
 terraform workspace select blue
 terraform destroy
+
 </CodeBlock>
 
 <ProductionNote>
@@ -122,17 +137,17 @@ sequenceDiagram
     participant V1 as App v1 (90%)
     participant V2 as App v2 (10%)
     participant Monitor as Azure Monitor
-    
+
     Users->>FD: Requests
-    
+
     FD->>V1: 90% traffic
     FD->>V2: 10% traffic
-    
+
     Monitor->>V1: Baseline metrics
     Monitor->>V2: Canary metrics
-    
+
     Note over Monitor: Compare error rates, latency
-    
+
     alt Metrics look good
         Monitor-->>FD: Increase canary to 50%
         Monitor-->>FD: Increase canary to 100%
@@ -176,14 +191,14 @@ sequenceDiagram
     options={["Rolling", "Canary", "Blue-Green", "All of the above"]}
     correct={2}
   />
-  
+
   <Question
     question="What is essential for a successful canary deployment?"
     options={[
       "Fast instances",
       "Monitoring comparing v1 vs v2 metrics with automated rollback",
       "A large team",
-      "Manual approval"
+      "Manual approval",
     ]}
     correct={1}
     explanation="Without comparative monitoring and automated rollback, canary deployment is just hoping nothing breaks."
@@ -194,8 +209,8 @@ sequenceDiagram
 
 ## 📋 Summary
 
-| Strategy | Rollback Speed | Cost | Best For |
-|----------|---------------|------|----------|
-| **Blue-Green** | Instant | 2x infra | DB migrations, critical upgrades |
-| **Canary** | Fast (stop shift) | Slightly higher | APIs, web apps |
-| **Rolling** | Slow (reverse) | Normal | Stateless K8s services |
+| Strategy       | Rollback Speed    | Cost            | Best For                         |
+| -------------- | ----------------- | --------------- | -------------------------------- |
+| **Blue-Green** | Instant           | 2x infra        | DB migrations, critical upgrades |
+| **Canary**     | Fast (stop shift) | Slightly higher | APIs, web apps                   |
+| **Rolling**    | Slow (reverse)    | Normal          | Stateless K8s services           |

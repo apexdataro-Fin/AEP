@@ -5,19 +5,43 @@ module: "04-security"
 lesson: 4
 difficulty: "professional"
 estimated_time: "50 minutes"
-technologies: ["Azure Key Vault", "Storage Service Encryption", "Azure SQL TDE", "Always Encrypted", "Azure Disk Encryption", "HSM"]
-skills: ["encryption-at-rest", "encryption-in-transit", "key-management", "hsm", "data-classification"]
+technologies:
+  [
+    "Azure Key Vault",
+    "Storage Service Encryption",
+    "Azure SQL TDE",
+    "Always Encrypted",
+    "Azure Disk Encryption",
+    "HSM",
+  ]
+skills:
+  ["encryption-at-rest", "encryption-in-transit", "key-management", "hsm", "data-classification"]
 certifications: ["AZ-104", "AZ-500"]
 knowledge_nodes: ["encryption", "key-vault", "data-protection", "hsm"]
 prerequisites: ["04-security/lessons/02-identity-access"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Differentiate encryption at rest vs encryption in transit
 - Manage encryption keys with Key Vault (software-protected, HSM-protected, customer-managed)
 - Apply Azure Disk Encryption to VMs
@@ -46,28 +70,29 @@ Every Azure storage service encrypts data at rest **by default**. Your job is to
 graph TD
     DATA["🗄️ Your Data"] --> REST["At Rest<br/>Storage, Disks, Database"]
     DATA --> TRANSIT["In Transit<br/>TLS, VPN, ExpressRoute"]
-    
+
     REST --> PMK["Platform-Managed Keys<br/>Microsoft manages rotation"]
     REST --> CMK["Customer-Managed Keys<br/>You control in Key Vault"]
-    
+
     CMK --> SOFT["Software-Protected<br/>FIPS 140-2 Level 2"]
     CMK --> HSM["HSM-Protected<br/>FIPS 140-2 Level 3"]
-    
+
     style PMK fill:#0078d4,stroke:#333,color:#fff
     style CMK fill:#ff6b35,stroke:#333,color:#fff
     style HSM fill:#d13438,stroke:#333,color:#fff
 ```
 
-| Approach | Who manages keys? | Compliance level | Cost |
-|----------|-------------------|-----------------|------|
-| **Platform-Managed** | Microsoft auto-rotates | Standard (SOC 2) | Free |
-| **Customer-Managed (software)** | You in Key Vault | PCI-DSS, HIPAA | Key Vault $ |
-| **Customer-Managed (HSM)** | You in dedicated HSM | FIPS 140-2 Level 3 | Key Vault Premium + HSM $ |
+| Approach                        | Who manages keys?      | Compliance level   | Cost                      |
+| ------------------------------- | ---------------------- | ------------------ | ------------------------- |
+| **Platform-Managed**            | Microsoft auto-rotates | Standard (SOC 2)   | Free                      |
+| **Customer-Managed (software)** | You in Key Vault       | PCI-DSS, HIPAA     | Key Vault $               |
+| **Customer-Managed (HSM)**      | You in dedicated HSM   | FIPS 140-2 Level 3 | Key Vault Premium + HSM $ |
 
 ### Encryption in Transit
 
 <BestPractice>
-**TLS 1.2 minimum for all connections. TLS 1.0/1.1 are deprecated.** Azure Storage and SQL can enforce minimum TLS version.
+  **TLS 1.2 minimum for all connections. TLS 1.0/1.1 are deprecated.** Azure Storage and SQL can
+  enforce minimum TLS version.
 </BestPractice>
 
 <CodeBlock language="bash">
@@ -78,7 +103,9 @@ az storage account update \\
   --min-tls-version TLS1_2
 
 # Now the storage account rejects TLS 1.0 and 1.1 connections
+
 # Any legacy client using older TLS gets: "The TLS version is not permitted"`}
+
 </CodeBlock>
 
 ---
@@ -88,7 +115,9 @@ az storage account update \\
 ### Azure Disk Encryption (VMs)
 
 <ProductionNote>
-Azure Disk Encryption uses BitLocker (Windows) or DM-Crypt (Linux) to encrypt VM OS and data disks. Keys are stored in Key Vault. Even if someone copies the VHD file, they can't mount it without the key.
+  Azure Disk Encryption uses BitLocker (Windows) or DM-Crypt (Linux) to encrypt VM OS and data
+  disks. Keys are stored in Key Vault. Even if someone copies the VHD file, they can't mount it
+  without the key.
 </ProductionNote>
 
 <TerminalBlock>
@@ -100,35 +129,39 @@ az keyvault create \\
   --enabled-for-disk-encryption true
 
 # 2. Encrypt the VM
+
 az vm encryption enable \\
-  --resource-group cloudnova-prod \\
-  --name payment-processor-vm \\
-  --disk-encryption-keyvault cloudnova-encryption-kv \\
-  --volume-type ALL
+--resource-group cloudnova-prod \\
+--name payment-processor-vm \\
+--disk-encryption-keyvault cloudnova-encryption-kv \\
+--volume-type ALL
 
 # 3. Verify encryption status
+
 az vm encryption show \\
-  --resource-group cloudnova-prod \\
-  --name payment-processor-vm
+--resource-group cloudnova-prod \\
+--name payment-processor-vm
+
 # Output: "osDisk": "Encrypted", "dataDisk": "Encrypted"`}
+
 </TerminalBlock>
 
 ### SQL Database: TDE vs Always Encrypted
 
-| Feature | Transparent Data Encryption (TDE) | Always Encrypted |
-|---------|----------------------------------|-----------------|
-| **What it protects** | Data at rest (files on disk) | Data in use (columns in memory) |
-| **Transparent to app?** | Yes, fully transparent | No — requires client driver |
-| **Protects from DBA?** | No (DBA can query) | Yes (DBA sees ciphertext) |
-| **Performance impact** | Minimal | Some overhead |
-| **Use case** | General encryption | PII, credit cards, healthcare |
+| Feature                 | Transparent Data Encryption (TDE) | Always Encrypted                |
+| ----------------------- | --------------------------------- | ------------------------------- |
+| **What it protects**    | Data at rest (files on disk)      | Data in use (columns in memory) |
+| **Transparent to app?** | Yes, fully transparent            | No — requires client driver     |
+| **Protects from DBA?**  | No (DBA can query)                | Yes (DBA sees ciphertext)       |
+| **Performance impact**  | Minimal                           | Some overhead                   |
+| **Use case**            | General encryption                | PII, credit cards, healthcare   |
 
 ```mermaid
 sequenceDiagram
     participant App as Application
     participant Driver as SQL Client Driver<br/>(with Column Master Key)
     participant SQL as Azure SQL
-    
+
     App->>Driver: INSERT INTO customers<br/>(name, credit_card)
     Driver->>Driver: Encrypt credit_card column<br/>with Column Encryption Key
     Driver->>SQL: INSERT (name, [encrypted credit_card])
@@ -146,21 +179,22 @@ sequenceDiagram
 ### CloudNova: PCI-DSS Compliance for Payment Data
 
 <ArchitectureNote title="CloudNova Payment Processing Security">
-CloudNova handles credit card data and must comply with PCI-DSS.
+  CloudNova handles credit card data and must comply with PCI-DSS.
 </ArchitectureNote>
 
-| PCI-DSS Requirement | Azure Implementation |
-|--------------------|---------------------|
-| 3.4 — Render PAN unreadable | Always Encrypted for credit_card column |
-| 3.5 — Protect encryption keys | Key Vault with HSM |
-| 4.1 — Encrypt over open networks | TLS 1.2 enforced on all endpoints |
-| 8.2 — Unique authentication | Managed Identity for all service-to-service |
-| 10.1 — Audit access | Sentinel + Key Vault logging |
+| PCI-DSS Requirement              | Azure Implementation                        |
+| -------------------------------- | ------------------------------------------- |
+| 3.4 — Render PAN unreadable      | Always Encrypted for credit_card column     |
+| 3.5 — Protect encryption keys    | Key Vault with HSM                          |
+| 4.1 — Encrypt over open networks | TLS 1.2 enforced on all endpoints           |
+| 8.2 — Unique authentication      | Managed Identity for all service-to-service |
+| 10.1 — Audit access              | Sentinel + Key Vault logging                |
 
 ### Immutable Storage (WORM)
 
 <Warning>
-**Once written, cannot be deleted or modified for the retention period.** Use for legal holds, compliance, and ransomware protection.
+  **Once written, cannot be deleted or modified for the retention period.** Use for legal holds,
+  compliance, and ransomware protection.
 </Warning>
 
 <TerminalBlock>
@@ -171,13 +205,16 @@ az storage account blob-service-properties update \\
   --enable-versioning true
 
 # Set time-based retention: 7 years
+
 az storage container immutability-policy create \\
-  --account-name cloudnovacompliance \\
-  --container-name financial-records \\
-  --period 2555  # 7 years in days
+--account-name cloudnovacompliance \\
+--container-name financial-records \\
+--period 2555 # 7 years in days
 
 # Now: no one — not even the subscription owner —
+
 # can delete or modify blobs in this container for 7 years`}
+
 </TerminalBlock>
 
 ---
@@ -188,13 +225,14 @@ az storage container immutability-policy create \\
 
 CloudNova stores three types of data. Design the encryption approach for each.
 
-| Data Type | Example | Requirements |
-|-----------|---------|--------------|
-| Public content | Blog posts, product images | Basic protection |
-| Customer PII | Email, address, preferences | GDPR compliance |
-| Payment data | Credit cards, bank accounts | PCI-DSS Level 1 |
+| Data Type      | Example                     | Requirements     |
+| -------------- | --------------------------- | ---------------- |
+| Public content | Blog posts, product images  | Basic protection |
+| Customer PII   | Email, address, preferences | GDPR compliance  |
+| Payment data   | Credit cards, bank accounts | PCI-DSS Level 1  |
 
 **Tasks:**
+
 1. Choose encryption approach for each data type (PMK, CMK, HSM)
 2. Specify which columns use Always Encrypted
 3. Write a Key Vault access policy for the payment processor
@@ -206,11 +244,20 @@ CloudNova stores three types of data. Design the encryption approach for each.
 
 ## Flashcard Review
 
-<Flashcard front="Platform-managed vs Customer-managed keys" back="PMK: Microsoft manages keys, auto-rotates, free. CMK: You control keys in Key Vault, you manage rotation, required for PCI-DSS/HIPAA." />
+<Flashcard
+  front="Platform-managed vs Customer-managed keys"
+  back="PMK: Microsoft manages keys, auto-rotates, free. CMK: You control keys in Key Vault, you manage rotation, required for PCI-DSS/HIPAA."
+/>
 
-<Flashcard front="TDE vs Always Encrypted" back="TDE encrypts database files on disk (transparent). Always Encrypted encrypts specific columns in memory (DBA can't see plaintext)." />
+<Flashcard
+  front="TDE vs Always Encrypted"
+  back="TDE encrypts database files on disk (transparent). Always Encrypted encrypts specific columns in memory (DBA can't see plaintext)."
+/>
 
-<Flashcard front="What is immutable storage (WORM)?" back="Write Once, Read Many. Blobs cannot be deleted or modified for a set retention period. Used for compliance, legal holds, ransomware protection." />
+<Flashcard
+  front="What is immutable storage (WORM)?"
+  back="Write Once, Read Many. Blobs cannot be deleted or modified for a set retention period. Used for compliance, legal holds, ransomware protection."
+/>
 
 ---
 
@@ -228,8 +275,8 @@ CloudNova stores three types of data. Design the encryption approach for each.
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Previous: Network Security | [Lesson 3](03-network-security) |
-| Next: Security Monitoring | [Lesson 5](05-security-monitoring) |
-| AZ-104: Data Protection | [Exam objective](../../certifications/az-104/data-protection) |
+| Resource                   | Link                                                          |
+| -------------------------- | ------------------------------------------------------------- |
+| Previous: Network Security | [Lesson 3](03-network-security)                               |
+| Next: Security Monitoring  | [Lesson 5](05-security-monitoring)                            |
+| AZ-104: Data Protection    | [Exam objective](../../certifications/az-104/data-protection) |

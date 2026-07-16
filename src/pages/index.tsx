@@ -57,7 +57,15 @@ function useUserStats(): UserStats {
   return stats;
 }
 
-function ProgressRing({ progress, size = 56, stroke = 6 }: { progress: number; size?: number; stroke?: number }) {
+function ProgressRing({
+  progress,
+  size = 56,
+  stroke = 6,
+}: {
+  progress: number;
+  size?: number;
+  stroke?: number;
+}) {
   const radius = (size - stroke) / 2;
   const circumference = radius * 2 * Math.PI;
   const offset = circumference - (progress / 100) * circumference;
@@ -86,7 +94,17 @@ function ProgressRing({ progress, size = 56, stroke = 6 }: { progress: number; s
   );
 }
 
-function StatCard({ label, value, sub, icon }: { label: string; value: string; sub?: string; icon: string }) {
+function StatCard({
+  label,
+  value,
+  sub,
+  icon,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  icon: string;
+}) {
   return (
     <div className={styles.statCard}>
       <span className={styles.statIcon}>{icon}</span>
@@ -136,12 +154,32 @@ function GamificationPanel({ stats }: { stats: UserStats }) {
         <span className={styles.sectionBadge}>Your Progress</span>
       </div>
       <div className={styles.gamificationGrid}>
-        <StatCard icon="⚡" label="Total XP" value={stats.xp.toLocaleString()} sub={`Level ${stats.level}`} />
+        <StatCard
+          icon="⚡"
+          label="Total XP"
+          value={stats.xp.toLocaleString()}
+          sub={`Level ${stats.level}`}
+        />
         <StatCard icon="🔥" label="Day Streak" value={stats.streak.toString()} sub="Keep it up!" />
-        <StatCard icon="📚" label="Lessons" value={stats.lessonsCompleted.toString()} sub="completed" />
+        <StatCard
+          icon="📚"
+          label="Lessons"
+          value={stats.lessonsCompleted.toString()}
+          sub="completed"
+        />
         <StatCard icon="🧪" label="Labs" value={stats.labsCompleted.toString()} sub="completed" />
-        <StatCard icon="🏗️" label="Projects" value={stats.projectsCompleted.toString()} sub="delivered" />
-        <StatCard icon="⏱" label="Study Time" value={`${Math.round(stats.studyMinutes / 60)}h`} sub="total" />
+        <StatCard
+          icon="🏗️"
+          label="Projects"
+          value={stats.projectsCompleted.toString()}
+          sub="delivered"
+        />
+        <StatCard
+          icon="⏱"
+          label="Study Time"
+          value={`${Math.round(stats.studyMinutes / 60)}h`}
+          sub="total"
+        />
       </div>
     </div>
   );
@@ -189,7 +227,9 @@ function DailyGoal({ stats }: { stats: UserStats }) {
       </div>
       <div className={styles.dailyGoalVisual}>
         <div className={styles.dailyGoalRing}>
-          <span>{stats.dailyGoalProgress}/{stats.dailyGoal}</span>
+          <span>
+            {stats.dailyGoalProgress}/{stats.dailyGoal}
+          </span>
         </div>
         <div className={styles.dailyGoalText}>
           <strong>Complete 1 lesson</strong>

@@ -15,7 +15,15 @@ status: "published"
 version: "1.0.0"
 author: "ARES EDU PLATFORM"
 last_updated: "2026-07-15"
-search_keywords: ["kubernetes architecture", "k8s control plane", "etcd", "kubelet", "kube-proxy", "cloud controller"]
+search_keywords:
+  [
+    "kubernetes architecture",
+    "k8s control plane",
+    "etcd",
+    "kubelet",
+    "kube-proxy",
+    "cloud controller",
+  ]
 learning_objectives:
   - "Explain every component in the Kubernetes control plane"
   - "Describe the reconciliation loop and why it's central to K8s"
@@ -28,12 +36,44 @@ active_recall:
 review_schedule: { "initial": "1 day", "next": "3 days", "interval": "spaced-repetition" }
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, AIExplanation, AIQuiz, AIFlashcards } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  AIExplanation,
+  AIQuiz,
+  AIFlashcards,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 export const CloudNova = ({ children }) => (
-  <div style={{ borderLeft: '4px solid #0ea5e9', padding: '1rem 1.5rem', margin: '1.5rem 0', background: 'var(--ifm-color-emphasis-100)', borderRadius: '0 8px 8px 0' }}>
-    <strong style={{ color: '#0ea5e9' }}>🏢 CloudNova Engineering</strong>
-    <div style={{ marginTop: '0.5rem' }}>{children}</div>
+  <div
+    style={{
+      borderLeft: "4px solid #0ea5e9",
+      padding: "1rem 1.5rem",
+      margin: "1.5rem 0",
+      background: "var(--ifm-color-emphasis-100)",
+      borderRadius: "0 8px 8px 0",
+    }}
+  >
+    <strong style={{ color: "#0ea5e9" }}>🏢 CloudNova Engineering</strong>
+    <div style={{ marginTop: "0.5rem" }}>{children}</div>
   </div>
 );
 
@@ -42,6 +82,7 @@ export const CloudNova = ({ children }) => (
 ## Learning Objectives
 
 After this lesson, you will be able to:
+
 1. Explain every component in the Kubernetes control plane and worker node
 2. Describe the reconciliation loop and why it defines Kubernetes' philosophy
 3. Draw the complete Kubernetes architecture diagram from memory
@@ -111,6 +152,7 @@ graph TB
 <Definition term="API Server (kube-apiserver)">
 
 The single entry point to the cluster. **Every** operation — `kubectl apply`, a pod starting, a scheduler decision — passes through the API server. It:
+
 - Validates and processes REST requests
 - Authenticates (who are you?) and authorizes (are you allowed?)
 - Writes to etcd
@@ -121,6 +163,7 @@ The single entry point to the cluster. **Every** operation — `kubectl apply`, 
 <Definition term="etcd">
 
 A distributed, consistent key-value store. It holds **the entire state of the cluster**:
+
 - What pods exist and where
 - What services are defined
 - What secrets are stored
@@ -134,6 +177,7 @@ If etcd is lost without backups, the cluster has amnesia. **Always back up etcd*
 <Definition term="Scheduler (kube-scheduler)">
 
 Watches for pods that have no assigned node, then **decides where they should run**. It considers:
+
 - Resource requirements (CPU, memory, GPU)
 - Node affinity/anti-affinity rules
 - Taints and tolerations
@@ -147,6 +191,7 @@ The scheduler **doesn't place the pod** — it only writes the binding to the AP
 <Definition term="Controller Manager">
 
 A collection of controllers running in a single process. Each controller watches a specific resource type and ensures the **actual state matches the desired state**. Key controllers:
+
 - **Node controller**: Detects when nodes go down
 - **Replication controller**: Maintains correct pod count
 - **Endpoint controller**: Populates endpoint objects
@@ -159,6 +204,7 @@ A collection of controllers running in a single process. Each controller watches
 <Definition term="Kubelet">
 
 The agent running on **every node**. It:
+
 - Receives pod specifications from the API server
 - Ensures containers described in pod specs are running and healthy
 - Reports node and pod status back to the API server
@@ -175,6 +221,7 @@ Network proxy on every node. It implements Kubernetes **Service** abstraction by
 <Definition term="Container Runtime">
 
 The software that actually runs containers. Kubernetes supports any runtime implementing the **Container Runtime Interface (CRI)**:
+
 - containerd (default, most common)
 - CRI-O
 - Docker (deprecated, via dockershim removed in v1.24)
@@ -235,25 +282,9 @@ kubectl apply -f nginx-deployment.yaml
 ```
 
 <CodeBlock language="yaml" title="nginx-deployment.yaml">
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: nginx-deployment
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: nginx
-  template:
-    metadata:
-      labels:
-        app: nginx
-    spec:
-      containers:
-      - name: nginx
-        image: nginx:1.25
-        ports:
-        - containerPort: 80
+  apiVersion: apps/v1 kind: Deployment metadata: name: nginx-deployment spec: replicas: 3 selector:
+  matchLabels: app: nginx template: metadata: labels: app: nginx spec: containers: - name: nginx
+  image: nginx:1.25 ports: - containerPort: 80
 </CodeBlock>
 
 **Step-by-step trace:**
@@ -335,13 +366,13 @@ graph TB
 
 **Production Design Decisions:**
 
-| Component | HA Strategy | Notes |
-|-----------|------------|-------|
-| API Server | 3 replicas behind LB | Stateless, easy to scale |
-| etcd | 3 or 5 nodes | Requires quorum (N/2 + 1) |
-| Scheduler | Leader election | Only one active at a time |
-| Controller Manager | Leader election | Only one active at a time |
-| Worker Nodes | N+1 or N+2 redundancy | Spread across AZs |
+| Component          | HA Strategy           | Notes                     |
+| ------------------ | --------------------- | ------------------------- |
+| API Server         | 3 replicas behind LB  | Stateless, easy to scale  |
+| etcd               | 3 or 5 nodes          | Requires quorum (N/2 + 1) |
+| Scheduler          | Leader election       | Only one active at a time |
+| Controller Manager | Leader election       | Only one active at a time |
+| Worker Nodes       | N+1 or N+2 redundancy | Spread across AZs         |
 
 **etcd Quorum**: With 3 etcd nodes, you can lose 1. With 5, you can lose 2. **Never use an even number of etcd nodes** — it wastes capacity without improving fault tolerance.
 
@@ -359,6 +390,7 @@ You're designing the Kubernetes infrastructure for CloudNova's next-gen platform
 - Must support **200 microservices** across dev, staging, and production
 
 **Your design decisions:**
+
 1. How many control plane nodes and etcd replicas?
 2. How many worker nodes, and what sizing?
 3. Which Azure region and how many availability zones?
@@ -397,6 +429,7 @@ sequenceDiagram
 ```
 
 **Key etcd facts:**
+
 - **Write**: Always goes through the leader. Requires majority confirmation.
 - **Read**: Can be served by any node, but linearizable reads go through leader.
 - **Quorum**: `floor(N/2) + 1` — with 3 nodes, need 2; with 5, need 3.
@@ -406,6 +439,7 @@ sequenceDiagram
 <SecurityNote>
 
 **etcd Security Checklist:**
+
 - [ ] TLS encryption for peer and client communication
 - [ ] Client certificate authentication (not just bearer tokens)
 - [ ] Network policies restricting etcd port (2379-2380) access
@@ -432,16 +466,19 @@ sequenceDiagram
 If you have a Kubernetes cluster (local or cloud):
 
 1. **Check control plane health**:
+
    ```bash
    kubectl get componentstatuses
    ```
 
 2. **Inspect the scheduler and controller manager**:
+
    ```bash
    kubectl get pods -n kube-system | grep -E "scheduler|controller-manager"
    ```
 
 3. **View API server arguments**:
+
    ```bash
    kubectl -n kube-system get pod -l component=kube-apiserver -o yaml | grep -A1 command
    ```
@@ -461,6 +498,7 @@ If you have a Kubernetes cluster (local or cloud):
 <Challenge>
 
 **Challenge**: Set up a local Kubernetes cluster using `kind` or `minikube` and:
+
 1. Scale the number of nodes
 2. Deploy a workload and watch the scheduler in action
 3. Simulate a node failure and observe pod rescheduling
@@ -478,19 +516,22 @@ If you have a Kubernetes cluster (local or cloud):
       question: "Which component is the single entry point for all Kubernetes operations?",
       options: ["etcd", "kubelet", "kube-proxy", "API Server"],
       correct: 3,
-      explanation: "The API Server is the hub. Every operation — kubectl commands, controller actions, node reports — goes through it."
+      explanation:
+        "The API Server is the hub. Every operation — kubectl commands, controller actions, node reports — goes through it.",
     },
     {
       question: "What algorithm does etcd use for consensus?",
       options: ["Paxos", "Raft", "Two-Phase Commit", "Gossip Protocol"],
       correct: 1,
-      explanation: "etcd uses the Raft consensus algorithm, chosen for its understandability and practical implementation."
+      explanation:
+        "etcd uses the Raft consensus algorithm, chosen for its understandability and practical implementation.",
     },
     {
       question: "What is the minimum number of etcd nodes needed for high availability?",
       options: ["1", "2", "3", "4"],
       correct: 2,
-      explanation: "3 nodes minimum. This tolerates 1 failure while maintaining quorum. 2 nodes offers no fault tolerance."
+      explanation:
+        "3 nodes minimum. This tolerates 1 failure while maintaining quorum. 2 nodes offers no fault tolerance.",
     },
     {
       question: "The reconciliation loop pattern follows which sequence?",
@@ -498,11 +539,12 @@ If you have a Kubernetes cluster (local or cloud):
         "Plan → Execute → Verify",
         "Observe → Compare → Act → Repeat",
         "Request → Approve → Deploy",
-        "Build → Test → Release"
+        "Build → Test → Release",
       ],
       correct: 1,
-      explanation: "Controllers observe current state, compare with desired state, act to reconcile, and repeat indefinitely."
-    }
+      explanation:
+        "Controllers observe current state, compare with desired state, act to reconcile, and repeat indefinitely.",
+    },
   ]}
 />
 
@@ -542,6 +584,7 @@ If you have a Kubernetes cluster (local or cloud):
 **Explain Kubernetes architecture to someone with no cloud background.**
 
 Try this: "Kubernetes is like a city's public transit system. Each bus route (Deployment) has a schedule saying how many buses should be running. The dispatcher (Controller Manager) constantly checks: are there enough buses? If a bus breaks down, the dispatcher calls the garage (Scheduler) to find an available bus and assign a driver (Kubelet). The central dispatch board (API Server) records everything, and the city's database (etcd) keeps track of it all."
+
 </AICallout>
 
 ---
@@ -570,16 +613,17 @@ Try this: "Kubernetes is like a city's public transit system. Each bus route (De
 
 <CheatSheet title="Kubernetes Architecture Quick Reference">
 
-| Component | Location | Function | Key Flag/Config |
-|-----------|----------|----------|-----------------|
-| kube-apiserver | Control Plane | REST API hub | `--etcd-servers`, `--authorization-mode` |
-| etcd | Control Plane | State storage | `--data-dir`, `--listen-client-urls` |
-| kube-scheduler | Control Plane | Pod placement | `--leader-elect`, `--profiling` |
-| kube-controller-manager | Control Plane | Reconciliation | `--controllers`, `--leader-elect` |
-| kubelet | All Workers | Container agent | `--container-runtime`, `--node-ip` |
-| kube-proxy | All Workers | Network proxy | `--proxy-mode` (iptables/IPVS) |
+| Component               | Location      | Function        | Key Flag/Config                          |
+| ----------------------- | ------------- | --------------- | ---------------------------------------- |
+| kube-apiserver          | Control Plane | REST API hub    | `--etcd-servers`, `--authorization-mode` |
+| etcd                    | Control Plane | State storage   | `--data-dir`, `--listen-client-urls`     |
+| kube-scheduler          | Control Plane | Pod placement   | `--leader-elect`, `--profiling`          |
+| kube-controller-manager | Control Plane | Reconciliation  | `--controllers`, `--leader-elect`        |
+| kubelet                 | All Workers   | Container agent | `--container-runtime`, `--node-ip`       |
+| kube-proxy              | All Workers   | Network proxy   | `--proxy-mode` (iptables/IPVS)           |
 
 **Port Reference:**
+
 - API Server: 6443
 - etcd client: 2379
 - etcd peer: 2380
@@ -594,11 +638,14 @@ Try this: "Kubernetes is like a city's public transit system. Each bus route (De
 ## AI Prompt Suggestions
 
 <AICallout type="prompt">
-"I'm designing a Kubernetes cluster for a production workload with 99.95% SLA. Walk me through the control plane architecture decisions — how many API servers, etcd nodes, what networking model, and how to handle upgrades with zero downtime."
+  "I'm designing a Kubernetes cluster for a production workload with 99.95% SLA. Walk me through the
+  control plane architecture decisions — how many API servers, etcd nodes, what networking model,
+  and how to handle upgrades with zero downtime."
 </AICallout>
 
 <AICallout type="prompt">
-"Draw me an ASCII art diagram showing the complete Kubernetes architecture with all components labeled, including the data flow for a pod creation request."
+  "Draw me an ASCII art diagram showing the complete Kubernetes architecture with all components
+  labeled, including the data flow for a pod creation request."
 </AICallout>
 
 ---
@@ -606,9 +653,9 @@ Try this: "Kubernetes is like a city's public transit system. Each bus route (De
 ## Related Content
 
 <KnowledgeLinks>
-- **Next Lesson**: [Pods & Workloads](pods-workloads) — Understanding the smallest deployable unit
-- **Previous**: [Docker Production](docker-production) — Building container images for K8s
-- **Related**: [Container Fundamentals](../08-containers/container-fundamentals) — The primitives K8s builds upon
-- **Lab**: Multi-node Kubernetes cluster setup
-- **Certification**: CKA Domain 1 — Cluster Architecture (25%)
+  - **Next Lesson**: [Pods & Workloads](pods-workloads) — Understanding the smallest deployable unit
+  - **Previous**: [Docker Production](docker-production) — Building container images for K8s -
+  **Related**: [Container Fundamentals](../08-containers/container-fundamentals) — The primitives
+  K8s builds upon - **Lab**: Multi-node Kubernetes cluster setup - **Certification**: CKA Domain 1 —
+  Cluster Architecture (25%)
 </KnowledgeLinks>

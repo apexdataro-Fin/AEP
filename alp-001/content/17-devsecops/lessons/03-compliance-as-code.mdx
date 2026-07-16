@@ -22,10 +22,21 @@ tags: [security, compliance, opa, azure-policy]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  SecurityNote, ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  SecurityNote,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Compliance as Code & Policy-as-Code
 
@@ -72,27 +83,30 @@ graph TD
 package terraform.analysis
 
 # All Azure resources must have tags
+
 deny[msg] {
-  resource := input.resource_changes[_]
-  resource.type == "azurerm_resource_group"
-  not resource.change.after.tags
-  msg = sprintf("%s: Resource group must have tags", [resource.address])
+resource := input.resource*changes[*]
+resource.type == "azurerm_resource_group"
+not resource.change.after.tags
+msg = sprintf("%s: Resource group must have tags", [resource.address])
 }
 
 deny[msg] {
-  resource := input.resource_changes[_]
-  resource.type == "azurerm_resource_group"
-  not resource.change.after.tags.environment
-  msg = sprintf("%s: Missing required tag: environment", [resource.address])
+resource := input.resource*changes[*]
+resource.type == "azurerm_resource_group"
+not resource.change.after.tags.environment
+msg = sprintf("%s: Missing required tag: environment", [resource.address])
 }
 
 # Storage accounts must not be publicly accessible
+
 deny[msg] {
-  resource := input.resource_changes[_]
-  resource.type == "azurerm_storage_account"
-  resource.change.after.network_rules.default_action != "Deny"
-  msg = sprintf("%s: Storage account must deny public access", [resource.address])
+resource := input.resource*changes[*]
+resource.type == "azurerm_storage_account"
+resource.change.after.network_rules.default_action != "Deny"
+msg = sprintf("%s: Storage account must deny public access", [resource.address])
 }
+
 </CodeBlock>
 
 <CodeBlock language="bash" title="Run OPA in CI/CD">
@@ -101,14 +115,17 @@ terraform plan -out=tfplan
 terraform show -json tfplan > tfplan.json
 
 # Evaluate OPA policies against the plan
+
 opa eval --data policies/ --input tfplan.json \
-  "data.terraform.analysis.deny"
+ "data.terraform.analysis.deny"
 
 # If any deny rules fire, fail the pipeline
+
 if [ $? -ne 0 ]; then
-  echo "❌ Policy violation detected"
-  exit 1
+echo "❌ Policy violation detected"
+exit 1
 fi
+
 </CodeBlock>
 
 <ArchitectureNote>
@@ -147,12 +164,12 @@ fi
 }
 </CodeBlock>
 
-| Effect | Behavior |
-|--------|----------|
-| **Deny** | Block non-compliant creation |
-| **Audit** | Log non-compliance (don't block) |
-| **DeployIfNotExists** | Auto-remediate when missing |
-| **Modify** | Auto-add tags/configuration |
+| Effect                | Behavior                         |
+| --------------------- | -------------------------------- |
+| **Deny**              | Block non-compliant creation     |
+| **Audit**             | Log non-compliance (don't block) |
+| **DeployIfNotExists** | Auto-remediate when missing      |
+| **Modify**            | Auto-add tags/configuration      |
 
 <ProductionNote>
 
@@ -167,6 +184,7 @@ fi
 <Challenge title="Write Compliance Policies">
 
 **Context:** CloudNova needs to enforce for SOC2 compliance:
+
 1. All storage accounts must deny public access
 2. All resources must have `environment`, `cost_center`, and `data_classification` tags
 3. VMs must use managed identities, not passwords
@@ -193,6 +211,7 @@ deny[msg] {
   msg = sprintf("%s: VM must use managed identity", [resource.address])
 }
 ```
+
 </details>
 </Challenge>
 
@@ -229,7 +248,7 @@ deny[msg] {
     correct={1}
     explanation="OPA runs against `terraform plan` output — catching issues before resources are created."
   />
-  
+
   <Question
     question="Which Azure Policy effect should you use for auto-remediation?"
     options={["Deny", "Audit", "DeployIfNotExists", "Disabled"]}
@@ -241,8 +260,8 @@ deny[msg] {
 
 ## 📋 Summary
 
-| Layer | Tool | When |
-|-------|------|------|
-| **Pre-deployment** | OPA, Checkov, Sentinel | CI/CD (PR stage) |
-| **Post-deployment** | Azure Policy | Continuously |
-| **Audit** | Compliance reports | Automated |
+| Layer               | Tool                   | When             |
+| ------------------- | ---------------------- | ---------------- |
+| **Pre-deployment**  | OPA, Checkov, Sentinel | CI/CD (PR stage) |
+| **Post-deployment** | Azure Policy           | Continuously     |
+| **Audit**           | Compliance reports     | Automated        |

@@ -22,10 +22,24 @@ tags: [ci-cd, testing, pipelines, patterns]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Pipeline Design Patterns & Testing Strategies
 
@@ -60,7 +74,7 @@ graph TD
     subgraph "Fast / Cheap"
         UNIT[Unit: terraform validate, fmt, lint]
     end
-    
+
     style UNIT fill:#10b981,color:#fff
     style INT fill:#f59e0b,color:#fff
     style E2E fill:#ef4444,color:#fff
@@ -78,33 +92,18 @@ graph TD
 
 ### Pipeline Patterns
 
-| Pattern | Use Case | Example |
-|---------|----------|---------|
-| **Fan-out** | Run independent tasks in parallel | Test Python, test Bicep, lint docs all at once |
-| **Fan-in** | Wait for all parallel jobs, then proceed | All tests pass → deploy |
-| **Matrix** | Run same job with different parameters | Test against Python 3.10, 3.11, 3.12 |
-| **Sequential** | Each stage depends on previous | Build → Test → Deploy |
+| Pattern        | Use Case                                 | Example                                        |
+| -------------- | ---------------------------------------- | ---------------------------------------------- |
+| **Fan-out**    | Run independent tasks in parallel        | Test Python, test Bicep, lint docs all at once |
+| **Fan-in**     | Wait for all parallel jobs, then proceed | All tests pass → deploy                        |
+| **Matrix**     | Run same job with different parameters   | Test against Python 3.10, 3.11, 3.12           |
+| **Sequential** | Each stage depends on previous           | Build → Test → Deploy                          |
 
 <CodeBlock language="yaml" title="Fan-out + Fan-in Pattern">
-jobs:
-  # Fan-out: run in parallel
-  test-python:
-    runs-on: ubuntu-latest
-    steps: [run: pytest]
-  
-  test-terraform:
-    runs-on: ubuntu-latest
-    steps: [run: terraform validate]
-  
-  lint-docs:
-    runs-on: ubuntu-latest
-    steps: [run: markdownlint]
-  
-  # Fan-in: all must pass before deploy
-  deploy:
-    needs: [test-python, test-terraform, lint-docs]
-    runs-on: ubuntu-latest
-    steps: [run: ./deploy.sh]
+  jobs: # Fan-out: run in parallel test-python: runs-on: ubuntu-latest steps: [run: pytest]
+  test-terraform: runs-on: ubuntu-latest steps: [run: terraform validate] lint-docs: runs-on:
+  ubuntu-latest steps: [run: markdownlint] # Fan-in: all must pass before deploy deploy: needs:
+  [test-python, test-terraform, lint-docs] runs-on: ubuntu-latest steps: [run: ./deploy.sh]
 </CodeBlock>
 
 ---
@@ -114,28 +113,11 @@ jobs:
 ### Shift-Left Security
 
 <CodeBlock language="yaml" title="Security at Every Stage">
-jobs:
-  # Stage 1: Pre-commit (fastest)
-  pre-commit:
-    steps:
-      - run: pre-commit run --all-files
-      - run: detect-secrets scan
-  
-  # Stage 2: CI (on PR)
-  sast:
-    steps:
-      - uses: github/codeql-action/analyze@v3
-      - run: checkov -d terraform/
-  
-  # Stage 3: Pre-deploy (pre-prod)
-  image-scan:
-    steps:
-      - run: trivy image cloudnova-api:latest
-  
-  # Stage 4: Post-deploy (production)
-  compliance:
-    steps:
-      - run: az policy-compliance scan
+  jobs: # Stage 1: Pre-commit (fastest) pre-commit: steps: - run: pre-commit run --all-files - run:
+  detect-secrets scan # Stage 2: CI (on PR) sast: steps: - uses: github/codeql-action/analyze@v3 -
+  run: checkov -d terraform/ # Stage 3: Pre-deploy (pre-prod) image-scan: steps: - run: trivy image
+  cloudnova-api:latest # Stage 4: Post-deploy (production) compliance: steps: - run: az
+  policy-compliance scan
 </CodeBlock>
 
 <ProductionNote>
@@ -153,7 +135,7 @@ jobs:
 Sarah's team has a pipeline that takes 45 minutes:
 
 ```
-Build (5min) → Unit Tests (3min) → Terraform Validate (2min) → 
+Build (5min) → Unit Tests (3min) → Terraform Validate (2min) →
 Security Scan (10min) → Integration Tests (15min) → Deploy Dev (10min)
 ```
 
@@ -168,6 +150,7 @@ Security Scan (10min) → Integration Tests (15min) → Deploy Dev (10min)
 4. **Split:** Move Integration Tests to post-dev-deploy — defers 15min to async phase
 
 **Result:** ~15-minute pipeline for the critical path
+
 </details>
 </Exercise>
 
@@ -201,14 +184,14 @@ Security Scan (10min) → Integration Tests (15min) → Deploy Dev (10min)
     correct={2}
     explanation="Fast, cheap unit-level checks should dominate. E2E tests are valuable but slow — run them selectively."
   />
-  
+
   <Question
     question="What's the primary benefit of the fan-out pattern?"
     options={[
       "Better security",
       "Reduced pipeline time through parallel execution",
       "Simpler pipeline configuration",
-      "Fewer merge conflicts"
+      "Fewer merge conflicts",
     ]}
     correct={1}
   />
@@ -218,9 +201,9 @@ Security Scan (10min) → Integration Tests (15min) → Deploy Dev (10min)
 
 ## 📋 Summary
 
-| Pattern | When to Use |
-|---------|------------|
-| **Fan-out** | Independent tasks → run in parallel |
-| **Matrix** | Same task, different parameters |
-| **Sequential** | Each stage depends on previous |
+| Pattern        | When to Use                             |
+| -------------- | --------------------------------------- |
+| **Fan-out**    | Independent tasks → run in parallel     |
+| **Matrix**     | Same task, different parameters         |
+| **Sequential** | Each stage depends on previous          |
 | **Shift-left** | Move checks earlier for faster feedback |

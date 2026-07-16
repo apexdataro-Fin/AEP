@@ -22,10 +22,21 @@ tags: [github, cli, api, automation]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  Exercise, Challenge, Quiz, CodeBlock, TerminalBlock,
-  ProductionNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  ProductionNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # GitHub CLI, APIs & Automation
 
@@ -52,6 +63,7 @@ The **GitHub CLI (`gh`)** brings pull requests, issues, releases, and workflows 
 gh auth login
 
 # Pull Requests
+
 gh pr create --title "feat: add cost tagging" --body "Closes #42"
 gh pr list --state open
 gh pr view 123
@@ -60,22 +72,27 @@ gh pr review --approve
 gh pr merge --squash
 
 # Issues
+
 gh issue create --title "Bug: deployment timeout" --label "bug"
 gh issue list --assignee @me
 gh issue close 42
 
 # Releases
+
 gh release create v1.2.0 --title "v1.2.0" --notes "Added cost tagging"
 
 # Workflows
+
 gh run list
 gh run watch
 gh run view --log
 
 # Repositories
+
 gh repo clone apexdataro-Fin/AEP
 gh repo fork
 gh repo view --web
+
 </CodeBlock>
 
 ---
@@ -88,15 +105,18 @@ curl -H "Authorization: token $GH_TOKEN" \
   https://api.github.com/repos/apexdataro-Fin/AEP/pulls?state=open
 
 # Create an issue
+
 curl -X POST \
-  -H "Authorization: token $GH_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Cost optimization report","body":"Run weekly cost analysis"}' \
-  https://api.github.com/repos/apexdataro-Fin/AEP/issues
+ -H "Authorization: token $GH_TOKEN" \
+ -H "Content-Type: application/json" \
+ -d '{"title":"Cost optimization report","body":"Run weekly cost analysis"}' \
+ https://api.github.com/repos/apexdataro-Fin/AEP/issues
 
 # Get workflow runs
+
 curl -H "Authorization: token $GH_TOKEN" \
-  https://api.github.com/repos/apexdataro-Fin/AEP/actions/runs
+ https://api.github.com/repos/apexdataro-Fin/AEP/actions/runs
+
 </CodeBlock>
 
 ---
@@ -109,27 +129,32 @@ curl -H "Authorization: token $GH_TOKEN" \
 
 VERSION=$1
 if [ -z "$VERSION" ]; then
-  echo "Usage: ./release.sh v1.2.3"
-  exit 1
+echo "Usage: ./release.sh v1.2.3"
+exit 1
 fi
 
 # 1. Verify main is clean and up to date
+
 git checkout main
 git pull --rebase
 
 # 2. Create tag
+
 git tag -a "$VERSION" -m "Release $VERSION"
 
 # 3. Push tag
+
 git push origin "$VERSION"
 
 # 4. Generate changelog and create GitHub release
+
 gh release create "$VERSION" \
   --title "Release $VERSION" \
   --notes "$(git log --oneline $(git describe --tags --abbrev=0 @^)..@)" \
-  --draft
+ --draft
 
 echo "✅ Draft release $VERSION created. Review and publish."
+
 </CodeBlock>
 
 ---
@@ -156,15 +181,10 @@ echo "✅ Draft release $VERSION created. Review and publish."
     options={["gh login", "gh auth login", "gh connect", "gh setup"]}
     correct={1}
   />
-  
+
   <Question
     question="How do you merge a PR via the CLI?"
-    options={[
-      "gh merge 123",
-      "gh pr merge 123",
-      "git merge pr/123",
-      "gh pr close 123"
-    ]}
+    options={["gh merge 123", "gh pr merge 123", "git merge pr/123", "gh pr close 123"]}
     correct={1}
   />
 </Quiz>
@@ -173,11 +193,11 @@ echo "✅ Draft release $VERSION created. Review and publish."
 
 ## 📋 Summary
 
-| Tool | Use |
-|------|-----|
-| `gh pr` | Create, review, merge PRs |
-| `gh issue` | Track work items |
-| `gh release` | Manage releases |
-| `gh run` | Monitor CI/CD |
-| REST API | Simple integration |
-| GraphQL | Complex data queries |
+| Tool         | Use                       |
+| ------------ | ------------------------- |
+| `gh pr`      | Create, review, merge PRs |
+| `gh issue`   | Track work items          |
+| `gh release` | Manage releases           |
+| `gh run`     | Monitor CI/CD             |
+| REST API     | Simple integration        |
+| GraphQL      | Complex data queries      |

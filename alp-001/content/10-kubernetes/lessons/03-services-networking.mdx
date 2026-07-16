@@ -15,7 +15,8 @@ status: "published"
 version: "1.0.0"
 author: "ARES EDU PLATFORM"
 last_updated: "2026-07-15"
-search_keywords: ["kubernetes services", "k8s networking", "ingress controller", "network policies", "coreDNS"]
+search_keywords:
+  ["kubernetes services", "k8s networking", "ingress controller", "network policies", "coreDNS"]
 learning_objectives:
   - "Explain how Kubernetes Services provide stable networking"
   - "Configure ClusterIP, NodePort, and LoadBalancer services"
@@ -28,12 +29,44 @@ active_recall:
 review_schedule: { "initial": "1 day", "next": "3 days", "interval": "spaced-repetition" }
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, AIExplanation, AIQuiz, AIFlashcards } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  AIExplanation,
+  AIQuiz,
+  AIFlashcards,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 export const CloudNova = ({ children }) => (
-  <div style={{ borderLeft: '4px solid #0ea5e9', padding: '1rem 1.5rem', margin: '1.5rem 0', background: 'var(--ifm-color-emphasis-100)', borderRadius: '0 8px 8px 0' }}>
-    <strong style={{ color: '#0ea5e9' }}>🏢 CloudNova Engineering</strong>
-    <div style={{ marginTop: '0.5rem' }}>{children}</div>
+  <div
+    style={{
+      borderLeft: "4px solid #0ea5e9",
+      padding: "1rem 1.5rem",
+      margin: "1.5rem 0",
+      background: "var(--ifm-color-emphasis-100)",
+      borderRadius: "0 8px 8px 0",
+    }}
+  >
+    <strong style={{ color: "#0ea5e9" }}>🏢 CloudNova Engineering</strong>
+    <div style={{ marginTop: "0.5rem" }}>{children}</div>
   </div>
 );
 
@@ -66,21 +99,12 @@ graph LR
 ### ClusterIP (Default) — Internal Only
 
 <CodeBlock language="yaml" title="clusterip-service.yaml">
-apiVersion: v1
-kind: Service
-metadata:
-  name: nginx-service
-spec:
-  type: ClusterIP
-  selector:
-    app: nginx
-  ports:
-  - protocol: TCP
-    port: 80        # Service port
-    targetPort: 8080 # Container port
+  apiVersion: v1 kind: Service metadata: name: nginx-service spec: type: ClusterIP selector: app:
+  nginx ports: - protocol: TCP port: 80 # Service port targetPort: 8080 # Container port
 </CodeBlock>
 
 **Characteristics:**
+
 - Only reachable **inside the cluster**
 - Gets a virtual IP from the service CIDR range
 - DNS: `nginx-service.default.svc.cluster.local`
@@ -94,9 +118,9 @@ spec:
   selector:
     app: nginx
   ports:
-  - port: 80
-    targetPort: 8080
-    nodePort: 30080  # 30000-32767 range
+    - port: 80
+      targetPort: 8080
+      nodePort: 30080 # 30000-32767 range
 ```
 
 **Access pattern:** `http://<any-node-ip>:30080`
@@ -115,8 +139,8 @@ spec:
   selector:
     app: nginx
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
 ```
 
 <Info>
@@ -148,7 +172,9 @@ curl http://nginx-service.default  # Namespace-qualified
 curl http://nginx-service.default.svc.cluster.local  # Full FQDN
 
 # Cross-namespace:
+
 curl http://api-service.staging.svc.cluster.local
+
 </CodeBlock>
 
 ---
@@ -167,37 +193,12 @@ graph TB
 ```
 
 <CodeBlock language="yaml" title="ingress.yaml">
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: app-ingress
-  annotations:
-    cert-manager.io/cluster-issuer: "letsencrypt-prod"
-    nginx.ingress.kubernetes.io/rewrite-target: /
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts:
-    - cloudnova.com
-    secretName: cloudnova-tls
-  rules:
-  - host: cloudnova.com
-    http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: api-service
-            port:
-              number: 8080
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: web-service
-            port:
-              number: 3000
+  apiVersion: networking.k8s.io/v1 kind: Ingress metadata: name: app-ingress annotations:
+  cert-manager.io/cluster-issuer: "letsencrypt-prod" nginx.ingress.kubernetes.io/rewrite-target: /
+  spec: ingressClassName: nginx tls: - hosts: - cloudnova.com secretName: cloudnova-tls rules: -
+  host: cloudnova.com http: paths: - path: /api pathType: Prefix backend: service: name: api-service
+  port: number: 8080 - path: / pathType: Prefix backend: service: name: web-service port: number:
+  3000
 </CodeBlock>
 
 ---
@@ -212,51 +213,22 @@ graph TB
         Web[Web Pod<br/>app: web] -->|Allowed| API[API Pod<br/>app: api]
         API -->|Allowed| DB[DB Pod<br/>app: db]
     end
-    
+
     subgraph "namespace: monitoring"
         Prom[Prometheus]
     end
-    
+
     Prom -.->|Allowed via policy| API
     Prom -.-x|BLOCKED| Web
     Web -.-x|BLOCKED| DB
 ```
 
 <CodeBlock language="yaml" title="network-policy.yaml">
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: api-network-policy
-spec:
-  podSelector:
-    matchLabels:
-      app: api
-  policyTypes:
-  - Ingress
-  - Egress
-  ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: web
-    ports:
-    - protocol: TCP
-      port: 8080
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          name: monitoring
-    ports:
-    - protocol: TCP
-      port: 9090
-  egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: db
-    ports:
-    - protocol: TCP
-      port: 5432
+  apiVersion: networking.k8s.io/v1 kind: NetworkPolicy metadata: name: api-network-policy spec:
+  podSelector: matchLabels: app: api policyTypes: - Ingress - Egress ingress: - from: - podSelector:
+  matchLabels: app: web ports: - protocol: TCP port: 8080 - from: - namespaceSelector: matchLabels:
+  name: monitoring ports: - protocol: TCP port: 9090 egress: - to: - podSelector: matchLabels: app:
+  db ports: - protocol: TCP port: 5432
 </CodeBlock>
 
 <SecurityNote>
@@ -272,11 +244,13 @@ spec:
 kube-proxy watches the API server for Service and Endpoint changes, then updates node-level routing rules.
 
 **iptables mode** (default, legacy):
+
 - Creates DNAT (Destination NAT) rules
 - For each Service, creates a chain that randomly selects a backend pod
 - Scales poorly: O(n) rules, updates are slow with many services
 
 **IPVS mode** (recommended):
+
 - Uses Linux kernel IP Virtual Server
 - Supports multiple scheduling algorithms (rr, lc, dh, sh)
 - O(1) lookups, much better performance at scale
@@ -326,6 +300,7 @@ kubectl get endpoints web
 **Challenge: Secure Microservice Communication**
 
 Create three deployments (web, api, db) and:
+
 1. Set up Services for each tier
 2. Write NetworkPolicies that only allow: web → api → db
 3. Verify that web cannot reach db directly
@@ -345,16 +320,18 @@ Create three deployments (web, api, db) and:
         "To run containers",
         "To provide a stable IP and DNS for ephemeral pods",
         "To store configuration data",
-        "To encrypt pod traffic"
+        "To encrypt pod traffic",
       ],
       correct: 1,
-      explanation: "Services provide a stable endpoint that routes traffic to pods, regardless of pod churn and IP changes."
+      explanation:
+        "Services provide a stable endpoint that routes traffic to pods, regardless of pod churn and IP changes.",
     },
     {
       question: "Which Service type is only accessible within the cluster?",
       options: ["NodePort", "LoadBalancer", "ClusterIP", "ExternalName"],
       correct: 2,
-      explanation: "ClusterIP is the default and only provides internal cluster access. It's the standard for microservice-to-microservice communication."
+      explanation:
+        "ClusterIP is the default and only provides internal cluster access. It's the standard for microservice-to-microservice communication.",
     },
     {
       question: "What does a NetworkPolicy with an empty podSelector and no ingress rules do?",
@@ -362,11 +339,12 @@ Create three deployments (web, api, db) and:
         "Allow all traffic",
         "Deny all ingress to all pods",
         "Allow only egress traffic",
-        "Nothing — it's invalid"
+        "Nothing — it's invalid",
       ],
       correct: 1,
-      explanation: "An empty podSelector selects all pods, and with no ingress rules, all incoming traffic is denied. This creates a default-deny posture."
-    }
+      explanation:
+        "An empty podSelector selects all pods, and with no ingress rules, all incoming traffic is denied. This creates a default-deny posture.",
+    },
   ]}
 />
 
@@ -405,8 +383,7 @@ Create three deployments (web, api, db) and:
 ## Related Content
 
 <KnowledgeLinks>
-- **Next**: [Configuration & Secrets](configuration-secrets)
-- **Previous**: [Pods & Workloads](pods-workloads)
-- **Lab**: Multi-tier secure microservice deployment
-- **Certification**: CKA Domain 3 — Services & Networking (20%)
+  - **Next**: [Configuration & Secrets](configuration-secrets) - **Previous**: [Pods &
+  Workloads](pods-workloads) - **Lab**: Multi-tier secure microservice deployment -
+  **Certification**: CKA Domain 3 — Services & Networking (20%)
 </KnowledgeLinks>

@@ -22,16 +22,27 @@ tags: [observability, opentelemetry, tracing, grafana]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Analogy,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Analogy,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Observability: Logs, Metrics, Traces
 
 <Definition>
 
-**Observability** is the ability to understand a system's internal state from its external outputs. More than monitoring (which tells you *that* something is wrong), observability tells you *why* — even for problems you've never seen before.
+**Observability** is the ability to understand a system's internal state from its external outputs. More than monitoring (which tells you _that_ something is wrong), observability tells you _why_ — even for problems you've never seen before.
 
 </Definition>
 
@@ -55,11 +66,11 @@ import {
 
 ### Three Pillars
 
-| Pillar | Question | Tool |
-|--------|----------|------|
-| **Logs** | What happened at this specific moment? | Azure Log Analytics, Loki |
-| **Metrics** | What's the pattern over time? | Prometheus, Azure Metrics |
-| **Traces** | How did this request flow through the system? | Jaeger, Tempo, App Insights |
+| Pillar      | Question                                      | Tool                        |
+| ----------- | --------------------------------------------- | --------------------------- |
+| **Logs**    | What happened at this specific moment?        | Azure Log Analytics, Loki   |
+| **Metrics** | What's the pattern over time?                 | Prometheus, Azure Metrics   |
+| **Traces**  | How did this request flow through the system? | Jaeger, Tempo, App Insights |
 
 ```mermaid
 graph TD
@@ -68,7 +79,7 @@ graph TD
     API --> PAY[Payment Service]
     PAY --> DB[(Database)]
     PAY --> QUEUE[Message Queue]
-    
+
     TRACE[Distributed Trace]
     TRACE -.->|Span 1: 10ms| API
     TRACE -.->|Span 2: 25ms| AUTH
@@ -89,19 +100,23 @@ from opentelemetry.exporter.otlp import OTLPSpanExporter
 from opentelemetry.instrumentation.flask import FlaskInstrumentor
 
 # Auto-instrument Flask app
+
 FlaskInstrumentor().instrument_app(app)
 
 # Export traces to OTLP collector (works with any backend)
+
 exporter = OTLPSpanExporter(
-    endpoint="https://otlp.cloudnova.io:4317"
+endpoint="https://otlp.cloudnova.io:4317"
 )
 
 # Custom span
-tracer = trace.get_tracer(__name__)
+
+tracer = trace.get_tracer(**name**)
 with tracer.start_as_current_span("process-payment") as span:
-    span.set_attribute("payment.amount", amount)
-    span.set_attribute("payment.currency", currency)
-    process_payment(amount, currency)
+span.set_attribute("payment.amount", amount)
+span.set_attribute("payment.currency", currency)
+process_payment(amount, currency)
+
 </CodeBlock>
 
 <ArchitectureNote>
@@ -152,18 +167,18 @@ with tracer.start_as_current_span("process-payment") as span:
       "The entire request journey",
       "A single unit of work within a trace (e.g., one database query)",
       "A log entry",
-      "A metric data point"
+      "A metric data point",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="Why is OpenTelemetry important?"
     options={[
       "It's the only monitoring tool you need",
       "It provides vendor-neutral instrumentation — instrument once, export anywhere",
       "It replaces Prometheus",
-      "It's a Microsoft product"
+      "It's a Microsoft product",
     ]}
     correct={1}
   />
@@ -173,9 +188,9 @@ with tracer.start_as_current_span("process-payment") as span:
 
 ## 📋 Summary
 
-| Pillar | Purpose | Azure Tool |
-|--------|---------|------------|
-| **Logs** | Discrete events | Log Analytics |
-| **Metrics** | Time-series patterns | Azure Metrics, Prometheus |
-| **Traces** | Request journeys | App Insights, Jaeger |
-| **OTel** | Vendor-neutral instrumentation | OpenTelemetry Collector |
+| Pillar      | Purpose                        | Azure Tool                |
+| ----------- | ------------------------------ | ------------------------- |
+| **Logs**    | Discrete events                | Log Analytics             |
+| **Metrics** | Time-series patterns           | Azure Metrics, Prometheus |
+| **Traces**  | Request journeys               | App Insights, Jaeger      |
+| **OTel**    | Vendor-neutral instrumentation | OpenTelemetry Collector   |

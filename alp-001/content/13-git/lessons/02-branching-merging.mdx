@@ -23,11 +23,28 @@ tags: [git, branching, merging, workflow]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example, Analogy,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, ArchitectureNote,
-  SecurityNote, CostNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Branching & Merging Strategies
 
@@ -89,16 +106,21 @@ gitGraph
 git checkout -b feature/payments
 
 # List all branches
+
 git branch -a
 
 # See branch graph
+
 git log --graph --oneline --all --decorate
 
 # Delete a merged branch
+
 git branch -d feature/payments
 
 # Force delete (even if unmerged)
+
 git branch -D feature/payments
+
 </CodeBlock>
 
 ---
@@ -107,13 +129,13 @@ git branch -D feature/payments
 
 ### Merge vs Rebase
 
-| Feature | `git merge` | `git rebase` |
-|---------|-------------|--------------|
-| **Result** | Merge commit joining histories | Linear history (commits replayed) |
-| **History** | Preserves exact timeline | Clean, linear history |
-| **Conflicts** | Resolve once at merge commit | May resolve per rebased commit |
-| **Safety** | Never loses context | Rewrites commit SHAs |
-| **Best for** | Public/shared branches | Private feature branches |
+| Feature       | `git merge`                    | `git rebase`                      |
+| ------------- | ------------------------------ | --------------------------------- |
+| **Result**    | Merge commit joining histories | Linear history (commits replayed) |
+| **History**   | Preserves exact timeline       | Clean, linear history             |
+| **Conflicts** | Resolve once at merge commit   | May resolve per rebased commit    |
+| **Safety**    | Never loses context            | Rewrites commit SHAs              |
+| **Best for**  | Public/shared branches         | Private feature branches          |
 
 <Warning title="The Golden Rule of Rebase">
 
@@ -125,15 +147,15 @@ git branch -D feature/payments
 sequenceDiagram
     participant F as feature
     participant M as main
-    
+
     Note over M: commits E, F added
-    
+
     rect rgb(255, 200, 200)
     Note over F: git rebase main
     F->>M: Replay C, D on top of F
     Note over F: History rewritten! <br/> New SHAs for C', D'
     end
-    
+
     rect rgb(200, 255, 200)
     Note over F: git merge main
     F->>M: Create merge commit
@@ -176,9 +198,11 @@ git checkout main
 git pull --rebase
 
 # Create feature branch (short-lived!)
+
 git checkout -b feat/add-cost-tagging
 
 # Work, commit frequently
+
 git add terraform/variables.tf
 git commit -m "feat: add cost center tagging variables"
 
@@ -186,16 +210,20 @@ git add terraform/modules/compute/main.tf
 git commit -m "feat: apply cost tags to compute resources"
 
 # Before pushing, rebase on latest main
+
 git fetch origin
 git rebase origin/main
 
 # Push and create PR
+
 git push -u origin feat/add-cost-tagging
 
 # After PR review and merge, clean up
+
 git checkout main
 git pull --rebase
 git branch -d feat/add-cost-tagging
+
 </CodeBlock>
 
 ---
@@ -204,12 +232,12 @@ git branch -d feat/add-cost-tagging
 
 ### Merge Strategies
 
-| Strategy | Flag | When to Use | Result |
-|----------|------|-------------|--------|
-| **Fast-forward** | `--ff` (default) | Branch hasn't diverged | Linear — just moves pointer |
-| **No fast-forward** | `--no-ff` | Always create merge commit | Explicit merge commit preserved |
-| **Squash** | `--squash` | Collapse feature into one commit | Single commit on target |
-| **Rebase** | `--rebase` | Private branches only | Replayed linear history |
+| Strategy            | Flag             | When to Use                      | Result                          |
+| ------------------- | ---------------- | -------------------------------- | ------------------------------- |
+| **Fast-forward**    | `--ff` (default) | Branch hasn't diverged           | Linear — just moves pointer     |
+| **No fast-forward** | `--no-ff`        | Always create merge commit       | Explicit merge commit preserved |
+| **Squash**          | `--squash`       | Collapse feature into one commit | Single commit on target         |
+| **Rebase**          | `--rebase`       | Private branches only            | Replayed linear history         |
 
 ```mermaid
 graph LR
@@ -217,14 +245,14 @@ graph LR
         A1[main: A] --> B1[main: B]
         C1[feature: C] -.-> B1
     end
-    
+
     subgraph "No Fast-Forward Merge"
         A2[main: A] --> B2[main: B]
         A2 --> C2[feature: C]
         B2 --> M2[Merge commit]
         C2 --> M2
     end
-    
+
     subgraph "Squash Merge"
         A3[main: A]
         A3 --> C3[Squashed: A+B+C]
@@ -280,6 +308,7 @@ git rebase origin/main
 # Force push your rebased branch (safe because only you use it)
 git push --force-with-lease origin feat/cost-tagging
 ```
+
 </details>
 </Exercise>
 
@@ -306,17 +335,23 @@ flowchart TD
 git status
 
 # Abort if you want to start over
+
 git merge --abort
 git rebase --abort
 
 # Use "ours" (your version) for a specific file
+
 git checkout --ours path/to/file
+
 # Use "theirs" (incoming version) for a specific file
+
 git checkout --theirs path/to/file
 
 # After resolving, continue
+
 git add .
-git rebase --continue  # or git merge --continue
+git rebase --continue # or git merge --continue
+
 </CodeBlock>
 
 <CommonMistake title="Using `--force` Instead of `--force-with-lease`">
@@ -363,30 +398,30 @@ git push --force-with-lease
       "Deletes branch feature/x",
       "Creates and switches to branch feature/x",
       "Merges feature/x into current branch",
-      "Lists all branches named feature/x"
+      "Lists all branches named feature/x",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="Why is `git push --force-with-lease` safer than `git push --force`?"
     options={[
       "It's the same command with a different name",
       "It checks that your local copy of the remote matches the actual remote before pushing",
       "It creates a backup of the remote branch",
-      "It sends an email notification to teammates"
+      "It sends an email notification to teammates",
     ]}
     correct={1}
     explanation="`--force-with-lease` verifies that nobody else has pushed to the branch since you last fetched. If they have, the push is rejected — preventing accidental overwrites."
   />
-  
+
   <Question
     question="In trunk-based development, how long should feature branches typically live?"
     options={[
       "Several weeks",
       "Hours to a day maximum",
       "At least one sprint",
-      "Until the feature is code-complete"
+      "Until the feature is code-complete",
     ]}
     correct={1}
     explanation="Trunk-based development uses very short-lived branches (hours, not days) that are frequently integrated to main. This minimizes merge conflicts and enables continuous deployment."
@@ -402,11 +437,13 @@ git push --force-with-lease
 **Q:** "Compare GitFlow and trunk-based development. When would you choose each?"
 
 **A:** **GitFlow** uses long-lived branches (develop, release, hotfix) with strict branching rules. Best for:
+
 - Products with versioned releases (mobile apps, on-prem software)
 - Large teams needing release coordination
 - When you need to support multiple versions simultaneously
 
 **Trunk-based development** uses short-lived branches merged directly to main. Best for:
+
 - Continuous deployment to SaaS/web apps
 - Smaller, autonomous teams
 - When you can feature-flag incomplete work
@@ -441,11 +478,11 @@ During a `--no-ff` merge, a new merge commit is created with two parents. The ta
 
 ## 📋 Summary
 
-| Concept | Key Takeaway |
-|---------|-------------|
-| **Branches** | Lightweight pointers, not copies |
-| **Merge** | Preserves history, creates merge commit |
-| **Rebase** | Linear history, rewrite SHAs — private branches only |
-| **Conflict Resolution** | Edit → `git add` → `git merge/rebase --continue` |
-| **Force Push** | Always use `--force-with-lease`, never bare `--force` |
-| **CloudNova Standard** | Trunk-based, short-lived branches, rebase before PR |
+| Concept                 | Key Takeaway                                          |
+| ----------------------- | ----------------------------------------------------- |
+| **Branches**            | Lightweight pointers, not copies                      |
+| **Merge**               | Preserves history, creates merge commit               |
+| **Rebase**              | Linear history, rewrite SHAs — private branches only  |
+| **Conflict Resolution** | Edit → `git add` → `git merge/rebase --continue`      |
+| **Force Push**          | Always use `--force-with-lease`, never bare `--force` |
+| **CloudNova Standard**  | Trunk-based, short-lived branches, rebase before PR   |

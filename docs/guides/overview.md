@@ -15,8 +15,8 @@ ai_metadata:
 
 Practical guides for working with the platform.
 
-| Guide                                                  | Purpose                                        |
-| ------------------------------------------------------ | ---------------------------------------------- |
+| Guide                                                       | Purpose                                        |
+| ----------------------------------------------------------- | ---------------------------------------------- |
 | [Mermaid Guide](/docs/guides/mermaid-guide)                 | Create diagrams using Mermaid syntax           |
 | [AI Integration Guide](/docs/guides/ai-integration)         | How AI systems consume this platform's content |
 | [Contributing Guide](/docs/guides/contributing)             | How to contribute to the project               |

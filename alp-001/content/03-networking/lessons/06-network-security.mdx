@@ -13,13 +13,37 @@ author: "ARES Engineering"
 last_updated: "2026-07-15"
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  Challenge,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  Mermaid,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Network Security & Firewalls
 
 <Info>
 
 **Learning Objectives**
+
 - Design NSG rules with least-privilege principle
 - Layer Azure Firewall, NSGs, and WAF for defense-in-depth
 - Detect and respond to DDoS attacks in Azure
@@ -56,6 +80,7 @@ graph LR
     style B fill:#ef4444,color:#fff
     style C fill:#f59e0b,color:#000
     style D fill:#8b5cf6,color:#fff
+
 </Mermaid>
 
 Each layer stops different attacks. No single layer is enough.
@@ -83,9 +108,11 @@ graph TD
 
     style Pass fill:#22c55e,color:#000
     style Drop fill:#ef4444,color:#fff
+
 </Mermaid>
 
 **Key NSG facts:**
+
 - Rules are **stateful**: allow inbound → return traffic automatically allowed
 - Priority: 100-4096 (lower = higher priority)
 - Service Tags: `Internet`, `AzureLoadBalancer`, `VirtualNetwork` are built-in
@@ -158,14 +185,14 @@ graph TB
 
 ### NSG vs Azure Firewall: When to Use Which
 
-| Concern | NSG | Azure Firewall |
-|---------|-----|---------------|
-| **Scope** | Subnet or NIC | Hub VNet (centralized) |
-| **Filtering** | IP, port, protocol | IP, port, FQDN, threat intel |
-| **Logging** | NSG flow logs | Firewall logs + Log Analytics |
-| **Cost** | Free | $900+/month (Standard) |
-| **State** | Stateful (5-tuple) | Stateful + application-level |
-| **Best for** | Granular subnet rules | Central egress/ingress control |
+| Concern       | NSG                   | Azure Firewall                 |
+| ------------- | --------------------- | ------------------------------ |
+| **Scope**     | Subnet or NIC         | Hub VNet (centralized)         |
+| **Filtering** | IP, port, protocol    | IP, port, FQDN, threat intel   |
+| **Logging**   | NSG flow logs         | Firewall logs + Log Analytics  |
+| **Cost**      | Free                  | $900+/month (Standard)         |
+| **State**     | Stateful (5-tuple)    | Stateful + application-level   |
+| **Best for**  | Granular subnet rules | Central egress/ingress control |
 
 <SecurityNote>
 
@@ -218,6 +245,7 @@ graph TB
 A developer opened RDP (port 3389) to `0.0.0.0/0` on a test VM "just for 10 minutes." They forgot to close it. Within 6 hours, Azure Security Center detected brute-force attempts from 47 different IP addresses in 5 countries.
 
 **Fix implemented:**
+
 1. **Azure Policy** to deny NSG rules with source `0.0.0.0/0` and destination ports 22/3389
 2. **Just-in-Time (JIT) VM Access** — request temporary access with justification
 3. **Bastion** for all VM access — no public RDP/SSH ever
@@ -247,6 +275,7 @@ Instead of one big "internal network," every workload gets its own security boun
 ```
 
 **Implementation in Azure:**
+
 1. NSGs at subnet level (broad rules)
 2. ASGs for application-level groups
 3. Azure Policy to enforce NSG on every subnet
@@ -289,6 +318,7 @@ done
 CloudNova's current network allows all traffic within VNets. Management wants a zero-trust architecture.
 
 **Constraints:**
+
 - 47 microservices across 3 environments (prod, staging, dev)
 - Must not break existing application communication
 - Budget for implementation: 2 sprints (4 weeks)
@@ -315,7 +345,7 @@ CloudNova's current network allows all traffic within VNets. Management wants a 
     "Denied — explicit deny beats implicit allow",
     "Allowed — Rule 100 is higher priority and matches first",
     "Depends on whether the traffic is inbound or outbound",
-    "Trick question — NSGs can't block specific IPs"
+    "Trick question — NSGs can't block specific IPs",
   ]}
   correct={0}
   explanation="Wait — Rule 100 has higher priority! It matches first and allows the traffic. The packet never reaches Rule 200. To block a specific IP, the Deny rule MUST have a lower priority number than the Allow rule. This is the #1 NSG design mistake."
@@ -325,14 +355,14 @@ CloudNova's current network allows all traffic within VNets. Management wants a 
 
 <CheatSheet title="Network Security Quick Reference">
 
-| Tool | Protects Against | Cost | Key Features |
-|------|-----------------|------|-------------|
-| **NSG** | Unauthorized port access | Free | IP/port, stateful, subnet/NIC |
-| **Azure Firewall** | Egress, FQDN-based threats | $900+/mo | FQDN, threat intel, SNAT |
-| **WAF (App GW)** | OWASP Top 10, bots | Included in AG | SQLi, XSS, CRS rules |
-| **Front Door WAF** | Edge-level HTTP attacks | Included in FD | Global, bot management |
-| **DDoS Protection** | Volumetric + protocol | $2,944/mo | Auto-mitigation, cost guarantee |
-| **Private Endpoints** | Public exposure | Per endpoint | No public IP, Azure backbone |
+| Tool                  | Protects Against           | Cost           | Key Features                    |
+| --------------------- | -------------------------- | -------------- | ------------------------------- |
+| **NSG**               | Unauthorized port access   | Free           | IP/port, stateful, subnet/NIC   |
+| **Azure Firewall**    | Egress, FQDN-based threats | $900+/mo       | FQDN, threat intel, SNAT        |
+| **WAF (App GW)**      | OWASP Top 10, bots         | Included in AG | SQLi, XSS, CRS rules            |
+| **Front Door WAF**    | Edge-level HTTP attacks    | Included in FD | Global, bot management          |
+| **DDoS Protection**   | Volumetric + protocol      | $2,944/mo      | Auto-mitigation, cost guarantee |
+| **Private Endpoints** | Public exposure            | Per endpoint   | No public IP, Azure backbone    |
 
 </CheatSheet>
 

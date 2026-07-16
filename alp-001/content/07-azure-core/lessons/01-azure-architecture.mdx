@@ -9,15 +9,34 @@ technologies: ["Azure", "ARM", "Management Groups", "Subscriptions", "Resource G
 skills: ["azure-architecture", "management-groups", "subscription-design", "resource-organization"]
 certifications: ["AZ-104", "AZ-900"]
 knowledge_nodes: ["azure-architecture", "management-groups", "azure-resource-manager"]
-prerequisites: ["06-cloud-fundamentals/lessons/04-regions-zones", "06-cloud-fundamentals/lessons/05-resource-organization"]
+prerequisites:
+  [
+    "06-cloud-fundamentals/lessons/04-regions-zones",
+    "06-cloud-fundamentals/lessons/05-resource-organization",
+  ]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Understand Azure Resource Manager (ARM) as the deployment and management layer
 - Design management group hierarchies for enterprise governance
 - Choose the right subscription strategy for your organization
@@ -31,6 +50,7 @@ By the end of this lesson, you will:
 **Azure Resource Manager (ARM) is the brain of Azure.**
 
 Every request — from the portal, CLI, SDK, or Terraform — goes through ARM. ARM checks:
+
 1. **Are you authenticated?** (Who are you?)
 2. **Are you authorized?** (Can you create VMs?)
 3. **Is this allowed by policy?** (Are public IPs denied?)
@@ -49,32 +69,32 @@ graph TD
     ROOT["🏢 Root Management Group<br/>Tenant-level policies"] --> MG1["Management Group: Production"]
     ROOT --> MG2["Management Group: Development"]
     ROOT --> MG3["Management Group: Sandbox"]
-    
+
     MG1 --> SUB1["Production Subscription"]
     MG1 --> SUB2["DR Subscription"]
     MG2 --> SUB3["Development Subscription"]
     MG3 --> SUB4["Sandbox/Lab Subscription"]
-    
+
     SUB1 --> RG1["rg-networking"]
     SUB1 --> RG2["rg-compute"]
     SUB1 --> RG3["rg-data"]
-    
+
     RG2 --> VM1["🖥️ web-server-01"]
     RG2 --> NIC1["🔌 nic-web-01"]
     RG2 --> DISK1["💾 osdisk-web-01"]
-    
+
     style ROOT fill:#0078d4,stroke:#333,color:#fff
     style MG1 fill:#ff6b35,stroke:#333,color:#fff
     style SUB1 fill:#107c10,stroke:#333,color:#fff
     style RG2 fill:#ff8c00,stroke:#333,color:#fff
 ```
 
-| Level | Purpose | Key Settings | Example Count |
-|-------|---------|-------------|---------------|
-| **Management Group** | Policy inheritance, RBAC at scale | Policies, RBAC, budget | 3-10 |
-| **Subscription** | Billing boundary, resource limits | Quotas, billing, support plan | 5-50 |
-| **Resource Group** | Lifecycle container | Tags, RBAC scope, deployment scope | 20-200 |
-| **Resource** | Individual service | SKU, configuration, tags | 1000+ |
+| Level                | Purpose                           | Key Settings                       | Example Count |
+| -------------------- | --------------------------------- | ---------------------------------- | ------------- |
+| **Management Group** | Policy inheritance, RBAC at scale | Policies, RBAC, budget             | 3-10          |
+| **Subscription**     | Billing boundary, resource limits | Quotas, billing, support plan      | 5-50          |
+| **Resource Group**   | Lifecycle container               | Tags, RBAC scope, deployment scope | 20-200        |
+| **Resource**         | Individual service                | SKU, configuration, tags           | 1000+         |
 
 ---
 
@@ -83,33 +103,32 @@ graph TD
 ### Subscription Design Patterns
 
 <ArchitectureNote title="CloudNova Subscription Strategy">
-CloudNova started with one subscription. After 6 months, they had 800 resources, 15 teams, and chaos. They redesigned to the pattern below.
+  CloudNova started with one subscription. After 6 months, they had 800 resources, 15 teams, and
+  chaos. They redesigned to the pattern below.
 </ArchitectureNote>
 
-| Pattern | Structure | Best For |
-|---------|-----------|----------|
-| **Per Environment** | prod-sub, dev-sub, test-sub | Small/medium orgs, clear separation |
-| **Per Application** | app-a-sub, app-b-sub, shared-sub | Larger orgs, independent teams |
-| **Per Business Unit** | marketing-sub, engineering-sub | Enterprise, cost allocation by department |
-| **Hub-Spoke** | connectivity-sub, identity-sub, workload subs | Landing zone pattern, enterprise |
+| Pattern               | Structure                                     | Best For                                  |
+| --------------------- | --------------------------------------------- | ----------------------------------------- |
+| **Per Environment**   | prod-sub, dev-sub, test-sub                   | Small/medium orgs, clear separation       |
+| **Per Application**   | app-a-sub, app-b-sub, shared-sub              | Larger orgs, independent teams            |
+| **Per Business Unit** | marketing-sub, engineering-sub                | Enterprise, cost allocation by department |
+| **Hub-Spoke**         | connectivity-sub, identity-sub, workload subs | Landing zone pattern, enterprise          |
 
 <BestPractice>
-**CloudNova's chosen pattern:** Per Environment + Hub-Spoke hybrid.
-- 1 Connectivity subscription (hub VNet, firewall, VPN)
-- 1 Identity subscription (domain controllers, Azure AD DS)
-- 1 Production subscription (customer-facing workloads)
-- 1 Non-Production subscription (dev, test, staging)
-- 1 Sandbox subscription (experiments, no production data)
+  **CloudNova's chosen pattern:** Per Environment + Hub-Spoke hybrid. - 1 Connectivity subscription
+  (hub VNet, firewall, VPN) - 1 Identity subscription (domain controllers, Azure AD DS) - 1
+  Production subscription (customer-facing workloads) - 1 Non-Production subscription (dev, test,
+  staging) - 1 Sandbox subscription (experiments, no production data)
 </BestPractice>
 
 ### Resource Group Strategy
 
-| Strategy | Pros | Cons | Use When |
-|----------|------|------|----------|
-| **Per Application** | Clean lifecycle (delete app = delete RG) | Many RGs to manage | Microservices |
-| **Per Resource Type** | Easy cost tracking by type | Lifecycle management harder | Small environments |
-| **Per Lifecycle** | Deploy together, delete together | Mixed resource types | Staging environments |
-| **Per Team** | Clear ownership | Resource sprawl within RG | Large orgs with many teams |
+| Strategy              | Pros                                     | Cons                        | Use When                   |
+| --------------------- | ---------------------------------------- | --------------------------- | -------------------------- |
+| **Per Application**   | Clean lifecycle (delete app = delete RG) | Many RGs to manage          | Microservices              |
+| **Per Resource Type** | Easy cost tracking by type               | Lifecycle management harder | Small environments         |
+| **Per Lifecycle**     | Deploy together, delete together         | Mixed resource types        | Staging environments       |
+| **Per Team**          | Clear ownership                          | Resource sprawl within RG   | Large orgs with many teams |
 
 <TerminalBlock>
 {`# CloudNova: Organize resources with tagging + RGs
@@ -117,14 +136,18 @@ CloudNova started with one subscription. After 6 months, they had 800 resources,
 # Tags = metadata across RGs (cost center, owner, environment)
 
 # Create RG for the payment microservice
+
 az group create \\
-  --name rg-payment-prod-eastus \\
-  --location eastus \\
-  --tags "application=payment" "environment=prod" "owner=payments-team" "cost-center=CC-402"
+--name rg-payment-prod-eastus \\
+--location eastus \\
+--tags "application=payment" "environment=prod" "owner=payments-team" "cost-center=CC-402"
 
 # All payment resources go here: AKS, SQL, Redis, Key Vault
+
 # When payment v2 launches, create rg-payment-v2-prod-eastus
+
 # When v1 retires, delete the entire RG in one command`}
+
 </TerminalBlock>
 
 ---
@@ -142,32 +165,34 @@ graph TD
         CORP --> SANDBOX["Sandbox"]
         CORP --> DECOMMISSIONED["Decommissioned"]
     end
-    
+
     subgraph "Production Subscriptions"
         PROD --> CONNECT["Connectivity"]
         PROD --> IDENTITY["Identity"]
         PROD --> WORKLOADS["Workloads"]
     end
-    
+
     subgraph "Policies at Root"
         POLICY1["Deny public blob access"]
         POLICY2["Require tags: owner, cost-center"]
         POLICY3["Allowed regions: East US, West Europe"]
     end
-    
+
     subgraph "Policies at Production"
         POLICY4["Deny VMs without disk encryption"]
         POLICY5["Require Private Link for SQL"]
         POLICY6["Deny deletion of Key Vault"]
     end
-    
+
     style PROD fill:#d13438,stroke:#333,color:#fff
     style NONPROD fill:#ff8c00,stroke:#333,color:#fff
     style SANDBOX fill:#107c10,stroke:#333,color:#fff
 ```
 
 <ProductionNote>
-**Why this structure matters:** When CloudNova was audited for SOC 2, the auditor looked at one thing: "Can you prove your production workloads are isolated from development?" The management group hierarchy + subscription separation answered that in 10 seconds.
+  **Why this structure matters:** When CloudNova was audited for SOC 2, the auditor looked at one
+  thing: "Can you prove your production workloads are isolated from development?" The management
+  group hierarchy + subscription separation answered that in 10 seconds.
 </ProductionNote>
 
 ---
@@ -179,26 +204,26 @@ graph TD
 CloudNova is growing from 1 team to 5 teams. Design the subscription architecture.
 
 **Current (Chaos):**
+
 - 1 subscription, 800 resources, no naming convention
 - Dev and prod resources mixed
 - No cost tracking per team
 
 **Future Requirements:**
+
 - 5 teams: Payments, Catalog, Search, Analytics, Platform
 - Each team needs dev, staging, and production
 - SOC 2 requires prod isolation
 - Finance wants per-team billing
 
 **Tasks:**
+
 1. Draw the management group hierarchy
 2. List subscriptions needed
 3. Write the Azure Policy assignments for root and prod
 
 <Quiz question="What's the PRIMARY benefit of separating production into its own subscription?">
-- Lower cost
-- Faster deployments
-- *Security isolation and billing separation*
-- Easier naming
+  - Lower cost - Faster deployments - *Security isolation and billing separation* - Easier naming
 </Quiz>
 
 </Exercise>
@@ -207,11 +232,20 @@ CloudNova is growing from 1 team to 5 teams. Design the subscription architectur
 
 ## Flashcard Review
 
-<Flashcard front="What does ARM do before creating a resource?" back="1) Authenticate (who?), 2) Authorize (RBAC), 3) Evaluate policies (Azure Policy), 4) Check quotas — then deploy." />
+<Flashcard
+  front="What does ARM do before creating a resource?"
+  back="1) Authenticate (who?), 2) Authorize (RBAC), 3) Evaluate policies (Azure Policy), 4) Check quotas — then deploy."
+/>
 
-<Flashcard front="Management Group vs Subscription" back="Management Group = policy + RBAC container (no resources). Subscription = billing boundary + resource limits (contains resources)." />
+<Flashcard
+  front="Management Group vs Subscription"
+  back="Management Group = policy + RBAC container (no resources). Subscription = billing boundary + resource limits (contains resources)."
+/>
 
-<Flashcard front="Best naming convention for Resource Groups" back="rg-{application}-{environment}-{region}. Example: rg-payment-prod-eastus" />
+<Flashcard
+  front="Best naming convention for Resource Groups"
+  back="rg-{application}-{environment}-{region}. Example: rg-payment-prod-eastus"
+/>
 
 ---
 
@@ -229,8 +263,8 @@ CloudNova is growing from 1 team to 5 teams. Design the subscription architectur
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Next: Compute Services | [Lesson 2](02-compute-services) |
+| Resource                                     | Link                                                     |
+| -------------------------------------------- | -------------------------------------------------------- |
+| Next: Compute Services                       | [Lesson 2](02-compute-services)                          |
 | AZ-104: Manage Azure Identities & Governance | [Exam objective](../../certifications/az-104/governance) |
-| Module: Cloud Fundamentals | [Module 06](../../06-cloud-fundamentals/index) |
+| Module: Cloud Fundamentals                   | [Module 06](../../06-cloud-fundamentals/index)           |

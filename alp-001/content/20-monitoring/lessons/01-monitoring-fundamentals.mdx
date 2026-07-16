@@ -22,10 +22,19 @@ tags: [monitoring, alerting, metrics, azure]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Monitoring Fundamentals & Signal Types
 
@@ -49,12 +58,12 @@ import {
 
 ### The Four Golden Signals (Google SRE)
 
-| Signal | What it measures | Example |
-|--------|-----------------|---------|
-| **Latency** | How long requests take | p99 API response time < 200ms |
-| **Traffic** | How much demand | Requests per second, active connections |
-| **Errors** | Rate of failed requests | 5xx error rate < 0.1% |
-| **Saturation** | How "full" the service is | CPU > 80%, connection pool > 90% |
+| Signal         | What it measures          | Example                                 |
+| -------------- | ------------------------- | --------------------------------------- |
+| **Latency**    | How long requests take    | p99 API response time < 200ms           |
+| **Traffic**    | How much demand           | Requests per second, active connections |
+| **Errors**     | Rate of failed requests   | 5xx error rate < 0.1%                   |
+| **Saturation** | How "full" the service is | CPU > 80%, connection pool > 90%        |
 
 ---
 
@@ -69,12 +78,12 @@ graph TD
         M2[Request rate: 850/s]
         M3[Error rate: 0.3%]
     end
-    
+
     subgraph "Logs: Why?"
         L1[2026-07-15 10:32:15 ERROR PaymentGateway timeout]
         L2[2026-07-15 10:32:16 WARN Retry attempt 2/3]
     end
-    
+
     subgraph "Traces: Where?"
         T1[API → Auth → DB → Payment: 850ms]
         T2[API → Auth → DB → Payment: 2,300ms ⚠️]
@@ -94,15 +103,17 @@ graph TD
 - Payment processing failure
 
 # Severity 2 (Warning) — Page during business hours
+
 - CPU > 80% for 15 minutes
 - Disk > 85%
 - Certificate expiring within 7 days
 
 # Severity 3 (Info) — Ticket only, no page
+
 - Non-production environment issues
 - Expected maintenance windows
 - Cost anomaly (no immediate impact)
-</CodeBlock>
+  </CodeBlock>
 
 <ProductionNote>
 
@@ -142,14 +153,14 @@ graph TD
     options={["Latency", "Traffic", "Errors", "Saturation"]}
     correct={3}
   />
-  
+
   <Question
     question="When should an alert wake someone up at 3 AM?"
     options={[
       "Whenever any alert fires",
       "Only for user-impacting, actionable issues",
       "Never — all alerts should wait until morning",
-      "For any production issue"
+      "For any production issue",
     ]}
     correct={1}
   />
@@ -159,9 +170,9 @@ graph TD
 
 ## 📋 Summary
 
-| Signal | Question | Tool |
-|--------|----------|------|
-| **Metrics** | What? | Prometheus, Azure Monitor |
-| **Logs** | Why? | Log Analytics, ELK |
-| **Traces** | Where? | App Insights, Jaeger |
-| **Alerts** | Who should act? | PagerDuty, Azure Alerts |
+| Signal      | Question        | Tool                      |
+| ----------- | --------------- | ------------------------- |
+| **Metrics** | What?           | Prometheus, Azure Monitor |
+| **Logs**    | Why?            | Log Analytics, ELK        |
+| **Traces**  | Where?          | App Insights, Jaeger      |
+| **Alerts**  | Who should act? | PagerDuty, Azure Alerts   |

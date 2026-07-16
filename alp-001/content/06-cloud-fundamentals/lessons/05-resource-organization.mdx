@@ -32,7 +32,8 @@ active_recall:
     answer: "Management Groups → Subscriptions → Resource Groups → Resources. Each level inherits policies from above. Use Management Groups for broad governance, Subscriptions for billing boundaries, and Resource Groups for lifecycle management."
     difficulty: "medium"
 tags: [cloud-fundamentals, AZ-900, resource-organization, tagging, governance]
-search_keywords: [azure resource organization, management groups, resource groups, tagging strategy, AZ-900]
+search_keywords:
+  [azure resource organization, management groups, resource groups, tagging strategy, AZ-900]
 ---
 
 # Resource Organization & Management
@@ -63,7 +64,7 @@ graph TD
     S1 --> RG2[RG: auth-services]
     RG1 --> R1[VM: web-prod-01]
     RG1 --> R2[SQL: logistics-db]
-    
+
     style MG fill:#0ea5e9,stroke:#0284c7,color:#fff
     style S1 fill:#f59e0b,stroke:#d97706,color:#000
     style RG1 fill:#10b981,stroke:#059669,color:#fff
@@ -73,12 +74,12 @@ graph TD
 
 At CloudNova, every resource has mandatory tags:
 
-| Tag | Example | Purpose |
-|---|---|---|
-| `environment` | `production` | Separate prod from dev costs |
-| `team` | `infrastructure` | Cost allocation to teams |
-| `project` | `logistics-platform` | Project-level cost tracking |
-| `cost-center` | `CC-ENG-001` | Finance department mapping |
+| Tag           | Example              | Purpose                      |
+| ------------- | -------------------- | ---------------------------- |
+| `environment` | `production`         | Separate prod from dev costs |
+| `team`        | `infrastructure`     | Cost allocation to teams     |
+| `project`     | `logistics-platform` | Project-level cost tracking  |
+| `cost-center` | `CC-ENG-001`         | Finance department mapping   |
 
 ```bash
 # Find untagged resources (common in cost audits)

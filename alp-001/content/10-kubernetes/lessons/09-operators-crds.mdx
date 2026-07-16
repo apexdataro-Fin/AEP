@@ -15,7 +15,14 @@ status: "published"
 version: "1.0.0"
 author: "ARES EDU PLATFORM"
 last_updated: "2026-07-15"
-search_keywords: ["kubernetes operators", "custom resource definitions", "k8s crd", "operator pattern", "operator sdk"]
+search_keywords:
+  [
+    "kubernetes operators",
+    "custom resource definitions",
+    "k8s crd",
+    "operator pattern",
+    "operator sdk",
+  ]
 learning_objectives:
   - "Understand the Operator pattern and when to use it"
   - "Create and manage Custom Resource Definitions (CRDs)"
@@ -28,12 +35,41 @@ active_recall:
 review_schedule: { "initial": "1 day", "next": "3 days", "interval": "spaced-repetition" }
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 export const CloudNova = ({ children }) => (
-  <div style={{ borderLeft: '4px solid #0ea5e9', padding: '1rem 1.5rem', margin: '1.5rem 0', background: 'var(--ifm-color-emphasis-100)', borderRadius: '0 8px 8px 0' }}>
-    <strong style={{ color: '#0ea5e9' }}>🏢 CloudNova Engineering</strong>
-    <div style={{ marginTop: '0.5rem' }}>{children}</div>
+  <div
+    style={{
+      borderLeft: "4px solid #0ea5e9",
+      padding: "1rem 1.5rem",
+      margin: "1.5rem 0",
+      background: "var(--ifm-color-emphasis-100)",
+      borderRadius: "0 8px 8px 0",
+    }}
+  >
+    <strong style={{ color: "#0ea5e9" }}>🏢 CloudNova Engineering</strong>
+    <div style={{ marginTop: "0.5rem" }}>{children}</div>
   </div>
 );
 
@@ -42,6 +78,7 @@ export const CloudNova = ({ children }) => (
 ## The Problem: Day-2 Operations
 
 Kubernetes handles Day-1 beautifully — deploying stateless apps is trivial. But Day-2 is hard:
+
 - How do you upgrade PostgreSQL without downtime?
 - How do you rebalance a Kafka cluster after adding nodes?
 - How do you take a consistent backup and verify it?
@@ -74,38 +111,31 @@ spec:
     shortNames: ["pg"]
   scope: Namespaced
   versions:
-  - name: v1
-    served: true
-    storage: true
-    schema:
-      openAPIV3Schema:
-        type: object
-        properties:
-          spec:
-            type: object
-            properties:
-              replicas:
-                type: integer
-                minimum: 1
-                maximum: 5
-              version:
-                type: string
-                pattern: '^\d+\.\d+$'
-              storageGB:
-                type: integer
-                minimum: 10
+    - name: v1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                replicas:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                version:
+                  type: string
+                  pattern: '^\d+\.\d+$'
+                storageGB:
+                  type: integer
+                  minimum: 10
 ```
 
 <CodeBlock title="Using Your Custom Resource">
-# Now users can create instances:
-apiVersion: postgres.example.com/v1
-kind: PostgresCluster
-metadata:
-  name: production-db
-spec:
-  replicas: 3
-  version: "16.2"
-  storageGB: 100
+  # Now users can create instances: apiVersion: postgres.example.com/v1 kind: PostgresCluster
+  metadata: name: production-db spec: replicas: 3 version: "16.2" storageGB: 100
 </CodeBlock>
 
 ---
@@ -137,15 +167,15 @@ An Operator = **CRD** (the new API type) + **Controller** (the reconciliation lo
 
 <BestPractice>
 
-| Situation | Use |
-|-----------|-----|
-| Stateless web app | ❌ Deployment + HPA is enough |
-| Redis for caching | ❌ Helm chart is fine |
-| PostgreSQL with automated failover | ✅ Operator |
-| Kafka with rebalancing | ✅ Operator |
-| Elasticsearch cluster management | ✅ Operator |
-| Simple CRUD API | ❌ Just a Deployment |
-| Automated cert management (cert-manager) | ✅ Operator |
+| Situation                                | Use                           |
+| ---------------------------------------- | ----------------------------- |
+| Stateless web app                        | ❌ Deployment + HPA is enough |
+| Redis for caching                        | ❌ Helm chart is fine         |
+| PostgreSQL with automated failover       | ✅ Operator                   |
+| Kafka with rebalancing                   | ✅ Operator                   |
+| Elasticsearch cluster management         | ✅ Operator                   |
+| Simple CRUD API                          | ❌ Just a Deployment          |
+| Automated cert management (cert-manager) | ✅ Operator                   |
 
 **Rule of thumb**: If you'd need a human DBA/SRE to manage it, it needs an Operator. If `kubectl scale` is all you need, you don't.
 
@@ -155,15 +185,15 @@ An Operator = **CRD** (the new API type) + **Controller** (the reconciliation lo
 
 ## Popular Operators
 
-| Operator | What It Manages |
-|----------|----------------|
-| **cert-manager** | TLS certificates (auto-renew, auto-issue) |
-| **Prometheus Operator** | Prometheus, Alertmanager, Grafana config |
-| **Postgres Operator (Zalando/Crunchy)** | PostgreSQL HA, backups, failover |
-| **Strimzi** | Kafka clusters on Kubernetes |
-| **Elastic Cloud on K8s (ECK)** | Elasticsearch, Kibana, APM |
-| **External Secrets Operator** | Sync secrets from cloud providers |
-| **Ingress NGINX** | (Actually a controller, often confused as an operator) |
+| Operator                                | What It Manages                                        |
+| --------------------------------------- | ------------------------------------------------------ |
+| **cert-manager**                        | TLS certificates (auto-renew, auto-issue)              |
+| **Prometheus Operator**                 | Prometheus, Alertmanager, Grafana config               |
+| **Postgres Operator (Zalando/Crunchy)** | PostgreSQL HA, backups, failover                       |
+| **Strimzi**                             | Kafka clusters on Kubernetes                           |
+| **Elastic Cloud on K8s (ECK)**          | Elasticsearch, Kibana, APM                             |
+| **External Secrets Operator**           | Sync secrets from cloud providers                      |
+| **Ingress NGINX**                       | (Actually a controller, often confused as an operator) |
 
 ---
 
@@ -176,9 +206,9 @@ import kopf
 import kubernetes.client as k8s
 
 @kopf.on.create('cloudnova.io', 'v1', 'websites')
-def create_website(spec, name, namespace, **kwargs):
-    """When someone creates a Website CR, deploy it."""
-    
+def create_website(spec, name, namespace, \*\*kwargs):
+"""When someone creates a Website CR, deploy it."""
+
     deployment = k8s.V1Deployment(
         metadata=k8s.V1ObjectMeta(name=name),
         spec=k8s.V1DeploymentSpec(
@@ -196,10 +226,11 @@ def create_website(spec, name, namespace, **kwargs):
             )
         )
     )
-    
+
     api = k8s.AppsV1Api()
     api.create_namespaced_deployment(namespace, deployment)
     print(f"✅ Created deployment {name}")
+
 </CodeBlock>
 
 <Info>
@@ -219,6 +250,7 @@ This watches for `Website` custom resources and creates Deployments. It's the si
 CloudNova's platform team manages 50+ PostgreSQL instances manually — upgrades take hours, failover is manual, and a bad upgrade once caused 4 hours of downtime.
 
 **Your proposal:**
+
 1. Deploy the CloudNativePG (or Zalando) Postgres Operator
 2. Define a PostgresCluster CRD with replicas, version, backup config
 3. Demonstrate a zero-downtime minor version upgrade
@@ -239,10 +271,11 @@ CloudNova's platform team manages 50+ PostgreSQL instances manually — upgrades
         "Operators run outside the cluster",
         "Operators encode domain-specific operational knowledge (e.g., how to safely upgrade Postgres)",
         "Operators only work with StatefulSets",
-        "There is no difference"
+        "There is no difference",
       ],
       correct: 1,
-      explanation: "An Operator encodes an expert operator's knowledge — it knows how to upgrade, backup, failover, and manage the full lifecycle of a complex stateful application."
+      explanation:
+        "An Operator encodes an expert operator's knowledge — it knows how to upgrade, backup, failover, and manage the full lifecycle of a complex stateful application.",
     },
     {
       question: "When should you NOT use an Operator?",
@@ -250,11 +283,12 @@ CloudNova's platform team manages 50+ PostgreSQL instances manually — upgrades
         "For stateless, scalable web applications",
         "For managing PostgreSQL",
         "For managing TLS certificates",
-        "For managing Kafka clusters"
+        "For managing Kafka clusters",
       ],
       correct: 0,
-      explanation: "Stateless apps can be managed with Deployments + HPA. Operators are for stateful, complex applications requiring operational expertise."
-    }
+      explanation:
+        "Stateless apps can be managed with Deployments + HPA. Operators are for stateful, complex applications requiring operational expertise.",
+    },
   ]}
 />
 
@@ -275,7 +309,6 @@ CloudNova's platform team manages 50+ PostgreSQL instances manually — upgrades
 ## Related
 
 <KnowledgeLinks>
-- **Next**: [CKA/CKAD Preparation](cka-ckad-prep)
-- **Previous**: [Observability](observability)
-- **Certification**: CKA Domain 4 — Troubleshooting (30%)
+  - **Next**: [CKA/CKAD Preparation](cka-ckad-prep) - **Previous**: [Observability](observability) -
+  **Certification**: CKA Domain 4 — Troubleshooting (30%)
 </KnowledgeLinks>

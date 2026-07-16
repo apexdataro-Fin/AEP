@@ -127,6 +127,7 @@ releases:
 ```
 
 Key Helmfile commands:
+
 ```bash
 helmfile diff          # Show what would change
 helmfile apply         # Apply all releases in order
@@ -138,13 +139,13 @@ helmfile --environment prod apply  # Environment-specific
 
 **Secret management strategies ranked:**
 
-| Strategy | Security | Complexity | Recommendation |
-|----------|----------|------------|----------------|
-| `values.yaml` plaintext | ❌ Dangerous | Low | Never in production |
-| `--set` on CLI | ❌ In shell history | Low | Never |
-| `helm-secrets` + SOPS | ✅ Good | Medium | Good for encrypted values in Git |
-| External Secrets Operator | ✅✅ Better | Medium | Syncs from Key Vault to K8s Secrets |
-| CSI Secret Store Driver | ✅✅✅ Best | Higher | Mounts secrets directly, never stored in K8s |
+| Strategy                  | Security            | Complexity | Recommendation                               |
+| ------------------------- | ------------------- | ---------- | -------------------------------------------- |
+| `values.yaml` plaintext   | ❌ Dangerous        | Low        | Never in production                          |
+| `--set` on CLI            | ❌ In shell history | Low        | Never                                        |
+| `helm-secrets` + SOPS     | ✅ Good             | Medium     | Good for encrypted values in Git             |
+| External Secrets Operator | ✅✅ Better         | Medium     | Syncs from Key Vault to K8s Secrets          |
+| CSI Secret Store Driver   | ✅✅✅ Best         | Higher     | Mounts secrets directly, never stored in K8s |
 
 **CSI Secret Store example:**
 

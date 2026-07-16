@@ -13,11 +13,26 @@ prerequisites: ["05-python/lessons/05-testing-debugging"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Understand Python's role in AI-powered cloud automation
 - Use the Azure OpenAI SDK for infrastructure analysis
 - Build an AI-assisted troubleshooting pipeline
@@ -30,6 +45,7 @@ By the end of this lesson, you will:
 **Python is the bridge between cloud infrastructure and AI.**
 
 AI models can analyze logs, suggest fixes, and even generate infrastructure code. But AI can't connect to Azure on its own. Python is the glue:
+
 1. Your Python script queries Azure logs
 2. Sends the data to an AI model with a prompt
 3. The AI analyzes it and returns insights
@@ -49,7 +65,7 @@ graph LR
     PYTHON --> AI["🤖 AI Model<br/>Analyze & recommend"]
     AI --> PYTHON2["🐍 Python<br/>Execute actions"]
     PYTHON2 --> ACTION["✅ Fix applied<br/>📊 Report generated<br/>🛡️ Security hardened"]
-    
+
     style AI fill:#00a4ef,stroke:#333,color:#fff
     style PYTHON fill:#3776ab,stroke:#333,color:#fff
     style PYTHON2 fill:#3776ab,stroke:#333,color:#fff
@@ -58,7 +74,9 @@ graph LR
 ### Provider-Agnostic AI Interface
 
 <BestPractice>
-This platform uses **provider-agnostic interfaces**. The examples show patterns you can use with any LLM (Azure OpenAI, Ollama, local models). Swap the `call_ai()` function for your provider — the architecture stays the same.
+  This platform uses **provider-agnostic interfaces**. The examples show patterns you can use with
+  any LLM (Azure OpenAI, Ollama, local models). Swap the `call_ai()` function for your provider —
+  the architecture stays the same.
 </BestPractice>
 
 <CodeBlock language="python" title="ai_analyzer.py">
@@ -67,15 +85,19 @@ import json
 from typing import Optional
 
 # This would be your AI provider's client
-# from openai import AzureOpenAI  # Azure
-# from ollama import chat         # Local
-# import requests                  # Any REST API
+
+# from openai import AzureOpenAI # Azure
+
+# from ollama import chat # Local
+
+# import requests # Any REST API
 
 def analyze_security_incident(incident_logs: dict) -> dict:
-    """Analyze security incident data and recommend actions."""
-    
+"""Analyze security incident data and recommend actions."""
+
     # Build the prompt from structured data
     prompt = f"""
+
 You are a senior security engineer. Analyze this Azure security incident:
 
 ALERT: {incident_logs.get('alert_type')}
@@ -93,7 +115,7 @@ Respond in JSON format:
     "should_escalate": true|false
 }}
 """
-    
+
     # This is where you'd call your AI provider:
     # response = ai_client.chat.completions.create(
     #     model="gpt-4",
@@ -101,7 +123,7 @@ Respond in JSON format:
     #     response_format={"type": "json_object"}
     # )
     # return json.loads(response.choices[0].message.content)
-    
+
     # For now: return structured analysis
     return {
         "severity": "high",
@@ -118,7 +140,9 @@ Respond in JSON format:
         ],
         "should_escalate": True
     }
+
 `}
+
 </CodeBlock>
 
 ---
@@ -128,7 +152,9 @@ Respond in JSON format:
 ### AI-Assisted Troubleshooting Pipeline
 
 <ProductionNote>
-**CloudNova AI Pipeline:** When an alert fires in Sentinel, a Logic App triggers this Python function. It gathers context (logs, metrics, recent changes), asks the AI for analysis, and presents a triage summary to the on-call engineer.
+  **CloudNova AI Pipeline:** When an alert fires in Sentinel, a Logic App triggers this Python
+  function. It gathers context (logs, metrics, recent changes), asks the AI for analysis, and
+  presents a triage summary to the on-call engineer.
 </ProductionNote>
 
 <CodeBlock language="python" title="ai_troubleshooter.py">
@@ -136,8 +162,8 @@ Respond in JSON format:
 from datetime import datetime, timedelta
 
 def triage_incident(incident_id: str, affected_resource: str) -> dict:
-    """Gather context and get AI analysis for an incident."""
-    
+"""Gather context and get AI analysis for an incident."""
+
     # 1. Gather context from multiple sources
     context = {
         "incident_id": incident_id,
@@ -149,9 +175,10 @@ def triage_incident(incident_id: str, affected_resource: str) -> dict:
         "nsg_rules": get_current_nsg_rules(affected_resource),
         "deployment_history": get_recent_deployments(hours=24)
     }
-    
+
     # 2. Build analysis prompt
     prompt = f"""
+
 Context for incident {incident_id}:
 
 Resource: {affected_resource}
@@ -173,26 +200,26 @@ Recent deployments:
 {json.dumps(context['deployment_history'], indent=2)}
 
 Based on this context:
-1. What is the most likely root cause?
-2. Which of the recent changes is suspicious?
-3. What 3 diagnostic commands should the on-call engineer run?
-4. What is the recommended fix?
-"""
-    
-    # 3. Get AI analysis (provider-agnostic)
-    # analysis = call_ai(prompt)
-    
-    return {
-        "triage_summary": "Likely NSG rule change at 03:15 blocking port 443",
-        "suspicious_change": "NSG rule 'allow-https' deleted by service principal 'devops-sp'",
-        "diagnostic_commands": [
-            "az network nsg rule list --nsg-name prod-nsg --output table",
-            "curl -v https://{affected_resource}.cloudnova.com",
-            "az monitor activity-log list --resource-group prod-rg --start-time 2024-01-15T03:00:00Z"
-        ]
-    }
-`}
-</CodeBlock>
+
+1.  What is the most likely root cause?
+2.  Which of the recent changes is suspicious?
+3.  What 3 diagnostic commands should the on-call engineer run?
+4.  What is the recommended fix?
+    """
+        # 3. Get AI analysis (provider-agnostic)
+        # analysis = call_ai(prompt)
+
+        return {
+            "triage_summary": "Likely NSG rule change at 03:15 blocking port 443",
+            "suspicious_change": "NSG rule 'allow-https' deleted by service principal 'devops-sp'",
+            "diagnostic_commands": [
+                "az network nsg rule list --nsg-name prod-nsg --output table",
+                "curl -v https://{affected_resource}.cloudnova.com",
+                "az monitor activity-log list --resource-group prod-rg --start-time 2024-01-15T03:00:00Z"
+            ]
+        }
+    `}
+    </CodeBlock>
 
 ---
 
@@ -202,13 +229,13 @@ Based on this context:
 
 Here are battle-tested prompt templates. Use them with any AI provider.
 
-| Template | Use When |
-|----------|----------|
-| **Incident Triage** | Alert fires, need quick analysis |
-| **Security Review** | New deployment, check for vulnerabilities |
-| **Cost Optimization** | Monthly review, find savings |
-| **Architecture Review** | Design review, get feedback on diagram |
-| **Interview Prep** | Generate questions from job description |
+| Template                | Use When                                  |
+| ----------------------- | ----------------------------------------- |
+| **Incident Triage**     | Alert fires, need quick analysis          |
+| **Security Review**     | New deployment, check for vulnerabilities |
+| **Cost Optimization**   | Monthly review, find savings              |
+| **Architecture Review** | Design review, get feedback on diagram    |
+| **Interview Prep**      | Generate questions from job description   |
 
 <CodeBlock language="python" title="prompt_templates.py">
 {"""Reusable prompt templates for cloud engineering tasks."""
@@ -218,6 +245,7 @@ Review this Azure architecture for security issues:
 {architecture_description}
 
 Consider:
+
 1. Network security (NSGs, firewalls, segmentation)
 2. Identity (IAM, MFA, PIM, Managed Identities)
 3. Data protection (encryption at rest/transit, Key Vault)
@@ -232,6 +260,7 @@ Analyze these Azure resources for cost optimization:
 {resource_list}
 
 For each resource, suggest:
+
 1. Can it be downsized? (Right-size SKU)
 2. Can it be reserved? (1-year or 3-year RI)
 3. Can it be deallocated off-hours? (Dev/Test workloads)
@@ -245,6 +274,7 @@ Review this cloud architecture design:
 {architecture_mermaid}
 
 Evaluate:
+
 1. High availability — single points of failure?
 2. Scalability — can it handle 10x traffic?
 3. Security — defense-in-depth?
@@ -254,6 +284,7 @@ Evaluate:
 Score each category 1-10 and explain.
 """
 `}
+
 </CodeBlock>
 
 ---
@@ -265,6 +296,7 @@ Score each category 1-10 and explain.
 **Scenario:** At CloudNova, incidents often flood the on-call engineer with raw data. Build a Python function that takes an incident payload and returns a structured triage summary.
 
 **Input:**
+
 ```python
 incident = {
     "alert": "High CPU on web-server-01",
@@ -276,6 +308,7 @@ incident = {
 ```
 
 **Tasks:**
+
 1. Write the context-gathering function (mock the Azure calls)
 2. Build the prompt template
 3. Return the structured triage summary
@@ -286,19 +319,28 @@ incident = {
 
 ## Flashcard Review
 
-<Flashcard front="What is Python's role in AI cloud automation?" back="Python is the glue — it gathers data from Azure, sends it to AI for analysis, and executes the recommended actions. AI thinks, Python acts." />
+<Flashcard
+  front="What is Python's role in AI cloud automation?"
+  back="Python is the glue — it gathers data from Azure, sends it to AI for analysis, and executes the recommended actions. AI thinks, Python acts."
+/>
 
-<Flashcard front="Why use prompt templates?" back="Consistent, reusable, and testable prompts. Change the template once, not every script. Templates can be version-controlled." />
+<Flashcard
+  front="Why use prompt templates?"
+  back="Consistent, reusable, and testable prompts. Change the template once, not every script. Templates can be version-controlled."
+/>
 
-<Flashcard front="Provider-agnostic means..." back="The architecture doesn't depend on any specific AI provider. Swap the `call_ai()` function to use Azure OpenAI, Ollama, or local models without changing the rest of the code." />
+<Flashcard
+  front="Provider-agnostic means..."
+  back="The architecture doesn't depend on any specific AI provider. Swap the `call_ai()` function to use Azure OpenAI, Ollama, or local models without changing the rest of the code."
+/>
 
 ---
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Previous: Testing & Debugging | [Lesson 5](05-testing-debugging) |
+| Resource                                 | Link                                           |
+| ---------------------------------------- | ---------------------------------------------- |
+| Previous: Testing & Debugging            | [Lesson 5](05-testing-debugging)               |
 | Next module: Cloud Fundamentals (AZ-900) | [Module 06](../../06-cloud-fundamentals/index) |
-| AI Integration Guide | [Guides](../../../docs/guides/ai-integration) |
-| Module: AI Agents | [Module 27](../../27-ai-agents/index) |
+| AI Integration Guide                     | [Guides](../../../docs/guides/ai-integration)  |
+| Module: AI Agents                        | [Module 27](../../27-ai-agents/index)          |

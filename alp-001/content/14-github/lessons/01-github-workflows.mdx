@@ -23,10 +23,24 @@ tags: [github, collaboration, agile, code-review]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # GitHub Workflows: PRs, Issues, Projects
 
@@ -56,22 +70,22 @@ sequenceDiagram
     participant CI as CI/CD
     participant Rev as Reviewer
     participant Main as Main Branch
-    
+
     Dev->>PR: Create PR with description
     PR->>CI: Trigger automated checks
     CI-->>PR: ✅ Tests pass, plan posted
-    
+
     Dev->>Rev: Request review
-    
+
     Rev->>PR: Review with comments
-    
+
     alt Changes requested
         Rev-->>Dev: Request changes
         Dev->>PR: Push fixes
         PR->>CI: Re-run checks
         CI-->>PR: ✅ All checks pass
     end
-    
+
     Rev-->>PR: ✅ Approved
     Dev->>Main: Merge PR
     Main-->>Dev: Feature deployed
@@ -81,24 +95,30 @@ sequenceDiagram
 
 ```markdown
 ## What
+
 - Added cost center tagging to all compute resources
 - Created new `cost_center` variable with validation
 
 ## Why
+
 CloudNova Finance needs per-department cost tracking for Q3 audit
 
 ## Testing
+
 - [x] `terraform plan` shows only tagging changes
 - [x] Applied in dev environment — resources tagged correctly
 - [x] Destroyed dev resources — no orphaned tags
 
 ## Screenshots
+
 [Optional: UI changes, plan output]
 
 ## Related
+
 - Closes #42 (Finance cost tracking epic)
 - Depends on PR #38 (variable validation module)
 ```
+
 </BestPractice>
 
 <Warning>
@@ -112,29 +132,17 @@ CloudNova Finance needs per-department cost tracking for Q3 audit
 ## 🏗️ Issues — Work Tracking
 
 <CodeBlock language="yaml" title="Issue Templates (.github/ISSUE_TEMPLATE/bug.yml)">
-name: Bug Report
-description: File a bug report for CloudNova infrastructure
-labels: [bug, triage]
-body:
-  - type: input
-    attributes:
-      label: Environment
-      description: Which environment? (dev/staging/prod)
-  - type: textarea
-    attributes:
-      label: Expected Behavior
-  - type: textarea
-    attributes:
-      label: Actual Behavior
-  - type: textarea
-    attributes:
-      label: Terraform Plan Output
-      render: shell
+  name: Bug Report description: File a bug report for CloudNova infrastructure labels: [bug, triage]
+  body: - type: input attributes: label: Environment description: Which environment?
+  (dev/staging/prod) - type: textarea attributes: label: Expected Behavior - type: textarea
+  attributes: label: Actual Behavior - type: textarea attributes: label: Terraform Plan Output
+  render: shell
 </CodeBlock>
 
 <Tip>
 
 **Conventional labels** speed up triage:
+
 - `bug` / `feature` / `docs` — work type
 - `priority:high` / `priority:low` — urgency
 - `good-first-issue` — onboarding
@@ -146,13 +154,13 @@ body:
 
 ## 🏭 Code Review Best Practices
 
-| Do ✅ | Don't ❌ |
-|------|---------|
-| Review for logic, security, performance | Nitpick formatting (use automation!) |
-| Ask questions, suggest alternatives | Make demands without explanation |
-| Review in < 24 hours | Let PRs sit for days |
-| Praise good solutions | Only point out problems |
-| Test the changes locally for complex PRs | Trust the CI blindly for everything |
+| Do ✅                                    | Don't ❌                             |
+| ---------------------------------------- | ------------------------------------ |
+| Review for logic, security, performance  | Nitpick formatting (use automation!) |
+| Ask questions, suggest alternatives      | Make demands without explanation     |
+| Review in < 24 hours                     | Let PRs sit for days                 |
+| Praise good solutions                    | Only point out problems              |
+| Test the changes locally for complex PRs | Trust the CI blindly for everything  |
 
 <CodeBlock language="markdown" title="Effective Review Comments">
 # ✅ Good review comments:
@@ -168,11 +176,12 @@ Clean pattern."
 
 # ❌ Bad review comments:
 
-"Fix the indentation."  → Use `terraform fmt` in CI!
+"Fix the indentation." → Use `terraform fmt` in CI!
 
-"This is wrong."  → WHY is it wrong? Suggest the fix.
+"This is wrong." → WHY is it wrong? Suggest the fix.
 
-"Rewrite this entire module."  → Scope is too vague.
+"Rewrite this entire module." → Scope is too vague.
+
 </CodeBlock>
 
 ---
@@ -189,13 +198,13 @@ resource "azurerm_kubernetes_cluster" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   dns_prefix          = "cloudnova"
-  
+
   default_node_pool {
     name       = "default"
     node_count = 1
     vm_size    = "Standard_B2s"
   }
-  
+
   identity {
     type = "SystemAssigned"
   }
@@ -213,7 +222,7 @@ resource "azurerm_kubernetes_cluster" "main" {
 4. ⚠️ **Missing Kubernetes version** — should pin a specific version.
 5. ⚠️ **No tags** — missing cost center and environment tags.
 6. ❌ **Missing RBAC configuration** — should enable Azure AD integration.
-</details>
+   </details>
 </Exercise>
 
 ---
@@ -245,19 +254,19 @@ resource "azurerm_kubernetes_cluster" "main" {
       "Just merge it — CI passed",
       "Ensure CI passes AND at least one reviewer approved",
       "Wait 24 hours regardless",
-      "Merge first, review later"
+      "Merge first, review later",
     ]}
     correct={1}
     explanation="Both automated checks AND human review are required for safe merging."
   />
-  
+
   <Question
     question="What's the purpose of Issue Templates?"
     options={[
       "They're optional documentation",
       "They ensure bug reports and feature requests contain necessary context",
       "They replace PR descriptions",
-      "They're purely cosmetic"
+      "They're purely cosmetic",
     ]}
     correct={1}
   />
@@ -279,9 +288,9 @@ resource "azurerm_kubernetes_cluster" "main" {
 
 ## 📋 Summary
 
-| Component | Purpose |
-|-----------|---------|
-| **Pull Requests** | Code review gateway before merge |
-| **Issues** | Track bugs, features, tasks |
-| **Projects** | Sprint/kanban board for work organization |
-| **Code Review** | Quality gate — logic, security, architecture |
+| Component         | Purpose                                      |
+| ----------------- | -------------------------------------------- |
+| **Pull Requests** | Code review gateway before merge             |
+| **Issues**        | Track bugs, features, tasks                  |
+| **Projects**      | Sprint/kanban board for work organization    |
+| **Code Review**   | Quality gate — logic, security, architecture |

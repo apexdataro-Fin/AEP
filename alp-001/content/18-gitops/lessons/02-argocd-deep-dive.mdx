@@ -22,10 +22,20 @@ tags: [argocd, gitops, kubernetes, progressive-delivery]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # ArgoCD Deep Dive: Multi-Cluster & Progressive Delivery
 
@@ -52,17 +62,17 @@ import {
 ```mermaid
 graph TD
     GIT[Git Repository] --> ARGO[ArgoCD Control Plane]
-    
+
     subgraph "ArgoCD Hub Cluster"
         ARGO
         APPSETS[ApplicationSets]
     end
-    
+
     ARGO -->|Deploy| DEV[Dev Cluster]
     ARGO -->|Deploy| STAGING[Staging Cluster]
     ARGO -->|Deploy| PROD1[Prod US East]
     ARGO -->|Deploy| PROD2[Prod EU West]
-    
+
     APPSETS --> DEV
     APPSETS --> STAGING
     APPSETS --> PROD1
@@ -76,26 +86,11 @@ graph TD
 ### Argo Rollouts — Progressive Delivery
 
 <CodeBlock language="yaml" title="Canary Deployment with Argo Rollouts">
-apiVersion: argoproj.io/v1alpha1
-kind: Rollout
-metadata:
-  name: cloudnova-api
-spec:
-  replicas: 5
-  strategy:
-    canary:
-      steps:
-        - setWeight: 20    # Route 20% to new version
-        - pause:
-            duration: 5m   # Wait 5 minutes
-        - setWeight: 50    # Route 50%
-        - pause:
-            duration: 5m
-        - setWeight: 100   # Full rollout
-      analysis:
-        templates:
-          - templateName: error-rate-check
-        startingStep: 1    # Start analysis after 20% step
+  apiVersion: argoproj.io/v1alpha1 kind: Rollout metadata: name: cloudnova-api spec: replicas: 5
+  strategy: canary: steps: - setWeight: 20 # Route 20% to new version - pause: duration: 5m # Wait 5
+  minutes - setWeight: 50 # Route 50% - pause: duration: 5m - setWeight: 100 # Full rollout
+  analysis: templates: - templateName: error-rate-check startingStep: 1 # Start analysis after 20%
+  step
 </CodeBlock>
 
 <ProductionNote>
@@ -111,35 +106,12 @@ spec:
 ### ApplicationSets — Deploy at Scale
 
 <CodeBlock language="yaml" title="ApplicationSet for Multi-Environment">
-apiVersion: argoproj.io/v1alpha1
-kind: ApplicationSet
-metadata:
-  name: cloudnova-environments
-spec:
-  generators:
-    - list:
-        elements:
-          - env: dev
-            cluster: dev-cluster
-            autoSync: "true"
-          - env: staging
-            cluster: staging-cluster
-            autoSync: "true"
-          - env: prod
-            cluster: prod-cluster
-            autoSync: "false"
-  template:
-    metadata:
-      name: cloudnova-{{env}}
-    spec:
-      source:
-        repoURL: https://github.com/apexdataro-Fin/AEP
-        path: k8s/overlays/{{env}}
-      destination:
-        server: '{{cluster}}'
-      syncPolicy:
-        automated:
-          selfHeal: '{{autoSync}}'
+  apiVersion: argoproj.io/v1alpha1 kind: ApplicationSet metadata: name: cloudnova-environments spec:
+  generators: - list: elements: - env: dev cluster: dev-cluster autoSync: "true" - env: staging
+  cluster: staging-cluster autoSync: "true" - env: prod cluster: prod-cluster autoSync: "false"
+  template: metadata: name: cloudnova-{{ env }}
+  spec: source: repoURL: https://github.com/apexdataro-Fin/AEP path: k8s/overlays/{{ env }}
+  destination: server: '{{ cluster }}' syncPolicy: automated: selfHeal: '{{ autoSync }}'
 </CodeBlock>
 
 ---
@@ -167,7 +139,7 @@ spec:
       "The deployment continues — canary is for testing only",
       "Rollouts automatically aborts and rolls back",
       "An email is sent",
-      "Nothing — it's informational only"
+      "Nothing — it's informational only",
     ]}
     correct={1}
   />
@@ -177,8 +149,8 @@ spec:
 
 ## 📋 Summary
 
-| Feature | Purpose |
-|---------|---------|
-| **Multi-Cluster** | One control plane, many clusters |
-| **Rollouts** | Canary/blue-green with auto-analysis |
-| **ApplicationSets** | Templated, scalable deployments |
+| Feature             | Purpose                              |
+| ------------------- | ------------------------------------ |
+| **Multi-Cluster**   | One control plane, many clusters     |
+| **Rollouts**        | Canary/blue-green with auto-analysis |
+| **ApplicationSets** | Templated, scalable deployments      |

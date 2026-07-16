@@ -22,10 +22,21 @@ tags: [ai-infrastructure, gpu, kubernetes, serving]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ArchitectureNote, CostNote, ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ArchitectureNote,
+  CostNote,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # AI Infrastructure: GPUs, Serving & Scaling
 
@@ -54,33 +65,33 @@ graph TD
     subgraph "Application Layer"
         APP[Model Serving: vLLM, TGI, Triton]
     end
-    
+
     subgraph "Orchestration"
         K8S[Kubernetes: AKS with GPU node pools]
     end
-    
+
     subgraph "Compute"
         GPU[NVIDIA GPUs: A100, H100, L40S]
         CPU[CPU: Standard compute]
     end
-    
+
     subgraph "Networking"
         IB[InfiniBand: 400Gb/s for distributed training]
         ETH[Ethernet: 100Gb/s for inference]
     end
-    
+
     subgraph "Storage"
         BLOB[Blob: Training data, model weights]
         DISK[Premium SSD: Checkpoints, caching]
     end
 ```
 
-| GPU SKU | Best For | Azure VM Series |
-|---------|----------|----------------|
-| **NVIDIA A100 (80GB)** | Training large models | NC A100 v4 |
-| **NVIDIA H100** | Next-gen training + inference | ND H100 v5 |
-| **NVIDIA L40S** | Inference, fine-tuning | NGads V620 |
-| **NVIDIA T4** | Cost-effective inference | NCas T4 v3 |
+| GPU SKU                | Best For                      | Azure VM Series |
+| ---------------------- | ----------------------------- | --------------- |
+| **NVIDIA A100 (80GB)** | Training large models         | NC A100 v4      |
+| **NVIDIA H100**        | Next-gen training + inference | ND H100 v5      |
+| **NVIDIA L40S**        | Inference, fine-tuning        | NGads V620      |
+| **NVIDIA T4**          | Cost-effective inference      | NCas T4 v3      |
 
 ---
 
@@ -89,39 +100,12 @@ graph TD
 ### Model Serving on AKS
 
 <CodeBlock language="yaml" title="GPU-Enabled AKS Node Pool">
-apiVersion: containerservice/v1
-nodePools:
-  - name: gpunp
-    vmSize: Standard_NC24ads_A100_v4
-    count: 2
-    enableAutoScaling: true
-    minCount: 1
-    maxCount: 8
-    nodeTaints:
-      - "nvidia.com/gpu=true:NoSchedule"
----
-# GPU workload toleration
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: llm-serving
-spec:
-  template:
-    spec:
-      tolerations:
-        - key: nvidia.com/gpu
-          operator: Equal
-          value: "true"
-          effect: NoSchedule
-      containers:
-        - name: vllm
-          image: vllm/vllm-openai:latest
-          resources:
-            limits:
-              nvidia.com/gpu: 1
-          env:
-            - name: MODEL_NAME
-              value: "meta-llama/Llama-3-70b"
+  apiVersion: containerservice/v1 nodePools: - name: gpunp vmSize: Standard_NC24ads_A100_v4 count: 2
+  enableAutoScaling: true minCount: 1 maxCount: 8 nodeTaints: - "nvidia.com/gpu=true:NoSchedule" ---
+  # GPU workload toleration apiVersion: apps/v1 kind: Deployment metadata: name: llm-serving spec:
+  template: spec: tolerations: - key: nvidia.com/gpu operator: Equal value: "true" effect:
+  NoSchedule containers: - name: vllm image: vllm/vllm-openai:latest resources: limits:
+  nvidia.com/gpu: 1 env: - name: MODEL_NAME value: "meta-llama/Llama-3-70b"
 </CodeBlock>
 
 <CostNote>
@@ -136,13 +120,13 @@ spec:
 
 ### Inference Optimization
 
-| Technique | Impact | Effort |
-|-----------|--------|--------|
-| **Quantization (INT8, INT4)** | 2-4x speedup, 50-75% less memory | Low |
-| **Batching** | 5-10x throughput | Medium |
-| **Model distillation** | Smaller model, similar quality | High |
-| **Speculative decoding** | 2-3x speedup | Medium |
-| **vLLM (PagedAttention)** | 10-20x throughput vs naive | Low (drop-in) |
+| Technique                     | Impact                           | Effort        |
+| ----------------------------- | -------------------------------- | ------------- |
+| **Quantization (INT8, INT4)** | 2-4x speedup, 50-75% less memory | Low           |
+| **Batching**                  | 5-10x throughput                 | Medium        |
+| **Model distillation**        | Smaller model, similar quality   | High          |
+| **Speculative decoding**      | 2-3x speedup                     | Medium        |
+| **vLLM (PagedAttention)**     | 10-20x throughput vs naive       | Low (drop-in) |
 
 <ProductionNote>
 
@@ -179,13 +163,23 @@ spec:
 <Quiz>
   <Question
     question="What Azure resource enables GPU workloads on AKS?"
-    options={["Regular node pool", "GPU-enabled node pool with NVIDIA device plugin", "Virtual machines", "App Service"]}
+    options={[
+      "Regular node pool",
+      "GPU-enabled node pool with NVIDIA device plugin",
+      "Virtual machines",
+      "App Service",
+    ]}
     correct={1}
   />
-  
+
   <Question
     question="What is the most cost-effective inference optimization with least effort?"
-    options={["Model distillation", "Quantization (INT8/INT4)", "Training a new model", "Buying more GPUs"]}
+    options={[
+      "Model distillation",
+      "Quantization (INT8/INT4)",
+      "Training a new model",
+      "Buying more GPUs",
+    ]}
     correct={1}
     explanation="Quantization reduces model size by 50-75% with minimal accuracy loss and near-zero implementation effort."
   />
@@ -195,9 +189,9 @@ spec:
 
 ## 📋 Summary
 
-| Component | Practice |
-|-----------|----------|
-| **GPU Node Pools** | AKS with NVIDIA device plugin |
-| **Serving** | vLLM for throughput, TGI for HuggingFace |
-| **Cost** | Spot VMs, auto-scale, quantization |
-| **Networking** | InfiniBand for training, Ethernet for inference |
+| Component          | Practice                                        |
+| ------------------ | ----------------------------------------------- |
+| **GPU Node Pools** | AKS with NVIDIA device plugin                   |
+| **Serving**        | vLLM for throughput, TGI for HuggingFace        |
+| **Cost**           | Spot VMs, auto-scale, quantization              |
+| **Networking**     | InfiniBand for training, Ethernet for inference |

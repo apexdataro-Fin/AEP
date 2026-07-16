@@ -22,10 +22,19 @@ tags: [llmops, prompt-engineering, evaluation, guardrails]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # LLMOps: Operating Large Language Models
 
@@ -49,13 +58,13 @@ import {
 
 ### LLMOps vs Traditional MLOps
 
-| Challenge | Traditional ML | LLM Applications |
-|-----------|---------------|-----------------|
-| **Versioning** | Model weights | Prompts, chain config, model version |
-| **Evaluation** | Accuracy, precision, recall | Human feedback, semantic similarity, faithfulness |
-| **Cost** | Training cost (one-time) | Token-based inference (per-request) |
-| **Safety** | Bias metrics | Content filters, jailbreak resistance, PII detection |
-| **Latency** | Predictable | Variable (depends on model, tokens, load) |
+| Challenge      | Traditional ML              | LLM Applications                                     |
+| -------------- | --------------------------- | ---------------------------------------------------- |
+| **Versioning** | Model weights               | Prompts, chain config, model version                 |
+| **Evaluation** | Accuracy, precision, recall | Human feedback, semantic similarity, faithfulness    |
+| **Cost**       | Training cost (one-time)    | Token-based inference (per-request)                  |
+| **Safety**     | Bias metrics                | Content filters, jailbreak resistance, PII detection |
+| **Latency**    | Predictable                 | Variable (depends on model, tokens, load)            |
 
 ---
 
@@ -67,6 +76,7 @@ import {
 import promptflow
 
 # Version-controlled prompt
+
 prompt = """
 You are a CloudNova infrastructure assistant.
 Answer based ONLY on the following context.
@@ -77,14 +87,16 @@ Question: {question}
 Answer:"""
 
 # Evaluate prompt against test cases
+
 test_cases = [
-    {"question": "How do I deploy to AKS?", "expected_contains": ["kubectl", "container"]},
-    {"question": "What's the capital of France?", "expected_contains": ["I don't know"]},
+{"question": "How do I deploy to AKS?", "expected_contains": ["kubectl", "container"]},
+{"question": "What's the capital of France?", "expected_contains": ["I don't know"]},
 ]
 
 for case in test_cases:
-    response = llm.invoke(prompt.format(**case))
-    assert case["expected_contains"][0] in response
+response = llm.invoke(prompt.format(\*\*case))
+assert case["expected_contains"][0] in response
+
 </CodeBlock>
 
 <BestPractice>
@@ -110,13 +122,13 @@ graph LR
     SAFETY --> OUTPUT[Output to User]
 ```
 
-| Guardrail | What it prevents |
-|-----------|-----------------|
-| **PII Detection** | LLM receiving or outputting personal data |
+| Guardrail               | What it prevents                                 |
+| ----------------------- | ------------------------------------------------ |
+| **PII Detection**       | LLM receiving or outputting personal data        |
 | **Jailbreak Detection** | Prompt injection, "ignore previous instructions" |
-| **Topic Validation** | Off-topic questions wasting tokens |
-| **Factualness Check** | Hallucinated answers |
-| **Safety Filter** | Harmful, biased, or inappropriate content |
+| **Topic Validation**    | Off-topic questions wasting tokens               |
+| **Factualness Check**   | Hallucinated answers                             |
+| **Safety Filter**       | Harmful, biased, or inappropriate content        |
 
 <ProductionNote>
 
@@ -159,18 +171,18 @@ graph LR
       "Token counting",
       "Prompt versioning + model version + chain configuration",
       "API key rotation",
-      "Cost tracking"
+      "Cost tracking",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="Why do LLMs need special guardrails compared to traditional ML models?"
     options={[
       "They don't — guardrails are the same",
       "LLMs can hallucinate, leak training data, be jailbroken, and generate harmful content — risks traditional ML models don't have",
       "LLMs are more expensive",
-      "LLMs are slower"
+      "LLMs are slower",
     ]}
     correct={1}
   />
@@ -180,9 +192,9 @@ graph LR
 
 ## 📋 Summary
 
-| Component | Purpose |
-|-----------|---------|
-| **Prompt Versioning** | Git-tracked, reviewed, tested |
-| **Evaluation** | Systematic, not subjective |
-| **Guardrails** | PII, jailbreak, hallucination detection |
-| **Cost Monitoring** | Token usage, per-request tracking |
+| Component             | Purpose                                 |
+| --------------------- | --------------------------------------- |
+| **Prompt Versioning** | Git-tracked, reviewed, tested           |
+| **Evaluation**        | Systematic, not subjective              |
+| **Guardrails**        | PII, jailbreak, hallucination detection |
+| **Cost Monitoring**   | Token usage, per-request tracking       |

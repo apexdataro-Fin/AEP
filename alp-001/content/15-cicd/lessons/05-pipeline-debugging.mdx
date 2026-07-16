@@ -22,10 +22,20 @@ tags: [ci-cd, debugging, incident-response, runbooks]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  CommonMistake, Debugging, Challenge, Quiz, CodeBlock,
-  Flashcard, ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  CommonMistake,
+  Debugging,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Pipeline Debugging & Incident Response
 
@@ -56,7 +66,7 @@ flowchart TD
     CHECK -->|Test| TEST[Isolated reproduction]
     CHECK -->|Deploy| DEPLOY[Check Azure logs, state]
     CHECK -->|Timeout| TIMEOUT[Resource exhaustion, deadlocks]
-    
+
     BUILD --> FIX[Fix code]
     TEST --> FLAKY{Flaky test?}
     FLAKY -->|Yes| QUARANTINE[Quarantine + fix later]
@@ -77,29 +87,19 @@ flowchart TD
 
 ### Common Failure Modes & Runbooks
 
-| Failure | Symptom | Runbook |
-|---------|---------|---------|
-| **Terraform state lock** | `Error acquiring state lock` | Check for stuck lock, force-unlock if safe |
-| **Azure quota exceeded** | `QuotaExceeded` error | Increase quota or clean up unused resources |
-| **Secret expired** | `Authentication failed` | Rotate service principal secret, update in pipeline |
-| **Dependency timeout** | `npm install` / `pip install` hangs | Check mirror availability, add retry logic |
-| **Flaky test** | Same code, different results | Quarantine the test, create ticket to fix |
+| Failure                  | Symptom                             | Runbook                                             |
+| ------------------------ | ----------------------------------- | --------------------------------------------------- |
+| **Terraform state lock** | `Error acquiring state lock`        | Check for stuck lock, force-unlock if safe          |
+| **Azure quota exceeded** | `QuotaExceeded` error               | Increase quota or clean up unused resources         |
+| **Secret expired**       | `Authentication failed`             | Rotate service principal secret, update in pipeline |
+| **Dependency timeout**   | `npm install` / `pip install` hangs | Check mirror availability, add retry logic          |
+| **Flaky test**           | Same code, different results        | Quarantine the test, create ticket to fix           |
 
 <CodeBlock language="yaml" title="Self-Healing Pipeline with Retry">
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Terraform Apply with Retry
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          retry_on: error
-          command: |
-            terraform apply -auto-approve tfplan || \
-              (terraform force-unlock -force LOCK_ID && \
-               terraform apply -auto-approve tfplan)
+  jobs: deploy: runs-on: ubuntu-latest steps: - name: Terraform Apply with Retry uses:
+  nick-fields/retry@v3 with: timeout_minutes: 10 max_attempts: 3 retry_on: error command: |
+  terraform apply -auto-approve tfplan || \ (terraform force-unlock -force LOCK_ID && \ terraform
+  apply -auto-approve tfplan)
 </CodeBlock>
 
 ---
@@ -147,6 +147,7 @@ jobs:
 **Incident:** The 3:00 AM deployment failed halfway through. The Terraform apply partially succeeded — some resources updated, others didn't. The application is in an inconsistent state.
 
 **Your task as on-call engineer:**
+
 1. Stop the bleeding
 2. Assess the damage
 3. Roll back to the last known good state
@@ -175,6 +176,7 @@ terraform apply -auto-approve
 # - How to prevent it?
 # - How to detect it faster?
 ```
+
 </details>
 </Challenge>
 
@@ -208,19 +210,19 @@ terraform apply -auto-approve
       "A test that always fails",
       "A test that passes and fails intermittently with the same code",
       "A test written in Python",
-      "A test that takes too long"
+      "A test that takes too long",
     ]}
     correct={1}
     explanation="Flaky tests are non-deterministic — same code, different results. They erode trust in CI and should be quarantined and fixed."
   />
-  
+
   <Question
     question="What's the first thing you should do when a production deployment fails?"
     options={[
       "Debug the root cause immediately",
       "Roll back to the last known good state first, then debug",
       "Notify all developers on Slack",
-      "Re-run the pipeline"
+      "Re-run the pipeline",
     ]}
     correct={1}
     explanation="Stabilize production first (rollback), then debug. Users don't care about your root cause analysis — they care about the service working."
@@ -231,10 +233,10 @@ terraform apply -auto-approve
 
 ## 📋 Summary
 
-| Principle | Practice |
-|-----------|----------|
-| **Debug, don't re-run** | Find root cause before retrying |
-| **Runbooks** | Documented procedures for known failures |
-| **Rollback first** | Stabilize production, debug later |
-| **Self-healing** | Retry logic for transient failures |
-| **Blameless postmortem** | Learn, don't blame |
+| Principle                | Practice                                 |
+| ------------------------ | ---------------------------------------- |
+| **Debug, don't re-run**  | Find root cause before retrying          |
+| **Runbooks**             | Documented procedures for known failures |
+| **Rollback first**       | Stabilize production, debug later        |
+| **Self-healing**         | Retry logic for transient failures       |
+| **Blameless postmortem** | Learn, don't blame                       |

@@ -81,7 +81,9 @@
   background: var(--celos-surface-raised);
   border: 1px solid var(--celos-border);
   border-radius: 0.75rem;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 
 .moduleCard:hover {

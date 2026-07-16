@@ -15,7 +15,8 @@ status: "published"
 version: "1.0.0"
 author: "ARES EDU PLATFORM"
 last_updated: "2026-07-15"
-search_keywords: ["kubernetes rbac", "k8s security", "service accounts", "pod security standards", "cluster roles"]
+search_keywords:
+  ["kubernetes rbac", "k8s security", "service accounts", "pod security standards", "cluster roles"]
 learning_objectives:
   - "Design and implement RBAC policies for multi-tenant clusters"
   - "Understand ServiceAccounts and how pods authenticate"
@@ -28,12 +29,44 @@ active_recall:
 review_schedule: { "initial": "1 day", "next": "3 days", "interval": "spaced-repetition" }
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, AIExplanation, AIQuiz, AIFlashcards } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  AIExplanation,
+  AIQuiz,
+  AIFlashcards,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 export const CloudNova = ({ children }) => (
-  <div style={{ borderLeft: '4px solid #0ea5e9', padding: '1rem 1.5rem', margin: '1.5rem 0', background: 'var(--ifm-color-emphasis-100)', borderRadius: '0 8px 8px 0' }}>
-    <strong style={{ color: '#0ea5e9' }}>🏢 CloudNova Engineering</strong>
-    <div style={{ marginTop: '0.5rem' }}>{children}</div>
+  <div
+    style={{
+      borderLeft: "4px solid #0ea5e9",
+      padding: "1rem 1.5rem",
+      margin: "1.5rem 0",
+      background: "var(--ifm-color-emphasis-100)",
+      borderRadius: "0 8px 8px 0",
+    }}
+  >
+    <strong style={{ color: "#0ea5e9" }}>🏢 CloudNova Engineering</strong>
+    <div style={{ marginTop: "0.5rem" }}>{children}</div>
   </div>
 );
 
@@ -44,6 +77,7 @@ export const CloudNova = ({ children }) => (
 <Definition>
 
 **Least Privilege**: Every subject (user, pod, service) should have **only the permissions it needs** to do its job — and nothing more. In Kubernetes, this means:
+
 - A frontend pod should not be able to list all secrets
 - A CI/CD service account should only deploy to its namespace
 - A developer should only see pods in their team's namespaces
@@ -60,16 +94,16 @@ graph TB
         U[User / Group]
         SA[ServiceAccount]
     end
-    
+
     subgraph "RBAC"
         RB[RoleBinding / ClusterRoleBinding]
     end
-    
+
     subgraph "Permissions"
         R[Role<br/>namespace-scoped]
         CR[ClusterRole<br/>cluster-scoped]
     end
-    
+
     U --> RB
     SA --> RB
     RB --> R
@@ -105,9 +139,9 @@ metadata:
   name: pod-reader
   namespace: development
 rules:
-- apiGroups: [""]
-  resources: ["pods", "pods/log"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
 
 ---
 # Step 2: Create a ServiceAccount (who is doing it)
@@ -125,9 +159,9 @@ metadata:
   name: ci-bot-pod-reader
   namespace: development
 subjects:
-- kind: ServiceAccount
-  name: ci-bot
-  namespace: development
+  - kind: ServiceAccount
+    name: ci-bot
+    namespace: development
 roleRef:
   kind: Role
   name: pod-reader
@@ -137,6 +171,7 @@ roleRef:
 <BestPractice>
 
 **RBAC Design Rules:**
+
 1. **One ServiceAccount per application** — never share SAs between apps
 2. **Namespace-scope when possible** — use Roles over ClusterRoles
 3. **Avoid `verbs: ["*"]`** — list exactly what verbs are needed
@@ -163,6 +198,7 @@ kubectl get pod my-pod -o jsonpath='{.spec.serviceAccountName}'
 <SecurityNote>
 
 **ServiceAccount Best Practices:**
+
 - **Never use the `default` ServiceAccount** for application pods
 - Disable automounting of SA tokens when the pod doesn't need API access:
   ```yaml
@@ -179,11 +215,11 @@ kubectl get pod my-pod -o jsonpath='{.spec.serviceAccountName}'
 
 Kubernetes defines three security levels:
 
-| Level | What It Blocks | Use Case |
-|-------|---------------|----------|
-| **Privileged** | Nothing | System pods, node agents |
-| **Baseline** | Known privilege escalations | Most applications |
-| **Restricted** | Everything risky | Highly secure environments |
+| Level          | What It Blocks              | Use Case                   |
+| -------------- | --------------------------- | -------------------------- |
+| **Privileged** | Nothing                     | System pods, node agents   |
+| **Baseline**   | Known privilege escalations | Most applications          |
+| **Restricted** | Everything risky            | Highly secure environments |
 
 ```yaml
 apiVersion: v1
@@ -196,20 +232,10 @@ metadata:
 ```
 
 <CodeBlock title="Restricted Pod Checklist">
-# A "Restricted" pod must:
-spec:
-  containers:
-  - name: app
-    securityContext:
-      runAsNonRoot: true       # Must NOT run as root
-      allowPrivilegeEscalation: false  # No setuid binaries
-      capabilities:
-        drop: ["ALL"]          # Drop all Linux capabilities
-      seccompProfile:
-        type: RuntimeDefault   # Restrict syscalls
-  volumes:
-  - name: tmp
-    emptyDir: {}               # No hostPath volumes
+  # A "Restricted" pod must: spec: containers: - name: app securityContext: runAsNonRoot: true #
+  Must NOT run as root allowPrivilegeEscalation: false # No setuid binaries capabilities: drop:
+  ["ALL"] # Drop all Linux capabilities seccompProfile: type: RuntimeDefault # Restrict syscalls
+  volumes: - name: tmp emptyDir: {} # No hostPath volumes
 </CodeBlock>
 
 ---
@@ -237,6 +263,7 @@ kubectl get clusterrolebindings -o json | \
 Security audit found a developer's ServiceAccount with `cluster-admin` privileges — a major violation. The developer had been testing and left it.
 
 **Your incident response:**
+
 1. Immediately revoke the cluster-admin binding
 2. Create a properly scoped Role for the developer's CI pipeline
 3. Audit ALL ServiceAccounts for over-privileged access
@@ -293,16 +320,19 @@ kubectl auth can-i delete pods -n rbac-lab \
         "Roles are more secure",
         "Roles are namespace-scoped; ClusterRoles are cluster-wide",
         "ClusterRoles don't exist in Kubernetes",
-        "Roles can only read, ClusterRoles can write"
+        "Roles can only read, ClusterRoles can write",
       ],
       correct: 1,
-      explanation: "Roles grant permissions within a single namespace. ClusterRoles grant permissions cluster-wide or to cluster-scoped resources (nodes, PVs, namespaces)."
+      explanation:
+        "Roles grant permissions within a single namespace. ClusterRoles grant permissions cluster-wide or to cluster-scoped resources (nodes, PVs, namespaces).",
     },
     {
-      question: "Which Pod Security Standard level should you target for most application workloads?",
+      question:
+        "Which Pod Security Standard level should you target for most application workloads?",
       options: ["Privileged", "Baseline", "Restricted", "None"],
       correct: 1,
-      explanation: "Baseline blocks known privilege escalations while allowing common application patterns. Restricted is ideal but may break applications that legitimately need some capabilities."
+      explanation:
+        "Baseline blocks known privilege escalations while allowing common application patterns. Restricted is ideal but may break applications that legitimately need some capabilities.",
     },
     {
       question: "Why should you avoid using the 'default' ServiceAccount for application pods?",
@@ -310,11 +340,12 @@ kubectl auth can-i delete pods -n rbac-lab \
         "It's slower",
         "It has no permissions at all",
         "It's shared across all pods in the namespace, breaking the principle of least privilege",
-        "It doesn't exist in newer Kubernetes versions"
+        "It doesn't exist in newer Kubernetes versions",
       ],
       correct: 2,
-      explanation: "All pods in a namespace share the default SA by default. If one pod needs API access and gets it via the default SA, ALL pods get that access — a security risk."
-    }
+      explanation:
+        "All pods in a namespace share the default SA by default. If one pod needs API access and gets it via the default SA, ALL pods get that access — a security risk.",
+    },
   ]}
 />
 
@@ -334,8 +365,8 @@ kubectl auth can-i delete pods -n rbac-lab \
 ## Related
 
 <KnowledgeLinks>
-- **Next**: [Resource Management & Scaling](resource-scaling)
-- **Previous**: [Storage in Kubernetes](storage)
-- **Related**: [Security Fundamentals](../../04-security/security-fundamentals)
-- **Certification**: CKA Domain 6 — Security (30%)
+  - **Next**: [Resource Management & Scaling](resource-scaling) - **Previous**: [Storage in
+  Kubernetes](storage) - **Related**: [Security
+  Fundamentals](../../04-security/security-fundamentals) - **Certification**: CKA Domain 6 —
+  Security (30%)
 </KnowledgeLinks>

@@ -5,7 +5,8 @@ module: "08-containers"
 lesson: 1
 difficulty: "core"
 estimated_time: "45 minutes"
-technologies: ["Containers", "Docker (conceptual)", "OCI", "Container Registries", "Azure Container Registry"]
+technologies:
+  ["Containers", "Docker (conceptual)", "OCI", "Container Registries", "Azure Container Registry"]
 skills: ["container-concepts", "container-vs-vm", "oci-spec", "registry-management"]
 certifications: ["AZ-104"]
 knowledge_nodes: ["containers", "container-vs-vm", "oci", "registry"]
@@ -13,11 +14,26 @@ prerequisites: ["02-linux/lessons/01-linux-architecture"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Understand what containers are and why they revolutionized software delivery
 - Differentiate containers from virtual machines
 - Understand the OCI (Open Container Initiative) standards
@@ -47,26 +63,26 @@ graph TD
         HV --> VM2["VM 2<br/>Guest OS + App"]
         INFRA["Infrastructure"] --> HV
     end
-    
+
     subgraph "Containers"
         ENGINE["Container Engine"] --> C1["Container 1<br/>App + Dependencies"]
         ENGINE --> C2["Container 2<br/>App + Dependencies"]
         OS["Host OS (shared kernel)"] --> ENGINE
         INFRA2["Infrastructure"] --> OS
     end
-    
+
     style VM1 fill:#0078d4,stroke:#333,color:#fff
     style C1 fill:#107c10,stroke:#333,color:#fff
 ```
 
-| Aspect | VM | Container |
-|--------|----|-----------|
-| **Boot time** | Minutes | Seconds |
-| **Size** | GBs (includes OS) | MBs (app + deps only) |
-| **Isolation** | Strong (hypervisor) | Process-level (kernel) |
-| **Density** | 10s per host | 100s per host |
-| **Portability** | VM image, platform-specific | Container image, runs anywhere |
-| **Resource overhead** | Full OS per VM | Shared kernel |
+| Aspect                | VM                          | Container                      |
+| --------------------- | --------------------------- | ------------------------------ |
+| **Boot time**         | Minutes                     | Seconds                        |
+| **Size**              | GBs (includes OS)           | MBs (app + deps only)          |
+| **Isolation**         | Strong (hypervisor)         | Process-level (kernel)         |
+| **Density**           | 10s per host                | 100s per host                  |
+| **Portability**       | VM image, platform-specific | Container image, runs anywhere |
+| **Resource overhead** | Full OS per VM              | Shared kernel                  |
 
 <BestPractice>
 **Think of containers as isolated processes, not mini-VMs.** A container shares the host kernel and has no guest OS. Start containers in < 1 second. Destroy them just as fast. This changes how you think about infrastructure.
@@ -83,7 +99,7 @@ sequenceDiagram
     participant Dev as Developer
     participant Docker as Docker Engine
     participant Kernel as Linux Kernel
-    
+
     Dev->>Docker: docker run nginx
     Docker->>Docker: 1. Pull image from registry<br/>(layers: OS base, nginx, config)
     Docker->>Kernel: 2. Create namespaces<br/>(PID, NET, MNT, UTS, IPC, USER)
@@ -97,13 +113,13 @@ sequenceDiagram
     Note over Kernel: The container is just a process<br/>with namespace isolation + resource limits
 ```
 
-| Isolation Mechanism | What It Does |
-|--------------------|--------------|
-| **PID Namespace** | Container sees only its own processes (PID 1 = container's main process) |
-| **Network Namespace** | Container gets its own network stack, IP, ports |
-| **Mount Namespace** | Container sees its own filesystem (the image layers) |
-| **cgroups** | Limits CPU, memory, disk I/O — prevents noisy neighbor problem |
-| **Union Filesystem** | Layers: base image + app layer + thin writable layer |
+| Isolation Mechanism   | What It Does                                                             |
+| --------------------- | ------------------------------------------------------------------------ |
+| **PID Namespace**     | Container sees only its own processes (PID 1 = container's main process) |
+| **Network Namespace** | Container gets its own network stack, IP, ports                          |
+| **Mount Namespace**   | Container sees its own filesystem (the image layers)                     |
+| **cgroups**           | Limits CPU, memory, disk I/O — prevents noisy neighbor problem           |
+| **Union Filesystem**  | Layers: base image + app layer + thin writable layer                     |
 
 ---
 
@@ -112,22 +128,23 @@ sequenceDiagram
 ### CloudNova's Container Journey
 
 <ArchitectureNote title="Why CloudNova Adopted Containers">
-CloudNova started with VMs. Every deployment was a gamble: "Will it work in production?" Three pain points drove the switch to containers.
+  CloudNova started with VMs. Every deployment was a gamble: "Will it work in production?" Three
+  pain points drove the switch to containers.
 </ArchitectureNote>
 
-| Pain Point | Before Containers | After Containers |
-|------------|------------------|-----------------|
-| **Deployment inconsistency** | "Works on my machine" — different OS versions, missing dependencies | Same image from dev → staging → production |
-| **Scaling speed** | New VM boots in 3 minutes. Traffic spike already lost users | New container starts in 2 seconds. Handles spike in real-time |
-| **Resource waste** | 50 VMs, average CPU 12%. Paying for 88% idle | 50 containers on 3 VMs. CPU 65%. Save 60% on compute |
+| Pain Point                   | Before Containers                                                   | After Containers                                              |
+| ---------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------- |
+| **Deployment inconsistency** | "Works on my machine" — different OS versions, missing dependencies | Same image from dev → staging → production                    |
+| **Scaling speed**            | New VM boots in 3 minutes. Traffic spike already lost users         | New container starts in 2 seconds. Handles spike in real-time |
+| **Resource waste**           | 50 VMs, average CPU 12%. Paying for 88% idle                        | 50 containers on 3 VMs. CPU 65%. Save 60% on compute          |
 
 ### Container Registries
 
-| Registry | Use Case | CloudNova Usage |
-|----------|----------|-----------------|
-| **Docker Hub** | Public images (nginx, redis, python) | Base images only |
-| **Azure Container Registry (ACR)** | Private images, geo-replicated | All internal applications |
-| **GitHub Container Registry** | OCI artifacts alongside code | Open source components |
+| Registry                           | Use Case                             | CloudNova Usage           |
+| ---------------------------------- | ------------------------------------ | ------------------------- |
+| **Docker Hub**                     | Public images (nginx, redis, python) | Base images only          |
+| **Azure Container Registry (ACR)** | Private images, geo-replicated       | All internal applications |
+| **GitHub Container Registry**      | OCI artifacts alongside code         | Open source components    |
 
 <TerminalBlock>
 {`# Create Azure Container Registry for CloudNova
@@ -141,9 +158,13 @@ az acr create \\
     "southeastasia" "Standard"
 
 # Result:
+
 # - Premium SKU: Private Link, geo-replication, 500 GiB storage
+
 # - Geo-replicated: images available in 3 regions for fast pulls
+
 # - No admin user: all access via Azure AD + RBAC`}
+
 </TerminalBlock>
 
 ---
@@ -154,18 +175,16 @@ az acr create \\
 
 CloudNova needs to deploy these workloads. For each, choose VM or Container and justify:
 
-| Workload | Description |
-|----------|-------------|
-| A | Python API, stateless, uses PostgreSQL |
-| B | Legacy .NET Framework 4.5 app (Windows-specific) |
-| C | Data processing job, runs 10 min, triggered by events |
-| D | PostgreSQL database (production) |
+| Workload | Description                                           |
+| -------- | ----------------------------------------------------- |
+| A        | Python API, stateless, uses PostgreSQL                |
+| B        | Legacy .NET Framework 4.5 app (Windows-specific)      |
+| C        | Data processing job, runs 10 min, triggered by events |
+| D        | PostgreSQL database (production)                      |
 
 <Quiz question="What is the PRIMARY advantage of containers over VMs?">
-- Better security isolation
-- *Faster startup and higher density (share host OS kernel)*
-- Easier to manage with GUI tools
-- Built-in high availability
+  - Better security isolation - *Faster startup and higher density (share host OS kernel)* - Easier
+  to manage with GUI tools - Built-in high availability
 </Quiz>
 
 </Exercise>
@@ -174,17 +193,26 @@ CloudNova needs to deploy these workloads. For each, choose VM or Container and 
 
 ## Flashcard Review
 
-<Flashcard front="Container vs VM: key difference" back="Containers share the host OS kernel (no guest OS). VMs each run a full guest OS. This makes containers start in seconds (vs minutes), take MBs (vs GBs), and run 100s per host (vs 10s)." />
+<Flashcard
+  front="Container vs VM: key difference"
+  back="Containers share the host OS kernel (no guest OS). VMs each run a full guest OS. This makes containers start in seconds (vs minutes), take MBs (vs GBs), and run 100s per host (vs 10s)."
+/>
 
-<Flashcard front="What is an OCI image?" back="Open Container Initiative standard specification. Defines how to package an application (image-spec) and how to run it (runtime-spec). Docker, Podman, and containerd all follow OCI." />
+<Flashcard
+  front="What is an OCI image?"
+  back="Open Container Initiative standard specification. Defines how to package an application (image-spec) and how to run it (runtime-spec). Docker, Podman, and containerd all follow OCI."
+/>
 
-<Flashcard front="What does a container registry do?" back="Stores and distributes container images. Like GitHub for container images. Supports versioning (tags), vulnerability scanning, and geo-replication." />
+<Flashcard
+  front="What does a container registry do?"
+  back="Stores and distributes container images. Like GitHub for container images. Supports versioning (tags), vulnerability scanning, and geo-replication."
+/>
 
 ---
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Next: Docker Deep Dive | [Module 09](../../09-docker/index) |
+| Resource                      | Link                                                          |
+| ----------------------------- | ------------------------------------------------------------- |
+| Next: Docker Deep Dive        | [Module 09](../../09-docker/index)                            |
 | Azure Container Registry docs | [docs](https://learn.microsoft.com/azure/container-registry/) |

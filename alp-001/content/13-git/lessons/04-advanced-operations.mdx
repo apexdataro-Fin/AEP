@@ -23,10 +23,24 @@ tags: [git, advanced, stash, bisect, hooks]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Advanced Git Operations
 
@@ -55,27 +69,37 @@ git stash
 # Equivalent to: git stash push
 
 # Save with a descriptive message
+
 git stash push -m "WIP: cost tagging refactor"
 
 # List all stashes
+
 git stash list
+
 # stash@{0}: WIP: cost tagging refactor
+
 # stash@{1}: WIP: IAM policy updates
 
 # Apply most recent stash (keeps it in the list)
+
 git stash apply
 
 # Apply and remove from stash list
+
 git stash pop
 
 # Apply a specific stash
+
 git stash apply stash@{1}
 
 # Stash untracked files too
+
 git stash push -u
 
 # Create a branch from a stash
+
 git stash branch feat/cost-tagging stash@{0}
+
 </CodeBlock>
 
 <Tip>
@@ -106,14 +130,18 @@ gitGraph
 git cherry-pick abc1234
 
 # Cherry-pick a range (exclusive of start)
+
 git cherry-pick abc1234..def5678
 
 # Cherry-pick without committing (for review)
+
 git cherry-pick -n abc1234
-git diff --staged  # Review before committing
+git diff --staged # Review before committing
 
 # Cherry-pick a merge commit (must specify parent)
+
 git cherry-pick -m 1 merge-commit-sha
+
 </CodeBlock>
 
 <ProductionNote>
@@ -144,23 +172,31 @@ flowchart TD
 git bisect start
 
 # Mark current as bad (deployment fails)
+
 git bisect bad HEAD
 
 # Mark 2 weeks ago as good (last known working deploy)
+
 git bisect good abc1234
 
 # Git checks out a commit halfway between. Test:
+
 terraform plan
-# If it works:  git bisect good
-# If it fails:  git bisect bad
+
+# If it works: git bisect good
+
+# If it fails: git bisect bad
 
 # Repeat ~5-7 times for 100+ commits
 
 # Git reports the exact commit that introduced the bug
+
 # abc5678 is the first bad commit
 
 # End bisect session
+
 git bisect reset
+
 </CodeBlock>
 
 <BestPractice>
@@ -172,36 +208,40 @@ git bisect start HEAD abc1234
 git bisect run ./scripts/test-deploy.sh
 # Git runs the script on each bisect step automatically
 ```
+
 </BestPractice>
 
 ---
 
 ## 🔧 Git Hooks — Automation
 
-| Hook | Trigger | Use Case |
-|------|---------|----------|
-| `pre-commit` | Before commit is created | Lint, format, check for secrets |
-| `commit-msg` | After commit message is written | Enforce conventional commits |
-| `pre-push` | Before push to remote | Run tests, check for secrets |
-| `post-merge` | After successful merge | Install dependencies, run migrations |
+| Hook         | Trigger                         | Use Case                             |
+| ------------ | ------------------------------- | ------------------------------------ |
+| `pre-commit` | Before commit is created        | Lint, format, check for secrets      |
+| `commit-msg` | After commit message is written | Enforce conventional commits         |
+| `pre-push`   | Before push to remote           | Run tests, check for secrets         |
+| `post-merge` | After successful merge          | Install dependencies, run migrations |
 
 <CodeBlock language="bash" title="pre-commit Hook for Secrets Detection">
 #!/bin/bash
 # .git/hooks/pre-commit
 
 # Check for AWS/Azure keys
+
 if git diff --cached | grep -E "(AKIA[0-9A-Z]{16}|sk-[a-zA-Z0-9]{32})"; then
-    echo "❌ Secret keys detected! Commit blocked."
-    exit 1
+echo "❌ Secret keys detected! Commit blocked."
+exit 1
 fi
 
 # Check for terraform state files
+
 if git diff --cached --name-only | grep "\.tfstate"; then
-    echo "❌ Terraform state file detected! Commit blocked."
-    exit 1
+echo "❌ Terraform state file detected! Commit blocked."
+exit 1
 fi
 
 echo "✅ Pre-commit checks passed"
+
 </CodeBlock>
 
 ---
@@ -238,6 +278,7 @@ git stash pop
 
 # Continue where you left off!
 ```
+
 </details>
 </Challenge>
 
@@ -270,7 +311,7 @@ git stash pop
     options={["git save", "git stash", "git shelve", "git backup"]}
     correct={1}
   />
-  
+
   <Question
     question="`git bisect` uses what search algorithm to find bugs?"
     options={["Linear search", "Binary search", "Depth-first search", "Breadth-first search"]}
@@ -295,9 +336,9 @@ git stash pop
 
 ## 📋 Summary
 
-| Tool | When to Use |
-|------|------------|
-| `stash` | Context switching mid-work |
+| Tool          | When to Use                            |
+| ------------- | -------------------------------------- |
+| `stash`       | Context switching mid-work             |
 | `cherry-pick` | Apply specific commits without merging |
-| `bisect` | Find which commit introduced a bug |
-| `hooks` | Automate quality checks |
+| `bisect`      | Find which commit introduced a bug     |
+| `hooks`       | Automate quality checks                |

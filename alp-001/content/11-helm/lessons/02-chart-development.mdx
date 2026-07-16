@@ -144,17 +144,17 @@ resources:
 
 **Helm hooks** give you precise lifecycle control:
 
-| Hook | Execution Point |
-|------|----------------|
-| `pre-install` | After templates rendered, before resources created |
-| `post-install` | After all resources are loaded |
-| `pre-delete` | Before any resources are deleted |
-| `post-delete` | After all resources deleted |
-| `pre-upgrade` | After templates rendered, before upgrade |
-| `post-upgrade` | After all resources upgraded |
-| `pre-rollback` | Before rollback executes |
-| `post-rollback` | After rollback completes |
-| `test` | When `helm test` is invoked |
+| Hook            | Execution Point                                    |
+| --------------- | -------------------------------------------------- |
+| `pre-install`   | After templates rendered, before resources created |
+| `post-install`  | After all resources are loaded                     |
+| `pre-delete`    | Before any resources are deleted                   |
+| `post-delete`   | After all resources deleted                        |
+| `pre-upgrade`   | After templates rendered, before upgrade           |
+| `post-upgrade`  | After all resources upgraded                       |
+| `pre-rollback`  | Before rollback executes                           |
+| `post-rollback` | After rollback completes                           |
+| `test`          | When `helm test` is invoked                        |
 
 Hooks are implemented by adding annotations to any Kubernetes resource:
 
@@ -179,6 +179,7 @@ spec:
 ```
 
 **Hook deletion policies:**
+
 - `before-hook-creation` — delete previous hook before running new one
 - `hook-succeeded` — delete after success
 - `hook-failed` — keep on failure for debugging
@@ -211,7 +212,7 @@ redis:
   architecture: replication
   auth:
     enabled: true
-    password: ""  # Set via external secret
+    password: "" # Set via external secret
 
 postgresql:
   enabled: true

@@ -22,10 +22,21 @@ tags: [automation, ansible, immutable, infrastructure]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Infrastructure Automation & Configuration Management
 
@@ -56,24 +67,24 @@ graph LR
         NET[Create VNet]
         STOR[Create Storage]
     end
-    
+
     subgraph "Configuration (Ansible, Chef)"
         PKG[Install packages]
         CONF[Configure services]
         SEC[Hardening]
     end
-    
+
     VM --> PKG
     NET --> CONF
     STOR --> SEC
 ```
 
-| Layer | Tool | What it does |
-|-------|------|-------------|
-| **Provisioning** | Terraform, Bicep, Pulumi | Creates cloud resources |
-| **Configuration** | Ansible, Chef, Puppet | Configures OS and software |
-| **Image Baking** | Packer | Pre-builds golden images |
-| **Orchestration** | Kubernetes | Manages container lifecycle |
+| Layer             | Tool                     | What it does                |
+| ----------------- | ------------------------ | --------------------------- |
+| **Provisioning**  | Terraform, Bicep, Pulumi | Creates cloud resources     |
+| **Configuration** | Ansible, Chef, Puppet    | Configures OS and software  |
+| **Image Baking**  | Packer                   | Pre-builds golden images    |
+| **Orchestration** | Kubernetes               | Manages container lifecycle |
 
 ---
 
@@ -94,7 +105,7 @@ sequenceDiagram
     participant TF as Terraform
     participant Old as Old VM
     participant New as New VM
-    
+
     Packer->>Registry: Build + push new image
     TF->>New: Create VM from new image
     Note over New: Health check passes
@@ -114,19 +125,20 @@ source "azure-arm" "ubuntu" {
 }
 
 build {
-  sources = ["source.azure-arm.ubuntu"]
-  
-  provisioner "ansible" {
-    playbook_file = "./ansible/hardening.yml"
-  }
-  
-  provisioner "shell" {
-    inline = [
-      "sudo apt-get update && sudo apt-get upgrade -y",
-      "sudo apt-get install -y azure-cli monitoring-agent"
-    ]
-  }
+sources = ["source.azure-arm.ubuntu"]
+
+provisioner "ansible" {
+playbook_file = "./ansible/hardening.yml"
 }
+
+provisioner "shell" {
+inline = [
+"sudo apt-get update && sudo apt-get upgrade -y",
+"sudo apt-get install -y azure-cli monitoring-agent"
+]
+}
+}
+
 </CodeBlock>
 
 ---
@@ -135,44 +147,39 @@ build {
 
 ### Ansible for Compliance Automation
 
-<CodeBlock language="yaml" title="CIS Hardening Playbook">
----
+## <CodeBlock language="yaml" title="CIS Hardening Playbook">
+
 - name: CIS Benchmark Hardening
   hosts: linux_servers
   become: yes
   vars:
-    cis_level: 1
-  
-  tasks:
-    - name: Ensure SSH root login is disabled
-      lineinfile:
-        path: /etc/ssh/sshd_config
-        regexp: '^PermitRootLogin'
-        line: 'PermitRootLogin no'
-      notify: restart sshd
-    
-    - name: Ensure password policy is configured
-      pam_pwquality:
-        name: minlen
-        value: "14"
-    
-    - name: Ensure auditd is running
-      service:
-        name: auditd
-        state: started
-        enabled: yes
-    
-    - name: Ensure automatic updates are configured
-      apt:
-        name: unattended-upgrades
-        state: present
-  
-  handlers:
-    - name: restart sshd
-      service:
-        name: sshd
-        state: restarted
-</CodeBlock>
+  cis_level: 1
+  tasks: - name: Ensure SSH root login is disabled
+  lineinfile:
+  path: /etc/ssh/sshd_config
+  regexp: '^PermitRootLogin'
+  line: 'PermitRootLogin no'
+  notify: restart sshd
+      - name: Ensure password policy is configured
+        pam_pwquality:
+          name: minlen
+          value: "14"
+
+      - name: Ensure auditd is running
+        service:
+          name: auditd
+          state: started
+          enabled: yes
+
+      - name: Ensure automatic updates are configured
+        apt:
+          name: unattended-upgrades
+          state: present
+  handlers: - name: restart sshd
+  service:
+  name: sshd
+  state: restarted
+  </CodeBlock>
 
 <ProductionNote>
 
@@ -209,14 +216,14 @@ build {
     options={["Ansible", "Terraform", "Chef", "Puppet"]}
     correct={1}
   />
-  
+
   <Question
     question="What is the main benefit of immutable infrastructure?"
     options={[
       "Lower cost",
       "No configuration drift — every server is identical",
       "Faster boot times",
-      "Simpler DNS configuration"
+      "Simpler DNS configuration",
     ]}
     correct={1}
     explanation="By replacing instead of patching, you guarantee every server matches the golden image. No 'snowflake' servers."
@@ -227,9 +234,9 @@ build {
 
 ## 📋 Summary
 
-| Tool | Purpose |
-|------|---------|
+| Tool          | Purpose                   |
+| ------------- | ------------------------- |
 | **Terraform** | Provision cloud resources |
-| **Ansible** | Configure servers |
-| **Packer** | Build golden images |
-| **Immutable** | Replace, don't patch |
+| **Ansible**   | Configure servers         |
+| **Packer**    | Build golden images       |
+| **Immutable** | Replace, don't patch      |

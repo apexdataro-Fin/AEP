@@ -22,10 +22,20 @@ tags: [finops, cost, azure, optimization]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  CostNote, ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  CostNote,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # FinOps: Cloud Financial Operations
 
@@ -56,11 +66,11 @@ graph LR
     OPERATE --> INFORM
 ```
 
-| Phase | Activities |
-|-------|-----------|
-| **Inform** | Tag resources, allocate costs to teams, build dashboards |
+| Phase        | Activities                                                    |
+| ------------ | ------------------------------------------------------------- |
+| **Inform**   | Tag resources, allocate costs to teams, build dashboards      |
 | **Optimize** | Rightsize VMs, purchase reservations, delete unused resources |
-| **Operate** | Budget alerts, anomaly detection, continuous review |
+| **Operate**  | Budget alerts, anomaly detection, continuous review           |
 
 ---
 
@@ -71,6 +81,7 @@ graph LR
 <BestPractice>
 
 **Every resource gets three mandatory cost tags** at CloudNova:
+
 - `environment` — dev, staging, prod (lower environments get auto-shutdown)
 - `cost_center` — finance, engineering, marketing
 - `data_classification` — public, internal, confidential
@@ -84,8 +95,9 @@ az policy definition create \
   --rules '{"if":{"field":"tags[cost_center]","exists":"false"},"then":{"effect":"deny"}}'
 
 az policy assignment create \
-  --policy require-cost-center \
-  --scope /subscriptions/cloudnova-sub
+ --policy require-cost-center \
+ --scope /subscriptions/cloudnova-sub
+
 </CodeBlock>
 
 ---
@@ -96,25 +108,21 @@ az policy assignment create \
 
 <CostNote>
 
-| Pattern | Savings | Effort |
-|---------|---------|--------|
-| **Reservations (1-3 year)** | 40-65% | Low (one-time purchase) |
-| **Rightsizing** | 20-50% | Medium (review recco) |
-| **Auto-shutdown dev nights/weekends** | 30-50% | Low (automation) |
-| **Delete unused resources** | Variable | Low (weekly cleanup script) |
-| **Azure Hybrid Benefit** | Up to 40% | Low (activate) |
-| **Spot VMs for batch jobs** | Up to 90% | Medium (handle eviction) |
+| Pattern                               | Savings   | Effort                      |
+| ------------------------------------- | --------- | --------------------------- |
+| **Reservations (1-3 year)**           | 40-65%    | Low (one-time purchase)     |
+| **Rightsizing**                       | 20-50%    | Medium (review recco)       |
+| **Auto-shutdown dev nights/weekends** | 30-50%    | Low (automation)            |
+| **Delete unused resources**           | Variable  | Low (weekly cleanup script) |
+| **Azure Hybrid Benefit**              | Up to 40% | Low (activate)              |
+| **Spot VMs for batch jobs**           | Up to 90% | Medium (handle eviction)    |
 
 </CostNote>
 
 <CodeBlock language="kql" title="Find Unattached Managed Disks ($$$ waste)">
-Resources
-| where type == "microsoft.compute/disks"
-| where properties.diskState == "Unattached"
-| project name, resourceGroup, 
-          diskSizeGB = properties.diskSizeGB,
-          monthlyCost = properties.diskSizeGB * 0.05  // $0.05/GB
-| order by monthlyCost desc
+  Resources | where type == "microsoft.compute/disks" | where properties.diskState == "Unattached" |
+  project name, resourceGroup, diskSizeGB = properties.diskSizeGB, monthlyCost =
+  properties.diskSizeGB * 0.05 // $0.05/GB | order by monthlyCost desc
 </CodeBlock>
 
 ---
@@ -141,6 +149,7 @@ AzureDiagnostics
 ```
 
 Root cause: Dev team spun up AKS clusters for testing and forgot to delete them. Solution: auto-cleanup policy for dev resources older than 7 days.
+
 </details>
 </Challenge>
 
@@ -172,11 +181,16 @@ Root cause: Dev team spun up AKS clusters for testing and forgot to delete them.
 <Quiz>
   <Question
     question="What is the first step in the FinOps lifecycle?"
-    options={["Start buying reservations", "Inform — get visibility into spending", "Fire people for spending too much", "Ignore costs until the bill comes"]}
+    options={[
+      "Start buying reservations",
+      "Inform — get visibility into spending",
+      "Fire people for spending too much",
+      "Ignore costs until the bill comes",
+    ]}
     correct={1}
     explanation="You can't optimize what you can't see. Inform (visibility + allocation) comes before Optimize or Operate."
   />
-  
+
   <Question
     question="How much can Azure Reservations save compared to pay-as-you-go?"
     options={["5-10%", "40-65%", "100%", "Nothing"]}
@@ -188,8 +202,8 @@ Root cause: Dev team spun up AKS clusters for testing and forgot to delete them.
 
 ## 📋 Summary
 
-| Phase | Key Action |
-|-------|-----------|
-| **Inform** | Tag everything, allocate costs |
+| Phase        | Key Action                               |
+| ------------ | ---------------------------------------- |
+| **Inform**   | Tag everything, allocate costs           |
 | **Optimize** | Reservations, rightsizing, auto-shutdown |
-| **Operate** | Budgets, alerts, continuous review |
+| **Operate**  | Budgets, alerts, continuous review       |

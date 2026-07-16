@@ -22,10 +22,19 @@ tags: [platform, governance, multi-tenancy, policy]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Multi-Tenancy & Platform Governance
 
@@ -60,7 +69,7 @@ graph LR
     subgraph "Too Tight"
         C[Everything requires ticket + approval]
     end
-    
+
     A -.->|Chaos| B
     B -.->|Frustration| C
     B -.->|Trust + Guardrails = Velocity| VELOCITY
@@ -78,12 +87,12 @@ graph LR
 
 ### Quota Management
 
-| Resource | Dev Quota | Prod Quota | Enforcement |
-|----------|-----------|------------|-------------|
-| **AKS clusters** | 2 per team | Per-app only | Azure Policy |
-| **Storage accounts** | 5 per team | As needed | Budget alerts |
-| **Public IPs** | 2 per team | Approved list | OPA policy |
-| **Monthly spend** | $500/team | $5,000/app | Budget + alerts |
+| Resource             | Dev Quota  | Prod Quota    | Enforcement     |
+| -------------------- | ---------- | ------------- | --------------- |
+| **AKS clusters**     | 2 per team | Per-app only  | Azure Policy    |
+| **Storage accounts** | 5 per team | As needed     | Budget alerts   |
+| **Public IPs**       | 2 per team | Approved list | OPA policy      |
+| **Monthly spend**    | $500/team  | $5,000/app    | Budget + alerts |
 
 ---
 
@@ -105,7 +114,7 @@ graph LR
       "No governance — let teams use whatever they want",
       "Guardrails — self-service within safe, policy-enforced boundaries",
       "Full approval — every change requires a ticket",
-      "Only governance for production"
+      "Only governance for production",
     ]}
     correct={1}
   />
@@ -115,8 +124,8 @@ graph LR
 
 ## 📋 Summary
 
-| Principle | Practice |
-|-----------|----------|
-| **Guardrails > Gates** | Policy-bounded self-service |
-| **Multi-Tenancy** | Appropriate isolation per workload |
+| Principle                 | Practice                             |
+| ------------------------- | ------------------------------------ |
+| **Guardrails > Gates**    | Policy-bounded self-service          |
+| **Multi-Tenancy**         | Appropriate isolation per workload   |
 | **Automated Enforcement** | OPA, Azure Policy, not manual review |

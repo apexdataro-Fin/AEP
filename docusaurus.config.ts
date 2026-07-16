@@ -252,9 +252,7 @@ const config: Config = {
         },
         {
           title: "Community",
-          items: [
-            { label: "GitHub", href: "https://github.com/apexdataro-Fin/AEP" },
-          ],
+          items: [{ label: "GitHub", href: "https://github.com/apexdataro-Fin/AEP" }],
         },
       ],
       copyright: `Copyright © ${new Date().getFullYear()} ARES EDU PLATFORM. Built with Docusaurus.`,

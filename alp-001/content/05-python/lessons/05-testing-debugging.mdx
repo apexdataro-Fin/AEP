@@ -13,11 +13,26 @@ prerequisites: ["05-python/lessons/02-azure-sdk-apis"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this lesson, you will:
+
 - Write robust error handling for Azure SDK operations
 - Implement retry logic for transient cloud failures
 - Use structured logging instead of `print()`
@@ -55,50 +70,52 @@ import time
 from typing import Callable
 
 def retry_on_transient_failure(
-    func: Callable,
-    max_retries: int = 3,
-    backoff: float = 2.0
+func: Callable,
+max_retries: int = 3,
+backoff: float = 2.0
 ):
-    """Retry wrapper for transient Azure failures."""
-    for attempt in range(max_retries):
-        try:
-            return func()
-        except ServiceRequestError as e:
-            # Network error — retry
-            if attempt < max_retries - 1:
-                wait = backoff ** attempt  # Exponential: 2, 4, 8 seconds
-                print(f"⚠️  Network error, retrying in {wait}s...")
-                time.sleep(wait)
-            else:
-                raise  # All retries exhausted
-        except HttpResponseError as e:
-            if e.status_code == 429:  # Rate limited
-                retry_after = int(e.response.headers.get("Retry-After", 30))
-                print(f"⏳ Rate limited, waiting {retry_after}s...")
-                time.sleep(retry_after)
-            elif e.status_code == 409:  # Conflict — don't retry
-                raise ValueError(f"Resource conflict: {e.message}")
-            else:
-                raise  # Unknown — fail fast
+"""Retry wrapper for transient Azure failures."""
+for attempt in range(max_retries):
+try:
+return func()
+except ServiceRequestError as e: # Network error — retry
+if attempt < max_retries - 1:
+wait = backoff \*\* attempt # Exponential: 2, 4, 8 seconds
+print(f"⚠️ Network error, retrying in {wait}s...")
+time.sleep(wait)
+else:
+raise # All retries exhausted
+except HttpResponseError as e:
+if e.status_code == 429: # Rate limited
+retry_after = int(e.response.headers.get("Retry-After", 30))
+print(f"⏳ Rate limited, waiting {retry_after}s...")
+time.sleep(retry_after)
+elif e.status_code == 409: # Conflict — don't retry
+raise ValueError(f"Resource conflict: {e.message}")
+else:
+raise # Unknown — fail fast
 
 # Usage
+
 try:
-    result = retry_on_transient_failure(
-        lambda: compute_client.virtual_machines.get("prod-rg", "web-server-01")
-    )
-    print(f"VM status: {result.provisioning_state}")
+result = retry_on_transient_failure(
+lambda: compute_client.virtual_machines.get("prod-rg", "web-server-01")
+)
+print(f"VM status: {result.provisioning_state}")
 except ResourceNotFoundError:
-    print("❌ VM 'web-server-01' not found in prod-rg")
+print("❌ VM 'web-server-01' not found in prod-rg")
 except ValueError as e:
-    print(f"❌ {e}")
+print(f"❌ {e}")
 except Exception as e:
-    print(f"❌ Unexpected error: {e}")`}
+print(f"❌ Unexpected error: {e}")`}
+
 </CodeBlock>
 
 ### Structured Logging
 
 <BestPractice>
-**Use `logging` instead of `print`.** Logging gives you timestamps, log levels (DEBUG, INFO, WARNING, ERROR), and the ability to write to files, stdout, and cloud sinks simultaneously.
+  **Use `logging` instead of `print`.** Logging gives you timestamps, log levels (DEBUG, INFO,
+  WARNING, ERROR), and the ability to write to files, stdout, and cloud sinks simultaneously.
 </BestPractice>
 
 <CodeBlock language="python">
@@ -107,26 +124,32 @@ import logging
 import sys
 
 # Configure logging
+
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
-    handlers=[
-        logging.StreamHandler(sys.stdout),           # Console
-        logging.FileHandler('automation.log')        # File
-    ]
+level=logging.INFO,
+format='%(asctime)s [%(levelname)s] %(name)s: %(message)s',
+handlers=[
+logging.StreamHandler(sys.stdout), # Console
+logging.FileHandler('automation.log') # File
+]
 )
 logger = logging.getLogger('cloud-automation')
 
 # Usage throughout your script
+
 logger.info("Starting VM cleanup across 3 subscriptions")
 logger.debug("Fetching VM list for subscription: %s", sub_id)
 logger.warning("VM 'old-server-01' has no cost-center tag — skipping")
 logger.error("Failed to delete disk 'orphan-disk-42': permission denied")
 
 # Output:
+
 # 2024-01-15 14:32:05 [INFO] cloud-automation: Starting VM cleanup...
+
 # 2024-01-15 14:32:06 [WARNING] cloud-automation: VM 'old-server-01'...
+
 # 2024-01-15 14:32:07 [ERROR] cloud-automation: Failed to delete...`}
+
 </CodeBlock>
 
 ---
@@ -135,11 +158,11 @@ logger.error("Failed to delete disk 'orphan-disk-42': permission denied")
 
 ### Testing Cloud Scripts
 
-| Test Type | What It Tests | Tool | Example |
-|-----------|--------------|------|---------|
-| **Unit test** | Logic — "Does my function filter VMs correctly?" | `pytest` + mocks | Mock the Azure SDK, test business logic |
-| **Integration test** | Real API — "Can I actually list VMs?" | `pytest` + real credentials | Run against a dev subscription |
-| **Dry run** | Safety check — "What would this delete?" | `--dry-run` flag | Print changes, don't execute |
+| Test Type            | What It Tests                                    | Tool                        | Example                                 |
+| -------------------- | ------------------------------------------------ | --------------------------- | --------------------------------------- |
+| **Unit test**        | Logic — "Does my function filter VMs correctly?" | `pytest` + mocks            | Mock the Azure SDK, test business logic |
+| **Integration test** | Real API — "Can I actually list VMs?"            | `pytest` + real credentials | Run against a dev subscription          |
+| **Dry run**          | Safety check — "What would this delete?"         | `--dry-run` flag            | Print changes, don't execute            |
 
 <CodeBlock language="python" title="test_vm_filter.py">
 {"""Test VM filtering logic without calling Azure."""
@@ -147,13 +170,13 @@ import pytest
 from my_automation import filter_deletable_vms
 
 def test_filter_excludes_tagged_vms():
-    """VMs with 'DO_NOT_DELETE' tag should be excluded."""
-    mock_vms = [
-        {"name": "vm-prod-01", "tags": {"DO_NOT_DELETE": "true"}},
-        {"name": "vm-prod-02", "tags": {}},
-        {"name": "vm-dev-01",   "tags": {}},
-    ]
-    
+"""VMs with 'DO_NOT_DELETE' tag should be excluded."""
+mock_vms = [
+{"name": "vm-prod-01", "tags": {"DO_NOT_DELETE": "true"}},
+{"name": "vm-prod-02", "tags": {}},
+{"name": "vm-dev-01", "tags": {}},
+]
+
     result = filter_deletable_vms(mock_vms)
     # Should only return VMs without DO_NOT_DELETE tag
     assert len(result) == 2
@@ -161,10 +184,11 @@ def test_filter_excludes_tagged_vms():
     assert result[1]["name"] == "vm-dev-01"
 
 def test_filter_empty_list():
-    """Empty VM list should return empty list (not error)."""
-    assert filter_deletable_vms([]) == []
+"""Empty VM list should return empty list (not error)."""
+assert filter_deletable_vms([]) == []
 
 # Run: pytest test_vm_filter.py -v`}
+
 </CodeBlock>
 
 ---
@@ -179,28 +203,37 @@ def test_filter_empty_list():
 # "azure.core.exceptions.HttpResponseError: Operation returned 429"
 
 # DIAGNOSIS:
+
 # 1. Error 429 = Rate limited by Azure
+
 # 2. Script was creating VMs sequentially with NO delay
+
 # 3. Subscription limit: 20 VMs per 5 minutes in the region
 
 # FIXES:
+
 # 1. Add retry logic with exponential backoff
+
 # 2. Add 15-second delay between each VM creation
+
 # 3. Implement batch processing: create 20, wait 5 min, continue
+
 # 4. Add checkpoint: save progress so restart picks up where it left off
 
 # BEFORE (bad):
+
 for vm_config in vm_list:
-    compute.begin_create_or_update(...).result()  # No delay, no retry
+compute.begin_create_or_update(...).result() # No delay, no retry
 
 # AFTER (good):
+
 CHECKPOINT_FILE = "deployment_progress.json"
 completed = load_checkpoint(CHECKPOINT_FILE)
 
 for i, vm_config in enumerate(vm_list):
-    if vm_config["name"] in completed:
-        continue
-    
+if vm_config["name"] in completed:
+continue
+
     try:
         result = retry_on_transient_failure(
             lambda: compute.begin_create_or_update(
@@ -213,6 +246,7 @@ for i, vm_config in enumerate(vm_list):
     except Exception as e:
         logger.error("VM %s failed: %s", vm_config["name"], e)
         # Don't crash — log and continue`}
+
 </TerminalBlock>
 
 ---
@@ -235,6 +269,7 @@ for vm in compute.virtual_machines.list_all():
 ```
 
 **Find all 5 bugs:**
+
 1. ...
 2. ...
 3. ...
@@ -247,17 +282,26 @@ for vm in compute.virtual_machines.list_all():
 
 ## Flashcard Review
 
-<Flashcard front="What does HTTP 429 mean?" back="Too Many Requests — rate limited by Azure. Implement exponential backoff and respect the Retry-After header." />
+<Flashcard
+  front="What does HTTP 429 mean?"
+  back="Too Many Requests — rate limited by Azure. Implement exponential backoff and respect the Retry-After header."
+/>
 
-<Flashcard front="logging vs print: why logging?" back="Timestamps, log levels (DEBUG/INFO/WARNING/ERROR), file output, integration with cloud monitoring, and ability to filter by severity." />
+<Flashcard
+  front="logging vs print: why logging?"
+  back="Timestamps, log levels (DEBUG/INFO/WARNING/ERROR), file output, integration with cloud monitoring, and ability to filter by severity."
+/>
 
-<Flashcard front="Why use checkpoints in long-running scripts?" back="If the script fails at 80%, a checkpoint saves which resources were created. Restart picks up from 80%, not 0%." />
+<Flashcard
+  front="Why use checkpoints in long-running scripts?"
+  back="If the script fails at 80%, a checkpoint saves which resources were created. Restart picks up from 80%, not 0%."
+/>
 
 ---
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
+| Resource                  | Link                           |
+| ------------------------- | ------------------------------ |
 | Previous: Data Processing | [Lesson 4](04-data-processing) |
-| Next: Python for AI | [Lesson 6](06-python-ai) |
+| Next: Python for AI       | [Lesson 6](06-python-ai)       |

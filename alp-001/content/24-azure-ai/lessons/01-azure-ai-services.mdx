@@ -22,10 +22,19 @@ tags: [azure, ai, cognitive-services, machine-learning]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Quiz, CodeBlock, Flashcard,
-  SecurityNote, ProductionNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  SecurityNote,
+  ProductionNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Azure AI Services: Cognitive Services & Machine Learning
 
@@ -52,26 +61,26 @@ import {
 ```mermaid
 graph TD
     AZURE[Azure AI]
-    
+
     AZURE --> PREBUILT[Pre-built: Cognitive Services]
     AZURE --> CUSTOM[Custom: Azure Machine Learning]
     AZURE --> GEN[Generative: Azure OpenAI]
-    
+
     PREBUILT --> VISION[Vision: OCR, face, video]
     PREBUILT --> SPEECH[Speech: TTS, STT, translation]
     PREBUILT --> LANGUAGE[Language: NLP, sentiment, translation]
     PREBUILT --> DECISION[Decision: anomaly, content mod, metrics]
-    
+
     CUSTOM --> AML[Azure ML: Train, deploy, MLOps]
-    
+
     GEN --> AOAI[Azure OpenAI: GPT-4, DALL-E, embeddings]
 ```
 
-| Service Type | When to Use | Example |
-|-------------|------------|---------|
-| **Cognitive Services** | Common AI tasks, no training needed | OCR on invoices, sentiment analysis |
-| **Azure ML** | Custom models with your data | Predictive maintenance, fraud detection |
-| **Azure OpenAI** | Generative AI: chat, embeddings, code | AI tutor, RAG knowledge base, code review |
+| Service Type           | When to Use                           | Example                                   |
+| ---------------------- | ------------------------------------- | ----------------------------------------- |
+| **Cognitive Services** | Common AI tasks, no training needed   | OCR on invoices, sentiment analysis       |
+| **Azure ML**           | Custom models with your data          | Predictive maintenance, fraud detection   |
+| **Azure OpenAI**       | Generative AI: chat, embeddings, code | AI tutor, RAG knowledge base, code review |
 
 ---
 
@@ -84,18 +93,21 @@ from azure.ai.formrecognizer import DocumentAnalysisClient
 from azure.core.credentials import AzureKeyCredential
 
 client = DocumentAnalysisClient(
-    endpoint="https://cloudnova-ai.cognitiveservices.azure.com/",
-    credential=AzureKeyCredential(os.environ["AI_KEY"])
+endpoint="https://cloudnova-ai.cognitiveservices.azure.com/",
+credential=AzureKeyCredential(os.environ["AI_KEY"])
 )
 
 # Analyze an invoice
+
 with open("invoice.pdf", "rb") as f:
-    poller = client.begin_analyze_document("prebuilt-invoice", f)
-    result = poller.result()
+poller = client.begin_analyze_document("prebuilt-invoice", f)
+result = poller.result()
 
 for field in result.documents[0].fields.values():
-    print(f"{field.value_type}: {field.value}")
+print(f"{field.value_type}: {field.value}")
+
 # Output: VendorName: Contoso Corp, InvoiceTotal: $1,250.00...
+
 </CodeBlock>
 
 <Tip>
@@ -113,6 +125,7 @@ for field in result.documents[0].fields.values():
 <SecurityNote>
 
 **Every Azure AI deployment must pass CloudNova's Responsible AI checklist:**
+
 1. **Fairness** — Is the model biased against any group?
 2. **Reliability** — Does it fail gracefully on unexpected input?
 3. **Privacy** — Is training data compliant with GDPR/data policies?
@@ -142,17 +155,22 @@ for field in result.documents[0].fields.values():
 <Quiz>
   <Question
     question="Which Azure service would you use for extracting text from scanned documents?"
-    options={["Azure Machine Learning", "Azure OpenAI", "Cognitive Services - Document Intelligence", "Azure Kubernetes Service"]}
+    options={[
+      "Azure Machine Learning",
+      "Azure OpenAI",
+      "Cognitive Services - Document Intelligence",
+      "Azure Kubernetes Service",
+    ]}
     correct={2}
   />
-  
+
   <Question
     question="What's the advantage of Azure OpenAI over direct OpenAI API?"
     options={[
       "It's cheaper",
       "Enterprise security: RBAC, private networking, data residency, compliance",
       "It has better models",
-      "It's open source"
+      "It's open source",
     ]}
     correct={1}
   />
@@ -162,8 +180,8 @@ for field in result.documents[0].fields.values():
 
 ## 📋 Summary
 
-| Service | Best For |
-|---------|----------|
-| **Cognitive Services** | Pre-built AI (OCR, speech, NLP) |
-| **Azure ML** | Custom model training + MLOps |
-| **Azure OpenAI** | Generative AI with enterprise security |
+| Service                | Best For                               |
+| ---------------------- | -------------------------------------- |
+| **Cognitive Services** | Pre-built AI (OCR, speech, NLP)        |
+| **Azure ML**           | Custom model training + MLOps          |
+| **Azure OpenAI**       | Generative AI with enterprise security |

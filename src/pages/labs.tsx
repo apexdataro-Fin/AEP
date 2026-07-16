@@ -6,14 +6,62 @@ import styles from "./index.module.css";
 import labsStyles from "./labs.module.css";
 
 const labs = [
-  { id: "L01", name: "Linux File System", type: "Guided", duration: "30 min", difficulty: "Beginner" },
-  { id: "L02", name: "User & Group Management", type: "Guided", duration: "45 min", difficulty: "Beginner" },
-  { id: "L03", name: "Network Troubleshooting", type: "Challenge", duration: "60 min", difficulty: "Intermediate" },
-  { id: "L04", name: "Azure VM Deployment", type: "Guided", duration: "90 min", difficulty: "Intermediate" },
-  { id: "L05", name: "Docker Containerization", type: "Hands-on", duration: "75 min", difficulty: "Intermediate" },
-  { id: "L06", name: "Kubernetes Deployment", type: "Hands-on", duration: "120 min", difficulty: "Advanced" },
-  { id: "L07", name: "Terraform Infrastructure", type: "Guided", duration: "90 min", difficulty: "Intermediate" },
-  { id: "L08", name: "CI/CD Pipeline", type: "Project", duration: "180 min", difficulty: "Advanced" },
+  {
+    id: "L01",
+    name: "Linux File System",
+    type: "Guided",
+    duration: "30 min",
+    difficulty: "Beginner",
+  },
+  {
+    id: "L02",
+    name: "User & Group Management",
+    type: "Guided",
+    duration: "45 min",
+    difficulty: "Beginner",
+  },
+  {
+    id: "L03",
+    name: "Network Troubleshooting",
+    type: "Challenge",
+    duration: "60 min",
+    difficulty: "Intermediate",
+  },
+  {
+    id: "L04",
+    name: "Azure VM Deployment",
+    type: "Guided",
+    duration: "90 min",
+    difficulty: "Intermediate",
+  },
+  {
+    id: "L05",
+    name: "Docker Containerization",
+    type: "Hands-on",
+    duration: "75 min",
+    difficulty: "Intermediate",
+  },
+  {
+    id: "L06",
+    name: "Kubernetes Deployment",
+    type: "Hands-on",
+    duration: "120 min",
+    difficulty: "Advanced",
+  },
+  {
+    id: "L07",
+    name: "Terraform Infrastructure",
+    type: "Guided",
+    duration: "90 min",
+    difficulty: "Intermediate",
+  },
+  {
+    id: "L08",
+    name: "CI/CD Pipeline",
+    type: "Project",
+    duration: "180 min",
+    difficulty: "Advanced",
+  },
 ];
 
 export default function LabsPage(): ReactNode {

@@ -7,19 +7,44 @@ prerequisites: ["net-01", "net-04"]
 skills: ["load-balancing", "azure-load-balancer", "application-gateway", "traffic-management"]
 technologies: ["azure-load-balancer", "application-gateway", "traffic-manager", "front-door"]
 certifications: ["az-104", "az-400"]
-knowledge_nodes: ["layer4-vs-layer7", "load-balancing-algorithms", "health-probes", "session-affinity"]
+knowledge_nodes:
+  ["layer4-vs-layer7", "load-balancing-algorithms", "health-probes", "session-affinity"]
 review_schedule: "3d,7d,30d"
 author: "ARES Engineering"
 last_updated: "2026-07-15"
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  Challenge,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  Mermaid,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Load Balancing Patterns
 
 <Info>
 
 **Learning Objectives**
+
 - Choose between L4 and L7 load balancing for any scenario
 - Configure Azure Load Balancer and Application Gateway
 - Design health probe strategies that detect real failures
@@ -70,6 +95,7 @@ graph TD
     style L7 fill:#0ea5e9,color:#fff
     style DNS fill:#8b5cf6,color:#fff
     style FD fill:#22c55e,color:#000
+
 </Mermaid>
 
 ### Health Probes: Design Matters
@@ -96,6 +122,7 @@ The inventory API's health endpoint returned `200 OK` just by checking if the pr
 **Root cause:** Health probes didn't validate actual dependencies.
 
 **Fix:**
+
 ```python
 @app.get("/health/deep")
 async def deep_health():
@@ -119,14 +146,14 @@ After fix: database partition → health returns 503 → LB removes backend → 
 
 ### Load Balancing Algorithms
 
-| Algorithm | How it works | Best for |
-|-----------|-------------|----------|
-| **Round Robin** | Each request to next server in list | Equal-capacity backends |
-| **Least Connections** | Server with fewest active connections | Mixed-duration requests |
-| **IP Hash (5-tuple)** | Hash of src IP, dst IP, src port, dst port, protocol | Consistent routing (NAT) |
-| **Weighted** | Percentage split (80/20) | Canary deployments |
-| **Path-based** | `/api/*` → pool A, `/static/*` → pool B | Microservices routing |
-| **Host-based** | `api.cloudnova.io` → pool A, `admin.cloudnova.io` → pool B | Multi-tenant |
+| Algorithm             | How it works                                               | Best for                 |
+| --------------------- | ---------------------------------------------------------- | ------------------------ |
+| **Round Robin**       | Each request to next server in list                        | Equal-capacity backends  |
+| **Least Connections** | Server with fewest active connections                      | Mixed-duration requests  |
+| **IP Hash (5-tuple)** | Hash of src IP, dst IP, src port, dst port, protocol       | Consistent routing (NAT) |
+| **Weighted**          | Percentage split (80/20)                                   | Canary deployments       |
+| **Path-based**        | `/api/*` → pool A, `/static/*` → pool B                    | Microservices routing    |
+| **Host-based**        | `api.cloudnova.io` → pool A, `admin.cloudnova.io` → pool B | Multi-tenant             |
 
 ### Session Affinity (Sticky Sessions)
 
@@ -141,7 +168,8 @@ With affinity:    User → LB → Server A  (request 1)
 ```
 
 <Warning>
-Session affinity creates a scaling problem: if Server A goes down, all its users lose sessions. **Prefer stateless backends** — store sessions in Redis/CosmosDB instead.
+  Session affinity creates a scaling problem: if Server A goes down, all its users lose sessions.
+  **Prefer stateless backends** — store sessions in Redis/CosmosDB instead.
 </Warning>
 
 ---
@@ -171,9 +199,11 @@ graph TB
     style FD fill:#22c55e,color:#000
     style AG_EU fill:#0ea5e9,color:#fff
     style AG_ASIA fill:#0ea5e9,color:#fff
+
 </Mermaid>
 
 **Key design decisions:**
+
 1. Front Door at edge (anycast) → lowest latency for global users
 2. App Gateway per region → L7 routing, WAF at regional level
 3. Azure LB for VMSS → L4 pass-through for non-HTTP workloads
@@ -287,7 +317,7 @@ curl -v http://localhost/health
     "Load balancer removes the backend — port 80 is unresponsive",
     "Load balancer keeps the backend — TCP probe only checks if port is open, not if app is healthy",
     "Load balancer marks the backend as degraded and routes 50% traffic",
-    "Azure automatically detects 500s and removes the backend"
+    "Azure automatically detects 500s and removes the backend",
   ]}
   correct={1}
   explanation="A TCP health probe only verifies the port is listening. It doesn't know about HTTP 500s. Use an HTTP health probe with path /health that actually checks application dependencies."
@@ -309,13 +339,13 @@ curl -v http://localhost/health
 
 <CheatSheet title="Azure Load Balancer Quick Reference">
 
-| Service | Layer | Global? | TLS? | WAF? | Best For |
-|---------|-------|---------|------|------|----------|
-| Azure LB | L4 | ❌ | ❌ | ❌ | Internal services, VMSS |
-| App Gateway | L7 | ❌ | ✅ | ✅ | HTTP routing, TLS termination |
-| Traffic Manager | DNS | ✅ | ❌ | ❌ | Simple geo-failover |
-| Front Door | L7 | ✅ | ✅ | ✅ | Global app delivery |
-| Cross-region LB | L4 | ✅ | ❌ | ❌ | Global L4 failover |
+| Service         | Layer | Global? | TLS? | WAF? | Best For                      |
+| --------------- | ----- | ------- | ---- | ---- | ----------------------------- |
+| Azure LB        | L4    | ❌      | ❌   | ❌   | Internal services, VMSS       |
+| App Gateway     | L7    | ❌      | ✅   | ✅   | HTTP routing, TLS termination |
+| Traffic Manager | DNS   | ✅      | ❌   | ❌   | Simple geo-failover           |
+| Front Door      | L7    | ✅      | ✅   | ✅   | Global app delivery           |
+| Cross-region LB | L4    | ✅      | ❌   | ❌   | Global L4 failover            |
 
 </CheatSheet>
 

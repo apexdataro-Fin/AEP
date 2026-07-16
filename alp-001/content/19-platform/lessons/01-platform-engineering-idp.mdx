@@ -22,10 +22,20 @@ tags: [platform, idp, developer-experience, backstage]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Analogy,
-  Exercise, Challenge, Quiz, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Analogy,
+  Exercise,
+  Challenge,
+  Quiz,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Platform Engineering: The Internal Developer Platform
 
@@ -59,7 +69,7 @@ import {
 graph TD
     PLATFORM[Platform Team] -->|Builds & maintains| IDP[Internal Developer Platform]
     IDP -->|Self-service| DEV[Development Teams]
-    
+
     subgraph "IDP Components"
         CATALOG[Service Catalog]
         SCAFFOLD[Scaffolding]
@@ -68,15 +78,15 @@ graph TD
         SEC[Security Policies]
         DOCS[Documentation]
     end
-    
+
     DEV -->|Feedback| PLATFORM
 ```
 
-| Anti-Pattern | Platform Engineering Approach |
-|-------------|------------------------------|
-| "DevOps team handles deployments" | Self-service CI/CD templates |
-| "Ask ops to create a database" | Scaffolding tool creates it in 5 min |
-| "Read the wiki for setup" | Golden path tutorial in the IDP |
+| Anti-Pattern                          | Platform Engineering Approach        |
+| ------------------------------------- | ------------------------------------ |
+| "DevOps team handles deployments"     | Self-service CI/CD templates         |
+| "Ask ops to create a database"        | Scaffolding tool creates it in 5 min |
+| "Read the wiki for setup"             | Golden path tutorial in the IDP      |
 | "Each team builds their own pipeline" | Reusable, blessed pipeline templates |
 
 ---
@@ -91,12 +101,12 @@ graph TD
 
 </BestPractice>
 
-| Golden Path | What developers get |
-|-------------|-------------------|
-| **New Microservice** | Scaffolded repo with CI/CD, Dockerfile, k8s manifests, monitoring |
-| **New Database** | Terraform module applied via self-service form |
-| **Deploy to Production** | Automated pipeline with security + approval gates |
-| **Add Monitoring** | Pre-configured dashboards, alerts auto-provisioned |
+| Golden Path              | What developers get                                               |
+| ------------------------ | ----------------------------------------------------------------- |
+| **New Microservice**     | Scaffolded repo with CI/CD, Dockerfile, k8s manifests, monitoring |
+| **New Database**         | Terraform module applied via self-service form                    |
+| **Deploy to Production** | Automated pipeline with security + approval gates                 |
+| **Add Monitoring**       | Pre-configured dashboards, alerts auto-provisioned                |
 
 ---
 
@@ -105,23 +115,11 @@ graph TD
 ### IDP Stack — Backstage + Crossplane
 
 <CodeBlock language="yaml" title="Backstage Component Definition">
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: cloudnova-payments
-  description: Payment processing service
-  annotations:
-    github.com/project-slug: apexdataro-Fin/cloudnova-payments
-    backstage.io/techdocs-ref: dir:.
-spec:
-  type: service
-  lifecycle: production
-  owner: team-payments
-  system: cloudnova-platform
-  providesApis:
-    - cloudnova-payments-api
-  dependsOn:
-    - component:cloudnova-database
+  apiVersion: backstage.io/v1alpha1 kind: Component metadata: name: cloudnova-payments description:
+  Payment processing service annotations: github.com/project-slug: apexdataro-Fin/cloudnova-payments
+  backstage.io/techdocs-ref: dir:. spec: type: service lifecycle: production owner: team-payments
+  system: cloudnova-platform providesApis: - cloudnova-payments-api dependsOn: -
+  component:cloudnova-database
 </CodeBlock>
 
 <ProductionNote>
@@ -164,18 +162,18 @@ spec:
       "To build better infrastructure",
       "To reduce cognitive load on developers by abstracting infrastructure complexity",
       "To replace DevOps engineers",
-      "To build Kubernetes clusters"
+      "To build Kubernetes clusters",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="What's wrong with 'ask ops to create a database'?"
     options={[
       "Nothing — that's their job",
       "It's a manual, non-scalable process that creates a bottleneck",
       "It's faster than self-service",
-      "Databases should never be created"
+      "Databases should never be created",
     ]}
     correct={1}
   />
@@ -185,9 +183,9 @@ spec:
 
 ## 📋 Summary
 
-| Principle | Practice |
-|-----------|----------|
-| **Platform as Product** | IDP with self-service, feedback loops |
-| **Golden Paths** | Make right way the easy way |
-| **Self-Service** | Developers provision their own infra |
+| Principle                 | Practice                                    |
+| ------------------------- | ------------------------------------------- |
+| **Platform as Product**   | IDP with self-service, feedback loops       |
+| **Golden Paths**          | Make right way the easy way                 |
+| **Self-Service**          | Developers provision their own infra        |
 | **Reduce Cognitive Load** | Abstract complexity behind clean interfaces |

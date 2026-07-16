@@ -23,11 +23,28 @@ tags: [git, history, rebase, undo]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example, Analogy,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, ArchitectureNote,
-  SecurityNote, CostNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Rewriting History: Amend, Reset, Rebase Interactive
 
@@ -49,14 +66,14 @@ Sometimes you make a typo in a commit message, forget to include a file, or make
 
 ### The Undo Toolbox
 
-| Command | What it does | Safe for shared branches? |
-|---------|-------------|--------------------------|
-| `git commit --amend` | Modify the last commit (message or files) | Only if not pushed |
-| `git reset --soft HEAD~1` | Undo commit, keep changes staged | Only if not pushed |
-| `git reset --mixed HEAD~1` | Undo commit, unstage changes | Only if not pushed |
-| `git reset --hard HEAD~1` | Undo commit, DISCARD changes | Only if not pushed |
-| `git revert HEAD` | Create new commit that undoes HEAD | **Yes — always safe** |
-| `git rebase -i` | Squash, reorder, edit, drop commits | Only if not pushed |
+| Command                    | What it does                              | Safe for shared branches? |
+| -------------------------- | ----------------------------------------- | ------------------------- |
+| `git commit --amend`       | Modify the last commit (message or files) | Only if not pushed        |
+| `git reset --soft HEAD~1`  | Undo commit, keep changes staged          | Only if not pushed        |
+| `git reset --mixed HEAD~1` | Undo commit, unstage changes              | Only if not pushed        |
+| `git reset --hard HEAD~1`  | Undo commit, DISCARD changes              | Only if not pushed        |
+| `git revert HEAD`          | Create new commit that undoes HEAD        | **Yes — always safe**     |
+| `git rebase -i`            | Squash, reorder, edit, drop commits       | Only if not pushed        |
 
 <Warning title="The Reflog is Your Safety Net">
 
@@ -82,11 +99,14 @@ Git's reflog keeps a 90-day (default) log of every HEAD movement. Almost nothing
 git commit --amend -m "feat: add proper cost tagging to compute"
 
 # Add a forgotten file to the last commit
+
 git add forgotten-file.tf
-git commit --amend --no-edit  # Keep the same message
+git commit --amend --no-edit # Keep the same message
 
 # ⚠️ If you already pushed, you'll need --force-with-lease
+
 git push --force-with-lease origin feat/cost-tagging
+
 </CodeBlock>
 
 ### `git reset` — Three Levels
@@ -97,11 +117,11 @@ graph LR
         C1[Commit undone] --> SA[Changes in staging area]
         SA --> WD[Working directory unchanged]
     end
-    
+
     subgraph "git reset --mixed DEFAULT"
         C2[Commit undone] --> WD2[Changes in working directory<br/>NOT staged]
     end
-    
+
     subgraph "git reset --hard"
         C3[Commit undone] --> DISCARD[Changes DISCARDED<br/>⚠️ Cannot recover without reflog]
     end
@@ -112,12 +132,17 @@ graph LR
 git reset --soft HEAD~1
 
 # Mixed (default): undo last commit, changes unstaged
+
 git reset HEAD~1
+
 # Same as: git reset --mixed HEAD~1
 
 # Hard: undo last commit, discard ALL changes
+
 git reset --hard HEAD~1
+
 # ⚠️ THINK TWICE before --hard
+
 </CodeBlock>
 
 ---
@@ -133,17 +158,27 @@ git reset --hard HEAD~1
 # ghi9012 feat: add cost tagging
 
 # Start interactive rebase (last 3 commits)
+
 git rebase -i HEAD~3
 
 # Editor opens:
+
 # pick ghi9012 feat: add cost tagging
+
 # squash def5678 WIP: almost done
+
 # squash abc1234 fix typo
+
 #
+
 # Save and close → editor opens for combined commit message
+
 # feat: add cost tagging to all compute resources
+
 #
+
 # Result: 1 clean commit instead of 3 messy ones
+
 </CodeBlock>
 
 <BestPractice>
@@ -154,15 +189,15 @@ git rebase -i HEAD~3
 
 ### Interactive Rebase Operations
 
-| Command | Effect |
-|---------|--------|
-| `pick` | Use the commit as-is |
-| `reword` | Change only the commit message |
-| `edit` | Pause to amend the commit (add/remove files) |
-| `squash` | Combine with previous commit, merge messages |
-| `fixup` | Like squash, but discard the message |
-| `drop` | Remove the commit entirely |
-| `reorder` | Move commits to different positions |
+| Command   | Effect                                       |
+| --------- | -------------------------------------------- |
+| `pick`    | Use the commit as-is                         |
+| `reword`  | Change only the commit message               |
+| `edit`    | Pause to amend the commit (add/remove files) |
+| `squash`  | Combine with previous commit, merge messages |
+| `fixup`   | Like squash, but discard the message         |
+| `drop`    | Remove the commit entirely                   |
+| `reorder` | Move commits to different positions          |
 
 ---
 
@@ -194,7 +229,7 @@ gitGraph
     commit id: "B (buggy)"
     commit id: "C"
     commit id: "D (revert B)"
-    
+
     style 1 fill:#ef4444,color:#fff
     style 3 fill:#10b981,color:#fff
 ```
@@ -245,6 +280,7 @@ git rebase --continue
 # 7. Force push (safe — only you use this branch)
 git push --force-with-lease origin feat/tf-modules
 ```
+
 </details>
 </Challenge>
 
@@ -278,14 +314,14 @@ git push --force-with-lease origin feat/tf-modules
     correct={2}
     explanation="`git revert` is the only safe option — it creates a new commit instead of rewriting history."
   />
-  
+
   <Question
     question="What does 'squash' do in interactive rebase?"
     options={[
       "Deletes the commit",
       "Combines the commit with the previous one and opens editor for merged message",
       "Reorders commits",
-      "Changes only the commit message"
+      "Changes only the commit message",
     ]}
     correct={1}
   />
@@ -299,11 +335,7 @@ git push --force-with-lease origin feat/tf-modules
 
 **Q:** "A developer accidentally committed and pushed a file containing credentials. The commit is 5 commits back in main. How do you handle this?"
 
-**A:** 1. **Immediately rotate the credentials** — the secret is compromised regardless of Git cleanup.
-2. Use `git filter-branch` or `git filter-repo` (preferred) to remove the file from all history.
-3. Force push main after coordinating with the team.
-4. All team members must rebase their branches onto the cleaned main.
-5. Implement pre-commit hooks to prevent secrets from being committed.
+**A:** 1. **Immediately rotate the credentials** — the secret is compromised regardless of Git cleanup. 2. Use `git filter-branch` or `git filter-repo` (preferred) to remove the file from all history. 3. Force push main after coordinating with the team. 4. All team members must rebase their branches onto the cleaned main. 5. Implement pre-commit hooks to prevent secrets from being committed.
 
 </InterviewQuestion>
 
@@ -311,10 +343,10 @@ git push --force-with-lease origin feat/tf-modules
 
 ## 📋 Summary
 
-| Command | Purpose | Shared Branch Safe? |
-|---------|---------|-------------------|
-| `commit --amend` | Fix last commit | ❌ After push |
-| `reset --soft` | Undo commit, keep staged | ❌ After push |
-| `reset --hard` | Undo commit, discard | ❌ Never |
-| `rebase -i` | Squash/reorder/edit | ❌ After push |
-| `revert` | Safe undo | ✅ Always |
+| Command          | Purpose                  | Shared Branch Safe? |
+| ---------------- | ------------------------ | ------------------- |
+| `commit --amend` | Fix last commit          | ❌ After push       |
+| `reset --soft`   | Undo commit, keep staged | ❌ After push       |
+| `reset --hard`   | Undo commit, discard     | ❌ Never            |
+| `rebase -i`      | Squash/reorder/edit      | ❌ After push       |
+| `revert`         | Safe undo                | ✅ Always           |

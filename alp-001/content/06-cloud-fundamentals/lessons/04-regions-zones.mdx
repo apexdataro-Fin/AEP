@@ -62,22 +62,23 @@ graph TD
     R1 --> Z3[Zone 3]
     R2 --> Z4[Zone 1]
     R2 --> Z5[Zone 2]
-    
+
     style G fill:#0ea5e9,stroke:#0284c7,color:#fff
     style R1 fill:#8b5cf6,stroke:#7c3aed,color:#fff
     style Z1 fill:#10b981,stroke:#059669,color:#fff
 ```
 
-| Layer | What It Is | Failure Protection |
-|---|---|---|
-| **Zone** | Physically separate datacenter in a region | Datacenter-level failures |
-| **Region** | Multiple zones, <2ms latency between zones | Zone-level failures |
-| **Region Pair** | Two regions 300+ miles apart | Regional disasters |
-| **Geography** | Data residency boundary (e.g., "United States") | Compliance and data sovereignty |
+| Layer           | What It Is                                      | Failure Protection              |
+| --------------- | ----------------------------------------------- | ------------------------------- |
+| **Zone**        | Physically separate datacenter in a region      | Datacenter-level failures       |
+| **Region**      | Multiple zones, <2ms latency between zones      | Zone-level failures             |
+| **Region Pair** | Two regions 300+ miles apart                    | Regional disasters              |
+| **Geography**   | Data residency boundary (e.g., "United States") | Compliance and data sovereignty |
 
 ## CloudNova Design Decision
 
 CloudNova operates in **East US** (primary) with **West US** (DR). Each region has services deployed across 2 availability zones. This means:
+
 - Zone failure → other zone handles traffic
 - East US goes down → fail over to West US (4-hour RTO)
 

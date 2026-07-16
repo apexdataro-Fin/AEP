@@ -23,11 +23,26 @@ tags: [git, terraform, iac, devops]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, ArchitectureNote,
-  SecurityNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Git for Infrastructure as Code
 
@@ -59,30 +74,11 @@ Infrastructure as Code means your servers, networks, and databases are defined i
 ### IaC Repository Structure
 
 <CodeBlock language="bash" title="CloudNova's IaC Repository Layout">
-cloudnova-infra/
-├── terraform/
-│   ├── modules/           # Reusable modules
-│   │   ├── compute/
-│   │   ├── networking/
-│   │   └── database/
-│   ├── environments/      # Per-environment configs
-│   │   ├── dev/
-│   │   ├── staging/
-│   │   └── prod/
-│   └── global/            # Shared resources
-│       ├── dns/
-│       └── monitoring/
-├── bicep/
-│   └── modules/
-├── policies/
-│   └── azure-policy/
-├── scripts/
-│   └── deploy.sh
-├── .github/
-│   └── workflows/
-│       ├── terraform-plan.yml
-│       └── terraform-apply.yml
-└── .gitignore
+  cloudnova-infra/ ├── terraform/ │ ├── modules/ # Reusable modules │ │ ├── compute/ │ │ ├──
+  networking/ │ │ └── database/ │ ├── environments/ # Per-environment configs │ │ ├── dev/ │ │ ├──
+  staging/ │ │ └── prod/ │ └── global/ # Shared resources │ ├── dns/ │ └── monitoring/ ├── bicep/ │
+  └── modules/ ├── policies/ │ └── azure-policy/ ├── scripts/ │ └── deploy.sh ├── .github/ │ └──
+  workflows/ │ ├── terraform-plan.yml │ └── terraform-apply.yml └── .gitignore
 </CodeBlock>
 
 ---
@@ -96,32 +92,40 @@ cloudnova-infra/
 **/.terraform/*
 
 # Terraform state files — NEVER commit these!
-*.tfstate
-*.tfstate.*
+
+_.tfstate
+_.tfstate.\*
 
 # Terraform variable files (may contain secrets)
-*.tfvars
+
+\*.tfvars
 !example.tfvars
 
 # Terraform plan output
-*.tfplan
+
+\*.tfplan
 
 # Terraform lock file (optional — team decision)
+
 # .terraform.lock.hcl
 
 # CLI config with credentials
+
 .terraformrc
 terraform.rc
 
 # Environment files
+
 .env
-.env.*
-*.env
+.env.\*
+\*.env
 
 # IDE
+
 .vscode/
 .idea/
-*.swp
+\*.swp
+
 </CodeBlock>
 
 <SecurityNote>
@@ -142,18 +146,18 @@ sequenceDiagram
     participant Git as GitHub
     participant CI as GitHub Actions
     participant Azure as Azure
-    
+
     Dev->>Git: Push feature branch
     Dev->>Git: Open Pull Request
     Git->>CI: Trigger terraform plan
-    
+
     CI->>Azure: Authenticate (OIDC)
     CI->>CI: terraform init
     CI->>CI: terraform plan
     CI-->>Git: Post plan output as PR comment
-    
+
     Note over Dev,Git: Code review happens here
-    
+
     Dev->>Git: Merge PR to main
     Git->>CI: Trigger terraform apply
     CI->>Azure: terraform apply
@@ -169,19 +173,19 @@ on:
       - 'terraform/**'
 
 jobs:
-  plan:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
+plan:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4
+
       - name: Terraform Plan
         uses: hashicorp/setup-terraform@v3
-      
+
       - run: terraform init
         working-directory: ./terraform/environments/dev
-      
+
       - run: terraform plan -no-color
         working-directory: ./terraform/environments/dev
+
 </CodeBlock>
 
 ---
@@ -217,7 +221,7 @@ resource "azurerm_storage_account" "data" {
   location                 = azurerm_resource_group.main.location
   account_tier             = "Standard"
   account_replication_type = "LRS"
-  
+
   # Missing: network_rules, min_tls_version, infrastructure_encryption
 }
 ```
@@ -238,7 +242,7 @@ resource "azurerm_storage_account" "data" {
 5. ⚠️ **Naming convention** — verify this follows CloudNova's naming standard.
 
 6. ✅ **Using variables** — good for environment parameterization.
-</details>
+   </details>
 </Challenge>
 
 ---
@@ -266,23 +270,18 @@ resource "azurerm_storage_account" "data" {
 <Quiz>
   <Question
     question="Which file should NEVER be committed to an IaC repository?"
-    options={[
-      "main.tf",
-      "terraform.tfstate",
-      "variables.tf",
-      "outputs.tf"
-    ]}
+    options={["main.tf", "terraform.tfstate", "variables.tf", "outputs.tf"]}
     correct={1}
     explanation="Terraform state files contain secrets and resource metadata. Always use remote backends."
   />
-  
+
   <Question
     question="What's the best practice for IaC code review?"
     options={[
       "Review the code, merge, then run terraform apply manually",
       "Automate terraform plan on PR, review the plan output, merge triggers apply",
       "Skip review for infrastructure — it's just config",
-      "Review only the terraform apply step"
+      "Review only the terraform apply step",
     ]}
     correct={1}
     explanation="Automated plan on PR lets reviewers see exactly what will change. Manual apply after merge prevents untested changes."
@@ -305,10 +304,10 @@ resource "azurerm_storage_account" "data" {
 
 ## 📋 Summary
 
-| Principle | Practice |
-|-----------|----------|
-| **Never commit state** | Remote backends with encryption |
+| Principle                | Practice                              |
+| ------------------------ | ------------------------------------- |
+| **Never commit state**   | Remote backends with encryption       |
 | **Never commit secrets** | Key Vault references, CI/CD injection |
-| **Automate plan on PR** | Reviewers see infrastructure diffs |
-| **Protect main branch** | Require reviews + passing plans |
-| **Structure for scale** | Modules + environments + CI/CD |
+| **Automate plan on PR**  | Reviewers see infrastructure diffs    |
+| **Protect main branch**  | Require reviews + passing plans       |
+| **Structure for scale**  | Modules + environments + CI/CD        |

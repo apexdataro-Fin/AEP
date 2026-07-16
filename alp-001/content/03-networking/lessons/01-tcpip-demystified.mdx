@@ -13,13 +13,37 @@ author: "ARES Engineering"
 last_updated: "2026-07-15"
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  Challenge,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  Mermaid,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # TCP/IP Demystified
 
 <Info>
 
 **Learning Objectives**
+
 - Explain the TCP 3-way handshake step-by-step
 - Map protocols to OSI layers in cloud context
 - Read a packet capture and identify key headers
@@ -48,10 +72,11 @@ This is exactly how TCP sends your data across the internet — in numbered, con
 <Analogy>
 
 **The Post Office Analogy**
+
 - **IP** = the postal service that delivers individual letters (packets). It doesn't care if letters arrive in order or at all.
 - **TCP** = the protocol you follow: number every page, confirm receipt, resend if lost.
 
-TCP runs *on top of* IP — like numbered pages traveling inside postal envelopes.
+TCP runs _on top of_ IP — like numbered pages traveling inside postal envelopes.
 
 </Analogy>
 
@@ -73,11 +98,13 @@ graph LR
     style A fill:#0ea5e9,color:#fff
     style D fill:#f59e0b,color:#000
     style E fill:#f59e0b,color:#000
+
 </Mermaid>
 
 **Cloud engineers spend 90% of their time in Layers 3, 4, and 7.** You need to know:
+
 - **Layer 3 (IP):** Routing, subnetting, VNet design
-- **Layer 4 (TCP/UDP):** Port numbers, connection state, load balancer configuration  
+- **Layer 4 (TCP/UDP):** Port numbers, connection state, load balancer configuration
 - **Layer 7 (HTTP/DNS):** Application routing, TLS termination, API design
 
 ### TCP Header — What Matters
@@ -99,6 +126,7 @@ graph LR
 ```
 
 **Key fields a cloud engineer needs:**
+
 - **Source/Destination Port:** "Which application am I talking to?"
 - **SYN flag:** "I want to start a connection"
 - **ACK flag:** "I confirm receipt"
@@ -127,11 +155,13 @@ sequenceDiagram
 <Example>
 
 **Real-world TCP handshake (tcpdump output):**
+
 ```
 10:32:01.123456 IP 10.0.1.5.54321 > 10.0.2.10.443: Flags [S], seq 1234567890
 10:32:01.124890 IP 10.0.2.10.443 > 10.0.1.5.54321: Flags [S.], seq 987654321, ack 1234567891
 10:32:01.125001 IP 10.0.1.5.54321 > 10.0.2.10.443: Flags [.], ack 987654322
 ```
+
 Line 1: Client sends SYN (S)  
 Line 2: Server responds SYN-ACK (S.)  
 Line 3: Client acknowledges
@@ -166,11 +196,11 @@ stateDiagram-v2
 
 **States that matter in production:**
 
-| State | Problem | Cloud Impact |
-|-------|---------|-------------|
-| `TIME_WAIT` | Port exhaustion | "My app can't open more connections!" |
-| `SYN_RCVD` | SYN flood attack | "Server unresponsive — check DDoS protection" |
-| `CLOSE_WAIT` | Application not closing socket | "File descriptor leak — app will crash" |
+| State        | Problem                        | Cloud Impact                                  |
+| ------------ | ------------------------------ | --------------------------------------------- |
+| `TIME_WAIT`  | Port exhaustion                | "My app can't open more connections!"         |
+| `SYN_RCVD`   | SYN flood attack               | "Server unresponsive — check DDoS protection" |
+| `CLOSE_WAIT` | Application not closing socket | "File descriptor leak — app will crash"       |
 
 <ProductionNote>
 
@@ -231,19 +261,21 @@ net.ipv4.tcp_congestion_control = bbr
 ```
 
 <Warning>
-**Don't blindly apply these.** Benchmark your workload first. TCP BBR helps with packet loss (common in multi-region deployments), but CUBIC may be better in low-latency same-region scenarios.
+  **Don't blindly apply these.** Benchmark your workload first. TCP BBR helps with packet loss
+  (common in multi-region deployments), but CUBIC may be better in low-latency same-region
+  scenarios.
 </Warning>
 
 ### Load Balancer TCP Behavior
 
 Azure Load Balancer (L4) vs Application Gateway (L7) handle TCP differently:
 
-| Aspect | Azure LB (L4) | App Gateway (L7) |
-|--------|--------------|-------------------|
-| TCP termination | Pass-through | Terminates and re-originates |
-| Client IP visible? | Yes (default) | Via X-Forwarded-For header |
-| Health probes | TCP port check | HTTP path check |
-| Idle timeout | 4-30 min (configurable) | Per-request |
+| Aspect             | Azure LB (L4)           | App Gateway (L7)             |
+| ------------------ | ----------------------- | ---------------------------- |
+| TCP termination    | Pass-through            | Terminates and re-originates |
+| Client IP visible? | Yes (default)           | Via X-Forwarded-For header   |
+| Health probes      | TCP port check          | HTTP path check              |
+| Idle timeout       | 4-30 min (configurable) | Per-request                  |
 
 <Debugging>
 
@@ -279,7 +311,8 @@ TCP's guarantees (ordered delivery, reliability) create interesting challenges a
 **1. Head-of-Line Blocking**  
 If packet #5 is lost, packets #6-#100 wait in a buffer. In HTTP/1.1, this blocks the entire connection. HTTP/2 multiplexes streams to mitigate this, but TCP-level HOL blocking still occurs. This is why **HTTP/3 uses QUIC (UDP-based)** — to eliminate TCP's ordering constraint entirely.
 
-**2. The Bandwidth-Delay Product**  
+**2. The Bandwidth-Delay Product**
+
 ```
 BDP = bandwidth × RTT
 
@@ -291,6 +324,7 @@ Your TCP buffer must hold 62.5 MB of "in-flight" data to fully utilize this link
 
 **3. TCP Over WAN (Azure Regions)**  
 Between US East and West Europe (~100ms RTT):
+
 - TCP slow-start takes ~8 round trips to reach full speed
 - That's 800ms before the connection reaches maximum throughput
 - Small API calls (one packet) never exit slow-start
@@ -354,16 +388,19 @@ Between US East and West Europe (~100ms RTT):
 **Time:** 15 minutes
 
 1. Start a packet capture:
+
 ```bash
 sudo tcpdump -i any -nn 'tcp and port 443' -w /tmp/handshake.pcap
 ```
 
 2. In another terminal, make an HTTPS request:
+
 ```bash
 curl -s https://httpbin.org/ip > /dev/null
 ```
 
 3. Stop the capture (Ctrl+C) and analyze:
+
 ```bash
 tcpdump -r /tmp/handshake.pcap -nn
 ```
@@ -414,12 +451,7 @@ tcpdump -r /tmp/handshake.pcap -nn
 
 <Quiz
   question="A SYN flood attack exploits which TCP connection state?"
-  options={[
-    "ESTABLISHED",
-    "SYN_RCVD",
-    "TIME_WAIT",
-    "CLOSE_WAIT"
-  ]}
+  options={["ESTABLISHED", "SYN_RCVD", "TIME_WAIT", "CLOSE_WAIT"]}
   correct={1}
   explanation="SYN flood fills the server's SYN_RCVD queue with half-open connections. Each SYN consumes resources until the server can't accept new connections. Mitigation: SYN cookies, rate limiting, Azure DDoS Protection."
 />
@@ -447,13 +479,13 @@ tcpdump -r /tmp/handshake.pcap -nn
 
 <CheatSheet title="TCP Quick Reference">
 
-| Concept | Key Points |
-|---------|-----------|
-| **Handshake** | SYN → SYN-ACK → ACK (3 steps) |
-| **Connection close** | FIN → ACK → FIN → ACK (4 steps) |
-| **Flow control** | Receiver advertises window size ("I can handle X bytes") |
-| **Congestion control** | Sender adjusts rate based on packet loss / RTT |
-| **Port numbers** | 1-65535. 1-1023 = privileged. Ephemeral = 32768-60999 (Linux default) |
+| Concept                | Key Points                                                                                                     |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------- |
+| **Handshake**          | SYN → SYN-ACK → ACK (3 steps)                                                                                  |
+| **Connection close**   | FIN → ACK → FIN → ACK (4 steps)                                                                                |
+| **Flow control**       | Receiver advertises window size ("I can handle X bytes")                                                       |
+| **Congestion control** | Sender adjusts rate based on packet loss / RTT                                                                 |
+| **Port numbers**       | 1-65535. 1-1023 = privileged. Ephemeral = 32768-60999 (Linux default)                                          |
 | **Common cloud ports** | 22 (SSH), 80 (HTTP), 443 (HTTPS), 1433 (SQL Server), 5432 (PostgreSQL), 6379 (Redis), 3306 (MySQL), 3389 (RDP) |
 
 </CheatSheet>
@@ -464,7 +496,7 @@ tcpdump -r /tmp/handshake.pcap -nn
 
 ### Top Mistakes Cloud Engineers Make
 
-1. **Assuming TCP guarantees delivery at the application level.** TCP guarantees delivery *or notification of failure*. If `send()` returns success, data is in the kernel buffer — not necessarily delivered yet. Use application-level acknowledgments for critical operations.
+1. **Assuming TCP guarantees delivery at the application level.** TCP guarantees delivery _or notification of failure_. If `send()` returns success, data is in the kernel buffer — not necessarily delivered yet. Use application-level acknowledgments for critical operations.
 
 2. **Ignoring TIME_WAIT.** At 1000 connections/second with 120s TIME_WAIT, you hold 120,000 ports in limbo. You only have ~28,000 ephemeral ports by default. Solution: connection pooling, `tcp_tw_reuse`, or increase port range.
 

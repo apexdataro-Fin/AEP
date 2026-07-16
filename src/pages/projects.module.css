@@ -65,7 +65,9 @@
   border: 1px solid var(--celos-border);
   border-radius: 1rem;
   position: relative;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 
 .timelineItem:hover {

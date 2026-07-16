@@ -22,10 +22,18 @@ tags: [interview, career, system-design, preparation]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition,
-  Exercise, Challenge, Quiz, Flashcard,
-  InterviewQuestion, ProductionNote
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Exercise,
+  Challenge,
+  Quiz,
+  Flashcard,
+  InterviewQuestion,
+  ProductionNote,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Cloud Engineering Interview Preparation
 
@@ -49,11 +57,11 @@ A **cloud engineering interview** tests three things: system design (can you arc
 
 ### The Three Interview Types
 
-| Type | What They Test | Cloud Engineering Example |
-|------|---------------|--------------------------|
-| **System Design** | Can you architect? | "Design a multi-region deployment on Azure" |
-| **Technical Deep Dive** | Do you understand? | "Walk me through Kubernetes pod networking" |
-| **Behavioral** | Can you work with others? | "Tell me about a production incident you handled" |
+| Type                    | What They Test            | Cloud Engineering Example                         |
+| ----------------------- | ------------------------- | ------------------------------------------------- |
+| **System Design**       | Can you architect?        | "Design a multi-region deployment on Azure"       |
+| **Technical Deep Dive** | Do you understand?        | "Walk me through Kubernetes pod networking"       |
+| **Behavioral**          | Can you work with others? | "Tell me about a production incident you handled" |
 
 ---
 
@@ -75,6 +83,7 @@ A **cloud engineering interview** tests three things: system design (can you arc
 Clarify: "How many users? HA requirements? Latency targets?"
 
 Architecture:
+
 - Azure Front Door for global routing
 - AKS in East US + West Europe (active-active)
 - Cosmos DB multi-region writes
@@ -82,28 +91,31 @@ Architecture:
 - Terraform for IaC, Flux for GitOps
 
 Rationale:
+
 - AKS over VMs: container orchestration, auto-scaling
 - Cosmos DB over SQL: global distribution, low latency
 - Active-active over active-passive: no failover downtime
 
 Deep Dive:
+
 - "Let me walk you through how Front Door routes traffic..."
 - "Here's how Cosmos DB handles conflict resolution..."
 
 Scale:
+
 - "At 10x traffic, we'd add regions, partition data..."
-</CodeBlock>
+  </CodeBlock>
 
 ---
 
 ## 🏭 Behavioral Interview: STAR Method
 
-| Element | Meaning | Example |
-|---------|---------|---------|
-| **S**ituation | Set the context | "Our Terraform deploys were taking 45 minutes..." |
-| **T**ask | What was your role? | "I was the lead engineer responsible for optimizing the pipeline" |
-| **A**ction | What did YOU do? | "I parallelized the plan stages, implemented module caching, and shifted linting to pre-commit hooks" |
-| **R**esult | What was the outcome? | "Deployment time dropped to 12 minutes — a 73% improvement — and our team ships 3x more frequently" |
+| Element       | Meaning               | Example                                                                                               |
+| ------------- | --------------------- | ----------------------------------------------------------------------------------------------------- |
+| **S**ituation | Set the context       | "Our Terraform deploys were taking 45 minutes..."                                                     |
+| **T**ask      | What was your role?   | "I was the lead engineer responsible for optimizing the pipeline"                                     |
+| **A**ction    | What did YOU do?      | "I parallelized the plan stages, implemented module caching, and shifted linting to pre-commit hooks" |
+| **R**esult    | What was the outcome? | "Deployment time dropped to 12 minutes — a 73% improvement — and our team ships 3x more frequently"   |
 
 <ProductionNote>
 
@@ -167,18 +179,18 @@ Scale:
       "Start drawing the architecture immediately",
       "Clarify requirements: scale, constraints, priorities",
       "List all Azure services you know",
-      "Ask about salary"
+      "Ask about salary",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="In the STAR method, what does 'Action' mean?"
     options={[
       "What the team did collectively",
       "What YOU personally did — your individual contribution",
       "The result of the project",
-      "The situation background"
+      "The situation background",
     ]}
     correct={1}
   />
@@ -188,8 +200,8 @@ Scale:
 
 ## 📋 Summary
 
-| Interview Type | Key Strategy |
-|---------------|-------------|
+| Interview Type    | Key Strategy                                        |
+| ----------------- | --------------------------------------------------- |
 | **System Design** | Clarify → Architect → Rationale → Deep Dive → Scale |
-| **Technical** | Deep knowledge of your tools, explain internals |
-| **Behavioral** | STAR method: YOUR actions, YOUR impact |
+| **Technical**     | Deep knowledge of your tools, explain internals     |
+| **Behavioral**    | STAR method: YOUR actions, YOUR impact              |

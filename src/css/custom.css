@@ -178,7 +178,9 @@ h6 {
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   margin: 0 0.125rem;
-  transition: background 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s;
 }
 
 .navbar__link:hover,
@@ -300,7 +302,10 @@ pre {
   border: 1px solid var(--celos-border);
   border-radius: 1rem;
   padding: 1.5rem;
-  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    transform 0.2s,
+    border-color 0.2s;
 }
 
 .academy-card:hover {

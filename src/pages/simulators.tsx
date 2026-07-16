@@ -6,15 +6,60 @@ import styles from "./index.module.css";
 import simStyles from "./simulators.module.css";
 
 const simulators = [
-  { icon: "💻", name: "Linux Terminal", desc: "Practice shell commands, permissions, and scripting in a safe terminal.", status: "Ready" },
-  { icon: "☁️", name: "Azure Portal", desc: "Navigate Azure services, deploy resources, and manage subscriptions.", status: "Ready" },
-  { icon: "🛠", name: "Terraform", desc: "Write and apply infrastructure-as-code configurations.", status: "Ready" },
-  { icon: "🐳", name: "Docker", desc: "Build, run, and manage containers and images.", status: "Ready" },
-  { icon: "☸️", name: "Kubernetes", desc: "Deploy and manage pods, services, and deployments.", status: "Ready" },
-  { icon: "🌐", name: "Networking", desc: "Troubleshoot CIDR, DNS, load balancing, and routing.", status: "Ready" },
-  { icon: "🏗", name: "Architecture Builder", desc: "Design cloud architectures with drag-and-drop components.", status: "Beta" },
-  { icon: "🚨", name: "Incident Simulator", desc: "Respond to production incidents and lead war rooms.", status: "Beta" },
-  { icon: "🤖", name: "AI Playground", desc: "Experiment with prompts, embeddings, and AI workflows.", status: "Beta" },
+  {
+    icon: "💻",
+    name: "Linux Terminal",
+    desc: "Practice shell commands, permissions, and scripting in a safe terminal.",
+    status: "Ready",
+  },
+  {
+    icon: "☁️",
+    name: "Azure Portal",
+    desc: "Navigate Azure services, deploy resources, and manage subscriptions.",
+    status: "Ready",
+  },
+  {
+    icon: "🛠",
+    name: "Terraform",
+    desc: "Write and apply infrastructure-as-code configurations.",
+    status: "Ready",
+  },
+  {
+    icon: "🐳",
+    name: "Docker",
+    desc: "Build, run, and manage containers and images.",
+    status: "Ready",
+  },
+  {
+    icon: "☸️",
+    name: "Kubernetes",
+    desc: "Deploy and manage pods, services, and deployments.",
+    status: "Ready",
+  },
+  {
+    icon: "🌐",
+    name: "Networking",
+    desc: "Troubleshoot CIDR, DNS, load balancing, and routing.",
+    status: "Ready",
+  },
+  {
+    icon: "🏗",
+    name: "Architecture Builder",
+    desc: "Design cloud architectures with drag-and-drop components.",
+    status: "Beta",
+  },
+  {
+    icon: "🚨",
+    name: "Incident Simulator",
+    desc: "Respond to production incidents and lead war rooms.",
+    status: "Beta",
+  },
+  {
+    icon: "🤖",
+    name: "AI Playground",
+    desc: "Experiment with prompts, embeddings, and AI workflows.",
+    status: "Beta",
+  },
 ];
 
 export default function SimulatorsPage(): ReactNode {

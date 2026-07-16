@@ -17,8 +17,8 @@ These standards ensure consistency, quality, and maintainability across the enti
 
 ## Standards Index
 
-| Standard                                                      | Purpose                            |
-| ------------------------------------------------------------- | ---------------------------------- |
+| Standard                                                           | Purpose                            |
+| ------------------------------------------------------------------ | ---------------------------------- |
 | [Style Guide](/docs/standards/style-guide)                         | Code formatting and style rules    |
 | [Naming Conventions](/docs/standards/naming-conventions)           | File, variable, and content naming |
 | [Code Quality](/docs/standards/code-quality)                       | Quality gates and review criteria  |

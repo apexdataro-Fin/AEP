@@ -23,10 +23,25 @@ tags: [github, ci-cd, github-actions, terraform]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Example,
-  CommonMistake, Debugging, Exercise, Challenge, Quiz, CodeBlock,
-  TerminalBlock, Flashcard, ProductionNote, SecurityNote, InterviewQuestion, AITutor
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  CommonMistake,
+  Debugging,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  SecurityNote,
+  InterviewQuestion,
+  AITutor,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # GitHub Actions: CI/CD Automation
 
@@ -54,7 +69,7 @@ import {
 ```mermaid
 graph TD
     EVENT[Event Trigger] --> WF[Workflow]
-    
+
     subgraph "Workflow: terraform-ci.yml"
         J1[Job: validate] --> J2[Job: plan]
         J1 --> S1[Step: checkout]
@@ -62,7 +77,7 @@ graph TD
         S2 --> S3[Step: terraform validate]
         J2 --> S4[Step: terraform plan]
     end
-    
+
     EVENT -->|push/PR| WF
 ```
 
@@ -70,56 +85,53 @@ graph TD
 name: Terraform CI
 
 on:
-  pull_request:
-    paths:
-      - 'terraform/**'
-    branches: [main]
+pull_request:
+paths: - 'terraform/\*\*'
+branches: [main]
 
 env:
-  ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-  ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
+validate:
+runs-on: ubuntu-latest
+steps: - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: "1.7"
-      
+
       - name: Terraform Format
         run: terraform fmt -check -recursive
         working-directory: ./terraform
-      
+
       - name: Terraform Init
         run: terraform init -backend=false
         working-directory: ./terraform
-      
+
       - name: Terraform Validate
         run: terraform validate
         working-directory: ./terraform
 
-  plan:
-    needs: validate
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pull-requests: write
-    steps:
-      - uses: actions/checkout@v4
-      
+plan:
+needs: validate
+runs-on: ubuntu-latest
+permissions:
+contents: read
+pull-requests: write
+steps: - uses: actions/checkout@v4
+
       - uses: hashicorp/setup-terraform@v3
-      
+
       - name: Terraform Plan
         id: plan
         run: |
           terraform init
           terraform plan -no-color -out=tfplan
         working-directory: ./terraform
-      
+
       - name: Post Plan to PR
         uses: actions/github-script@v7
         with:
@@ -134,6 +146,7 @@ jobs:
             });
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
+
 </CodeBlock>
 
 ---
@@ -148,19 +161,19 @@ sequenceDiagram
     participant CI as CI Workflow
     participant Env as Environment Gate
     participant Azure as Azure
-    
+
     Dev->>CI: Merge to main
-    
+
     CI->>CI: Build & Test
-    
+
     CI->>Env: Deploy to Dev
     Note over Env: Auto-deploy (no approval)
     CI->>Azure: Apply Terraform (dev)
-    
+
     CI->>Env: Deploy to Staging
     Note over Env: Auto-deploy (no approval)
     CI->>Azure: Apply Terraform (staging)
-    
+
     CI->>Env: Deploy to Production
     Note over Env: ⏸️ Waiting for approval
     Env-->>CI: ✅ Approved by lead
@@ -183,25 +196,24 @@ sequenceDiagram
 name: Terraform Deploy
 
 permissions:
-  id-token: write   # Required for OIDC
-  contents: read
+id-token: write # Required for OIDC
+contents: read
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Azure Login (OIDC)
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          # No secrets needed! Token federated from GitHub
-      
+deploy:
+runs-on: ubuntu-latest
+steps: - name: Azure Login (OIDC)
+uses: azure/login@v2
+with:
+client-id: ${{ secrets.AZURE_CLIENT_ID }}
+tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }} # No secrets needed! Token federated from GitHub
+
       - name: Terraform Apply
         run: |
           terraform init
           terraform apply -auto-approve
+
 </CodeBlock>
 
 <SecurityNote>
@@ -231,30 +243,33 @@ jobs:
 Two workflow files working together:
 
 **`terraform-ci.yml`** (runs on PR):
+
 - `terraform fmt -check`
 - `terraform validate`
 - `terraform plan` → post to PR
 
 **`terraform-cd.yml`** (runs on merge):
+
 ```yaml
 jobs:
   dev:
     runs-on: ubuntu-latest
     environment: dev
     steps: [checkout, azure-login, terraform-apply]
-  
+
   staging:
     needs: dev
     runs-on: ubuntu-latest
     environment: staging
     steps: [checkout, azure-login, terraform-apply]
-  
+
   production:
     needs: staging
     runs-on: ubuntu-latest
-    environment: production  # Has required reviewers configured
+    environment: production # Has required reviewers configured
     steps: [checkout, azure-login, terraform-apply]
 ```
+
 </details>
 </Challenge>
 
@@ -290,18 +305,18 @@ jobs:
       "Only manual button clicks",
       "Events: push, pull_request, schedule, workflow_dispatch, etc.",
       "Only on merge to main",
-      "It runs continuously"
+      "It runs continuously",
     ]}
     correct={1}
   />
-  
+
   <Question
     question="What does `needs: [job-name]` do in a workflow?"
     options={[
       "It's a comment, does nothing",
       "Makes the current job wait until the specified job(s) complete successfully",
       "Creates a dependency on external services",
-      "Duplicates the specified job"
+      "Duplicates the specified job",
     ]}
     correct={1}
   />
@@ -323,10 +338,10 @@ jobs:
 
 ## 📋 Summary
 
-| Component | What it does |
-|-----------|-------------|
-| **Workflow** | YAML file defining CI/CD logic |
-| **Event** | Trigger (push, PR, schedule) |
-| **Job** | Runs on a GitHub-hosted or self-hosted runner |
-| **Environment** | Deployment target with protection rules |
-| **OIDC** | Passwordless cloud authentication |
+| Component       | What it does                                  |
+| --------------- | --------------------------------------------- |
+| **Workflow**    | YAML file defining CI/CD logic                |
+| **Event**       | Trigger (push, PR, schedule)                  |
+| **Job**         | Runs on a GitHub-hosted or self-hosted runner |
+| **Environment** | Deployment target with protection rules       |
+| **OIDC**        | Passwordless cloud authentication             |

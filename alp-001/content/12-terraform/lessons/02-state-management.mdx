@@ -58,6 +58,7 @@ The state file contains:
 ```
 
 Every time you run `terraform plan`, Terraform:
+
 1. Refreshes state from the cloud (verifying resources still exist)
 2. Compares your `.tf` files to the state
 3. Shows you the difference
@@ -80,6 +81,7 @@ terraform {
 ```
 
 **Benefits of remote backends:**
+
 - **Shared state** — entire team sees the same infrastructure picture
 - **State locking** — prevents two people applying simultaneously
 - **Encryption** — state at rest is encrypted (may contain secrets!)
@@ -91,7 +93,7 @@ graph TB
     D1[Dev 1: terraform plan]
     D2[Dev 2: terraform plan]
   end
-  
+
   D1 -->|acquires lease| S[Azure Storage Account]
   D2 -->|lease taken, waits| S
   S --> L[State Lock: Lease Blob]
@@ -127,9 +129,9 @@ terraform apply  # Applies only to prod workspace
 
 **Workspace vs directory isolation:**
 
-| Approach | When to Use |
-|----------|------------|
-| Workspaces | Same config, different parameters (environments) |
+| Approach    | When to Use                                      |
+| ----------- | ------------------------------------------------ |
+| Workspaces  | Same config, different parameters (environments) |
 | Directories | Completely different infrastructure (components) |
 
 ### Architect

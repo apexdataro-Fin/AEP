@@ -22,10 +22,21 @@ tags: [sre, reliability, sla, monitoring]
 ---
 
 import {
-  Info, Warning, Tip, BestPractice, Definition, Analogy,
-  Exercise, Challenge, Quiz, CodeBlock, Flashcard,
-  ProductionNote, ArchitectureNote, InterviewQuestion
-} from '@site/src/components/shared/InteractiveBlocks';
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Analogy,
+  Exercise,
+  Challenge,
+  Quiz,
+  CodeBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # Site Reliability Engineering (SRE) & SLIs
 
@@ -55,17 +66,17 @@ import {
 
 ### SLIs, SLOs, SLAs — The Reliability Stack
 
-| Term | Definition | Example |
-|------|-----------|---------|
-| **SLI** (Indicator) | Actual measurement | "API latency p99 is 215ms this week" |
-| **SLO** (Objective) | Internal target | "API latency p99 must be < 200ms" |
-| **SLA** (Agreement) | External promise (with consequences) | "99.9% uptime or 10% credit" |
+| Term                | Definition                           | Example                              |
+| ------------------- | ------------------------------------ | ------------------------------------ |
+| **SLI** (Indicator) | Actual measurement                   | "API latency p99 is 215ms this week" |
+| **SLO** (Objective) | Internal target                      | "API latency p99 must be < 200ms"    |
+| **SLA** (Agreement) | External promise (with consequences) | "99.9% uptime or 10% credit"         |
 
 ```mermaid
 graph TD
     SLI[SLI: What we measure<br/>Latency, error rate, throughput] --> SLO[SLO: Internal target<br/>p99 latency < 200ms, 99.9% availability]
     SLO --> SLA[SLA: Customer promise<br/>99.5% uptime guaranteed<br/>Refund if breached]
-    
+
     SLO --> EB[Error Budget<br/>0.1% allowed downtime<br/>= ~43 min/month]
     EB --> DECISION{Use error budget?}
     DECISION -->|Budget available| SHIP[Ship features]
@@ -90,10 +101,15 @@ graph TD
 # Allowed downtime: 43,200 * 0.001 = 43.2 minutes/month
 
 # CloudNova's error budget policy:
+
 # - Green (> 50% remaining): Ship freely
+
 # - Yellow (20-50% remaining): Ship cautiously, prioritize reliability
+
 # - Red (< 20% remaining): Feature freeze, all hands on reliability
+
 # - Exhausted: Emergency mode — revert recent changes
+
 </CodeBlock>
 
 <Tip>
@@ -108,13 +124,13 @@ graph TD
 
 ### Toil — The Silent Killer
 
-| Is it toil? | Yes | No |
-|------------|-----|-----|
-| Manual | ✅ | Automated = not toil |
-| Repetitive | ✅ | Novel work = not toil |
-| Automatable | ✅ | Requires human judgment = not toil |
-| No enduring value | ✅ | Creates long-term improvement = not toil |
-| Scales with usage | ✅ | Constant regardless of scale = not toil |
+| Is it toil?       | Yes | No                                       |
+| ----------------- | --- | ---------------------------------------- |
+| Manual            | ✅  | Automated = not toil                     |
+| Repetitive        | ✅  | Novel work = not toil                    |
+| Automatable       | ✅  | Requires human judgment = not toil       |
+| No enduring value | ✅  | Creates long-term improvement = not toil |
+| Scales with usage | ✅  | Constant regardless of scale = not toil  |
 
 <ProductionNote>
 
@@ -129,6 +145,7 @@ graph TD
 <Challenge title="Define SLOs for CloudNova">
 
 CloudNova's customer-facing API serves:
+
 - Product catalog (read-heavy, latency-sensitive)
 - Order processing (write-heavy, consistency-critical)
 - Payment gateway (PCI-compliant, availability-critical)
@@ -138,14 +155,15 @@ Define appropriate SLIs and SLOs for each service.
 <details>
 <summary>SLO Definitions</summary>
 
-| Service | SLI | SLO | Why |
-|---------|-----|-----|-----|
-| **Product Catalog** | p99 latency | < 150ms | Users abandon slow pages |
-| **Order Processing** | Error rate | < 0.1% | Revenue-impacting failures |
-| **Payment Gateway** | Availability | 99.99% | PCI compliance + revenue |
-| **Payment Gateway** | p99 latency | < 500ms | External gateway overhead |
+| Service              | SLI          | SLO     | Why                        |
+| -------------------- | ------------ | ------- | -------------------------- |
+| **Product Catalog**  | p99 latency  | < 150ms | Users abandon slow pages   |
+| **Order Processing** | Error rate   | < 0.1%  | Revenue-impacting failures |
+| **Payment Gateway**  | Availability | 99.99%  | PCI compliance + revenue   |
+| **Payment Gateway**  | p99 latency  | < 500ms | External gateway overhead  |
 
 Payment Gateway gets the strictest SLO because it directly impacts revenue and compliance.
+
 </details>
 </Challenge>
 
@@ -175,18 +193,23 @@ Payment Gateway gets the strictest SLO because it directly impacts revenue and c
 <Quiz>
   <Question
     question="If your SLA promises 99.5% uptime, what should your SLO be?"
-    options={["99.5% — same as SLA", "99.9% — stricter than SLA", "99.0% — looser than SLA", "Doesn't matter"]}
+    options={[
+      "99.5% — same as SLA",
+      "99.9% — stricter than SLA",
+      "99.0% — looser than SLA",
+      "Doesn't matter",
+    ]}
     correct={1}
     explanation="SLO should be stricter than SLA to catch issues before customers notice. The gap between SLO and SLA is your safety buffer."
   />
-  
+
   <Question
     question="What happens when the error budget is exhausted?"
     options={[
       "Nothing — keep shipping",
       "Feature freeze — all engineering effort shifts to reliability",
       "Reduce the SLO",
-      "Ignore it"
+      "Ignore it",
     ]}
     correct={1}
   />
@@ -196,10 +219,10 @@ Payment Gateway gets the strictest SLO because it directly impacts revenue and c
 
 ## 📋 Summary
 
-| Concept | Purpose |
-|---------|---------|
-| **SLI** | Measure actual reliability |
-| **SLO** | Set internal reliability targets |
-| **SLA** | Promise reliability to customers |
-| **Error Budget** | Data-driven release gating |
-| **Toil Reduction** | Automate repetitive work |
+| Concept            | Purpose                          |
+| ------------------ | -------------------------------- |
+| **SLI**            | Measure actual reliability       |
+| **SLO**            | Set internal reliability targets |
+| **SLA**            | Promise reliability to customers |
+| **Error Budget**   | Data-driven release gating       |
+| **Toil Reduction** | Automate repetitive work         |

@@ -13,11 +13,26 @@ prerequisites: ["07-azure-core/lessons/09-security-center"]
 status: "published"
 ---
 
-import { Info, Warning, Tip, BestPractice, Example, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, ProductionNote, ArchitectureNote, InterviewQuestion } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Example,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  ProductionNote,
+  ArchitectureNote,
+  InterviewQuestion,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 ## Learning Objectives
 
 By the end of this review, you will:
+
 - Understand the AZ-104 exam structure and scoring
 - Self-assess readiness across all 5 exam domains
 - Practice with real-format questions and case studies
@@ -49,13 +64,13 @@ pie title AZ-104 Exam Domains (Weight %)
     "Monitor & Backup" : 15
 ```
 
-| Domain | Weight | Key Topics | CloudNova Readiness |
-|--------|--------|------------|-------------------|
-| **Identities & Governance** | 20-25% | RBAC, Policy, Management Groups, Azure AD | ✅ Covered |
-| **Storage** | 15-20% | Blobs, Files, SAS, replication, tiers | ✅ Covered |
-| **Compute** | 20-25% | VMs, Scale Sets, App Service, ACI, AKS | ✅ Covered |
-| **Networking** | 20-25% | VNets, NSGs, Load Balancers, Front Door, DNS | ✅ Covered |
-| **Monitor & Backup** | 10-15% | Alerts, Log Analytics, Backup, Recovery Vault | ✅ Covered |
+| Domain                      | Weight | Key Topics                                    | CloudNova Readiness |
+| --------------------------- | ------ | --------------------------------------------- | ------------------- |
+| **Identities & Governance** | 20-25% | RBAC, Policy, Management Groups, Azure AD     | ✅ Covered          |
+| **Storage**                 | 15-20% | Blobs, Files, SAS, replication, tiers         | ✅ Covered          |
+| **Compute**                 | 20-25% | VMs, Scale Sets, App Service, ACI, AKS        | ✅ Covered          |
+| **Networking**              | 20-25% | VNets, NSGs, Load Balancers, Front Door, DNS  | ✅ Covered          |
+| **Monitor & Backup**        | 10-15% | Alerts, Log Analytics, Backup, Recovery Vault | ✅ Covered          |
 
 ---
 
@@ -106,12 +121,14 @@ pie title AZ-104 Exam Domains (Weight %)
 ### Case Study: CloudNova Migration
 
 <ArchitectureNote title="AZ-104 Case Study Simulation">
-Real AZ-104 questions are preceded by a case study. Read the context, then answer the questions. Here's a simulation.
+  Real AZ-104 questions are preceded by a case study. Read the context, then answer the questions.
+  Here's a simulation.
 </ArchitectureNote>
 
 **Background:** CloudNova is migrating 50 on-premises VMs to Azure. The VMs run a mix of Windows Server 2016, Ubuntu 20.04, and Red Hat Enterprise Linux.
 
 **Requirements:**
+
 1. Existing IP addresses must be preserved after migration
 2. Solution must support 99.95% SLA
 3. RPO of 15 minutes during migration
@@ -152,20 +169,21 @@ Real AZ-104 questions are preceded by a case study. Read the context, then answe
 
 Rate your confidence (1-5) in each AZ-104 topic area:
 
-| Topic | Your Rating (1-5) | Study Priority |
-|-------|------------------|----------------|
-| RBAC and custom roles | ? | High if < 3 |
-| Azure Policy and Blueprints | ? | High if < 3 |
-| VM deployment and management | ? | Medium if < 4 |
-| Storage account configuration | ? | Medium if < 4 |
-| VNet peering and NSGs | ? | High if < 3 |
-| Load balancing (L4 vs L7) | ? | Medium if < 4 |
-| Backup and Site Recovery | ? | Medium if < 4 |
-| Application Insights and alerts | ? | Low if > 3 |
-| ARM templates and Bicep | ? | Medium if < 3 |
-| Azure AD and hybrid identity | ? | High if < 3 |
+| Topic                           | Your Rating (1-5) | Study Priority |
+| ------------------------------- | ----------------- | -------------- |
+| RBAC and custom roles           | ?                 | High if < 3    |
+| Azure Policy and Blueprints     | ?                 | High if < 3    |
+| VM deployment and management    | ?                 | Medium if < 4  |
+| Storage account configuration   | ?                 | Medium if < 4  |
+| VNet peering and NSGs           | ?                 | High if < 3    |
+| Load balancing (L4 vs L7)       | ?                 | Medium if < 4  |
+| Backup and Site Recovery        | ?                 | Medium if < 4  |
+| Application Insights and alerts | ?                 | Low if > 3     |
+| ARM templates and Bicep         | ?                 | Medium if < 3  |
+| Azure AD and hybrid identity    | ?                 | High if < 3    |
 
-**Study plan:** Spend 70% of your time on topics rated 1-3. 
+**Study plan:** Spend 70% of your time on topics rated 1-3.
+
 </Exercise>
 
 ---
@@ -187,18 +205,27 @@ Rate your confidence (1-5) in each AZ-104 topic area:
 
 ## Flashcard Review
 
-<Flashcard front="What's the AZ-104 passing score?" back="700 out of 1000. Questions are weighted by difficulty — harder questions are worth more points." />
+<Flashcard
+  front="What's the AZ-104 passing score?"
+  back="700 out of 1000. Questions are weighted by difficulty — harder questions are worth more points."
+/>
 
-<Flashcard front="Which domain has the highest weight on AZ-104?" back="Compute and Networking each at 20-25%. Together they represent nearly half the exam." />
+<Flashcard
+  front="Which domain has the highest weight on AZ-104?"
+  back="Compute and Networking each at 20-25%. Together they represent nearly half the exam."
+/>
 
-<Flashcard front="What happens if VNet A is peered with VNet B, and B is peered with C?" back="A cannot reach C directly. VNet peering is NOT transitive. You'd need A peered with C, or use a hub-spoke with gateway transit." />
+<Flashcard
+  front="What happens if VNet A is peered with VNet B, and B is peered with C?"
+  back="A cannot reach C directly. VNet peering is NOT transitive. You'd need A peered with C, or use a hub-spoke with gateway transit."
+/>
 
 ---
 
 ## Related Content
 
-| Resource | Link |
-|----------|------|
-| Previous: Security Center | [Lesson 9](09-security-center) |
-| Next module: Containers | [Module 08](../../08-containers/index) |
+| Resource                  | Link                                             |
+| ------------------------- | ------------------------------------------------ |
+| Previous: Security Center | [Lesson 9](09-security-center)                   |
+| Next module: Containers   | [Module 08](../../08-containers/index)           |
 | AZ-104 Certification Path | [Certifications](../../../certifications/az-104) |

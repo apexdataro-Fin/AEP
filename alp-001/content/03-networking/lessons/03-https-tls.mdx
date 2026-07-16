@@ -13,13 +13,37 @@ author: "ARES Engineering"
 last_updated: "2026-07-15"
 ---
 
-import { Info, Warning, Tip, BestPractice, Definition, Example, Analogy, CommonMistake, Debugging, ProductionNote, ArchitectureNote, SecurityNote, CostNote, InterviewQuestion, CheatSheet, Challenge, Exercise, Quiz, CodeBlock, TerminalBlock, Flashcard, Mermaid } from '@site/src/components/shared/InteractiveBlocks';
+import {
+  Info,
+  Warning,
+  Tip,
+  BestPractice,
+  Definition,
+  Example,
+  Analogy,
+  CommonMistake,
+  Debugging,
+  ProductionNote,
+  ArchitectureNote,
+  SecurityNote,
+  CostNote,
+  InterviewQuestion,
+  CheatSheet,
+  Challenge,
+  Exercise,
+  Quiz,
+  CodeBlock,
+  TerminalBlock,
+  Flashcard,
+  Mermaid,
+} from "@site/src/components/shared/InteractiveBlocks";
 
 # HTTP/HTTPS & TLS Deep Dive
 
 <Info>
 
 **Learning Objectives**
+
 - Explain HTTP request/response structure and status codes
 - Diagram the TLS 1.3 handshake step by step
 - Debug certificate chain issues in production
@@ -45,6 +69,7 @@ HTTPS is the same conversation, but in a soundproof booth with ID checks — nob
 <Analogy>
 
 **HTTP vs HTTPS Analogy**
+
 - **HTTP:** Sending a postcard — anyone handling it can read the message.
 - **HTTPS:** Sending a letter in a locked briefcase. Only the recipient has the key.
 
@@ -68,33 +93,33 @@ User-Agent: CloudNova-CLI/2.1
 [BODY — optional]
 ```
 
-| Method | Purpose | Idempotent? |
-|--------|---------|------------|
-| **GET** | Retrieve resource | Yes |
-| **POST** | Create resource | No |
-| **PUT** | Replace resource | Yes |
-| **PATCH** | Partial update | No |
-| **DELETE** | Remove resource | Yes |
-| **HEAD** | Get headers only | Yes |
-| **OPTIONS** | CORS preflight | Yes |
+| Method      | Purpose           | Idempotent? |
+| ----------- | ----------------- | ----------- |
+| **GET**     | Retrieve resource | Yes         |
+| **POST**    | Create resource   | No          |
+| **PUT**     | Replace resource  | Yes         |
+| **PATCH**   | Partial update    | No          |
+| **DELETE**  | Remove resource   | Yes         |
+| **HEAD**    | Get headers only  | Yes         |
+| **OPTIONS** | CORS preflight    | Yes         |
 
 ### Status Codes You Actually Need
 
-| Code | Meaning | When You'll See It |
-|------|---------|-------------------|
-| **200 OK** | Success | Normal operation |
-| **201 Created** | Resource created | POST succeeded |
-| **204 No Content** | Success, no body | DELETE succeeded |
-| **301 Moved Permanently** | URL changed forever | Old API → new API |
-| **302 Found** | Temporary redirect | Login redirect |
-| **400 Bad Request** | Client sent bad data | Validation error |
-| **401 Unauthorized** | Missing/invalid auth | Token expired |
-| **403 Forbidden** | Authenticated but not allowed | RBAC blocked |
-| **404 Not Found** | Resource doesn't exist | Wrong URL / deleted |
-| **429 Too Many Requests** | Rate limited | Throttling |
-| **500 Internal Server Error** | Server crashed | Bug in code |
-| **502 Bad Gateway** | Upstream failure | Backend down |
-| **503 Service Unavailable** | Overloaded | Scaling event |
+| Code                          | Meaning                       | When You'll See It  |
+| ----------------------------- | ----------------------------- | ------------------- |
+| **200 OK**                    | Success                       | Normal operation    |
+| **201 Created**               | Resource created              | POST succeeded      |
+| **204 No Content**            | Success, no body              | DELETE succeeded    |
+| **301 Moved Permanently**     | URL changed forever           | Old API → new API   |
+| **302 Found**                 | Temporary redirect            | Login redirect      |
+| **400 Bad Request**           | Client sent bad data          | Validation error    |
+| **401 Unauthorized**          | Missing/invalid auth          | Token expired       |
+| **403 Forbidden**             | Authenticated but not allowed | RBAC blocked        |
+| **404 Not Found**             | Resource doesn't exist        | Wrong URL / deleted |
+| **429 Too Many Requests**     | Rate limited                  | Throttling          |
+| **500 Internal Server Error** | Server crashed                | Bug in code         |
+| **502 Bad Gateway**           | Upstream failure              | Backend down        |
+| **503 Service Unavailable**   | Overloaded                    | Scaling event       |
 
 ---
 
@@ -124,6 +149,7 @@ sequenceDiagram
 </Mermaid>
 
 **TLS 1.3 improvements over 1.2:**
+
 - **1-RTT vs 2-RTT** — eliminates one round trip
 - **0-RTT resumption** — instant reconnection for returning clients
 - **Removed insecure cipher suites** — no more RSA key exchange, no CBC mode
@@ -131,6 +157,7 @@ sequenceDiagram
 <Example>
 
 **Inspect a TLS certificate with OpenSSL:**
+
 ```bash
 # Check certificate details
 openssl s_client -connect cloudnova.io:443 -servername cloudnova.io </dev/null | openssl x509 -text -noout
@@ -162,9 +189,11 @@ graph TD
     style Root fill:#22c55e,color:#000
     style Intermediate fill:#f59e0b,color:#000
     style Leaf fill:#0ea5e9,color:#fff
+
 </Mermaid>
 
 **Critical certificate rules:**
+
 1. Chain must be complete — missing intermediate = browser shows "untrusted"
 2. Common Name (CN) or SAN must match the hostname exactly
 3. Certificate must not be expired (check `notAfter` date)
@@ -180,6 +209,7 @@ Tuesday 03:14 UTC. All HTTPS endpoints for `*.cloudnova.io` return connection er
 **Root cause:** The wildcard certificate for `*.cloudnova.io` expired at midnight UTC. The auto-renewal job had failed silently 3 weeks earlier because the ACME challenge validation was misconfigured after a DNS migration.
 
 **Timeline:**
+
 - **03:14** — PagerDuty alert: "All HTTPS endpoints unreachable"
 - **03:21** — Identified expired certificate via `openssl s_client -connect`
 - **03:27** — Emergency manual renewal via Let's Encrypt
@@ -187,6 +217,7 @@ Tuesday 03:14 UTC. All HTTPS endpoints for `*.cloudnova.io` return connection er
 - **03:42** — All services recovered
 
 **Fix implemented:**
+
 1. Certificate expiry monitoring (alert at 30, 14, 7, 3, 1 days)
 2. ACME challenge validation test as part of DNS migration checklist
 3. Cert-manager on AKS for automatic Kubernetes certificate renewal
@@ -215,6 +246,7 @@ sequenceDiagram
 </Mermaid>
 
 **When to use mTLS:**
+
 - Service-to-service communication in zero-trust networks
 - API gateway to backend (gateway authenticates as specific client)
 - Financial/healthcare regulated environments
@@ -252,13 +284,14 @@ graph TB
 
     style AppGW fill:#0ea5e9,color:#fff
     style AppGW2 fill:#0ea5e9,color:#fff
+
 </Mermaid>
 
-| Approach | Pros | Cons |
-|----------|------|------|
-| **TLS termination at gateway** | Simplified cert management, WAF inspection | Plaintext inside VNet |
-| **End-to-end TLS** | Defense in depth, compliance | More certs to manage, slight latency |
-| **mTLS everywhere** | Zero-trust, strong identity | Complex PKI, operational overhead |
+| Approach                       | Pros                                       | Cons                                 |
+| ------------------------------ | ------------------------------------------ | ------------------------------------ |
+| **TLS termination at gateway** | Simplified cert management, WAF inspection | Plaintext inside VNet                |
+| **End-to-end TLS**             | Defense in depth, compliance               | More certs to manage, slight latency |
+| **mTLS everywhere**            | Zero-trust, strong identity                | Complex PKI, operational overhead    |
 
 <SecurityNote>
 
@@ -301,6 +334,7 @@ openssl s_client -connect inventory.cloudnova.io:443 -CApath /etc/ssl/certs -ver
 CloudNova runs 47 microservices on AKS, each terminating its own TLS. Manual certificate renewal takes 4 hours and happens quarterly.
 
 **Your task:** Design an automated certificate management system that:
+
 1. Automatically renews certificates before expiry
 2. Handles wildcard (`*.cloudnova.io`) and per-service certs
 3. Works with Azure Key Vault for storage
@@ -328,7 +362,7 @@ CloudNova runs 47 microservices on AKS, each terminating its own TLS. Manual cer
     "TLS certificate is expired",
     "The certificate chain is incomplete (missing intermediate cert)",
     "Using a self-signed certificate",
-    "Wrong cipher suite selected"
+    "Wrong cipher suite selected",
   ]}
   correct={1}
   explanation="Browsers are stricter than curl. If the intermediate certificate isn't served, the browser can't build the chain to a trusted root. Curl may work because it might already have the intermediate cached. Always serve the full chain."
@@ -350,13 +384,13 @@ CloudNova runs 47 microservices on AKS, each terminating its own TLS. Manual cer
 
 <CheatSheet title="TLS Certificate Commands">
 
-| Task | Command |
-|------|---------|
-| Check cert expiry | `openssl s_client -connect host:443 2>/dev/null \| openssl x509 -noout -enddate` |
-| View full cert | `openssl s_client -connect host:443 -showcerts` |
+| Task                 | Command                                                                             |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| Check cert expiry    | `openssl s_client -connect host:443 2>/dev/null \| openssl x509 -noout -enddate`    |
+| View full cert       | `openssl s_client -connect host:443 -showcerts`                                     |
 | Generate self-signed | `openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -nodes` |
-| Verify chain | `openssl verify -CAfile chain.pem cert.pem` |
-| Check ciphers | `nmap --script ssl-enum-ciphers -p 443 host` |
+| Verify chain         | `openssl verify -CAfile chain.pem cert.pem`                                         |
+| Check ciphers        | `nmap --script ssl-enum-ciphers -p 443 host`                                        |
 
 </CheatSheet>
 
