@@ -43,8 +43,8 @@ const config: Config = {
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          editUrl: "https://github.com/apexdataro-Fin/AEP/edit/main/",
-          showLastUpdateTime: true,
+          editUrl: undefined,
+          showLastUpdateTime: false,
           showLastUpdateAuthor: false,
           routeBasePath: "docs",
           path: "docs",

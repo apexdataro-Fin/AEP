@@ -1,10 +1,5 @@
 {
-  "label": "Lessons",
+  "label": "Cloud Engineering",
   "position": 2,
-  "link": {
-    "type": "generated-index",
-    "title": "Lessons",
-    "description": "Individual lessons covering specific cloud engineering topics with hands-on exercises.",
-    "slug": "/lessons"
-  }
+  "collapsible": false
 }
