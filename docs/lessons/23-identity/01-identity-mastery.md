@@ -1,71 +1,61 @@
 ---
 sidebar_position: 1
 title: "إدارة الهوية والوصول"
-description: "Azure AD، RBAC، PIM، الهويات المُدارة، والوصول المشروط."
+description: "Azure AD، RBAC، PIM، Conditional Access، والهوية كحد أمان جديد."
 ---
 
 # إدارة الهوية والوصول
 
-> **"الهوية هي محيط الأمان الجديد. لم تعد الجدران النارية كافية."**
+> **"الهوية هي محيط الأمان الجديد. لم تعد جدران الحماية كافية."**
 
-## التسلسل الهرمي للهوية
+## التسلسل الهرمي
 
 ```
-Tenant (Azure AD — مؤسستك بأكملها)
-├── Management Groups (اختياري — للتجميع)
-│   ├── Subscription (الاشتراك — حدود الفوترة)
-│   │   ├── Resource Group (حاوية منطقية)
-│   │   │   └── Resources (تُطبق عليها RBAC)
+Tenant (Azure AD — مؤسستك)
+├── Management Groups (اختياري)
+│   ├── Subscriptions (الفوترة)
+│   │   ├── Resource Groups (منطقية)
+│   │   │   └── Resources (RBAC هنا)
 ```
 
-## RBAC — التحكم في الوصول
+## RBAC عملياً
 
 ```bash
-# أعط صلاحية على مستوى Resource Group
+# خطأ شائع — صلاحية واسعة جداً
 az role assignment create \
   --assignee ahmed@cloudnova.com \
   --role "Contributor" \
-  --resource-group app-prod-rg
+  --scope /subscriptions/xxx    # ❌ الاشتراك كله!
 
-# ليس على مستوى الـ Subscription!
-# هذا يمنع "الوصول بالخطأ" لموارد أخرى
+# الصحيح — تحديد النطاق
+az role assignment create \
+  --assignee ahmed@cloudnova.com \
+  --role "Contributor" \
+  --scope /subscriptions/xxx/resourceGroups/app-prod-rg  # ✅ محدد
 ```
 
-## PIM — الوصول في الوقت المناسب
+## PIM — Just-in-Time Access
 
-بدلاً من صلاحيات دائمة:
-
-1. المستخدم يطلب التفعيل (مع تبرير)
-2. يمكن طلب موافقة مدير
-3. الصلاحية تُفعّل لمدة محددة (مثلاً ٤ ساعات)
-4. تنتهي تلقائياً — لا تنسى
-
-## الهوية المُدارة — لا كلمات مرور
-
-```python
-# تطبيق على Azure VM يحتاج الوصول لـ Key Vault
-# الحل القديم (خطر):
-# client_secret = "SuperSecret123!" ← يُسرّب، يُنسى، لا يتجدد
-
-# الحل الحديث:
-from azure.identity import DefaultAzureCredential
-credential = DefaultAzureCredential()
-# Azure يدير كل شيء — لا كلمات مرور
+```bash
+# بدلاً من صلاحية دائمة مدمرة:
+# ١. المستخدم يطلب تفعيل الدور (مع تبرير)
+# ٢. مدير يوافق (أو تلقائي إذا كانت السياسة تسمح)
+# ٣. الصلاحية تفعّل لمدة ٤ ساعات
+# ٤. تنتهي تلقائياً
+# ٥. كل شيء مسجّل ومدقق
 ```
 
-## سيناريو CloudNova: وصول طارئ آمن
+## Conditional Access
 
-> **الموقف:** الساعة ٣ فجراً. مهندس يحتاج صلاحية Contributor على الإنتاج.
-
-**السيناريو الآمن:**
-
-1. يطلب PIM activation مع تبرير: "إصلاح عاجل لـ API"
-2. النظام: يتطلب موافقة مدير
-3. يرسل إشعاراً للمدير المناوب
-4. المدير يوافق — صلاحية ٣ ساعات فقط
-5. بعد ٣ ساعات — تنتهي تلقائياً
-
-**المراجعة لاحقاً:** كل شيء مسجّل: من طلب، لماذا، من وافق، ماذا تغير.
+```yaml
+قواعد الوصول المشروط:
+  - إذا: تسجيل دخول من دولة غير معروفة
+    إذن: طلب MFA
+  - إذا: جهاز غير مسجل في Intune
+    إذن: منع الوصول
+  - إذا: دور Global Admin
+    إذن: MFA دائماً + جهاز مسجل
+```
 
 ---
 

@@ -1,38 +1,58 @@
 ---
 sidebar_position: 1
-title: "أساسيات MLOps"
+title: "MLOps — تشغيل تعلم الآلة"
 description: "خطوط أنابيب ML، سجل النماذج، مخازن الميزات، والتدريب المستمر."
 ---
 
-# أساسيات MLOps
+# MLOps — تشغيل تعلم الآلة
 
-> **"MLOps: ما DevOps للتطبيقات، لكن لنماذج تعلم الآلة."**
+> **"MLOps هو DevOps لتعلّم الآلة. نفس المبادئ — تحديات مختلفة."**
 
-## خط أنابيب MLOps
+## خط أنابيب MLOps الكامل
 
+```mermaid
+graph LR
+    D[بيانات] --> F[استخراج الميزات]
+    F --> T[تدريب]
+    T --> R[تسجيل النموذج]
+    R --> V[تحقق]
+    V --> Deploy[نشر]
+    Deploy --> M[مراقبة]
+    M -->|تدهور| T
+    M -->|تغذية راجعة| D
 ```
-بيانات ← ميزات ← تدريب ← تسجيل ← نشر ← مراقبة ← إعادة تدريب
-```
-
-## خدمات Azure لـ MLOps
-
-| المرحلة  | خدمة Azure                 |
-| -------- | -------------------------- |
-| البيانات | Azure Data Lake            |
-| الميزات  | Azure ML Feature Store     |
-| التدريب  | Azure ML Compute           |
-| التسجيل  | Azure ML Model Registry    |
-| النشر    | Azure ML Managed Endpoints |
-| المراقبة | Azure ML Monitor           |
 
 ## تحديات MLOps
 
-| التحدي               | الحل                              |
-| -------------------- | --------------------------------- |
-| تدهور النموذج        | مراقبة مستمرة وإعادة تدريب تلقائي |
-| إصدار البيانات       | DVC، تسجيل إصدار datasets         |
-| قابلية إعادة الإنتاج | بيئات Docker + تثبيت المتطلبات    |
-| الامتثال             | تدقيق آلي، سجل قرارات             |
+| التحدي | الوصف | الحل |
+|---|---|---|
+| **تدهور النموذج** | دقة النموذج تقل مع الوقت | مراقبة مستمرة + إعادة تدريب تلقائي |
+| **إصدار البيانات** | البيانات تتغير — أي نسخة دربت؟ | DVC (Data Version Control) |
+| **قابلية إعادة الإنتاج** | هل يمكنك إعادة التدريب بعد ٦ أشهر؟ | Docker + ثبت المتطلبات |
+| **الامتثال** | من درب؟ متى؟ بأي بيانات؟ | سجل تدقيق كامل |
+
+## خدمات Azure لـ MLOps
+
+```python
+from azure.ai.ml import MLClient
+from azure.ai.ml.entities import Model
+
+ml_client = MLClient(credential, subscription_id, workspace)
+
+# تسجيل نموذج
+model = Model(
+    path="./model",
+    name="cloudnova-churn-predictor",
+    version="3",
+    description="يتنبأ باحتمالية ترك العميل"
+)
+ml_client.models.create_or_update(model)
+
+# نشر النموذج
+from azure.ai.ml.entities import ManagedOnlineEndpoint
+endpoint = ManagedOnlineEndpoint(name="churn-api")
+ml_client.online_endpoints.begin_create_or_update(endpoint)
+```
 
 ---
 

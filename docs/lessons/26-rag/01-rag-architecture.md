@@ -1,56 +1,78 @@
 ---
 sidebar_position: 1
-title: "معمارية RAG"
-description: "التوليد المعزز بالاسترجاع: التقسيم، المتجهات، الاسترجاع، والتوليد."
+title: "RAG — التوليد المعزز بالاسترجاع"
+description: "RAG: التقسيم، التضمين، الاسترجاع، التوليد — أعطِ نموذج اللغة ذاكرة خارجية."
 ---
 
-# معمارية RAG
+# RAG — التوليد المعزز بالاسترجاع
 
-> **"RAG — Retrieval-Augmented Generation — يعطي نماذج اللغة ذاكرة خارجية."**
+> **"RAG يعطي LLM ذاكرة خارجية. بدلاً من أن 'يتذكر' كل شيء — يبحث عن المعلومات ذات الصلة."**
 
 ## لماذا RAG؟
 
-المشكلة: نماذج اللغة لا تعرف بياناتك الخاصة. تدربت على بيانات عامة حتى تاريخ معين.
-
-الحل: أعطها مستنداتك. ابحث عن المستندات ذات الصلة بالسؤال. أضفها للسياق.
+| المشكلة | بدون RAG | مع RAG |
+|---|---|---|
+| بيانات حديثة | النموذج لا يعرفها | تُضاف للمستندات |
+| بيانات خاصة | لا يمكن الوصول | مستنداتك الخاصة |
+| هلوسة | يختلق إجابات | يستند لوثائق حقيقية |
+| تحديث المعرفة | إعادة تدريب مكلف | أضف مستنداً جديداً |
 
 ## خط أنابيب RAG
 
 ```mermaid
 graph LR
-    Q[سؤال المستخدم] --> E[تضمين السؤال]
-    E --> V[بحث متجه]
-    V --> D[(المستندات)]
-    D --> P[سياق + سؤال]
-    P --> LLM[نموذج اللغة]
-    LLM --> R[الإجابة]
+    Q[سؤال] --> E[تضمين السؤال]
+    E --> VS[بحث متجه]
+    VS --> D[(Vector DB)]
+    D --> R[أفضل ٣ مستندات]
+    R --> P[Prompt: سياق + سؤال]
+    P --> LLM[GPT-4]
+    LLM --> A[إجابة]
 ```
 
 ## القرارات الرئيسية
 
-| القرار               | الخيارات                           |
-| -------------------- | ---------------------------------- |
-| **التقسيم Chunking** | حجم ثابت، تقسيم دلالي، تقسيم متكرر |
-| **نموذج التضمين**    | text-embedding-3-small, ada-002    |
-| **الاسترجاع**        | Top-k، عتبة تشابه، هجين            |
-| **التوليد**          | System prompt، few-shot            |
+| القرار | الخيارات | توصية |
+|---|---|---|
+| **حجم التقسيم** | ٢٥٦-٢٠٤٨ tokens | ٥١٢ للوثائق التقنية |
+| **نموذج التضمين** | ada-002, text-embedding-3 | text-embedding-3-small |
+| **استراتيجية الاسترجاع** | Top-k, MMR, Hybrid | Hybrid (متجه + كلمات مفتاحية) |
+| **الـ Prompt** | بسيط، مفصل | أضف تعليمات واضحة + أمثلة |
 
-## مثال تطبيقي
+## كود RAG كامل
 
 ```python
+from openai import AzureOpenAI
+import numpy as np
+
+client = AzureOpenAI(...)
+
 # ١. تضمين المستندات
-docs = ["مستند ١...", "مستند ٢..."]
-embeddings = [embed(doc) for doc in docs]
+docs = load_documents("cloudnova_docs/")
+embeddings = []
+for doc in docs:
+    emb = client.embeddings.create(model="text-embedding-3-small", input=doc)
+    embeddings.append(emb.data[0].embedding)
 
 # ٢. تضمين السؤال
-query_embedding = embed("كيف أصلح الاتصال بقاعدة البيانات؟")
+query_emb = client.embeddings.create(model="text-embedding-3-small", input=question)
 
-# ٣. ابحث عن أقرب المستندات
-results = vector_search(query_embedding, embeddings, top_k=3)
+# ٣. بحث عن التشابه
+similarities = [np.dot(query_emb, doc_emb) for doc_emb in embeddings]
+top_indices = np.argsort(similarities)[-3:][::-1]
 
-# ٤. أضف السياق واسأل النموذج
-context = "\n".join(results)
-answer = llm.generate(f"بناءً على:\n{context}\n\nأجب: {question}")
+# ٤. بناء prompt
+context = "\n---\n".join([docs[i] for i in top_indices])
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[{
+        "role": "system",
+        "content": f"أجب بناءً على المستندات التالية فقط:\n{context}"
+    }, {
+        "role": "user",
+        "content": question
+    }]
+)
 ```
 
 ---

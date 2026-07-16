@@ -1,38 +1,79 @@
 ---
 sidebar_position: 1
-title: "Interview Preparation"
-description: "System design, behavioral questions, technical deep-dives for cloud engineering roles."
+title: "التحضير للمقابلات"
+description: "أسئلة تصميم الأنظمة، الأسئلة السلوكية، والتعمق التقني لمهندسي السحابة."
 ---
 
-# Interview Preparation
+# التحضير للمقابلات
 
-System design, behavioral questions, technical deep-dives for cloud engineering roles.
+> **"المقابلة ليست امتحاناً. إنها محادثة تقنية بين زملاء. استعد لتُظهر ما تعرفه."**
 
-## What You Will Learn
+## أنواع المقابلات
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
+| النوع | المدة | التركيز |
+|---|---|---|
+| **المكالمة الأولية** | ٣٠-٤٥ دقيقة | مفاهيم أساسية، مراجعة السيرة الذاتية |
+| **البرمجة التقنية** | ٤٥-٦٠ دقيقة | سكريبتات، أتمتة |
+| **تصميم الأنظمة** | ٦٠ دقيقة | معمارية، مقايضات |
+| **السلوكية** | ٤٥ دقيقة | طريقة STAR، القيادة |
+| **التعمق السحابي** | ٤٥-٦٠ دقيقة | Azure/AWS/Kubernetes |
 
-## Interview Types
+## طريقة STAR
 
-| Type             | Duration  | Focus                         |
-| ---------------- | --------- | ----------------------------- |
-| Phone Screen     | 30-45 min | Basic concepts, resume review |
-| Technical Coding | 45-60 min | Scripting, automation         |
-| System Design    | 60 min    | Architecture, tradeoffs       |
-| Behavioral       | 45 min    | STAR method, leadership       |
-| Cloud Deep-Dive  | 45-60 min | Azure/AWS specifics           |
+لكل سؤال سلوكي، استخدم هيكل STAR:
 
-## STAR Method
+| الحرف | المعنى | مثال |
+|---|---|---|
+| **S** - Situation | ما السياق؟ | "في CloudNova، كنا نواجه تأخيراً في نشر التطبيقات" |
+| **T** - Task | ما المطلوب؟ | "كنت مسؤولاً عن تحسين وقت النشر" |
+| **A** - Action | ماذا فعلت أنت؟ | "صممت Pipeline CI/CD باستخدام GitHub Actions و Terraform" |
+| **R** - Result | ما النتيجة؟ | "انخفض وقت النشر من ٤٥ دقيقة إلى ٨ دقائق" |
 
-- **S**ituation: What was the context?
-- **T**ask: What needed to be done?
-- **A**ction: What did YOU do?
-- **R**esult: What was the outcome?
+## أسئلة تصميم الأنظمة الشائعة
 
-## CloudNova Exercise
+### "صمم YouTube"
 
-Apply what you learned to a real production scenario at CloudNova.
+```
+المكونات:
+├── خدمة رفع الفيديو (تخزين Blob)
+├── خدمة تحويل الصيغ (Background Jobs)
+├── CDN للتوزيع
+├── قاعدة بيانات للبيانات الوصفية
+└── خدمة توصيات
+```
+
+### "صمم نظام مراقبة لـ ١٠٠٠ خادم"
+
+```
+المكونات:
+├── Prometheus لجمع metrics
+├── Grafana للوحات المعلومات
+├── AlertManager للتنبيهات
+├── Loki للسجلات
+└── Tempo للتتبع
+```
+
+## أسئلة Kubernetes متوقعة
+
+1. **"كيف تشخص Pod في حالة CrashLoopBackOff؟"**
+   ```
+   kubectl describe pod → راجع Events
+   kubectl logs pod → سجلات التطبيق
+   kubectl logs pod --previous → السجلات قبل الانهيار
+   ```
+
+2. **"ما الفرق بين Deployment و StatefulSet؟"**
+   - Deployment: للتطبيقات عديمة الحالة (stateless)
+   - StatefulSet: للتطبيقات ذات الحالة (قواعد بيانات) — هوية ثابتة، تخزين ثابت
+
+## نصائح للمقابلة
+
+1. **تحدث بصوت عالٍ.** اشرح تفكيرك وأنت تحل المشكلة
+2. **ارسم.** استخدم السبورة لرسم المعمارية
+3. **اسأل أسئلة توضيحية.** "كم عدد المستخدمين؟" "كم ميزانية؟"
+4. **ناقش المقايضات.** لا يوجد حل مثالي — اذكر الإيجابيات والسلبيات
+5. **كن صادقاً.** "لا أعرف، لكنني سأبحث كالتالي..."
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

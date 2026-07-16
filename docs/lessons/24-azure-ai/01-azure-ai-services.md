@@ -1,55 +1,68 @@
 ---
 sidebar_position: 1
 title: "الذكاء الاصطناعي على Azure"
-description: "خدمات Azure AI: OpenAI، Cognitive Services، Azure ML، والبحث الذكي."
+description: "Azure OpenAI، Cognitive Services، Azure ML، AI Search — تطبيقات عملية."
 ---
 
 # الذكاء الاصطناعي على Azure
 
-> **"الذكاء الاصطناعي ليس مستقبلاً — إنه الآن. و Azure يوفر البنية التحتية له."**
+> **"Azure ليس مجرد بنية تحتية للذكاء الاصطناعي. إنه منصة متكاملة: نماذج، تدريب، نشر، وأمان."**
 
 ## محفظة Azure AI
 
-| الخدمة                     | الاستخدام                   |
-| -------------------------- | --------------------------- |
-| **Azure OpenAI**           | نماذج GPT، المتجهات، DALL-E |
-| **Cognitive Services**     | رؤية، نطق، لغة، قرار        |
-| **Azure Machine Learning** | تدريب ونشر نماذج ML         |
-| **AI Search**              | بحث دلالي، RAG              |
+| الخدمة | الفئة | الوصف |
+|---|---|---|
+| **Azure OpenAI** | نماذج لغوية | GPT-4, GPT-4o, DALL-E, Whisper |
+| **AI Search** | بحث ذكي | بحث دلالي + RAG + فهرسة |
+| **Azure ML** | منصة ML | تدريب، نشر، MLOps |
+| **Cognitive Services** | ذكاء جاهز | رؤية، نطق، لغة، قرار |
 
-## Azure OpenAI — مثال عملي
+## Azure OpenAI — إعداد آمن
 
 ```python
 from openai import AzureOpenAI
 import os
 
+# أبداً لا تضع المفتاح في الكود!
 client = AzureOpenAI(
     azure_endpoint=os.environ["AZURE_OPENAI_ENDPOINT"],
     api_key=os.environ["AZURE_OPENAI_KEY"],
     api_version="2024-02-01"
 )
 
+# استخدم Content Safety
 response = client.chat.completions.create(
     model="gpt-4",
     messages=[
-        {"role": "system", "content": "أنت مساعد تقني خبير."},
-        {"role": "user", "content": "اشرح Kubernetes في فقرة واحدة."}
-    ]
+        {"role": "system", "content": "أنت مساعد تقني خبير. أجب بدقة وباللغة العربية."},
+        {"role": "user", "content": "اشرح الفرق بين Docker و Kubernetes"}
+    ],
+    max_tokens=500,
+    temperature=0.7
 )
-print(response.choices[0].message.content)
 ```
 
-## سيناريو CloudNova: تلخيص تذاكر الدعم
+## RAG على Azure
 
-> **الموقف:** ١٠٠٠ تذكرة دعم يومياً. المهندسون يقضون ٣٠٪ من وقتهم في قراءة التذاكر.
+```mermaid
+graph LR
+    Q[سؤال] --> E[Azure OpenAI Embedding]
+    E --> S[Azure AI Search]
+    S --> D[(المستندات)]
+    D --> P[Prompt: سياق + سؤال]
+    P --> G[GPT-4]
+    G --> R[إجابة]
+```
+
+## سيناريو CloudNova: دعم فني ذكي
+
+> **الموقف:** ٥٠٠ تذكرة دعم يومياً. المهندسون غارقون.
 
 **الحل:**
-
-1. مرر التذكرة لـ GPT-4 مع prompt: "لخص هذه التذكرة في جملتين."
-2. صنفها: `category: networking|database|auth`
-3. حدد الأولوية: `priority: low|medium|high|critical`
-
-**النتيجة:** توفير ٢٥٪ من وقت المهندسين = تذاكر تُحل أسرع.
+1. Bot يقرأ التذكرة ويصنفها (شبكة، قاعدة بيانات، صلاحيات)
+2. يبحث في Azure AI Search عن حلول سابقة
+3. يقترح حلاً للمهندس (أو يحل تلقائياً للحالات البسيطة)
+4. النتيجة: ٤٠٪ من التذاكر تُحل تلقائياً
 
 ---
 
