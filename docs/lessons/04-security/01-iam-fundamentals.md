@@ -1,94 +1,172 @@
 ---
 sidebar_position: 1
 title: "الأمن في السحابة"
-description: "IAM، RBAC، مبدأ الامتياز الأدنى، الهوية المُدارة، وأمن الشبكات."
+description: "IAM، RBAC، Least Privilege، Managed Identity، PIM، Conditional Access، Network Security."
 ---
 
 # الأمن في السحابة
 
-> **"الأمان ليس مرحلة أخيرة. إنه جزء من كل خطوة، من أول سطر كود إلى آخر نشر."**
+> **"الأمان ليس مرحلة أخيرة. إنه جزء من كل طبقة، من أول سطر كود إلى آخر بايت في التخزين."**
 
-## المصادقة مقابل الصلاحية
+## دفاع متعدد الطبقات — Defense in Depth
 
-| المفهوم                       | السؤال               | مثال                           |
-| ----------------------------- | -------------------- | ------------------------------ |
-| **Authentication — المصادقة** | من أنت؟              | تسجيل الدخول، MFA، كلمة المرور |
-| **Authorization — الصلاحية**  | ماذا تستطيع أن تفعل؟ | الأدوار، الأذونات              |
-
-ببساطة: المصادقة = إثبات هويتك. الصلاحية = ما سُمح لك به بعد إثبات هويتك.
-
-## مبدأ الامتياز الأدنى
-
-> **لا تُعطِ أحداً أكثر مما يحتاج. أبداً.**
-
-```bash
-# خطأ: إعطاء Contributor للجميع
-az role assignment create --assignee user@cloudnova.com \
-  --role "Contributor" --scope /subscriptions/xxx
-
-# صحيح: تحديد النطاق بالضبط
-az role assignment create --assignee user@cloudnova.com \
-  --role "Contributor" --scope /subscriptions/xxx/resourceGroups/app-rg
+```mermaid
+graph TD
+    D[Data - تشفير] --> A[Application - SAST/DAST]
+    A --> C[Compute - OS Hardening]
+    C --> N[Network - NSG, Firewall]
+    N --> I[Identity - MFA, RBAC, PIM]
+    I --> P[Physical - Azure DC Security]
 ```
 
-## RBAC في Azure
+## Authentication vs Authorization
 
-| الدور                 | ماذا يسمح                         | لمن؟                |
-| --------------------- | --------------------------------- | ------------------- |
-| **Owner**             | كل شيء (بما فيها إدارة الصلاحيات) | قادة الفريق فقط     |
-| **Contributor**       | إنشاء وتعديل الموارد              | المطورين            |
-| **Reader**            | عرض فقط                           | المدققين، المتدربين |
-| **User Access Admin** | إدارة الصلاحيات                   | مسؤولي الأمن        |
+| المفهوم            | السؤال       | مثال               | أداة Azure    |
+| ------------------ | ------------ | ------------------ | ------------- |
+| **Authentication** | من أنت؟      | تسجيل دخول، MFA    | Azure AD      |
+| **Authorization**  | ماذا تستطيع؟ | الأدوار، الصلاحيات | RBAC          |
+| **Auditing**       | ماذا فعلت؟   | سجل النشاطات       | Azure Monitor |
 
-## الهوية المُدارة — Managed Identity
+## Principle of Least Privilege
+
+> **لا تُعطِ أحداً أكثر مما يحتاج. أبداً. تحقق كل ٩٠ يوماً.**
+
+```bash
+# ❌ خطأ شائع
+az role assignment create \
+  --assignee developer@cloudnova.com \
+  --role "Contributor" \
+  --scope /subscriptions/xxx    # الاشتراك كله!
+
+# ✅ الصحيح
+az role assignment create \
+  --assignee developer@cloudnova.com \
+  --role "Contributor" \
+  --scope /subscriptions/xxx/resourceGroups/app-dev-rg  # محدد
+
+# ✅ أفضل — أدوار مخصصة
+az role definition create --role-definition '{
+    "Name": "DevOps Engineer",
+    "Description": "Can manage VMs and AKS, cannot touch databases",
+    "Actions": [
+        "Microsoft.Compute/*",
+        "Microsoft.ContainerService/*"
+    ],
+    "NotActions": [
+        "Microsoft.Sql/*"
+    ],
+    "AssignableScopes": ["/subscriptions/xxx/resourceGroups/app-rg"]
+}'
+```
+
+## Managed Identity — لا كلمات مرور
 
 ```python
-# بدلاً من:
-# password = "SuperSecret123!"  ← خطر! لا تفعل هذا أبداً
+# ❌ خطر — كلمات مرور في الكود
+# client_secret = "SuperSecret123!"  ← لا تفعل هذا أبداً
 
-# استخدم Managed Identity:
-from azure.identity import ManagedIdentityCredential
-credential = ManagedIdentityCredential()
-# لا كلمة مرور. لا مفتاح. Azure يدير كل شيء.
+# ✅ آمن — Managed Identity
+from azure.identity import DefaultAzureCredential
+
+credential = DefaultAzureCredential()
+# يحاول بالترتيب:
+# ١. Environment Variables (AZURE_CLIENT_ID, etc.)
+# ٢. Managed Identity (على Azure VM)
+# ٣. Azure CLI (az login)
+# ٤. Interactive Browser
 ```
 
-المزايا:
+### لماذا Managed Identity؟
 
-- لا كلمات مرور للتسريب
-- لا مفاتيح للتجديد اليدوي
-- Azure يدير التدوير تلقائياً
-- تدقيق كامل — كل استخدام مُسجّل
+| بدونها                     | معها                 |
+| -------------------------- | -------------------- |
+| كلمة مرور في الكود ← مسربة | لا كلمة مرور         |
+| تجديد الكلمة يدوياً ← منسي | Azure يجدد تلقائياً  |
+| مشاركة المفاتيح ← خطيرة    | لكل مورد هوية منفصلة |
 
-## PIM — الوصول المؤقت
+## PIM — Just-in-Time Access
 
-بدلاً من صلاحيات دائمة: اطلب الصلاحية عند الحاجة.
+بدلاً من صلاحية دائمة مدمرة:
+
+1. المستخدم يطلب تفعيل الدور مع تبرير
+2. يمكن اشتراط موافقة مدير
+3. الصلاحية تفعّل لمدة محددة (مثلاً ٤ ساعات)
+4. تنتهي تلقائياً
+5. كل شيء مسجل ومدقق
 
 ```bash
-# مهندس يحتاج صلاحية Contributor لمدة ٤ ساعات
-# يطلب عبر Azure Portal > PIM > Activate
-# النظام: موافقة تلقائية؟ يحتاج موافقة مدير؟
-# بعد ٤ ساعات — الصلاحية تنتهي تلقائياً
-# كل شيء مُسجّل ومدقق
+# طلب صلاحية Contributor لمدة ٣ ساعات
+az role assignment create \
+  --assignee oncall@cloudnova.com \
+  --role "Contributor" \
+  --scope /subscriptions/xxx/resourceGroups/prod-rg \
+  --duration PT3H
 ```
 
-## سيناريو CloudNova: حذف قاعدة بيانات الإنتاج
+## Conditional Access
 
-> **الموقف:** مطور جديد حذف قاعدة بيانات الإنتاج بالخطأ. التحقيق يكشف: كان لديه صلاحية Contributor على كامل الاشتراك.
+```yaml
+سياسات الوصول المشروط:
+  - الشرط: تسجيل دخول من موقع غير معتاد
+    الإجراء: طلب MFA
 
-**كيف نمنع التكرار؟**
+  - الشرط: جهاز غير مسجل في Intune
+    الإجراء: منع الوصول تماماً
 
-1. **تقسيم الاشتراكات:** prod منفصل تماماً عن dev
-2. **RBAC دقيق:** صلاحيات على مستوى Resource Group، لا Subscription
-3. **Resource Lock:** `CanNotDelete` على الموارد الحرجة
-4. **PIM:** صلاحيات الإنتاج مؤقتة فقط
-5. **Azure Policy:** منع حذف قواعد البيانات بدون موافقة
+  - الشرط: مستخدم له دور Global Admin
+    الإجراء: MFA دائماً + جهاز مسجل + موقع معروف
+
+  - الشرط: خطر مرتفع (Azure Identity Protection)
+    الإجراء: منع + تنبيه فريق الأمن
+```
+
+## Network Security
 
 ```bash
-# Resource Lock — خط الدفاع الأخير
-az lock create --name "prod-db-lock" \
+# NSG — جدار ناري على مستوى الشبكة
+az network nsg rule create \
+  --nsg-name cloudnova-nsg \
+  --name AllowHttp \
+  --priority 100 \
+  --direction Inbound \
+  --source-address-prefixes Internet \
+  --destination-port-ranges 80 443 \
+  --access Allow
+
+# قاعدة Whois لـ SSH
+az network nsg rule create \
+  --nsg-name cloudnova-nsg \
+  --name AllowBastionSSH \
+  --priority 200 \
+  --source-address-prefixes 10.0.0.0/8 \
+  --destination-port-ranges 22 \
+  --access Allow
+```
+
+## سيناريو CloudNova: حذف قاعدة بيانات
+
+> **الموقف:** مطور جديد يحذف قاعدة إنتاج بالخطأ. التحقيق: لديه Contributor على الاشتراك كله.
+
+### كيف نمنع التكرار؟
+
+```bash
+# ١. Resource Lock
+az lock create \
+  --name "prod-db-cant-delete" \
   --lock-type CanNotDelete \
   --resource-group prod-rg \
   --resource-name cloudnova-db
+
+# ٢. RBAC دقيق — ليس Contributor
+# دور مخصص: يمكنه إنشاء VMs، لا يمكنه لمس قواعد البيانات
+
+# ٣. PIM — صلاحية الإنتاج مؤقتة فقط
+
+# ٤. Azure Policy — منع حذف الموارد الحرجة
+# سياسة: أي Delete على prod-rg يتطلب موافقة
+
+# ٥. Delete Lock + Azure Backup
+# حتى لو تم الحذف — النسخة الاحتياطية تنقذك
 ```
 
 ---

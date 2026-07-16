@@ -1,169 +1,264 @@
 ---
 sidebar_position: 1
-title: "Docker من الصفر إلى الإنتاج"
-description: "اكتب Dockerfiles إنتاجية، ابنِ صوراً صغيرة الحجم، واستخدم docker-compose لإدارة التطبيقات متعددة الحاويات."
+title: "Docker من الصفر إلى الإتقان"
+description: "دليل Docker الكامل: Dockerfiles، Multi-stage Builds، docker-compose، Volumes، Networks، الأمان، وسيناريوهات الإنتاج."
 ---
 
-# Docker من الصفر إلى الإنتاج
+# Docker من الصفر إلى الإتقان
 
-> **"الحاويات غيّرت طريقة نشر البرمجيات. Docker جعلها في متناول الجميع. أتقنها."**
+> **"الحاويات غيّرت طريقة نشر البرمجيات. Docker جعلها في متناول الجميع. أتقنها ولن تخاف من 'الشغال عندي' مرة أخرى."**
 
 ## لماذا Docker؟
 
-قبل Docker: "الشغال عندي مش شغال عندك." كل بيئة مختلفة — إصدارات مكتبات، أنظمة تشغيل، إعدادات.
+قبل Docker: "التطبيق شغال على جهازي — مش عارف ليه مش شغال على الخادم."
+بعد Docker: الصورة واحدة. تشتغل في أي مكان. **بالضبط نفس البيئة.**
 
-بعد Docker: الصورة واحدة. تشتغل في جهازك، في الخادم، في السحابة. **بالضبط نفس الشيء.**
+| المشكلة            | قبل Docker                                | بعد Docker               |
+| ------------------ | ----------------------------------------- | ------------------------ |
+| **بيئات مختلفة**   | "عندي Python 3.12، الخادم 3.9"            | الصورة تحمل كل شيء       |
+| **تبعيات متضاربة** | "App A يحتاج Postgres 14، App B يحتاج 16" | كل حاوية معزولة          |
+| **النشر**          | ٣٠ خطوة يدوية                             | `docker run`             |
+| **التوسع**         | تثبيت على كل خادم                         | `docker run` على أي خادم |
+| **التراجع**        | "كيف أرجع للإصدار السابق؟"                | `docker run old-image`   |
 
 ## المفاهيم الأساسية
 
-| المفهوم        | المعنى                         | تشبيه                           |
-| -------------- | ------------------------------ | ------------------------------- |
-| **Image**      | قالب القراءة فقط               | وصفة الطبخ                      |
-| **Container**  | نسخة مشغّلة من الصورة          | الطبق الجاهز                    |
-| **Dockerfile** | ملف بناء الصورة                | خطوات الوصفة                    |
-| **Registry**   | مستودع الصور (Docker Hub, ACR) | كتاب الطبخ                      |
-| **Volume**     | تخزين دائم للحاوية             | الثلاجة — تحفظ الطعام بعد الطبخ |
-| **Network**    | اتصال بين الحاويات             | طاولة الطعام — تجمع الأطباق     |
+| المفهوم        | المعنى                        | تشبيه واقعي                  |
+| -------------- | ----------------------------- | ---------------------------- |
+| **Dockerfile** | ملف نصي يصف كيفية بناء الصورة | وصفة الطبخ                   |
+| **Image**      | قالب للقراءة فقط              | الوجبة الجاهزة المجمدة       |
+| **Container**  | نسخة مشغّلة من الصورة         | الوجبة المسخنة الجاهزة للأكل |
+| **Registry**   | مستودع لتخزين الصور           | السوبرماركت                  |
+| **Volume**     | تخزين دائم للحاوية            | الثلاجة — تحفظ بعد الطبخ     |
+| **Network**    | اتصال بين الحاويات            | طاولة الطعام                 |
 
-## أول Dockerfile لك
+## Dockerfile — من البسيط إلى المتقدم
 
-```dockerfile
-# Dockerfile — وصفة بناء تطبيق Python
-FROM python:3.12-slim        # ابدأ من صورة Python الرسمية (خفيفة)
-WORKDIR /app                  # مجلد العمل داخل الحاوية
-COPY requirements.txt .       # انسخ ملف المتطلبات أولاً (للاستفادة من الكاش)
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .                      # انسخ باقي الكود
-EXPOSE 8080                   # المنفذ الذي يستمع عليه التطبيق
-CMD ["python", "app.py"]      # أمر التشغيل
-```
-
-```bash
-docker build -t cloudnova-api:v1 .    # ابنِ الصورة
-docker run -d -p 8080:8080 cloudnova-api:v1  # شغّلها
-docker ps                              # تأكد إنها شغالة
-curl http://localhost:8080/health      # اختبرها
-```
-
-## البناء متعدد المراحل — Multi-Stage Builds
-
-المشكلة: صورة Python العادية حجمها ١ جيجابايت. لماذا؟ كل أدوات البناء موجودة في الصورة النهائية.
-
-الحل: ابْنِ في مرحلة، وشغّل في مرحلة أخرى:
+### Dockerfile بسيط
 
 ```dockerfile
-# === المرحلة ١: البناء ===
-FROM python:3.12-slim AS builder
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt --target /deps
-
-# === المرحلة ٢: التشغيل (صورة أخف بكثير) ===
 FROM python:3.12-slim
 WORKDIR /app
-COPY --from=builder /deps /usr/local/lib/python3.12/site-packages
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
-USER 1000                     # لا تشغّل كـ root!
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD curl -f http://localhost:8080/health || exit 1
+EXPOSE 8080
 CMD ["python", "app.py"]
 ```
 
-النتيجة: صورة بحجم ١٥٠ ميجابايت بدل ١ جيجابايت. فرق ٨٥٪!
+```bash
+docker build -t cloudnova-api:v1 .
+docker run -d -p 8080:8080 --name api cloudnova-api:v1
+curl http://localhost:8080/health
+```
 
-## docker-compose — تطبيقات متعددة الحاويات
+### Dockerfile إنتاجي — Multi-Stage Build
+
+المشكلة: الصورة البسيطة حجمها ~٩٠٠MB. لماذا؟ كل أدوات البناء (compilers, headers) موجودة في الصورة النهائية.
+
+الحل: Multi-stage build — ابْنِ في مرحلة، وشغّل في مرحلة أخف:
+
+```dockerfile
+# ===== المرحلة ١: البناء =====
+FROM python:3.12-slim AS builder
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --no-cache-dir --user -r requirements.txt
+
+# ===== المرحلة ٢: التشغيل =====
+FROM python:3.12-slim
+WORKDIR /app
+
+# انسخ فقط المكتبات المثبتة من مرحلة البناء
+COPY --from=builder /root/.local /root/.local
+ENV PATH=/root/.local/bin:$PATH
+
+COPY . .
+
+# أمان — لا تشغل كـ root
+RUN useradd --create-home appuser
+USER appuser
+
+# فحص صحة
+HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
+  CMD curl -f http://localhost:8080/health || exit 1
+
+EXPOSE 8080
+CMD ["python", "app.py"]
+```
+
+النتيجة: صورة بحجم ~١٥٠MB بدلاً من ٩٠٠MB. **توفير ٨٣٪!**
+
+## Docker Compose — تطبيقات متعددة الحاويات
 
 ```yaml
 # docker-compose.yml — CloudNova API كاملة
 version: "3.8"
 services:
   api:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-      - DATABASE_URL=postgresql://user:pass@db:5432/cloudnova
+      - DATABASE_URL=postgresql://user:${DB_PASSWORD}@db:5432/cloudnova
+      - REDIS_URL=redis://redis:6379
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_started
     restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: "1.0"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
 
   db:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: ${DB_PASSWORD} # من متغيرات البيئة — آمن!
+      POSTGRES_USER: cloudnova
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: cloudnova
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d cloudnova"]
+      test: ["CMD-SHELL", "pg_isready -U cloudnova"]
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   redis:
     image: redis:7-alpine
     volumes:
       - redisdata:/data
+    restart: unless-stopped
 
 volumes:
   pgdata:
   redisdata:
 ```
 
+## Volumes — التخزين الدائم
+
 ```bash
-docker-compose up -d        # شغّل الكل
-docker-compose ps            # تأكد من الحالة
-docker-compose logs -f api   # سجلات الـ API مباشرة
-docker-compose down -v       # أوقف كل شيء ونظّف
+# Bind Mount — للتطوير (ملفاتك المحلية داخل الحاوية)
+docker run -v $(pwd)/app:/app -p 8080:8080 cloudnova-api
+
+# Named Volume — للإنتاج (Docker يديره)
+docker volume create pgdata
+docker run -v pgdata:/var/lib/postgresql/data postgres:16
+
+# tmpfs — للبيانات المؤقتة (في الذاكرة — أسرع)
+docker run --tmpfs /tmp:rw,size=100M cloudnova-api
 ```
 
-## أوامر تحتاجها يومياً
+## Networks — اتصال الحاويات
 
-| الأمر                            | الغرض                           |
-| -------------------------------- | ------------------------------- |
-| `docker build -t name .`         | بناء صورة                       |
-| `docker run -d -p 8080:80 name`  | تشغيل حاوية                     |
-| `docker ps`                      | الحاويات الشغالة                |
-| `docker ps -a`                   | كل الحاويات (بما فيها المتوقفة) |
-| `docker logs -f container`       | سجلات الحاوية مباشرة            |
-| `docker exec -it container bash` | ادخل الحاوية                    |
-| `docker system prune -a`         | نظف كل شيء غير مستخدم           |
-| `docker image ls`                | الصور المخزنة محلياً            |
-| `docker-compose up -d`           | شغّل docker-compose             |
-| `docker-compose logs -f`         | سجلات كل الخدمات                |
+```bash
+# شبكة مخصصة
+docker network create cloudnova-net
 
-## سيناريو CloudNova: الحاوية تشتغل محلياً لكنها تموت في الإنتاج
+# شغّل الحاويات على نفس الشبكة
+docker run -d --name db --network cloudnova-net postgres:16
+docker run -d --name api --network cloudnova-net -p 8080:8080 cloudnova-api
 
-> **الموقف:** `docker run cloudnova-api` يشتغل على جهازك. نفس الصورة في Azure تخرج بعد ٣٠ ثانية.
+# الآن api يصل لـ db باسم "db" فقط:
+# postgresql://user:pass@db:5432/cloudnova
+```
+
+## أوامر يومية — ورقة الغش
+
+| الأمر                                   | الغرض           |
+| --------------------------------------- | --------------- |
+| `docker build -t name:tag .`            | بناء صورة       |
+| `docker run -d --name x -p 8080:80 img` | تشغيل حاوية     |
+| `docker ps`                             | الحاويات النشطة |
+| `docker ps -a`                          | كل الحاويات     |
+| `docker logs -f container`              | سجلات مباشرة    |
+| `docker exec -it container bash`        | ادخل الحاوية    |
+| `docker inspect container`              | تفاصيل كاملة    |
+| `docker stats`                          | استهلاك الموارد |
+| `docker system prune -a`                | تنظيف كل شيء    |
+| `docker image ls`                       | الصور المحلية   |
+| `docker compose up -d`                  | تشغيل compose   |
+| `docker compose down -v`                | إيقاف وتنظيف    |
+
+## أمان Docker — ٥ قواعد ذهبية
+
+1. **لا تشغّل كـ root.** `USER 1000` في نهاية Dockerfile
+2. **صورة أساسية موثوقة.** استخدم `-slim` أو `-alpine` الرسمية
+3. **لا تضع أسراراً في الصورة.** استخدم BuildKit secrets أو env vars
+4. **افحص الصور بانتظام.** `docker scan` أو Trivy
+5. **قلل مساحة الهجوم.** صورة أصغر = fewer packages = fewer CVEs
+
+```bash
+# فحص أمني
+docker scan cloudnova-api:v1
+# أو
+trivy image cloudnova-api:v1
+```
+
+## سيناريو CloudNova: تحقيق في حادثة
+
+> **الموقف:** الحاوية تعمل محلياً لكنها تخرج بعد ٣٠ ثانية في Azure.
 
 ### خطة التشخيص:
 
 ```bash
-# 1. شوف سجلات الحاوية الميتة
-docker logs cloudnova-api --tail 50
-# "FATAL: database "cloudnova" does not exist"
+# ١. هل الحاوية شغالة؟
+docker ps -a | grep api
+# STATUS: Exited (1) 30 seconds ago
 
-# 2. افحص متغيرات البيئة
-docker inspect cloudnova-api | jq '.[0].Config.Env'
-# DATABASE_URL يشير إلى localhost — خطأ!
-# في Azure، قاعدة البيانات في حاوية منفصلة
+# ٢. شوف السجلات
+docker logs api --tail 50
+# FATAL: could not connect to database
+# Connection refused at db:5432
 
-# 3. الحل: docker-compose مع depends_on و healthcheck
-# (استخدم docker-compose.yml أعلاه)
+# ٣. هل الشبكة صحيحة؟
+docker network ls
+# api على network: bridge (الافتراضية)
+# db على network: cloudnova-net
+# ← شبكتان مختلفتان! لا يمكنهما الاتصال
 
-# 4. تأكد من إعادة التشغيل التلقائي
-docker run -d --restart=unless-stopped cloudnova-api
+# ٤. الحل: نفس الشبكة
+docker network connect cloudnova-net api
+docker restart api
+
+# ٥. راقب
+docker logs -f api
+# ✅ Connected to database successfully
 ```
 
-## نصائح إنتاجية
+### الدرس المستفاد:
 
-1. **لا تضع أسراراً في الصورة.** استخدم `--build-arg` أو متغيرات بيئة وقت التشغيل
-2. **الصورة الأصغر = أسرع في النشر وأقل ثغرات.** استخدم `-slim` أو `-alpine`
-3. **مستخدم غير root دائماً.** `USER 1000` في نهاية Dockerfile
-4. **HEALTHCHECK ضروري.** بدونه، Docker لا يعرف إذا تطبيقك حيّ أو ميت
-5. **نظف بانتظام.** `docker system prune -a` كل أسبوع
+```yaml
+# استخدم docker-compose — يدير الشبكات تلقائياً
+services:
+  api:
+    networks:
+      - cloudnova-net
+  db:
+    networks:
+      - cloudnova-net
+
+networks:
+  cloudnova-net:
+    driver: bridge
+```
 
 ---
 
