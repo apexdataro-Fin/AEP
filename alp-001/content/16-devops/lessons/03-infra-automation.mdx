@@ -159,11 +159,10 @@ inline = [
   path: /etc/ssh/sshd_config
   regexp: '^PermitRootLogin'
   line: 'PermitRootLogin no'
-  notify: restart sshd
-      - name: Ensure password policy is configured
-        pam_pwquality:
-          name: minlen
-          value: "14"
+  notify: restart sshd - name: Ensure password policy is configured
+  pam_pwquality:
+  name: minlen
+  value: "14"
 
       - name: Ensure auditd is running
         service:
@@ -175,10 +174,12 @@ inline = [
         apt:
           name: unattended-upgrades
           state: present
+
   handlers: - name: restart sshd
   service:
   name: sshd
   state: restarted
+
   </CodeBlock>
 
 <ProductionNote>

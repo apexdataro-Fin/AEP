@@ -205,9 +205,7 @@ Based on this context:
 2.  Which of the recent changes is suspicious?
 3.  What 3 diagnostic commands should the on-call engineer run?
 4.  What is the recommended fix?
-    """
-        # 3. Get AI analysis (provider-agnostic)
-        # analysis = call_ai(prompt)
+    """ # 3. Get AI analysis (provider-agnostic) # analysis = call_ai(prompt)
 
         return {
             "triage_summary": "Likely NSG rule change at 03:15 blocking port 443",
@@ -218,7 +216,9 @@ Based on this context:
                 "az monitor activity-log list --resource-group prod-rg --start-time 2024-01-15T03:00:00Z"
             ]
         }
+
     `}
+
     </CodeBlock>
 
 ---

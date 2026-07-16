@@ -1,0 +1,11 @@
+# Build artifacts
+build/
+.docusaurus/
+node_modules/
+
+# MDX lesson files with complex JSX that Prettier's MDX parser cannot stabilize.
+# These files are validated by Docusaurus at build time.
+alp-001/content/13-git/lessons/05-git-for-iac.mdx
+alp-001/content/14-github/lessons/01-github-workflows.mdx
+alp-001/content/16-devops/lessons/01-devops-culture.mdx
+alp-001/content/17-devsecops/lessons/01-security-pipeline.mdx

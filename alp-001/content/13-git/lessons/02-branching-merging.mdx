@@ -403,17 +403,17 @@ git push --force-with-lease
     correct={1}
   />
 
-  <Question
-    question="Why is `git push --force-with-lease` safer than `git push --force`?"
-    options={[
-      "It's the same command with a different name",
-      "It checks that your local copy of the remote matches the actual remote before pushing",
-      "It creates a backup of the remote branch",
-      "It sends an email notification to teammates",
-    ]}
-    correct={1}
-    explanation="`--force-with-lease` verifies that nobody else has pushed to the branch since you last fetched. If they have, the push is rejected — preventing accidental overwrites."
-  />
+<Question
+  question="Why is `git push --force-with-lease` safer than `git push --force`?"
+  options={[
+    "It's the same command with a different name",
+    "It checks that your local copy of the remote matches the actual remote before pushing",
+    "It creates a backup of the remote branch",
+    "It sends an email notification to teammates",
+  ]}
+  correct={1}
+  explanation="`--force-with-lease` verifies that nobody else has pushed to the branch since you last fetched. If they have, the push is rejected — preventing accidental overwrites."
+/>
 
   <Question
     question="In trunk-based development, how long should feature branches typically live?"
