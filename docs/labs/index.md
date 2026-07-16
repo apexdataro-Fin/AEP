@@ -24,5 +24,5 @@ Hands-on cloud labs. Practice in safe, sandboxed environments without worrying a
 | **Challenge Lab** | 90-180 min | Open-ended problem solving |
 
 :::tip Coming Soon
-Lab content is being developed. Check the [Roadmap](/reference/roadmap) for timeline.
+Lab content is being developed. Check the [Roadmap](/docs/reference/roadmap) for timeline.
 :::

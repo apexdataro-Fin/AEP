@@ -35,5 +35,5 @@ graph LR
 | **Specializations**   | 8-12 weeks each | Solutions Architect, Security Engineer, SRE |
 
 :::tip Coming Soon
-Full curriculum content is being developed. Check the [Roadmap](/reference/roadmap) for timeline.
+Full curriculum content is being developed. Check the [Roadmap](/docs/reference/roadmap) for timeline.
 :::

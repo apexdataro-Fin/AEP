@@ -63,9 +63,9 @@ graph LR
 
 ## Next Steps
 
-- [Getting Started](/development/getting-started) — First-time setup
-- [Environment Setup](/development/environment-setup) — Configure your tools
-- [Project Structure](/development/project-structure) — Understand the codebase
-- [Workflows](/development/workflows) — Common development workflows
-- [Testing](/development/testing) — Write and run tests
-- [Deployment](/development/deployment) — Deploy to production
+- [Getting Started](/docs/development/getting-started) — First-time setup
+- [Environment Setup](/docs/development/environment-setup) — Configure your tools
+- [Project Structure](/docs/development/project-structure) — Understand the codebase
+- [Workflows](/docs/development/workflows) — Common development workflows
+- [Testing](/docs/development/testing) — Write and run tests
+- [Deployment](/docs/development/deployment) — Deploy to production

@@ -17,8 +17,8 @@ Quick-reference material for the platform.
 
 | Document                                          | Purpose                                |
 | ------------------------------------------------- | -------------------------------------- |
-| [Glossary](/reference/glossary)                   | Definitions of cloud engineering terms |
-| [Roadmap](/reference/roadmap)                     | Platform development roadmap           |
-| [Changelog](/reference/changelog)                 | Version history and changes            |
-| [Quality Standards](/reference/quality-standards) | Quality requirements and metrics       |
-| [API Reference](/reference/api-reference)         | Platform API documentation             |
+| [Glossary](/docs/reference/glossary)                   | Definitions of cloud engineering terms |
+| [Roadmap](/docs/reference/roadmap)                     | Platform development roadmap           |
+| [Changelog](/docs/reference/changelog)                 | Version history and changes            |
+| [Quality Standards](/docs/reference/quality-standards) | Quality requirements and metrics       |
+| [API Reference](/docs/reference/api-reference)         | Platform API documentation             |

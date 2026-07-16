@@ -41,5 +41,5 @@ graph LR
 | **SRE**                   | 5-10 years | Reliability, observability, incident response |
 
 :::tip Coming Soon
-Detailed career path guides are being developed. Check the [Roadmap](/reference/roadmap) for timeline.
+Detailed career path guides are being developed. Check the [Roadmap](/docs/reference/roadmap) for timeline.
 :::

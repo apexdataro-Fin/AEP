@@ -76,8 +76,8 @@ Brief quiz or reflection questions.
 
 ## Next Steps
 
-- [Next Lesson](/lessons/next-topic)
-- [Related Project](/projects/related-project)
+- [Next Lesson](/docs/lessons/next-topic)
+- [Related Project](/docs/projects/related-project)
 ```
 
 ## Quality Requirements

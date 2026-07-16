@@ -1,0 +1,159 @@
+.page {
+  padding: 4rem 0 6rem;
+  min-height: 80vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  background: var(--ares-brown-100);
+  color: var(--ares-brown-700);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
+  color: var(--ares-brown-900);
+  margin-bottom: 0.75rem;
+  line-height: 1.1;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--ares-brown-600);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--ares-surface);
+  border: 1px solid var(--ares-brown-100);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  box-shadow: var(--ares-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--ares-shadow-md);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.code {
+  font-family: var(--ares-font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ares-brown-700);
+  background: var(--ares-brown-100);
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+}
+
+.level {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ares-brown-500);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cardTitle {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--ares-brown-900);
+  margin-bottom: 0.5rem;
+}
+
+.cardDesc {
+  font-size: 0.95rem;
+  color: var(--ares-brown-600);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
+}
+
+.topic {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ares-brown-700);
+  background: var(--ares-brown-100);
+  padding: 0.25rem 0.55rem;
+  border-radius: 0.4rem;
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.progressBar {
+  flex: 1;
+  height: 0.5rem;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressBar > div {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.progressText {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ares-brown-700);
+  min-width: 2.5rem;
+  text-align: right;
+}
+
+.exam {
+  font-size: 0.8rem;
+  color: var(--ares-brown-500);
+  margin-bottom: 1.25rem;
+  font-family: var(--ares-font-mono);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 2rem 0 4rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

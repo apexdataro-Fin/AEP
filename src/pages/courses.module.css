@@ -1,0 +1,164 @@
+.page {
+  padding: 3rem 0 5rem;
+  background: var(--celos-surface-alt);
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(124, 94, 74, 0.1);
+  color: var(--ifm-color-primary);
+  border-radius: 9999px;
+  margin-bottom: 0.75rem;
+}
+
+.title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.5rem;
+  color: var(--celos-text-primary);
+}
+
+.subtitle {
+  font-size: 1.05rem;
+  color: var(--celos-text-secondary);
+  margin: 0;
+}
+
+.progressSummary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.summaryCard {
+  background: var(--celos-surface-raised);
+  border: 1px solid var(--celos-border);
+  border-radius: 1rem;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.summaryValue {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--ifm-color-primary);
+}
+
+.summaryLabel {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--celos-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.moduleList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.moduleCard {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--celos-surface-raised);
+  border: 1px solid var(--celos-border);
+  border-radius: 0.75rem;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.moduleCard:hover {
+  box-shadow: 0 4px 12px rgba(45, 33, 24, 0.06);
+  border-color: var(--ifm-color-primary-lighter);
+}
+
+.moduleCard.completed {
+  border-left: 4px solid var(--celos-accent-green);
+}
+
+.moduleCard.in-progress {
+  border-left: 4px solid var(--ifm-color-primary);
+}
+
+.moduleCard.locked {
+  opacity: 0.7;
+}
+
+.moduleNum {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: var(--celos-surface-alt);
+  border: 1px solid var(--celos-border);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--celos-text-muted);
+}
+
+.moduleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.moduleName {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--celos-text-primary);
+}
+
+.moduleMeta {
+  font-size: 0.8rem;
+  color: var(--celos-text-muted);
+}
+
+.moduleStatus {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  background: var(--celos-surface-alt);
+  color: var(--celos-text-secondary);
+  white-space: nowrap;
+}
+
+.moduleCard.completed .moduleStatus {
+  background: rgba(90, 143, 110, 0.1);
+  color: var(--celos-accent-green);
+}
+
+.moduleCard.in-progress .moduleStatus {
+  background: rgba(124, 94, 74, 0.1);
+  color: var(--ifm-color-primary);
+}
+
+@media (max-width: 768px) {
+  .progressSummary {
+    grid-template-columns: 1fr;
+  }
+  .moduleCard {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}

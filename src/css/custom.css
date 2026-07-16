@@ -1,38 +1,40 @@
 /**
- * Cloud Engineering Learning OS — Custom Theme
- *
- * Design system based on sky-blue / slate professional palette
- * optimized for readability, accessibility, and dark mode.
+ * ARES EDU PLATFORM — Academy Theme
+ * Warm brown palette, modern surfaces, premium learning experience.
  */
 
 /* ============================================================
-   CSS Custom Properties — Light Mode
+   CSS Custom Properties — Light Mode (Brown Academy)
    ============================================================ */
 :root {
-  /* Brand */
-  --ifm-color-primary: #0284c7;
-  --ifm-color-primary-dark: #026ea5;
-  --ifm-color-primary-darker: #025f8e;
-  --ifm-color-primary-darkest: #014a6e;
-  --ifm-color-primary-light: #0ea5e9;
-  --ifm-color-primary-lighter: #22b1f0;
-  --ifm-color-primary-lightest: #38bdf8;
+  /* Brand — warm brown */
+  --ifm-color-primary: #7c5e4a;
+  --ifm-color-primary-dark: #6b4f3c;
+  --ifm-color-primary-darker: #5a4130;
+  --ifm-color-primary-darkest: #4a3425;
+  --ifm-color-primary-light: #9e7f6a;
+  --ifm-color-primary-lighter: #bfa08b;
+  --ifm-color-primary-lightest: #e0c4b0;
 
-  /* Neutral surface tokens */
-  --celos-surface: #ffffff;
-  --celos-surface-alt: #f8fafc;
-  --celos-surface-raised: #f1f5f9;
-  --celos-border: #e2e8f0;
-  --celos-text-primary: #0f172a;
-  --celos-text-secondary: #475569;
-  --celos-text-muted: #94a3b8;
+  /* Surfaces */
+  --celos-surface: #fdfbf9;
+  --celos-surface-alt: #f7f3ef;
+  --celos-surface-raised: #ffffff;
+  --celos-surface-hover: #efe9e3;
+  --celos-border: #e6ddd4;
+  --celos-border-light: #f0e9e1;
 
-  /* Accent */
-  --celos-accent-blue: #0ea5e9;
-  --celos-accent-cyan: #06b6d4;
-  --celos-accent-emerald: #10b981;
-  --celos-accent-amber: #f59e0b;
-  --celos-accent-violet: #8b5cf6;
+  /* Text */
+  --celos-text-primary: #2d2118;
+  --celos-text-secondary: #6b5a4a;
+  --celos-text-muted: #9e8e7e;
+
+  /* Accents */
+  --celos-accent-gold: #c69c3e;
+  --celos-accent-amber: #d4a24a;
+  --celos-accent-green: #5a8f6e;
+  --celos-accent-blue: #4a7a9e;
+  --celos-accent-rose: #b06b6b;
 
   /* Typography */
   --ifm-font-family-base: "Inter", system-ui, -apple-system, sans-serif;
@@ -51,40 +53,43 @@
   --ifm-navbar-padding-horizontal: 1.5rem;
 
   /* Code */
-  --docusaurus-highlighted-code-line-bg: rgba(2, 132, 199, 0.08);
-  --ifm-pre-background: #f8fafc;
-  --ifm-code-background: #f1f5f9;
+  --docusaurus-highlighted-code-line-bg: rgba(124, 94, 74, 0.08);
+  --ifm-pre-background: #f7f3ef;
+  --ifm-code-background: #f0e9e1;
 
   /* Misc */
-  --ifm-global-radius: 0.5rem;
-  --ifm-global-shadow-lw: 0 1px 2px rgba(0, 0, 0, 0.06);
-  --ifm-global-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --ifm-global-shadow-tl: 0 12px 32px rgba(0, 0, 0, 0.12);
+  --ifm-global-radius: 0.75rem;
+  --ifm-global-shadow-lw: 0 1px 2px rgba(45, 33, 24, 0.06);
+  --ifm-global-shadow-md: 0 4px 12px rgba(45, 33, 24, 0.08);
+  --ifm-global-shadow-tl: 0 12px 32px rgba(45, 33, 24, 0.12);
 }
 
 /* ============================================================
-   CSS Custom Properties — Dark Mode
+   CSS Custom Properties — Dark Mode (Brown Academy)
    ============================================================ */
 [data-theme="dark"] {
-  --ifm-color-primary: #38bdf8;
-  --ifm-color-primary-dark: #22b1f0;
-  --ifm-color-primary-darker: #0ea5e9;
-  --ifm-color-primary-darkest: #0284c7;
-  --ifm-color-primary-light: #4cc5fa;
-  --ifm-color-primary-lighter: #60cdfb;
-  --ifm-color-primary-lightest: #7dd5fc;
+  --ifm-color-primary: #d0b49e;
+  --ifm-color-primary-dark: #bfa08b;
+  --ifm-color-primary-darker: #a98d78;
+  --ifm-color-primary-darkest: #8f735f;
+  --ifm-color-primary-light: #e0c4b0;
+  --ifm-color-primary-lighter: #eed9c8;
+  --ifm-color-primary-lightest: #f5ebe2;
 
-  --celos-surface: #0f172a;
-  --celos-surface-alt: #1e293b;
-  --celos-surface-raised: #334155;
-  --celos-border: #334155;
-  --celos-text-primary: #f1f5f9;
-  --celos-text-secondary: #94a3b8;
-  --celos-text-muted: #64748b;
+  --celos-surface: #1a1410;
+  --celos-surface-alt: #241c17;
+  --celos-surface-raised: #2e241e;
+  --celos-surface-hover: #3d3028;
+  --celos-border: #3d3028;
+  --celos-border-light: #2e241e;
 
-  --docusaurus-highlighted-code-line-bg: rgba(56, 189, 248, 0.12);
-  --ifm-pre-background: #1e293b;
-  --ifm-code-background: #1e293b;
+  --celos-text-primary: #f5ebe2;
+  --celos-text-secondary: #b8a99a;
+  --celos-text-muted: #7a6b5c;
+
+  --docusaurus-highlighted-code-line-bg: rgba(208, 180, 158, 0.12);
+  --ifm-pre-background: #241c17;
+  --ifm-code-background: #2e241e;
 }
 
 /* ============================================================
@@ -118,6 +123,7 @@ h4,
 h5,
 h6 {
   letter-spacing: -0.02em;
+  color: var(--celos-text-primary);
 }
 
 .markdown h1 {
@@ -145,22 +151,40 @@ h6 {
 }
 
 /* ============================================================
-   Navbar
+   Navbar — Modern Academy
    ============================================================ */
 .navbar {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(253, 251, 249, 0.92);
   border-bottom: 1px solid var(--celos-border);
+  box-shadow: 0 1px 3px rgba(45, 33, 24, 0.04);
 }
 
 [data-theme="dark"] .navbar {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(26, 20, 16, 0.92);
 }
 
 .navbar__title {
   font-weight: 800;
   letter-spacing: -0.03em;
+  color: var(--celos-text-primary);
+}
+
+.navbar__link {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--celos-text-secondary);
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.125rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.navbar__link:hover,
+.navbar__link--active {
+  background: var(--celos-surface-hover);
+  color: var(--ifm-color-primary);
 }
 
 /* ============================================================
@@ -169,6 +193,11 @@ h6 {
 .footer {
   background: var(--celos-surface-alt);
   border-top: 1px solid var(--celos-border);
+  color: var(--celos-text-secondary);
+}
+
+.footer__title {
+  color: var(--celos-text-primary);
 }
 
 /* ============================================================
@@ -178,6 +207,8 @@ code {
   border-radius: 4px;
   padding: 0.15em 0.4em;
   font-size: 0.9em;
+  background: var(--ifm-code-background);
+  color: var(--celos-text-primary);
 }
 
 pre {
@@ -226,18 +257,18 @@ pre {
 }
 
 .alert--info {
-  --ifm-alert-background-color: rgba(14, 165, 233, 0.08);
+  --ifm-alert-background-color: rgba(74, 122, 158, 0.08);
   --ifm-alert-border-color: var(--celos-accent-blue);
 }
 
 .alert--success {
-  --ifm-alert-background-color: rgba(16, 185, 129, 0.08);
-  --ifm-alert-border-color: var(--celos-accent-emerald);
+  --ifm-alert-background-color: rgba(90, 143, 110, 0.08);
+  --ifm-alert-border-color: var(--celos-accent-green);
 }
 
 .alert--warning {
-  --ifm-alert-background-color: rgba(245, 158, 11, 0.08);
-  --ifm-alert-border-color: var(--celos-accent-amber);
+  --ifm-alert-background-color: rgba(198, 156, 62, 0.08);
+  --ifm-alert-border-color: var(--celos-accent-gold);
 }
 
 /* ============================================================
@@ -262,6 +293,59 @@ pre {
 }
 
 /* ============================================================
+   Academy Utility Classes
+   ============================================================ */
+.academy-card {
+  background: var(--celos-surface-raised);
+  border: 1px solid var(--celos-border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.academy-card:hover {
+  box-shadow: var(--ifm-global-shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--ifm-color-primary-lighter);
+}
+
+.academy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.academy-badge--gold {
+  background: rgba(198, 156, 62, 0.12);
+  color: var(--celos-accent-gold);
+}
+
+.academy-badge--green {
+  background: rgba(90, 143, 110, 0.12);
+  color: var(--celos-accent-green);
+}
+
+.academy-progress {
+  height: 8px;
+  background: var(--celos-surface-hover);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.academy-progress > div {
+  height: 100%;
+  background: linear-gradient(90deg, var(--ifm-color-primary), var(--ifm-color-primary-light));
+  border-radius: 9999px;
+  transition: width 0.6s ease;
+}
+
+/* ============================================================
    Responsive
    ============================================================ */
 @media (max-width: 996px) {
@@ -277,7 +361,7 @@ pre {
 }
 
 /* ============================================================
-   RTL Support (Arabic, Kurdish, etc.)
+   RTL Support
    ============================================================ */
 html[dir="rtl"] {
   direction: rtl;
@@ -294,41 +378,6 @@ html[dir="rtl"] .markdown h4 {
 html[dir="rtl"] .markdown table th,
 html[dir="rtl"] .markdown table td {
   text-align: right;
-}
-
-html[dir="rtl"] .navbar__items--right {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-html[dir="rtl"] .pagination-nav__link--next .pagination-nav__label::after {
-  content: " ←";
-}
-
-html[dir="rtl"] .pagination-nav__link--prev .pagination-nav__label::before {
-  content: " →";
-}
-
-html[dir="rtl"] .pagination-nav__link--next .pagination-nav__label::after,
-html[dir="rtl"] .pagination-nav__link--prev .pagination-nav__label::before {
-  display: inline;
-}
-
-html[dir="rtl"] .interactive-block {
-  border-left: none;
-  border-right: 4px solid var(--celos-border);
-}
-
-html[dir="rtl"] .aep-card--book,
-html[dir="rtl"] .aep-card--course,
-html[dir="rtl"] .aep-card--project,
-html[dir="rtl"] .aep-card--lab,
-html[dir="rtl"] .aep-card--certification,
-html[dir="rtl"] .aep-card--career,
-html[dir="rtl"] .aep-card--knowledge,
-html[dir="rtl"] .aep-card--technology {
-  border-left: none;
-  border-right: 3px solid;
 }
 
 /* ============================================================

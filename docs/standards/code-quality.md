@@ -67,8 +67,8 @@ Checks:
 
 Reviewers must verify:
 
-- [ ] Code follows the [Style Guide](/standards/style-guide)
-- [ ] Naming follows [Naming Conventions](/standards/naming-conventions)
+- [ ] Code follows the [Style Guide](/docs/standards/style-guide)
+- [ ] Naming follows [Naming Conventions](/docs/standards/naming-conventions)
 - [ ] Types are explicit and correct
 - [ ] No commented-out code
 - [ ] No console.log (unless intentional)

@@ -26,5 +26,5 @@ Real-world cloud engineering projects. Build, deploy, and learn by doing.
 | **Observability**    | Build a monitoring stack, set up alerting |
 
 :::tip Coming Soon
-Project content is being developed. Check the [Roadmap](/reference/roadmap) for timeline.
+Project content is being developed. Check the [Roadmap](/docs/reference/roadmap) for timeline.
 :::

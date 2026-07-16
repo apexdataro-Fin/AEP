@@ -50,5 +50,5 @@ graph TB
 | **CNCF**  | CKA, CKAD                              | CKS                             | —                        |
 
 :::tip Coming Soon
-Certification preparation guides are being developed. Check the [Roadmap](/reference/roadmap) for timeline.
+Certification preparation guides are being developed. Check the [Roadmap](/docs/reference/roadmap) for timeline.
 :::
