@@ -149,17 +149,23 @@ const config: Config = {
     navbar: {
       title: "ARES EDU",
       logo: {
-        alt: "ARES EDU PLATFORM",
+        alt: "ARES EDU PLATFORM — Home",
         src: "img/logo.svg",
         srcDark: "img/logo-dark.svg",
+        href: "/",
       },
-      hideOnScroll: true,
+      hideOnScroll: false,
       items: [
         {
           to: "/",
-          label: "Dashboard",
+          label: "🏠 Home",
           position: "left",
           exact: true,
+        },
+        {
+          to: "/docs/lessons",
+          label: "📚 Lessons",
+          position: "left",
         },
         {
           to: "/academy",

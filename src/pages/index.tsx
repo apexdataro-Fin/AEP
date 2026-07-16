@@ -1,404 +1,211 @@
 import type { ReactNode } from "react";
-import { useEffect, useState } from "react";
 import Link from "@docusaurus/Link";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 import Layout from "@theme/Layout";
 import Heading from "@theme/Heading";
 import styles from "./index.module.css";
 
-interface UserStats {
-  xp: number;
-  level: number;
-  streak: number;
-  lessonsCompleted: number;
-  labsCompleted: number;
-  projectsCompleted: number;
-  studyMinutes: number;
-  currentModule: string;
-  currentLesson: string;
-  lessonProgress: number;
-  careerRole: string;
-  careerProgress: number;
-  dailyGoal: number;
-  dailyGoalProgress: number;
-}
+const modules = [
+  { num: "01", name: "Engineering Foundations", slug: "01-foundations", emoji: "🧠" },
+  { num: "02", name: "Linux Mastery", slug: "02-linux", emoji: "🐧" },
+  { num: "03", name: "Networking Deep Dive", slug: "03-networking", emoji: "🌐" },
+  { num: "04", name: "Security & IAM", slug: "04-security", emoji: "🔒" },
+  { num: "05", name: "Python for Cloud", slug: "05-python", emoji: "🐍" },
+  { num: "06", name: "Cloud Fundamentals", slug: "06-cloud-fundamentals", emoji: "☁️" },
+  { num: "07", name: "Azure Core Services", slug: "07-azure-core", emoji: "🟦" },
+  { num: "08", name: "Containers", slug: "08-containers", emoji: "📦" },
+  { num: "09", name: "Docker", slug: "09-docker", emoji: "🐳" },
+  { num: "10", name: "Kubernetes", slug: "10-kubernetes", emoji: "☸️" },
+  { num: "11", name: "Helm", slug: "11-helm", emoji: "⛵" },
+  { num: "12", name: "Terraform", slug: "12-terraform", emoji: "🏗️" },
+  { num: "13", name: "Git", slug: "13-git", emoji: "🔀" },
+  { num: "14", name: "GitHub", slug: "14-github", emoji: "🐙" },
+  { num: "15", name: "CI/CD", slug: "15-cicd", emoji: "🔄" },
+  { num: "16", name: "DevOps", slug: "16-devops", emoji: "♾️" },
+  { num: "17", name: "DevSecOps", slug: "17-devsecops", emoji: "🛡️" },
+  { num: "18", name: "GitOps", slug: "18-gitops", emoji: "🚀" },
+  { num: "19", name: "Platform Engineering", slug: "19-platform", emoji: "⚙️" },
+  { num: "20", name: "Monitoring", slug: "20-monitoring", emoji: "📊" },
+  { num: "21", name: "Observability", slug: "21-observability", emoji: "🔍" },
+  { num: "22", name: "FinOps", slug: "22-finops", emoji: "💰" },
+  { num: "23", name: "Identity", slug: "23-identity", emoji: "🪪" },
+  { num: "24", name: "Azure AI", slug: "24-azure-ai", emoji: "🤖" },
+  { num: "25", name: "Vector Databases", slug: "25-vector-db", emoji: "🧬" },
+  { num: "26", name: "RAG Architecture", slug: "26-rag", emoji: "🧩" },
+  { num: "27", name: "AI Agents", slug: "27-ai-agents", emoji: "🕴️" },
+  { num: "28", name: "MLOps", slug: "28-mlops", emoji: "📈" },
+  { num: "29", name: "LLMOps", slug: "29-llmops", emoji: "💬" },
+  { num: "30", name: "AI Infrastructure", slug: "30-ai-infra", emoji: "🖥️" },
+  { num: "31", name: "Portfolio Building", slug: "31-portfolio", emoji: "💼" },
+  { num: "32", name: "Interview Preparation", slug: "32-interview", emoji: "🎤" },
+  { num: "33", name: "Career Paths", slug: "33-career", emoji: "🎯" },
+];
 
-const defaultStats: UserStats = {
-  xp: 2450,
-  level: 4,
-  streak: 12,
-  lessonsCompleted: 18,
-  labsCompleted: 7,
-  projectsCompleted: 2,
-  studyMinutes: 840,
-  currentModule: "Module 03 — Linux Mastery",
-  currentLesson: "File Permissions & ACLs",
-  lessonProgress: 65,
-  careerRole: "Junior Cloud Engineer",
-  careerProgress: 42,
-  dailyGoal: 1,
-  dailyGoalProgress: 0,
-};
+const simulators = [
+  { icon: "💻", name: "Linux Terminal", path: "/simulators" },
+  { icon: "☁️", name: "Azure Portal", path: "/simulators" },
+  { icon: "🛠", name: "Terraform", path: "/simulators" },
+  { icon: "🐳", name: "Docker", path: "/simulators" },
+  { icon: "☸️", name: "Kubernetes", path: "/simulators" },
+  { icon: "🌐", name: "Networking", path: "/simulators" },
+  { icon: "🏗", name: "Architecture", path: "/simulators" },
+  { icon: "🤖", name: "AI Playground", path: "/simulators" },
+];
 
-function useUserStats(): UserStats {
-  const [stats, setStats] = useState<UserStats>(defaultStats);
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("ares_stats");
-      if (saved) {
-        try {
-          setStats({ ...defaultStats, ...JSON.parse(saved) });
-        } catch {
-          setStats(defaultStats);
-        }
-      }
-    }
-  }, []);
-  return stats;
-}
+const certs = [
+  { code: "AZ-900", name: "Azure Fundamentals", exams: "Exam AZ-900" },
+  { code: "AZ-104", name: "Azure Administrator", exams: "Exam AZ-104" },
+  { code: "AZ-400", name: "Azure DevOps Expert", exams: "Exam AZ-400" },
+  { code: "AI-102", name: "Azure AI Engineer", exams: "Exam AI-102" },
+];
 
-function ProgressRing({
-  progress,
-  size = 56,
-  stroke = 6,
-}: {
-  progress: number;
-  size?: number;
-  stroke?: number;
-}) {
-  const radius = (size - stroke) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const offset = circumference - (progress / 100) * circumference;
+function ModuleCard({ m }: { m: (typeof modules)[0] }) {
   return (
-    <div className={styles.progressRing} style={{ width: size, height: size }}>
-      <svg width={size} height={size}>
-        <circle
-          className={styles.progressRingTrack}
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          strokeWidth={stroke}
-        />
-        <circle
-          className={styles.progressRingFill}
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          strokeWidth={stroke}
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-        />
-      </svg>
-      <span className={styles.progressRingText}>{progress}%</span>
-    </div>
+    <Link className={styles.moduleCard} to={`/docs/lessons/${m.slug}`}>
+      <span className={styles.moduleEmoji}>{m.emoji}</span>
+      <span className={styles.moduleNum}>Module {m.num}</span>
+      <span className={styles.moduleName}>{m.name}</span>
+    </Link>
   );
 }
 
-function StatCard({
-  label,
-  value,
-  sub,
-  icon,
-}: {
-  label: string;
-  value: string;
-  sub?: string;
-  icon: string;
-}) {
+function HeroSection() {
   return (
-    <div className={styles.statCard}>
-      <span className={styles.statIcon}>{icon}</span>
-      <div>
-        <span className={styles.statValue}>{value}</span>
-        <span className={styles.statLabel}>{label}</span>
-        {sub && <span className={styles.statSub}>{sub}</span>}
-      </div>
-    </div>
-  );
-}
-
-function ContinueLearning({ stats }: { stats: UserStats }) {
-  return (
-    <div className={`${styles.bentoCard} ${styles.bentoLarge}`}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>Continue Learning</span>
-        <span className={styles.eta}>⏱ 25 min remaining</span>
-      </div>
-      <Heading as="h2" className={styles.cardTitle}>
-        {stats.currentModule}
-      </Heading>
-      <p className={styles.cardLesson}>{stats.currentLesson}</p>
-      <div className={styles.progressRow}>
-        <ProgressRing progress={stats.lessonProgress} />
-        <div className={styles.progressInfo}>
-          <span className={styles.progressPercent}>{stats.lessonProgress}% complete</span>
-          <span className={styles.progressMeta}>Next: User & Group Management</span>
+    <section className={styles.hero}>
+      <div className={styles.heroContent}>
+        <span className={styles.heroBadge}>ALP-001 • Cloud Engineering Academy</span>
+        <Heading as="h1" className={styles.heroTitle}>
+          The Complete Cloud Engineering Learning OS
+        </Heading>
+        <p className={styles.heroSubtitle}>
+          33 modules, 121 lessons, real projects, interactive labs — everything you need to become a
+          production-ready cloud engineer. Start today, learn by building.
+        </p>
+        <div className={styles.heroActions}>
+          <Link className={styles.heroPrimary} to="/docs/lessons">
+            Start Learning →
+          </Link>
+          <Link className={styles.heroSecondary} to="/docs/lessons/01-foundations">
+            Browse Curriculum
+          </Link>
         </div>
       </div>
-      <div className={styles.cardActions}>
-        <Link className={styles.primaryButton} to="/docs/curriculum">
-          Resume Lesson →
-        </Link>
-        <Link className={styles.secondaryButton} to="/courses">
-          Browse Curriculum
-        </Link>
-      </div>
-    </div>
+    </section>
   );
 }
 
-function GamificationPanel({ stats }: { stats: UserStats }) {
+function ModuleGrid() {
   return (
-    <div className={styles.bentoCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>Your Progress</span>
+    <section className={styles.modulesSection}>
+      <div className={styles.sectionHeader}>
+        <Heading as="h2">📚 Complete Course Curriculum</Heading>
+        <p>33 modules from foundations to production cloud engineering. Click any module to explore.</p>
       </div>
-      <div className={styles.gamificationGrid}>
-        <StatCard
-          icon="⚡"
-          label="Total XP"
-          value={stats.xp.toLocaleString()}
-          sub={`Level ${stats.level}`}
-        />
-        <StatCard icon="🔥" label="Day Streak" value={stats.streak.toString()} sub="Keep it up!" />
-        <StatCard
-          icon="📚"
-          label="Lessons"
-          value={stats.lessonsCompleted.toString()}
-          sub="completed"
-        />
-        <StatCard icon="🧪" label="Labs" value={stats.labsCompleted.toString()} sub="completed" />
-        <StatCard
-          icon="🏗️"
-          label="Projects"
-          value={stats.projectsCompleted.toString()}
-          sub="delivered"
-        />
-        <StatCard
-          icon="⏱"
-          label="Study Time"
-          value={`${Math.round(stats.studyMinutes / 60)}h`}
-          sub="total"
-        />
-      </div>
-    </div>
-  );
-}
-
-function CareerCard({ stats }: { stats: UserStats }) {
-  return (
-    <div className={styles.bentoCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>CloudNova Career</span>
-        <span className={styles.statusDot}>● Active Mission</span>
-      </div>
-      <div className={styles.careerIdentity}>
-        <div className={styles.careerAvatar}>👤</div>
-        <div>
-          <Heading as="h3" className={styles.careerRole}>
-            {stats.careerRole}
-          </Heading>
-          <span className={styles.careerManager}>Manager: Sarah Chen</span>
-        </div>
-      </div>
-      <div className={styles.ticketCard}>
-        <span className={styles.ticketId}>TICKET-284</span>
-        <p>Investigate high latency on the customer API gateway.</p>
-      </div>
-      <div className={styles.careerProgressRow}>
-        <span>Promotion progress</span>
-        <span className={styles.careerPercent}>{stats.careerProgress}%</span>
-      </div>
-      <div className={styles.academyProgress}>
-        <div style={{ width: `${stats.careerProgress}%` }} />
-      </div>
-      <Link className={styles.linkButton} to="/career">
-        Open Sprint Board →
-      </Link>
-    </div>
-  );
-}
-
-function DailyGoal({ stats }: { stats: UserStats }) {
-  return (
-    <div className={styles.bentoCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>Daily Goal</span>
-      </div>
-      <div className={styles.dailyGoalVisual}>
-        <div className={styles.dailyGoalRing}>
-          <span>
-            {stats.dailyGoalProgress}/{stats.dailyGoal}
-          </span>
-        </div>
-        <div className={styles.dailyGoalText}>
-          <strong>Complete 1 lesson</strong>
-          <span>You're just getting started today.</span>
-        </div>
-      </div>
-      <Link className={styles.primaryButton} to="/docs/curriculum">
-        Start Today's Session
-      </Link>
-    </div>
-  );
-}
-
-function CertificationProgress() {
-  const certs = [
-    { code: "AZ-900", name: "Azure Fundamentals", progress: 80, color: "#7c5e4a" },
-    { code: "AZ-104", name: "Azure Administrator", progress: 35, color: "#4a7a9e" },
-    { code: "AZ-400", name: "Azure DevOps", progress: 10, color: "#5a8f6e" },
-    { code: "AI-102", name: "Azure AI Engineer", progress: 5, color: "#b06b6b" },
-  ];
-  return (
-    <div className={styles.bentoCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>Certification Journey</span>
-      </div>
-      <div className={styles.certList}>
-        {certs.map((cert) => (
-          <div key={cert.code} className={styles.certItem}>
-            <div className={styles.certInfo}>
-              <span className={styles.certCode}>{cert.code}</span>
-              <span className={styles.certName}>{cert.name}</span>
-            </div>
-            <div className={styles.certProgress} style={{ background: `${cert.color}20` }}>
-              <div style={{ width: `${cert.progress}%`, background: cert.color }} />
-            </div>
-            <span className={styles.certPercent}>{cert.progress}%</span>
-          </div>
+      <div className={styles.moduleGrid}>
+        {modules.map((m) => (
+          <ModuleCard key={m.num} m={m} />
         ))}
       </div>
-      <Link className={styles.linkButton} to="/certifications">
-        View Exam Roadmap →
-      </Link>
-    </div>
+    </section>
   );
 }
 
-function SimulatorLaunchpad() {
-  const sims = [
-    { icon: "💻", name: "Linux Terminal", path: "/simulators" },
-    { icon: "☁️", name: "Azure Portal", path: "/simulators" },
-    { icon: "🛠", name: "Terraform", path: "/simulators" },
-    { icon: "🐳", name: "Docker", path: "/simulators" },
-    { icon: "☸️", name: "Kubernetes", path: "/simulators" },
-    { icon: "🌐", name: "Networking", path: "/simulators" },
-    { icon: "🏗", name: "Architecture", path: "/simulators" },
-    { icon: "🤖", name: "AI Playground", path: "/simulators" },
-  ];
+function SimulatorSection() {
   return (
-    <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>Simulator Launchpad</span>
-        <span className={styles.eta}>Practice in safe environments</span>
+    <section className={styles.simSection}>
+      <div className={styles.sectionHeader}>
+        <Heading as="h2">🧪 Interactive Simulators</Heading>
+        <p>Practice in safe, sandboxed environments before touching real infrastructure.</p>
       </div>
       <div className={styles.simGrid}>
-        {sims.map((sim) => (
-          <Link key={sim.name} className={styles.simButton} to={sim.path}>
-            <span className={styles.simIcon}>{sim.icon}</span>
-            <span className={styles.simName}>{sim.name}</span>
+        {simulators.map((s) => (
+          <Link key={s.name} className={styles.simCard} to={s.path}>
+            <span className={styles.simIcon}>{s.icon}</span>
+            <span className={styles.simName}>{s.name}</span>
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
-function RoadmapPreview() {
-  const modules = [
-    { num: "01", name: "Engineering Foundations", status: "completed" },
-    { num: "02", name: "Linux Mastery", status: "in-progress" },
-    { num: "03", name: "Networking Deep Dive", status: "locked" },
-    { num: "04", name: "Security & IAM", status: "locked" },
-    { num: "05", name: "Python for Cloud", status: "locked" },
-    { num: "06", name: "Cloud Fundamentals", status: "locked" },
-  ];
+function CertSection() {
   return (
-    <div className={`${styles.bentoCard} ${styles.bentoWide}`}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>Learning Roadmap</span>
-        <Link className={styles.linkButton} to="/courses">
-          Full Roadmap →
+    <section className={styles.certSection}>
+      <div className={styles.sectionHeader}>
+        <Heading as="h2">🏆 Certification Roadmap</Heading>
+        <p>Every lesson maps to Microsoft Azure certification objectives. Track your exam readiness.</p>
+      </div>
+      <div className={styles.certGrid}>
+        {certs.map((c) => (
+          <Link key={c.code} className={styles.certCard} to="/certifications">
+            <span className={styles.certCode}>{c.code}</span>
+            <span className={styles.certName}>{c.name}</span>
+            <span className={styles.certExam}>{c.exams}</span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function QuickLinks() {
+  return (
+    <section className={styles.quickSection}>
+      <div className={styles.sectionHeader}>
+        <Heading as="h2">🚀 Quick Access</Heading>
+      </div>
+      <div className={styles.quickGrid}>
+        <Link className={styles.quickCard} to="/docs/lessons">
+          <span className={styles.quickIcon}>📖</span>
+          <strong>Browse All Lessons</strong>
+          <span>121 lessons across 33 modules</span>
+        </Link>
+        <Link className={styles.quickCard} to="/projects">
+          <span className={styles.quickIcon}>🏗️</span>
+          <strong>Real Projects</strong>
+          <span>Build a production cloud environment</span>
+        </Link>
+        <Link className={styles.quickCard} to="/labs">
+          <span className={styles.quickIcon}>🧪</span>
+          <strong>Hands-on Labs</strong>
+          <span>Guided, challenge & production labs</span>
+        </Link>
+        <Link className={styles.quickCard} to="/career">
+          <span className={styles.quickIcon}>💼</span>
+          <strong>Career Mode</strong>
+          <span>CloudNova — your virtual company</span>
+        </Link>
+        <Link className={styles.quickCard} to="/certifications">
+          <span className={styles.quickIcon}>🎯</span>
+          <strong>Certifications</strong>
+          <span>AZ-900, AZ-104, AZ-400, AI-102</span>
+        </Link>
+        <Link className={styles.quickCard} to="/simulators">
+          <span className={styles.quickIcon}>💻</span>
+          <strong>Simulators</strong>
+          <span>Linux, Terraform, Docker & more</span>
         </Link>
       </div>
-      <div className={styles.roadmapTrack}>
-        {modules.map((m) => (
-          <div key={m.num} className={`${styles.roadmapNode} ${styles[m.status]}`}>
-            <div className={styles.roadmapDot}>{m.status === "completed" ? "✓" : m.num}</div>
-            <span className={styles.roadmapName}>{m.name}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RecentActivity() {
-  const activities = [
-    { icon: "✅", text: "Completed 'File Permissions & ACLs'", time: "2h ago" },
-    { icon: "🏅", text: "Earned badge: Linux Apprentice", time: "Yesterday" },
-    { icon: "🧪", text: "Finished lab: User & Group Management", time: "2 days ago" },
-  ];
-  return (
-    <div className={styles.bentoCard}>
-      <div className={styles.cardHeader}>
-        <span className={styles.sectionBadge}>Recent Activity</span>
-      </div>
-      <ul className={styles.activityList}>
-        {activities.map((a, i) => (
-          <li key={i} className={styles.activityItem}>
-            <span className={styles.activityIcon}>{a.icon}</span>
-            <div>
-              <span className={styles.activityText}>{a.text}</span>
-              <span className={styles.activityTime}>{a.time}</span>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
+    </section>
   );
 }
 
 export default function Home(): ReactNode {
   const { siteConfig } = useDocusaurusContext();
-  const stats = useUserStats();
 
   return (
     <Layout
-      title="Dashboard"
-      description="Your ARES EDU PLATFORM learner dashboard — continue your cloud engineering journey."
+      title="Cloud Engineering Academy"
+      description="ARES EDU PLATFORM — ALP-001 Cloud Engineering. The complete learning operating system for cloud engineers."
     >
-      <main className={styles.dashboardPage}>
+      <main className={styles.page}>
+        <HeroSection />
         <div className="container">
-          <header className={styles.dashboardHeader}>
-            <div>
-              <span className={styles.welcomeBadge}>Welcome back, Engineer</span>
-              <Heading as="h1" className={styles.dashboardTitle}>
-                Your Cloud Engineering Academy
-              </Heading>
-              <p className={styles.dashboardSubtitle}>
-                Continue where you left off, track your career at CloudNova, and launch simulators.
-              </p>
-            </div>
-            <div className={styles.headerActions}>
-              <Link className={styles.secondaryButton} to="/docs/curriculum">
-                Browse Curriculum
-              </Link>
-            </div>
-          </header>
-
-          <section className={styles.bentoGrid}>
-            <ContinueLearning stats={stats} />
-            <GamificationPanel stats={stats} />
-            <CareerCard stats={stats} />
-            <DailyGoal stats={stats} />
-            <CertificationProgress />
-            <RecentActivity />
-          </section>
-
-          <RoadmapPreview />
-          <SimulatorLaunchpad />
+          <QuickLinks />
+          <ModuleGrid />
+          <CertSection />
+          <SimulatorSection />
         </div>
       </main>
     </Layout>
