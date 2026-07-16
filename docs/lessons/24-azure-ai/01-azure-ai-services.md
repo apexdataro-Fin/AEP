@@ -10,12 +10,12 @@ description: "خدمات Azure AI: OpenAI، Cognitive Services، Azure ML، وا
 
 ## محفظة Azure AI
 
-| الخدمة | الاستخدام |
-|---|---|
-| **Azure OpenAI** | نماذج GPT، المتجهات، DALL-E |
-| **Cognitive Services** | رؤية، نطق، لغة، قرار |
-| **Azure Machine Learning** | تدريب ونشر نماذج ML |
-| **AI Search** | بحث دلالي، RAG |
+| الخدمة                     | الاستخدام                   |
+| -------------------------- | --------------------------- |
+| **Azure OpenAI**           | نماذج GPT، المتجهات، DALL-E |
+| **Cognitive Services**     | رؤية، نطق، لغة، قرار        |
+| **Azure Machine Learning** | تدريب ونشر نماذج ML         |
+| **AI Search**              | بحث دلالي، RAG              |
 
 ## Azure OpenAI — مثال عملي
 
@@ -44,6 +44,7 @@ print(response.choices[0].message.content)
 > **الموقف:** ١٠٠٠ تذكرة دعم يومياً. المهندسون يقضون ٣٠٪ من وقتهم في قراءة التذاكر.
 
 **الحل:**
+
 1. مرر التذكرة لـ GPT-4 مع prompt: "لخص هذه التذكرة في جملتين."
 2. صنفها: `category: networking|database|auth`
 3. حدد الأولوية: `priority: low|medium|high|critical`

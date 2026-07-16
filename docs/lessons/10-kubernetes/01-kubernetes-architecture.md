@@ -13,6 +13,7 @@ description: "افهم معمارية Kubernetes: مستوى التحكم، ال
 لديك ١٠ حاويات. سهلة — `docker run`.
 
 لديك ١٠٠٠ حاوية عبر ٥٠ خادماً. الآن تحتاج:
+
 - من يشغّل الحاوية على أي خادم؟ (جدولة)
 - ماذا لو مات خادم؟ (إصلاح ذاتي)
 - كيف تصل للحاوية من الخارج؟ (شبكات)
@@ -53,10 +54,10 @@ metadata:
   name: cloudnova-api
 spec:
   containers:
-  - name: api
-    image: cloudnova/api:v2
-    ports:
-    - containerPort: 8080
+    - name: api
+      image: cloudnova/api:v2
+      ports:
+        - containerPort: 8080
 ```
 
 ### Deployment — إدارة الـ Pods
@@ -67,7 +68,7 @@ kind: Deployment
 metadata:
   name: cloudnova-api
 spec:
-  replicas: 3                    # ثلاث نسخ — توفر عالي
+  replicas: 3 # ثلاث نسخ — توفر عالي
   selector:
     matchLabels:
       app: cloudnova-api
@@ -77,23 +78,23 @@ spec:
         app: cloudnova-api
     spec:
       containers:
-      - name: api
-        image: cloudnova/api:v2
-        ports:
-        - containerPort: 8080
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "100m"
-          limits:
-            memory: "256Mi"
-            cpu: "500m"
-        readinessProbe:           # هل الحاوية جاهزة؟
-          httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 10
+        - name: api
+          image: cloudnova/api:v2
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          readinessProbe: # هل الحاوية جاهزة؟
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
 ```
 
 ### Service — الوصول إلى الـ Pods
@@ -107,9 +108,9 @@ spec:
   selector:
     app: cloudnova-api
   ports:
-  - port: 80
-    targetPort: 8080
-  type: LoadBalancer     # يعطي IP خارجي
+    - port: 80
+      targetPort: 8080
+  type: LoadBalancer # يعطي IP خارجي
 ```
 
 ## تشخيص المشاكل

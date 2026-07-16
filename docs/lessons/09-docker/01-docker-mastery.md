@@ -16,14 +16,14 @@ description: "اكتب Dockerfiles إنتاجية، ابنِ صوراً صغير
 
 ## المفاهيم الأساسية
 
-| المفهوم | المعنى | تشبيه |
-|---|---|---|
-| **Image** | قالب القراءة فقط | وصفة الطبخ |
-| **Container** | نسخة مشغّلة من الصورة | الطبق الجاهز |
-| **Dockerfile** | ملف بناء الصورة | خطوات الوصفة |
-| **Registry** | مستودع الصور (Docker Hub, ACR) | كتاب الطبخ |
-| **Volume** | تخزين دائم للحاوية | الثلاجة — تحفظ الطعام بعد الطبخ |
-| **Network** | اتصال بين الحاويات | طاولة الطعام — تجمع الأطباق |
+| المفهوم        | المعنى                         | تشبيه                           |
+| -------------- | ------------------------------ | ------------------------------- |
+| **Image**      | قالب القراءة فقط               | وصفة الطبخ                      |
+| **Container**  | نسخة مشغّلة من الصورة          | الطبق الجاهز                    |
+| **Dockerfile** | ملف بناء الصورة                | خطوات الوصفة                    |
+| **Registry**   | مستودع الصور (Docker Hub, ACR) | كتاب الطبخ                      |
+| **Volume**     | تخزين دائم للحاوية             | الثلاجة — تحفظ الطعام بعد الطبخ |
+| **Network**    | اتصال بين الحاويات             | طاولة الطعام — تجمع الأطباق     |
 
 ## أول Dockerfile لك
 
@@ -92,7 +92,7 @@ services:
     image: postgres:16-alpine
     environment:
       POSTGRES_USER: user
-      POSTGRES_PASSWORD: ${DB_PASSWORD}  # من متغيرات البيئة — آمن!
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # من متغيرات البيئة — آمن!
       POSTGRES_DB: cloudnova
     volumes:
       - pgdata:/var/lib/postgresql/data
@@ -121,18 +121,18 @@ docker-compose down -v       # أوقف كل شيء ونظّف
 
 ## أوامر تحتاجها يومياً
 
-| الأمر | الغرض |
-|---|---|
-| `docker build -t name .` | بناء صورة |
-| `docker run -d -p 8080:80 name` | تشغيل حاوية |
-| `docker ps` | الحاويات الشغالة |
-| `docker ps -a` | كل الحاويات (بما فيها المتوقفة) |
-| `docker logs -f container` | سجلات الحاوية مباشرة |
-| `docker exec -it container bash` | ادخل الحاوية |
-| `docker system prune -a` | نظف كل شيء غير مستخدم |
-| `docker image ls` | الصور المخزنة محلياً |
-| `docker-compose up -d` | شغّل docker-compose |
-| `docker-compose logs -f` | سجلات كل الخدمات |
+| الأمر                            | الغرض                           |
+| -------------------------------- | ------------------------------- |
+| `docker build -t name .`         | بناء صورة                       |
+| `docker run -d -p 8080:80 name`  | تشغيل حاوية                     |
+| `docker ps`                      | الحاويات الشغالة                |
+| `docker ps -a`                   | كل الحاويات (بما فيها المتوقفة) |
+| `docker logs -f container`       | سجلات الحاوية مباشرة            |
+| `docker exec -it container bash` | ادخل الحاوية                    |
+| `docker system prune -a`         | نظف كل شيء غير مستخدم           |
+| `docker image ls`                | الصور المخزنة محلياً            |
+| `docker-compose up -d`           | شغّل docker-compose             |
+| `docker-compose logs -f`         | سجلات كل الخدمات                |
 
 ## سيناريو CloudNova: الحاوية تشتغل محلياً لكنها تموت في الإنتاج
 

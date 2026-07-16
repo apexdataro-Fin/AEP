@@ -28,13 +28,13 @@ graph LR
 
 ## أدوات الأمان
 
-| الأداة | ماذا تفحص | متى |
-|---|---|---|
-| **detect-secrets** | كلمات مرور ومفاتيح في الكود | قبل commit |
-| **CodeQL / Semgrep** | ثغرات في الكود (SAST) | عند PR |
-| **Dependabot / Snyk** | ثغرات في المكتبات (SCA) | عند PR + دوري |
-| **Trivy** | ثغرات في صور Docker | بعد build |
-| **Checkov / tfsec** | أخطاء تكوين IaC | عند PR |
+| الأداة                | ماذا تفحص                   | متى           |
+| --------------------- | --------------------------- | ------------- |
+| **detect-secrets**    | كلمات مرور ومفاتيح في الكود | قبل commit    |
+| **CodeQL / Semgrep**  | ثغرات في الكود (SAST)       | عند PR        |
+| **Dependabot / Snyk** | ثغرات في المكتبات (SCA)     | عند PR + دوري |
+| **Trivy**             | ثغرات في صور Docker         | بعد build     |
+| **Checkov / tfsec**   | أخطاء تكوين IaC             | عند PR        |
 
 ## مثال: GitHub Actions مع الأمان
 

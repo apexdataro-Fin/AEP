@@ -2,7 +2,6 @@
 sidebar_position: 0
 id: lessons-index
 title: ALP-001 — Cloud Engineering Academy
-slug: /lessons
 description: The complete Cloud Engineering learning path — 33 modules from foundations to production.
 ---
 
@@ -12,32 +11,32 @@ The complete Cloud Engineering learning path. From Linux fundamentals to AI infr
 
 ## 🚀 Start Learning
 
-- **Beginners** → Start at [🧠 Engineering Foundations](foundations)
-- **Intermediate** → Jump to [🟦 Azure Core Services](azure-core)
-- **Advanced** → Dive into [🏗️ Terraform](terraform)
-- **Expert** → Explore [🤖 Azure AI](azure-ai)
+- **Beginners** → Start at [🧠 Engineering Foundations](/docs/lessons/foundations)
+- **Intermediate** → Jump to [🟦 Azure Core Services](/docs/lessons/azure-core)
+- **Advanced** → Dive into [🏗️ Terraform](/docs/lessons/terraform)
+- **Expert** → Explore [🤖 Azure AI](/docs/lessons/azure-ai)
 
 ## 📚 All 33 Modules
 
-| #   | Module                                      | #   | Module                                |
-| --- | ------------------------------------------- | --- | ------------------------------------- |
-| 01  | [🧠 Engineering Foundations](foundations)   | 18  | [🚀 GitOps](gitops)                   |
-| 02  | [🐧 Linux Mastery](linux)                   | 19  | [⚙️ Platform Engineering](platform)   |
-| 03  | [🌐 Networking Deep Dive](networking)       | 20  | [📊 Monitoring](monitoring)           |
-| 04  | [🔒 Security & IAM](security)               | 21  | [🔍 Observability](observability)     |
-| 05  | [🐍 Python for Cloud](python)               | 22  | [💰 FinOps](finops)                   |
-| 06  | [☁️ Cloud Fundamentals](cloud-fundamentals) | 23  | [🪪 Identity](identity)               |
-| 07  | [🟦 Azure Core Services](azure-core)        | 24  | [🤖 Azure AI](azure-ai)               |
-| 08  | [📦 Containers](containers)                 | 25  | [🧬 Vector Databases](vector-db)      |
-| 09  | [🐳 Docker](docker)                         | 26  | [🧩 RAG Architecture](rag)            |
-| 10  | [☸️ Kubernetes](kubernetes)                 | 27  | [🕴️ AI Agents](ai-agents)             |
-| 11  | [⛵ Helm](helm)                             | 28  | [📈 MLOps](mlops)                     |
-| 12  | [🏗️ Terraform](terraform)                   | 29  | [💬 LLMOps](llmops)                   |
-| 13  | [🔀 Git](git)                               | 30  | [🖥️ AI Infrastructure](ai-infra)      |
-| 14  | [🐙 GitHub](github)                         | 31  | [💼 Portfolio Building](portfolio)    |
-| 15  | [🔄 CI/CD](cicd)                            | 32  | [🎤 Interview Preparation](interview) |
-| 16  | [♾️ DevOps](devops)                         | 33  | [🎯 Career Paths](career)             |
-| 17  | [🛡️ DevSecOps](devsecops)                   |     |                                       |
+| #   | Module                                                    | #   | Module                                              |
+| --- | --------------------------------------------------------- | --- | --------------------------------------------------- |
+| 01  | [🧠 Engineering Foundations](/docs/lessons/foundations)   | 18  | [🚀 GitOps](/docs/lessons/gitops)                   |
+| 02  | [🐧 Linux Mastery](/docs/lessons/linux)                   | 19  | [⚙️ Platform Engineering](/docs/lessons/platform)   |
+| 03  | [🌐 Networking Deep Dive](/docs/lessons/networking)       | 20  | [📊 Monitoring](/docs/lessons/monitoring)           |
+| 04  | [🔒 Security & IAM](/docs/lessons/security)               | 21  | [🔍 Observability](/docs/lessons/observability)     |
+| 05  | [🐍 Python for Cloud](/docs/lessons/python)               | 22  | [💰 FinOps](/docs/lessons/finops)                   |
+| 06  | [☁️ Cloud Fundamentals](/docs/lessons/cloud-fundamentals) | 23  | [🪪 Identity](/docs/lessons/identity)               |
+| 07  | [🟦 Azure Core Services](/docs/lessons/azure-core)        | 24  | [🤖 Azure AI](/docs/lessons/azure-ai)               |
+| 08  | [📦 Containers](/docs/lessons/containers)                 | 25  | [🧬 Vector Databases](/docs/lessons/vector-db)      |
+| 09  | [🐳 Docker](/docs/lessons/docker)                         | 26  | [🧩 RAG Architecture](/docs/lessons/rag)            |
+| 10  | [☸️ Kubernetes](/docs/lessons/kubernetes)                 | 27  | [🕴️ AI Agents](/docs/lessons/ai-agents)             |
+| 11  | [⛵ Helm](/docs/lessons/helm)                             | 28  | [📈 MLOps](/docs/lessons/mlops)                     |
+| 12  | [🏗️ Terraform](/docs/lessons/terraform)                   | 29  | [💬 LLMOps](/docs/lessons/llmops)                   |
+| 13  | [🔀 Git](/docs/lessons/git)                               | 30  | [🖥️ AI Infrastructure](/docs/lessons/ai-infra)      |
+| 14  | [🐙 GitHub](/docs/lessons/github)                         | 31  | [💼 Portfolio Building](/docs/lessons/portfolio)    |
+| 15  | [🔄 CI/CD](/docs/lessons/cicd)                            | 32  | [🎤 Interview Preparation](/docs/lessons/interview) |
+| 16  | [♾️ DevOps](/docs/lessons/devops)                         | 33  | [🎯 Career Paths](/docs/lessons/career)             |
+| 17  | [🛡️ DevSecOps](/docs/lessons/devsecops)                   |     |                                                     |
 
 ## 🏆 Certification Mapping
 
