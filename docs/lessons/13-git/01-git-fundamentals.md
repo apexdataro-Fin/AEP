@@ -1,137 +1,175 @@
 ---
 sidebar_position: 1
-title: "Git للمهندس السحابي"
-description: "التحكم بالإصدارات للمحترفين: branching، merging، rebasing، وسير العمل مع Infrastructure as Code."
+title: "Git من الصفر إلى الإتقان"
+description: "كل ما يحتاجه مهندس السحابة عن Git: branching، merging، rebasing، hooks، وسير العمل مع IaC."
 ---
 
-# Git للمهندس السحابي
+# Git من الصفر إلى الإتقان
 
-> **"Git ليس مجرد `commit` و `push`. إنه نظام تتبع لكل تغيير في بنيتك التحتية. تعلمه بعمق."**
+> **"Git ليس مجرد `commit` و `push`. إنه آلة زمن لمشروعك. تعلم كيف تسافر عبر تاريخ الكود."**
 
-## مفاهيم أساسية
+## مفاهيم Git الأساسية
 
-| المفهوم          | المعنى                        | تشبيه                           |
-| ---------------- | ----------------------------- | ------------------------------- |
-| **Repository**   | مجلد يتتبعه Git               | خزانة الملفات                   |
-| **Commit**       | لقطة من الملفات في لحظة زمنية | صورة فوتوغرافية للمشروع         |
-| **Branch**       | خط تطوير منفصل                | نسخة من الملف للعمل عليها بأمان |
-| **Remote**       | نسخة من الـ repo على خادم     | نسخة احتياطية على GitHub        |
-| **Merge**        | دمج فرعين معاً                | ضم نسختين في نسخة واحدة         |
-| **Pull Request** | طلب مراجعة قبل الدمج          | طلب موافقة المدير               |
+```mermaid
+graph LR
+    WD[Working Directory] -->|git add| Staging[Staging Area]
+    Staging -->|git commit| Local[Local Repo]
+    Local -->|git push| Remote[Remote Repo]
+    Remote -->|git pull| WD
+```
 
-## الأوامر اليومية — خريطة كاملة
+| المفهوم | المعنى | تشبيه |
+|---|---|---|
+| **Working Directory** | ملفاتك الحالية | مكتبك |
+| **Staging Area** | ما جهّزته للـ commit | صندوق التجهيز |
+| **Commit** | لقطة محفوظة | صورة فوتوغرافية |
+| **Branch** | خط تطوير منفصل | غرفة جانبية |
+| **Remote** | نسخة على الخادم | نسخة احتياطية سحابية |
+
+## دورة العمل اليومية
 
 ```bash
-# ===== البداية =====
-git clone https://github.com/cloudnova/infra.git   # انسخ المشروع
-git status                    # ماذا تغير؟
-git diff                      # ما الفروقات بالضبط؟
+# ١. ابدأ يومك
+git pull origin main              # خذ آخر التحديثات
 
-# ===== دورة العمل اليومية =====
-git pull origin main         # خذ آخر التحديثات
-git checkout -b feature/add-alerts   # أنشئ فرعاً جديداً
-# ... عدّل الملفات ...
-git add monitoring.tf         # جهّز ملفاً للـ commit
-git add .                     # أو جهّز كل الملفات
-git commit -m "Add Prometheus alerts for API latency"
-git push origin feature/add-alerts   # ارفع الفرع
-# افتح Pull Request على GitHub ← راجع ← ادمج
+# ٢. اعمل على مهمة
+git checkout -b feature/add-monitoring
+
+# ٣. عدّل الملفات...
+# ٤. شوف ماذا تغير
+git status
+git diff                          # الفروقات بالتفصيل
+
+# ٥. جهّز وcommit
+git add monitoring.tf             # ملف محدد
+git add .                         # أو كل الملفات
+git commit -m "Add Prometheus alert for API latency > 500ms"
+
+# ٦. ارفع
+git push origin feature/add-monitoring
+
+# ٧. افتح Pull Request على GitHub
 ```
 
-## استراتيجية التفرع — Git Flow مبسط
+## استراتيجية التفرع — Git Flow للفرق
 
 ```
-main ─────●────────●────────●────── (إنتاج — دائماً نظيف)
-           \      /        /
-staging ───●────●────────●──────── (ما قبل الإنتاج)
-             \  /
-feature/xxx ──●─────────────────── (فرع العمل)
+main ─────●─────────●─────────●─────── (إنتاج — نظيف دائماً)
+           \       /         /
+staging ────●─────●─────────●───────── (اختبار ما قبل الإنتاج)
+             \   /
+feature/xxx ──●────────────────────── (مكان العمل الآمن)
 ```
 
 **القواعد الذهبية:**
 
-1. **main نظيف دائماً.** لا تدفع إليه مباشرة أبداً
-2. **فرع لكل مهمة.** `feature/add-alerts`، `fix/login-bug`
-3. **Pull Request إجباري.** حتى لو كنت الوحيد في الفريق
-4. **وصف commit واضح.** "Add alerts" ≠ "Add Prometheus alert for API p99 latency > 500ms"
+1. **main مقدس.** لا تدفع إليه مباشرة أبداً
+2. **فرع لكل مهمة.** `feature/add-alerts`، `fix/login-bug`، `docs/api-guide`
+3. **PR إجباري.** حتى لو كنت الوحيد في الفريق — للمراجعة الذاتية
+4. **Commit صغير ومركز.** "Add monitoring" سيء. "Add Prometheus alert for API p99 latency" جيد
+5. **Commit متكرر.** ١٠ commits صغيرة > ١ commit ضخم
 
-## التعامل مع الأخطاء
+## التعامل مع الكوارث
 
 ```bash
-# "يا إلهي! عملت commit للخطأ!"
-git reset HEAD~1              # تراجع عن آخر commit (احتفظ بالتغييرات)
-git reset --hard HEAD~1       # تراجع نهائي (احذف التغييرات)
+# "أضفت الملف الخطأ للـ commit!"
+git reset HEAD unwanted-file.txt     # أخرجه من staging
 
-# "نسيت أضيف ملفاً للـ commit"
-git add forgotten-file.tf
-git commit --amend --no-edit  # أضف الملف لآخر commit
+# "commit للفرع الخطأ!"
+git log --oneline                     # ابحث عن commit
+git reset HEAD~1                      # تراجع (الملفات تبقى)
 
 # "أريد العودة لنسخة قديمة"
-git log --oneline             # ابحث عن رقم الـ commit
-git revert abc1234            # أنشئ commit جديداً يعكس التغييرات
+git log --oneline                     # ابحث عن الـ hash
+git revert abc1234                    # أنشئ commit جديد يعكس التغييرات
+
+# "تعارض رهيب أثناء merge"
+git merge --abort                     # تراجع عن الـ merge
+# حل التعارضات يدوياً، ثم:
+git add .
+git merge --continue
+
+# "أين اختفى commitي؟"
+git reflog                            # سجل كل شيء — حتى المحذوف
+git cherry-pick abc1234               # استرجعه
 ```
 
 ## Git + Infrastructure as Code
-
-بنيتك التحتية كود. تعامل معها تماماً مثل كود التطبيق:
 
 ### .gitignore لمشاريع Terraform
 
 ```bash
 # .gitignore
-**/.terraform/*       # مجلد المزودات — كبير لا يُرفع
-*.tfstate             # ⚠️ لا ترفع state أبداً!
+**/.terraform/*           # الـ providers — كبير ولا يُرفع
+*.tfstate                 # ⚠️ لا ترفع state أبداً!
 *.tfstate.*
-*.tfvars              # قد تحتوي أسراراً
-!example.tfvars       # إلا مثال القيم
-.terraformrc          # بيانات اعتماد CLI
+*.tfvars                  # قد تحتوي أسراراً
+!example.tfvars           # إلا القالب
+.terraformrc              # بيانات اعتماد
+override.tf               # تجاوزات محلية
 ```
 
-### PR Template لمشاريع IaC
-
-```markdown
-## ماذا يتغير؟
-
-- إضافة Auto Scaling لخوادم الويب
-
-## لماذا؟
-
-- التعامل مع ارتفاع الحمل وقت الذروة (٩ صباحاً)
-
-## خطة Terraform
-
-<!-- الصق مخرجات terraform plan هنا -->
-
-Plan: 3 to add, 1 to change, 0 to destroy.
-
-## الاختبار
-
-- [x] الخطة لا تحذف أي موارد
-- [x] طبّقت في بيئة dev — الخوادم الجديدة تستجيب
-- [x] دمرت الموارد الجديدة — لم يتبق شيء
-```
-
-## سيناريو CloudNova: كارثة merge
-
-> **الموقف:** زميلك دمج PR يحذف `prevent_destroy = true` من قاعدة البيانات. `terraform apply` القادم سيحذف بيانات العملاء!
+### رسائل Commit احترافية
 
 ```bash
-# ١. اعرف من عدّل ومتى
-git log --oneline -- terraform/database.tf
-# abc1234 Remove lifecycle block (محمد — أمس)
+# ❌ سيء
+git commit -m "fix"
+git commit -m "updated stuff"
+git commit -m "changes"
 
-# ٢. شوف ماذا تغيّر بالضبط
+# ✅ جيد — يخبر ماذا ولماذا
+git commit -m "Add lifecycle.prevent_destroy to PostgreSQL database"
+git commit -m "Fix: increase API timeout from 30s to 60s for large reports"
+git commit -m "Refactor: extract networking module for reuse across environments"
+```
+
+### قالب PR لـ IaC
+
+```markdown
+## 📋 ماذا يتغير؟
+- إضافة Auto Scaling لخوادم الويب
+- تغيير VM size من B2s إلى B2ms
+
+## ❓ لماذا؟
+- حمل الذروة (٩-١١ صباحاً) يستهلك ٩٠٪ CPU
+- B2ms يوفر ٢x الذاكرة بنفس السعر التقريبي
+
+## 📊 خطة Terraform
+```
+Plan: 3 to add, 1 to change, 0 to destroy.
+```
+
+## ✅ الاختبار
+- [x] الخطة لا تحذف أي موارد
+- [x] طبقت في staging — الخوادم الجديدة تستجيب
+- [x] Auto scaling اختبر: زدت الحمل → ٣ خوادم جديدة
+```
+
+## سيناريو CloudNova: كارثة الدمج
+
+> **الموقف:** زميلك دمج PR يحذف `prevent_destroy` من قاعدة البيانات. `terraform apply` القادم سيحذف بيانات العملاء!
+
+```bash
+# ١. من ومتى؟
+git log --oneline -- terraform/database.tf
+# abc1234 Remove lifecycle block (محمد — أمس ٤:٣٠ م)
+
+# ٢. ماذا تغير بالضبط؟
 git show abc1234
 
 # ٣. اعكس التغيير
 git revert abc1234
-# أنشئ commit جديداً يعيد prevent_destroy
+# Commit جديد يعيد prevent_destroy
 
-# ٤. ادفع فوراً
+# ٤. ادفع فوراً وبلّغ الفريق
 git push origin main
+```
 
-# ٥. ناقش مع محمد — لماذا أزال الحماية؟
-# افتح issue للنقاش التقني
+**الدرس:** كل تغيير على `prevent_destroy` يجب أن يمر بمراجعة إضافية. أضف CODEOWNERS:
+
+```bash
+# .github/CODEOWNERS
+terraform/database.tf @cloudnova/senior-engineers
 ```
 
 ---

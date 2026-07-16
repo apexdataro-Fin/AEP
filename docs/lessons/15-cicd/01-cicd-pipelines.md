@@ -1,47 +1,58 @@
 ---
 sidebar_position: 1
-title: "CI/CD من الصفر"
-description: "ابنِ خط أنابيب CI/CD كامل: GitHub Actions، اختبارات آلية، نشر تلقائي، واستراتيجيات النشر."
+title: "CI/CD — من الكود إلى الإنتاج"
+description: "كل شيء عن CI/CD: GitHub Actions، Azure DevOps، استراتيجيات النشر، الاختبارات الآلية، والأمان."
 ---
 
-# CI/CD من الصفر
+# CI/CD — من الكود إلى الإنتاج
 
-> **"كل دقيقة تقضيها في النشر اليدوي هي دقيقة لا تُحل فيها مشاكل حقيقية. أتمتة كل شيء."**
+> **"كل دقيقة تقضيها في النشر اليدوي هي دقيقة لا تُصلح فيها مشاكل حقيقية. أتمتة كل شيء."**
 
 ## ما هو CI/CD؟
 
-| الحرف  | المعنى                         | السؤال الذي يجيب عليه                    |
-| ------ | ------------------------------ | ---------------------------------------- |
-| **CI** | Continuous Integration         | "هل الكود يشتغل؟" (بناء + اختبار تلقائي) |
-| **CD** | Continuous Delivery/Deployment | "كيف نوصله للمستخدمين؟" (نشر تلقائي)     |
+| الحرف | المعنى | السؤال | المثال |
+|---|---|---|---|
+| **CI** | Continuous Integration | "هل الكود يشتغل؟" | Build + Test تلقائي عند كل PR |
+| **CD** | Continuous Delivery | "هل هو جاهز للنشر؟" | نشر تلقائي لـ staging |
+| **CD** | Continuous Deployment | "هل نُشر للمستخدمين؟" | نشر تلقائي للإنتاج |
 
-## مراحل خط الأنابيب
+## مراحل الـ Pipeline
 
 ```mermaid
 graph LR
     A[Git Push] --> B[Build]
-    B --> C[Test]
-    C --> D[Scan]
-    D --> E[Deploy Staging]
-    E --> F[Test Staging]
-    F --> G[Deploy Production]
-    G --> H[Monitor]
+    B --> C[Unit Tests]
+    C --> D[SAST Scan]
+    D --> E[Container Build]
+    E --> F[Container Scan]
+    F --> G[Deploy Staging]
+    G --> H[Integration Tests]
+    H --> I{Approve?}
+    I -->|Yes| J[Deploy Production]
+    I -->|No| K[Notify]
+    J --> L[Smoke Tests]
+    L --> M[Monitor]
 ```
 
-## أول Pipeline على GitHub Actions
+## GitHub Actions — Pipeline كامل
 
 ```yaml
-# .github/workflows/deploy.yml
-name: Build and Deploy
+# .github/workflows/ci-cd.yml
+name: CI/CD Pipeline
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-test:
+  # ========== المرحلة ١: الاختبار ==========
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -51,78 +62,126 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install dependencies
+      - name: Install
         run: pip install -r requirements.txt
-
-      - name: Run tests
-        run: pytest --cov=. --cov-report=xml
 
       - name: Lint
         run: ruff check .
 
-  deploy:
-    needs: build-and-test
-    if: github.ref == 'refs/heads/main'
+      - name: Unit Tests
+        run: pytest --cov=. --cov-report=xml
+
+      - name: Upload Coverage
+        uses: codecov/codecov-action@v4
+
+  # ========== المرحلة ٢: الأمان ==========
+  security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Deploy to Azure
-        uses: azure/webapps-deploy@v3
+      - name: SAST Scan
+        uses: github/codeql-action/analyze@v3
+
+      - name: Secret Scan
+        run: |
+          pip install detect-secrets
+          detect-secrets scan --all-files
+
+      - name: IaC Scan
+        uses: bridgecrewio/checkov-action@master
         with:
-          app-name: cloudnova-api
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          directory: terraform/
+          framework: terraform
+
+  # ========== المرحلة ٣: البناء ==========
+  build:
+    needs: [test, security]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Container
+        run: |
+          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
+                     ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Scan Image
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          format: table
+          severity: HIGH,CRITICAL
+
+      - name: Push Image
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+
+  # ========== المرحلة ٤: النشر ==========
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl set image deployment/api \
+            api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          kubectl rollout status deployment/api --timeout=5m
+
+      - name: Smoke Test
+        run: |
+          curl -f https://api.cloudnova.com/health
+          curl -f https://api.cloudnova.com/api/v1/status
 ```
 
 ## استراتيجيات النشر
 
-| الاستراتيجية   | كيف تعمل                         | متى تستخدم                |
-| -------------- | -------------------------------- | ------------------------- |
-| **Rolling**    | استبدل النسخ واحدة تلو الأخرى    | النشر العادي              |
-| **Blue-Green** | بيئتان — بدّل الحركة فوراً       | تراجع فوري مضمون          |
-| **Canary**     | ١٠٪ من المستخدمين للإصدار الجديد | اختبار في الإنتاج الحقيقي |
-
-```yaml
-# Kubernetes Rolling Update
-strategy:
-  type: RollingUpdate
-  rollingUpdate:
-    maxSurge: 1 # نسخة إضافية أثناء التحديث
-    maxUnavailable: 0 # لا تفقد أي نسخة
-```
+| الاستراتيجية | الوصف | متى تستخدم |
+|---|---|---|
+| **Rolling** | استبدل Pods واحدة تلو الأخرى | أغلب النشرات اليومية |
+| **Blue-Green** | بيئتان — بدّل الحركة فوراً | تراجع فوري مضمون |
+| **Canary** | ١٠٪ للمستخدمين للجديد أولاً | اختبار في الإنتاج الحقيقي |
 
 ## مبادئ الـ Pipeline الجيد
 
-1. **تغذية راجعة سريعة.** الاختبارات تستغرق دقائق لا ساعات
-2. **بنى مرة واحدة.** لا تبنِ لكل بيئة
-3. **قابلية التراجع.** كل نشر يمكن عكسه
-4. **أمان مدمج.** افحص قبل النشر، لا بعده
+1. **سرعة.** الاختبارات تستغرق دقائق لا ساعات
+2. **أمان.** فحص أمني مدمج — ليس مرحلة منفصلة
+3. **قابلية التكرار.** نفس الـ Pipeline لكل البيئات
+4. **قابلية التراجع.** أي نشر يمكن عكسه بنقرة واحدة
+5. **تغذية راجعة.** المهندس يعرف نتيجة Pipeline خلال ١٠ دقائق
 
-## سيناريو CloudNova: Pipeline فاشل في الإنتاج
+## سيناريو CloudNova: Pipeline فشل في الإنتاج
 
-> **الموقف:** كل شيء يمر في staging. لكن أول نشر إنتاجي — انهيار كامل.
+> **الموقف:** كل شيء يمر في staging. أول نشر إنتاجي — انهيار كامل.
 
 **التحقيق:**
 
-1. الـ staging يستخدم قاعدة بيانات صغيرة (١٠ سجلات). الإنتاج (١٠ ملايين).
-2. Migration يستغرق ٤٥ دقيقة. الـ health check يفشل بعد ٣٠ ثانية.
-3. Pipeline يتراجع تلقائياً — لكن الـ migration لم يتراجع.
+1. الـ staging يستخدم ١٠ سجلات في قاعدة البيانات. الإنتاج ١٠ ملايين.
+2. Migration يستغرق ٤٥ دقيقة. الـ healthcheck يفشل بعد ٣٠ ثانية.
+3. Pipeline يتراجع تلقائياً — لكن migration لم يتراجع. البيانات في حالة غير متناسقة.
 
-**الدروس:**
+**الدروس المستفادة:**
 
 ```yaml
-# أضف timeout أطول
-- name: Run migrations
-  run: python manage.py migrate
-  timeout-minutes: 60   # كان ٥ دقائق فقط
-
-# أضف health check أذكى
+# ١. healthcheck واقعي
 readinessProbe:
   httpGet:
-    path: /health?deep=true   # فحص عميق — وليس سطحياً
-  initialDelaySeconds: 30
-  periodSeconds: 15
-  failureThreshold: 10        # اسمح بـ ١٠ محاولات
+    path: /health?deep=true    # فحص عميق
+  initialDelaySeconds: 60      # انتظر migration
+  failureThreshold: 10         # اسمح بمحاولات أكثر
+
+# ٢. timeout مناسب
+- name: Run Migrations
+  run: python manage.py migrate
+  timeout-minutes: 60          # كان ٥ فقط!
+
+# ٣. اختبار staging بحجم بيانات حقيقي
+# استخدم نسخة من بيانات الإنتاج (منظفة من البيانات الحساسة)
 ```
 
 ---

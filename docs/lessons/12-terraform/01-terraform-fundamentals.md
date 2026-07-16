@@ -1,30 +1,29 @@
 ---
 sidebar_position: 1
-title: "Terraform من الصفر إلى الإنتاج"
-description: "البنية التحتية ككود: HCL، المزودات Providers، إدارة الحالة State، والوحدات Modules."
+title: "Terraform — البنية التحتية ككود"
+description: "كل شيء عن Terraform: HCL، Providers، State، Modules، Workspaces، وسيناريوهات الإنتاج الحقيقية."
 ---
 
-# Terraform من الصفر إلى الإنتاج
+# Terraform — البنية التحتية ككود
 
-> **"لا تنشئ موارد سحابية بالنقر في البوابة. اكتبها ككود. كل شيء يُبنى بنقرة واحدة."**
+> **"لا تنشئ موارد سحابية بالنقر في البوابة. اكتبها ككود. كل شيء يُبنى بنقرة واحدة ويمكن إعادة بنائه في أي وقت."**
 
-## ما هو Terraform؟
+## لماذا Infrastructure as Code؟
 
-Terraform هي أداة **البنية التحتية ككود (IaC)** من HashiCorp. تكتب ما تريد (خوادم، شبكات، قواعد بيانات) في ملفات `.tf`، وتنفذ `terraform apply` — ويبنيها لك.
+| المشكلة | بدون IaC | مع Terraform |
+|---|---|---|
+| **إعادة البناء** | ساعات من النقر اليدوي | `terraform apply` |
+| **معرفة ما في الإنتاج** | "أعتقد أن لدينا ٤ خوادم..." | ملفات `.tf` = الحقيقة |
+| **مراجعة التغييرات** | "ماذا غيرت بالأمس؟" | Git history |
+| **بيئات متعددة** | كل بيئة مختلفة | نفس الكود، متغيرات مختلفة |
+| **التعافي من الكوارث** | أسابيع | ساعات |
 
-### لماذا Terraform وليس النقر في البوابة؟
-
-| الطريقة          | المشكلة                                     |
-| ---------------- | ------------------------------------------- |
-| النقر في البوابة | لا تاريخ، لا مراجعة، لا تكرار، لا أتمتة     |
-| Azure CLI / ARM  | صعب القراءة، طويل، خاص بـ Azure فقط         |
-| **Terraform**    | مقروء، قابل للمراجعة، متعدد السحابات، مؤتمت |
-
-## أول ملف Terraform
+## أول ملف Terraform — بناء شبكة
 
 ```hcl
 # main.tf
 terraform {
+  required_version = ">= 1.5"
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -35,6 +34,10 @@ terraform {
 
 provider "azurerm" {
   features {}
+  # لا تضع مفاتيح هنا! استخدم:
+  # export ARM_CLIENT_ID=...
+  # export ARM_CLIENT_SECRET=...
+  # export ARM_TENANT_ID=...
 }
 
 resource "azurerm_resource_group" "main" {
@@ -44,8 +47,8 @@ resource "azurerm_resource_group" "main" {
 
 resource "azurerm_virtual_network" "main" {
   name                = "cloudnova-vnet"
-  resource_group_name = azurerm_resource_group.main.name
   location            = azurerm_resource_group.main.location
+  resource_group_name = azurerm_resource_group.main.name
   address_space       = ["10.0.0.0/16"]
 }
 
@@ -55,42 +58,51 @@ resource "azurerm_subnet" "app" {
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.1.0/24"]
 }
+
+resource "azurerm_subnet" "db" {
+  name                 = "db-subnet"
+  resource_group_name  = azurerm_resource_group.main.name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
+# مخرجات — لاستخدامها في ملفات أخرى
+output "vnet_id" {
+  value = azurerm_virtual_network.main.id
+}
+
+output "app_subnet_id" {
+  value = azurerm_subnet.app.id
+}
 ```
 
-## الدورة الأساسية
+## الدورة الأساسية — الأوامر الأربعة
 
 ```bash
-terraform init      # حمّل المزودات، جهّز بيئة العمل
-terraform plan      # ماذا سيتغير؟ (معاينة — لا تغيير حقيقي)
-terraform apply     # نفّذ التغييرات
-terraform destroy   # احذف كل شيء (استخدمه بحذر!)
+terraform init      # يحمّل الـ Providers، يجهّز الـ Backend
+terraform fmt       # ينسق الملفات — دائماً قبل commit
+terraform validate  # يتحقق من صحة التركيب
+terraform plan      # يعرض ما سيتغير — لا تغيير حقيقي
+terraform apply     # ينفذ التغييرات
+
+# بعد الانتهاء
+terraform destroy   # يحذف كل شيء — استخدمه بحذر!
 ```
 
-### ماذا يفعل كل أمر بالضبط؟
+### ماذا يحدث في كل خطوة؟
 
-| الأمر      | ماذا يفعل                            | متى تستخدمه                 |
-| ---------- | ------------------------------------ | --------------------------- |
-| `init`     | يحمّل المزودات، يجهّز الـ backend    | أول مرة، بعد تغيير المزودات |
-| `plan`     | يقارن الملفات بالواقع ويعرض الفروقات | قبل كل `apply`              |
-| `apply`    | ينفذ التغييرات على السحابة           | بعد مراجعة الخطة            |
-| `fmt`      | ينسق الملفات                         | قبل commit                  |
-| `validate` | يتأكد من صحة التركيب                 | في CI/CD                    |
+| الأمر | ماذا يفعل | كم يستغرق |
+|---|---|---|
+| `init` | يحمّل azurerm provider (~100MB)، يجهّز backend | ١٠-٣٠ ثانية |
+| `plan` | يقارن `.tf` بالحالة الفعلية في Azure | ٣٠-١٢٠ ثانية |
+| `apply` | يستدعي Azure API لإنشاء/تعديل/حذف الموارد | ١-١٥ دقيقة |
 
-## إدارة الحالة — State Management
-
-Terraform يحفظ حالة بنيتك التحتية في ملف **terraform.tfstate**. هذا الملف هو سجل كل شيء أنشأه Terraform.
-
-### ⚠️ لا ترفع state لـ Git أبداً!
-
-الـ state يحتوي على:
-
-- كل أسماء الموارد ومعرفاتها
-- أسرار وبيانات حساسة أحياناً
-- بيانات قد تتعارض بين أعضاء الفريق
-
-الحل: **Remote Backend**
+## إدارة الحالة — أهم درس
 
 ```hcl
+# ⚠️ لا ترفع terraform.tfstate لـ Git أبداً!
+
+# الحل: Azure Storage Backend
 terraform {
   backend "azurerm" {
     resource_group_name  = "tfstate-rg"
@@ -101,7 +113,14 @@ terraform {
 }
 ```
 
-## المتغيرات — لا تكرر القيم
+### ماذا يخزن الـ State؟
+
+- كل Resource ID (حتى يعرف ماذا يدير)
+- كل Attribute (حتى يعرف ماذا تغير)
+- التبعيات بين الموارد
+- **أحياناً أسرار** (لهذا لا يُرفع لـ Git!)
+
+## المتغيرات — Don't Repeat Yourself
 
 ```hcl
 # variables.tf
@@ -109,70 +128,113 @@ variable "environment" {
   description = "بيئة النشر"
   type        = string
   default     = "dev"
+  validation {
+    condition     = contains(["dev", "staging", "prod"], var.environment)
+    error_message = "يجب أن تكون dev أو staging أو prod"
+  }
 }
 
 variable "vm_count" {
-  description = "عدد الخوادم"
-  type        = number
-  default     = 2
+  type    = number
+  default = 1
 }
 
-# استخدمها في main.tf
+variable "vm_size" {
+  type = map(string)
+  default = {
+    dev     = "Standard_B1s"
+    staging = "Standard_B2s"
+    prod    = "Standard_B2ms"
+  }
+}
+
+# استخدمها
 resource "azurerm_linux_virtual_machine" "web" {
-  count               = var.vm_count
-  name                = "web-${var.environment}-${count.index}"
-  resource_group_name = azurerm_resource_group.main.name
+  count = var.vm_count
+  name  = "web-${var.environment}-${count.index}"
+  size  = var.vm_size[var.environment]
   # ...
 }
 ```
 
+```bash
+# قيم من ملف
+terraform apply -var-file="prod.tfvars"
+
+# قيم من سطر الأوامر
+terraform apply -var="environment=prod" -var="vm_count=3"
+
+# قيم من متغيرات البيئة
+export TF_VAR_environment=prod
+terraform apply
+```
+
 ## الوحدات — Modules
 
-عندما يتكرر نمط — ضعه في Module:
-
-```
-modules/
-└── web-server/
-    ├── main.tf        # موارد الخادم
-    ├── variables.tf   # مدخلات الوحدة
-    └── outputs.tf     # مخرجات الوحدة
-```
-
 ```hcl
-# استخدم الوحدة
-module "web_server" {
+# modules/web-server/main.tf
+resource "azurerm_linux_virtual_machine" "main" {
+  count               = var.instance_count
+  name                = "${var.name}-${count.index}"
+  resource_group_name = var.resource_group_name
+  location            = var.location
+  size                = var.vm_size
+  # ...
+}
+
+# استخدم الوحدة ٣ مرات
+module "web_dev" {
   source          = "./modules/web-server"
-  environment     = "prod"
+  name            = "web-dev"
+  instance_count  = 1
+  vm_size         = "Standard_B1s"
+  environment     = "dev"
+}
+
+module "web_prod" {
+  source          = "./modules/web-server"
+  name            = "web-prod"
   instance_count  = 3
-  vm_size         = "Standard_B2s"
+  vm_size         = "Standard_B2ms"
+  environment     = "prod"
 }
 ```
 
-## سيناريو CloudNova: حادثة Terraform
+## سيناريو CloudNova: كارثة State
 
-> **الموقف:** `terraform apply` يريد حذف قاعدة بيانات الإنتاج!
+> **الموقف:** `terraform apply` يريد **حذف** قاعدة بيانات الإنتاج!
 
 ```bash
-# ماذا ترى في الخطة:
 Plan: 2 to add, 0 to change, 1 to destroy.
-
-# تمعّن في التفاصيل:
 # azurerm_postgresql_database.main must be replaced
 ```
 
-**لماذا؟** شخص عدّل `name` في الملف. Terraform يرى "المورد تغيّر اسمه = يجب حذف القديم وإنشاء جديد."
+**لماذا؟** شخص عدّل `name` في الملف. Terraform لا يعرف أن "قاعدة البيانات تغير اسمها". يرى: "احذف القديم، أنشئ جديد".
 
-**الحل:**
+**الحلول:**
 
-1. أعد الاسم كما كان
-2. استخدم `terraform state mv` لنقل الحالة
-3. فعّل `prevent_destroy = true` على الموارد الحرجة:
+1. **أعد الاسم القديم فوراً.**
+2. استخدم `terraform state mv` لنقل المورد القديم للاسم الجديد
+3. أضف حماية للموارد الحرجة:
 
 ```hcl
-lifecycle {
-  prevent_destroy = true
+resource "azurerm_postgresql_database" "main" {
+  name = "cloudnova-db"
+  # ...
+  lifecycle {
+    prevent_destroy = true   # ⚠️ ارفض الحذف
+  }
 }
 ```
+
+## نصائح الإنتاج
+
+1. **State في Azure Storage دائماً.** مع قفل `lease` لمنع التزامن
+2. **Plan قبل كل Apply.** وراجع الخطة بعناية
+3. **لا تستخدم Terraform لإدارة الأسرار.** استخدم Key Vault مع data source
+4. **فصل State.** كل بيئة لها state خاص بها
+5. **CI/CD للـ Terraform.** لا تشغل apply من جهازك الشخصي
+6. **Sentinel/OPA Policies.** امنع إنشاء موارد غير مسموحة
 
 ---
 
