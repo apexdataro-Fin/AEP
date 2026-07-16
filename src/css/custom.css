@@ -443,6 +443,73 @@ html[dir="rtl"] .markdown table td {
 }
 
 /* ============================================================
+   Global BiDi isolation for Arabic + English mixed content
+   ------------------------------------------------------------
+   يحل مشكلة Unicode Bidirectional على Safari iPhone و Chrome
+   و Firefox و Edge بدون تعديل يدوي للملفات.
+   ============================================================ */
+
+/* كل المحتوى العربي يعمل RTL ويستخدم plaintext-aware bidi */
+.markdown,
+.theme-doc-markdown,
+article {
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+/* عناصر bdi و dir="ltr" تعزل الكلمة الإنجليزية عن السياق العربي */
+.markdown bdi,
+.markdown [dir="ltr"],
+.theme-doc-markdown bdi,
+.theme-doc-markdown [dir="ltr"] {
+  unicode-bidi: isolate;
+  display: inline-block;
+  font-style: normal;
+  font-variant-numeric: lining-nums;
+}
+
+/* الكود يبقى LTR دائماً لتجنّب كسر القراءة داخل blocks */
+.markdown code,
+.markdown pre,
+.markdown pre code,
+.theme-doc-markdown code,
+.theme-doc-markdown pre,
+.theme-doc-markdown pre code {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+}
+
+/* العناوين والقوائم والجداول: RTL مع plaintext */
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4,
+.markdown h5,
+.markdown h6,
+.markdown p,
+.markdown li,
+.markdown blockquote,
+.markdown .alert,
+.markdown table {
+  direction: rtl;
+  unicode-bidi: plaintext;
+}
+
+/* الجداول: خليوية الـLTR مثل أسماء الأعمدة تبقى قابلة للقراءة */
+.markdown table th,
+.markdown table td {
+  direction: rtl;
+  unicode-bidi: plaintext;
+  text-align: right;
+}
+
+/* التحديد في Safari: لا يكسر ترتيب الـBiDi */
+::selection {
+  background: hsl(var(--primary) / 0.25);
+}
+
+/* ============================================================
    Print
    ============================================================ */
 @media print {

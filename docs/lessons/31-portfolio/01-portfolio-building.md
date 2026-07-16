@@ -175,8 +175,8 @@ terraform init && terraform apply
 
 ## 📝 Blog Posts
 
-- [How We Reduced Cloud Costs by 40%](link)
-- [GitOps at CloudNova: Lessons Learned](link)
+- [How We Reduced Cloud Costs by 40%](#)
+- [GitOps at CloudNova: Lessons Learned](#)
 
 ````
 
