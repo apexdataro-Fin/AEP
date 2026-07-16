@@ -1,37 +1,69 @@
 ---
 sidebar_position: 1
-title: "Monitoring Fundamentals"
-description: "Prometheus, Grafana, Azure Monitor, metrics, logs, and alerting."
+title: "المراقبة والاستباق"
+description: "Prometheus, Grafana, Azure Monitor: الإشارات الذهبية الأربعة، التنبيهات، ولوحات المعلومات."
 ---
 
-# Monitoring Fundamentals
+# المراقبة والاستباق
 
-Prometheus, Grafana, Azure Monitor, metrics, logs, and alerting.
+> **"لا يمكنك إصلاح ما لا تراه. المراقبة هي عيناك على النظام."**
 
-## What You Will Learn
+## الإشارات الذهبية الأربعة
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready cloud engineering skills.
+| الإشارة | المقياس | مثال | تنبيه إذا |
+|---|---|---|---|
+| **الزمن (Latency)** | وقت الاستجابة | p99 < 200ms | > 500ms لـ ٥ دقائق |
+| **الحركة (Traffic)** | عدد الطلبات | 1000 req/s | انخفاض مفاجئ > ٥٠٪ |
+| **الأخطاء (Errors)** | معدل الأخطاء | < 0.1% | > ١٪ لـ ١٠ دقائق |
+| **التشبع (Saturation)** | استخدام الموارد | CPU < 80% | > ٩٠٪ لـ ١٥ دقيقة |
 
-## The Four Golden Signals
+## Prometheus + Grafana
 
-| Signal     | Metric         | Example     |
-| ---------- | -------------- | ----------- |
-| Latency    | Response time  | p99 < 200ms |
-| Traffic    | Request rate   | 1000 req/s  |
-| Errors     | Error rate     | < 0.1%      |
-| Saturation | Resource usage | CPU < 80%   |
+```yaml
+# prometheus.yml — ماذا تراقب؟
+scrape_configs:
+  - job_name: 'cloudnova-api'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['api:8080']
 
-## Alerting Best Practices
+# قاعدة تنبيه
+groups:
+  - name: cloudnova
+    rules:
+      - alert: HighLatency
+        expr: histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m])) > 0.5
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API p99 latency > 500ms"
+          runbook: "https://wiki.cloudnova.com/runbooks/high-latency"
+```
 
-1. Alert on symptoms, not causes
-2. Every alert must be actionable
-3. Set meaningful thresholds (not 99% CPU at 3 AM)
-4. Include runbooks with every alert
+## قواعد التنبيه الذهبية
 
-## CloudNova Exercise
+1. **نبّه على الأعراض، لا الأسباب.** "API بطيء" ≠ "CPU مرتفع"
+2. **كل تنبيه يجب أن يكون قابلاً للتنفيذ.** إذا لم تستطع فعل شيء — لا تنبّه
+3. **اربط كل تنبيه بـ Runbook.** ماذا يفعل المهندس عندما يرن؟
+4. **لا تزعج المهندسين ليلاً بلا داع.** `severity: critical` فقط لما يوقظ أحداً
 
-Apply what you learned to a real production scenario at CloudNova, your virtual cloud engineering company.
+## سيناريو CloudNova: تنبيه ٣ صباحاً بدون داع
+
+> **الموقف:** تنبيه كل ليلة الساعة ٣ فجراً: "CPU > ٨٠٪" — لكنه يعود طبيعياً بعد ٥ دقائق.
+
+**التشخيص:**
+- مهمة نسخ احتياطي يومية تعمل ٣ فجراً
+- تستهلك المعالج مؤقتاً
+- لا يوجد أي تأثير على المستخدمين
+
+**الحل:**
+1. أضف نافذة صمت `silence` للنسخ الاحتياطي
+2. أو ارفع العتبة إلى ٩٥٪
+3. أو غيّر التقييم إلى `for: 15m` (يتجاهل الارتفاعات القصيرة)
+
+**القاعدة:** لا تنبّه على شيء لا يحتاج تدخلاً بشرياً.
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

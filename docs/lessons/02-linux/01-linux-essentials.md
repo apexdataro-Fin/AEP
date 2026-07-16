@@ -1,83 +1,189 @@
 ---
 sidebar_position: 1
-title: "Linux Essentials"
-description: "Master the terminal, file system, permissions, and essential commands that power every cloud server."
+title: "أساسيات Linux"
+description: "أتقن نظام Linux من الصفر: الأوامر الأساسية، نظام الملفات، الصلاحيات، إدارة العمليات، والـ bash scripting."
 ---
 
-# Linux Essentials
+# أساسيات Linux
 
-The cloud runs on Linux. Every server, container, and Kubernetes node. **Master it.**
+> **"السحابة تُبنى على Linux. كل خادم، كل حاوية، كل عقدة Kubernetes. تعلمه تتقن السحابة."**
 
-## What You Will Learn
+## لماذا Linux مهم لمهندس السحابة؟
 
-- Navigate the Linux file system with confidence
-- Understand and set file permissions
-- Manage processes and monitor resources
-- Write simple bash scripts
+Linux يشغّل أكثر من 90% من خوادم السحابة العامة. Azure، AWS، GCP — جميعها تعتمد على Linux. أي مهارة تتعلمها هنا ستستخدمها يومياً في عملك.
 
-## The Terminal — Your New Home
+## الأوامر الأساسية — مفاتيحك الأولى
 
 ```bash
-whoami          # Who are you?
-pwd             # Where are you?
-ls -la          # What's here?
-cd /var/log     # Go somewhere
-cat file.txt    # Read a file
-tail -f app.log # Watch a log live
+whoami          # من أنت؟ تحقق من هوية المستخدم
+pwd             # أين أنت؟ مسار المجلد الحالي
+ls -la          # ماذا هنا؟ عرض كل الملفات بتفاصيلها
+cd /var/log     # انتقل إلى مجلد السجلات
+cat file.txt    # اقرأ محتوى ملف
+tail -f app.log # راقب سجل التطبيق مباشرةً
+man ls          # دليل استخدام أي أمر
 ```
 
-## Linux File System
+### نصيحة ذهبية
+
+`man` هو صديقك الأول. أي أمر لا تعرفه — اكتب `man <الأمر>` واقرأ. ستتعلم أكثر مما تتخيل.
+
+## نظام الملفات — شجرة واحدة
 
 ```
-/           # Root — everything starts here
-├── /bin    # Essential binaries
-├── /etc    # Configuration files
-├── /home   # User directories
-├── /var    # Logs, databases
-├── /tmp    # Temporary files (cleared on reboot)
-└── /usr    # User-installed software
+/              # الجذر — كل شيء يبدأ من هنا
+├── /bin       # البرامج الأساسية (ls, cp, mv, cat)
+├── /boot      # ملفات الإقلاع والنواة
+├── /dev       # ملفات الأجهزة (كل شيء في Linux ملف!)
+├── /etc       # ملفات الإعدادات والتكوين
+├── /home      # مجلدات المستخدمين الشخصية
+├── /var       # بيانات متغيرة: سجلات، قواعد بيانات، طوابير
+├── /var/log   # ✨ أهم مجلد للمهندس — كل السجلات هنا
+├── /tmp       # ملفات مؤقتة (تُمسح عند إعادة التشغيل)
+├── /usr       # برامج المستخدم المثبتة
+└── /opt       # برامج خارجية اختيارية
 ```
 
-## File Permissions
+### تمرين: استكشف بنفسك
+
+```bash
+# تجول في نظام الملفات
+cd /
+ls -la
+cd /etc
+ls *.conf          # شاهد ملفات الإعدادات
+cd /var/log
+ls -lh             # شاهد أحجام السجلات
+```
+
+## الصلاحيات — من يقرأ؟ من يكتب؟ من ينفذ؟
 
 ```
--rwxr-xr-x  1 user  group   4096 Jan 15 14:32 script.sh
+-rwxr-xr-x  1 ali  dev   4096 Jan 15 14:32 script.sh
 │├─┤├─┤├─┤
-│ │  │  └── Others: read + execute
-│ │  └───── Group: read + execute
-│ └──────── Owner: read + write + execute
-└────────── Type: - file, d directory, l link
+│ │  │  └── الآخرون: r-x (قراءة + تنفيذ)
+│ │  └───── المجموعة: r-x (قراءة + تنفيذ)
+│ └──────── المالك: rwx (قراءة + كتابة + تنفيذ)
+└────────── النوع: - ملف، d مجلد، l رابط
 ```
 
-| Number  | Permission           |
-| ------- | -------------------- |
-| 7 (rwx) | Read, Write, Execute |
-| 6 (rw-) | Read, Write          |
-| 5 (r-x) | Read, Execute        |
-| 4 (r--) | Read only            |
+### جدول الصلاحيات الرقمية
 
-## Essential Commands
+| الرقم | الرمز | المعنى | متى تستخدمه |
+|---|---|---|---|
+| 7 | rwx | كل الصلاحيات | للبرامج التنفيذية |
+| 6 | rw- | قراءة وكتابة | للملفات العادية |
+| 5 | r-x | قراءة وتنفيذ | للمجلدات والـ scripts |
+| 4 | r-- | قراءة فقط | للملفات الحساسة |
+| 0 | --- | لا شيء | لحظر الوصول تماماً |
 
-| Command                 | Purpose            |
-| ----------------------- | ------------------ |
-| `grep "error" app.log`  | Search for errors  |
-| `find / -name "*.conf"` | Find config files  |
-| `ps aux`                | List all processes |
-| `top` / `htop`          | Resource monitor   |
-| `df -h`                 | Check disk space   |
-| `free -m`               | Check memory       |
-| `chmod 755 script.sh`   | Make executable    |
+```bash
+chmod 755 script.sh    # المالك: كل شيء، البقية: قراءة+تنفيذ
+chmod 644 config.txt   # المالك: قراءة+كتابة، البقية: قراءة فقط
+chmod 600 secret.key   # المالك فقط: قراءة+كتابة — ممتاز للمفاتيح
+chown ali:dev file.txt # غيّر المالك إلى ali والمجموعة إلى dev
+```
 
-## CloudNova Emergency Scenario
+## إدارة العمليات — ماذا يجري في الخادم؟
 
-It's 3 AM. Production is down. What commands do you run?
+```bash
+ps aux              # كل العمليات الجارية
+ps aux | grep nginx # هل nginx شغال؟
+top                 # مراقبة الموارد مباشرة
+htop                # نسخة أجمل من top (ثبته: apt install htop)
+kill 1234           # إنهاء عملية برقمها
+kill -9 1234        # إنهاء فوري (قوي — استخدمه بحذر)
+systemctl status nginx  # حالة خدمة
+systemctl restart nginx # إعادة تشغيل خدمة
+journalctl -u nginx -f  # سجلات الخدمة مباشرة
+```
 
-1. `systemctl status nginx` — is the service running?
-2. `tail -100 /var/log/nginx/error.log` — what broke?
-3. `df -h` — is the disk full?
-4. `free -m` — is memory exhausted?
-5. `ps aux | grep nginx` — is the process alive?
+## Bash Scripting — أتمتة كل شيء
+
+```bash
+#!/bin/bash
+# سكريبت فحص صحة الخادم — CloudNova
+
+echo "=== تقرير صحة الخادم ==="
+echo "التاريخ: $(date)"
+echo ""
+
+echo "💻 حالة النظام:"
+echo "  - وقت التشغيل: $(uptime -p)"
+echo "  - التحميل: $(uptime | awk -F'load average:' '{print $2}')"
+
+echo ""
+echo "💾 الذاكرة:"
+free -h | grep Mem | awk '{print "  - مستخدم: " $3 " / إجمالي: " $2}'
+
+echo ""
+echo "💿 القرص:"
+df -h / | tail -1 | awk '{print "  - مستخدم: " $3 " / إجمالي: " $2 " (" $5 ")"}'
+
+echo ""
+echo "🌐 الخدمات الحرجة:"
+for svc in nginx postgresql docker; do
+    if systemctl is-active --quiet $svc; then
+        echo "  ✅ $svc: يعمل"
+    else
+        echo "  ❌ $svc: متوقف!"
+    fi
+done
+```
+
+## سيناريو CloudNova: حالة طوارئ الساعة ٣ فجراً
+
+> **الموقف:** هاتفك يرن. تطبيق CloudNova الرئيسي توقف. المستخدمون غاضبون. ماذا تفعل؟
+
+### خطة الطوارئ خطوة بخطوة:
+
+```bash
+# 1. هل الخدمة شغالة؟
+systemctl status nginx
+# النتيجة: inactive (dead) ← الخدمة متوقفة!
+
+# 2. اقرأ آخر السجلات
+tail -100 /var/log/nginx/error.log
+# النتيجة: "bind() to 0.0.0.0:80 failed (98: Address already in use)"
+# المنفذ 80 محجوز من عملية أخرى!
+
+# 3. من يحتل المنفذ 80؟
+ss -tlnp | grep :80
+# النتيجة: عملية قديمة من Apache (نُسيت شغالة)
+
+# 4. أوقف العملية القديمة
+systemctl stop apache2
+systemctl disable apache2  # منع تشغيلها تلقائياً
+
+# 5. شغّل nginx مرة أخرى
+systemctl start nginx
+systemctl status nginx      # ✅ active (running)
+
+# 6. تأكد أن التطبيق يعمل
+curl -I http://localhost
+# HTTP/1.1 200 OK ← عاد للحياة!
+```
+
+## أوامر الشبكة — تشخيص المشاكل
+
+```bash
+ping google.com          # هل الخادم متصل بالإنترنت؟
+traceroute google.com    # ما المسار الذي تسلكه البيانات؟
+nslookup example.com     # حل أسماء النطاقات DNS
+curl -I https://api.com  # رؤوس HTTP فقط
+netstat -tulpn           # المنافذ المفتوحة ومن يستمع عليها
+ss -tulpn                # بديل حديث وأسرع لـ netstat
+ip addr show             # عناوين IP للخادم
+```
+
+## نصائح الإنتاج
+
+1. **لا تعمل كـ root أبداً.** أنشئ مستخدم عادي واستخدم `sudo` عند الحاجة
+2. **السجلات صديقك.** تعلم قراءة `/var/log` قبل أن تحتاجها في الطوارئ
+3. **أتمتة كل شيء.** إذا نفذت أمراً مرتين — اكتبه في سكريبت
+4. **النسخ الاحتياطي قبل التعديل.** `cp file.conf file.conf.backup` دائماً
+5. **اقرأ قبل التنفيذ.** افهم ما يفعله الأمر قبل أن تضغط Enter
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

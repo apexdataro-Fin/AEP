@@ -1,38 +1,69 @@
 ---
 sidebar_position: 1
-title: "FinOps Fundamentals"
-description: "Cloud cost optimization, tagging strategy, budgeting, and resource right-sizing."
+title: "استراتيجية FinOps"
+description: "تحسين تكاليف السحابة: استراتيجية الوسم، الميزانيات، الحجم المناسب، والتفاوض على العقود."
 ---
 
-# FinOps Fundamentals
+# استراتيجية FinOps
 
-Cloud cost optimization, tagging strategy, budgeting, and resource right-sizing.
+> **"السحابة ليست رخيصة تلقائياً. إنها رخيصة فقط عندما تُدار بشكل صحيح."**
 
-## What You Will Learn
+## مبادئ FinOps
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready cloud engineering skills.
+| المبدأ | المعنى |
+|---|---|
+| **الفرق تتعاون** | المالية + الهندسة + المنتج — ليس فريقاً واحداً منعزلاً |
+| **الجميع يمتلك إنفاقه** | كل فريق مسؤول عن فاتورته |
+| **قرارات مبنية على البيانات** | لا تخمين — استخدم بيانات التكلفة الحقيقية |
+| **التقارير تظهر قيمة الأعمال** | ليس فقط كم أنفقت — بل ماذا حققت |
 
-## FinOps Principles
+## استراتيجيات التوفير
 
-1. **Teams collaborate** — Finance + Engineering + Product
-2. **Everyone owns their cloud spend** — not just "the cloud team"
-3. **Decisions are data-driven** — use real cost data
-4. **Reports show business value** — not just dollar amounts
+| الاستراتيجية | التوفير | متى تستخدم |
+|---|---|---|
+| **Reserved Instances** | حتى ٧٢٪ | أحمال ثابتة معروفة |
+| **Auto-shutdown** | ~٦٥٪ من بيئات dev | إيقاف dev/test ليلاً وفي العطل |
+| **الحجم المناسب Right-size** | ٢٠-٥٠٪ | خوادم أقل من ٢٠٪ استخدام |
+| **Spot VMs** | حتى ٩٠٪ | مهام دفعية، معالجة بيانات |
+| **تنظيف الموارد المهملة** | متغير | أقراص، IPs، لقطات غير مستخدمة |
 
-## Cost Optimization Tactics
+## استراتيجية الوسم Tags
 
-| Tactic                          | Savings          |
-| ------------------------------- | ---------------- |
-| Reserved Instances              | Up to 72%        |
-| Auto-shutdown dev/test at night | ~65% of non-prod |
-| Right-size underutilized VMs    | 20-50%           |
-| Delete unattached disks/IPs     | Variable         |
-| Use Spot VMs for batch jobs     | Up to 90%        |
+```bash
+# كل مورد يجب أن يُوسم
+az tag create --resource-id /subscriptions/xxx/resourceGroups/app-rg \
+  --tags environment=prod cost-center=engineering project=cloudnova
+```
 
-## CloudNova Exercise
+| الوسم | القيمة | لماذا؟ |
+|---|---|---|
+| `environment` | prod/staging/dev | تتبع التكلفة حسب البيئة |
+| `cost-center` | engineering/marketing | أي قسم يدفع؟ |
+| `project` | cloudnova/migration | تتبع تكلفة المشروع |
+| `owner` | ahmed@cloudnova.com | من المسؤول؟ |
 
-Apply what you learned to a real production scenario at CloudNova, your virtual cloud engineering company.
+## سيناريو CloudNova: خفض الفاتورة ٤٠٪
+
+> **الموقف:** فاتورة Azure ١٥ ألف دولار شهرياً. الهدف: أقل من ٩ آلاف.
+
+```bash
+# ١. تحليل التكلفة
+az consumption usage list --query "sort_by([?cost > 50], &cost)[-10:]"
+
+# ٢. الاكتشافات:
+# - ٨ خوادم D-series في dev شغالة ٢٤/٧ (٤٢٠٠$)
+# - ١٢ قرص Premium غير متصل (٨٠٠$)
+# - ٥ IPs ثابتة غير مستخدمة (١٥٠$)
+
+# ٣. الإجراءات:
+# - Auto-shutdown لـ dev من ٨ مساءً لـ ٧ صباحاً (وفر ٢٨٠٠$)
+# - تغيير خوادم dev إلى B-series (وفر ٨٠٠$)
+# - حذف الأقراص والـ IPs غير المستخدمة (وفر ٩٥٠$)
+# - Reserved Instances للـ prod (وفر ١٢٠٠$)
+
+# الإجمالي الموفر: ٥٧٥٠$ (٣٨٪)
+```
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

@@ -1,45 +1,48 @@
 ---
 sidebar_position: 1
-title: "AI Agents Architecture"
-description: "Agent architectures, tool use, multi-agent systems, and orchestration frameworks."
+title: "وكلاء الذكاء الاصطناعي"
+description: "معمارية الوكلاء الأذكياء: الأدوات، التخطيط، الأنظمة متعددة الوكلاء."
 ---
 
-# AI Agents Architecture
+# وكلاء الذكاء الاصطناعي
 
-Agent architectures, tool use, multi-agent systems, and orchestration frameworks.
+> **"الوكيل الذكي لا يجيب فقط. إنه يفكر، يخطط، ويستخدم الأدوات."**
 
-## What You Will Learn
+## ما هو الوكيل الذكي؟
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
-
-## Agent Architecture
+نموذج لغة + قدرة على استخدام الأدوات + ذاكرة + تخطيط.
 
 ```mermaid
 graph TD
-    User[User Task] --> Agent[AI Agent]
-    Agent --> Plan[Planning]
-    Plan --> Tool1[Tool: Search]
-    Plan --> Tool2[Tool: Code]
-    Plan --> Tool3[Tool: Database]
-    Tool1 --> Result[Combined Result]
+    User[مهمة المستخدم] --> Agent[الوكيل]
+    Agent --> Plan[تخطيط]
+    Plan --> Tool1[أداة: بحث]
+    Plan --> Tool2[أداة: كود]
+    Plan --> Tool3[أداة: قاعدة بيانات]
+    Tool1 --> Result[نتيجة مجمعة]
     Tool2 --> Result
     Tool3 --> Result
     Result --> User
 ```
 
-## Frameworks
+## مقارنة أطر العمل
 
-| Framework       | Language    | Best For           |
-| --------------- | ----------- | ------------------ |
-| LangChain       | Python/JS   | Flexible pipelines |
-| AutoGen         | Python      | Multi-agent        |
-| CrewAI          | Python      | Role-based agents  |
-| Semantic Kernel | .NET/Python | Enterprise         |
+| الإطار | اللغة | الأنسب لـ |
+|---|---|---|
+| **LangChain** | Python/JS | خطوط أنابيب مرنة |
+| **AutoGen** | Python | وكلاء متعددون |
+| **CrewAI** | Python | وكلاء بأدوار |
+| **Semantic Kernel** | .NET/Python | تطبيقات مؤسسية |
 
-## CloudNova Exercise
+## سيناريو CloudNova: وكيل تشخيص الأعطال
 
-Apply what you learned to a real production scenario at CloudNova.
+> **الموقف:** نظام يراقب السجلات، وعندما يكتشف خطأ، يقوم الوكيل تلقائياً بـ:
+
+1. قراءة رسالة الخطأ
+2. البحث في قاعدة المعرفة عن حلول مشابهة
+3. اقتراح تشخيص
+4. فتح تذكرة بالمعلومات الكاملة
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

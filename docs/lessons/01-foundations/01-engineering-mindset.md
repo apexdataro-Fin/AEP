@@ -1,66 +1,111 @@
 ---
 sidebar_position: 1
-title: "The Engineering Mindset"
-description: "Learn to think like an engineer: decompose problems, see systems, build sustainable learning habits."
+title: "عقلية المهندس"
+description: "تعلم كيف تفكر كمهندس: تحليل المشكلات، التفكير المنظومي، التوثيق، والتعلم المستدام."
 ---
 
-# The Engineering Mindset
+# عقلية المهندس
 
-Before clouds, containers, or code — you need to **think like an engineer**.
+> **"قبل أن تلمس السحابة، قبل أن تكتب سطراً برمجياً — تعلّم كيف تفكّر كمهندس."**
 
-## What You Will Learn
+## ما هي العقلية الهندسية؟
 
-- Break complex problems into manageable parts using first-principles thinking
-- See the whole system, not just isolated components
-- Develop documentation and learning habits that last a career
+الهندسة ليست مجرد كتابة كود أو تشغيل خوادم. الهندسة هي **حل المشكلات تحت القيود**. كل قرار تقني يتضمن مقايضات:
 
-## First Principles Thinking
+| القيد | السؤال الذي تسأله |
+|---|---|
+| **الوقت** | متى يجب أن يُسلّم هذا؟ |
+| **التكلفة** | ما الميزانية المتاحة؟ |
+| **الحجم** | كم عدد المستخدمين؟ |
+| **الموثوقية** | كم دقيقة تعطل مسموح بها؟ |
+| **الأمان** | ما نموذج التهديدات؟ |
+| **الفريق** | كم مهندساً متاحاً؟ وما خبراتهم؟ |
 
-Break problems into fundamental truths:
+### مثال من الواقع
+
+> **الطلب:** "نريد نشر تطبيق ويب يخدم ١٠٠٠٠ مستخدم."
+
+المهندس المبتدئ: يختار Kubernetes فوراً لأنه "الأفضل".
+
+المهندس الحقيقي: يسأل أولاً —
+- كم مهندساً في الفريق؟ (إذا كانوا ٢، Kubernetes قد يكون عبئاً)
+- ما الميزانية؟ (حلول مُدارة قد تكون أغلى لكن أوفر في وقت الفريق)
+- كم مرة سنعدل التطبيق؟ (نشر مرة شهرياً ≠ نشر ١٠ مرات يومياً)
+- ما مستوى التوفر المطلوب؟ (99.9% ≠ 99.99%)
+
+## التفكير بالمبادئ الأولى
+
+لا تقبل الحلول الجاهزة دون تفكيكها:
 
 ```
-"Cloud is too expensive"
-  → Which resources cost money?
-    → Unused VMs running 24/7
-      → Auto-shutdown at 8 PM saves 60%
+"السحابة غالية جداً"
+  ↓ حللها للمبادئ الأولى
+    ↓ أي موارد بالضبط تكلف؟
+      ↓ ٤٠ خادم VM شغالة ٢٤/٧
+        ↓ هل كلها ضرورية؟
+          ↓ لا — ١٥ منها بيئة تطوير لا تُستخدم ليلاً
+            ↓ الحل: إيقاف تلقائي الساعة ٨ مساءً — وفر ٦٠٪
 ```
 
-## Systems Thinking
+## التفكير المنظومي — رؤية الصورة الكاملة
 
-Everything connects. A code change affects build, test, deploy, monitor, and alert:
+لا تنظر للقطعة وحدها. انظر للنظام كله:
 
 ```mermaid
 graph TD
-    A[Code Change] --> B[Build]
-    B --> C[Test]
-    C --> D[Deploy]
-    D --> E[Monitor]
-    E --> F[Alert]
+    A[تغيير في الكود] --> B[بناء Build]
+    B --> C[اختبار Test]
+    C --> D[نشر Deploy]
+    D --> E[مراقبة Monitor]
+    E --> F[تنبيه Alert]
     F --> A
+    G[العميل] --> H[API]
+    H --> I[قاعدة البيانات]
+    I --> J[نسخ احتياطي]
+    H --> K[ذاكرة تخزين مؤقت]
 ```
 
-## Key Engineering Habits
+عندما يتعطل شيء ما — المشكلة قد لا تكون في القطعة التي تعطلت. قد يكون السبب قبلها بخطوتين.
 
-| Habit                   | Why                                  |
-| ----------------------- | ------------------------------------ |
-| **Read error messages** | They tell you exactly what's wrong   |
-| **Read the docs**       | Before asking for help               |
-| **Test assumptions**    | Don't guess — verify                 |
-| **Document solutions**  | If you solved it once, write it down |
-| **Automate repetition** | If you do it twice, script it        |
+## عادات المهندس اليومية
 
-## CloudNova Exercise
+| العادة | لماذا؟ | مثال |
+|---|---|---|
+| **اقرأ رسائل الخطأ** | تخبرك بالضبط ما المشكلة | `ERROR: connection refused on port 5432` → قاعدة البيانات على منفذ مختلف |
+| **اقرأ التوثيق** | قبل أن تسأل غيرك | `man systemctl` قبل سؤال زميلك |
+| **اختبر افتراضاتك** | لا تخمّن — تحقق | "أعتقد أن DNS يعمل" ← `nslookup` لتتأكد |
+| **وثّق حلك** | إذا حللتها مرة، اكتبها | صفحة Notion أو ملف README في repo |
+| **أتمتة التكرار** | إذا نفذتها مرتين — اكتب سكريبت | نشر يدوي ← GitHub Actions |
+| **سجّل كل شيء** | لا تعتمد على ذاكرتك | `script` command يسجل جلسة الطرفية كاملة |
 
-**Task:** Decompose "Deploy a web app for 10,000 users" into sub-problems.
+## تمرين CloudNova: فكك المشكلة
 
-List at least 5 concerns:
+> **المهمة:** "صمم ونشر نظام مراقبة لمزرعة خوادم مكونة من ٢٠٠ خادم."
 
-1. **Compute** — How many servers? What size?
-2. **Networking** — Load balancer? DNS? Firewall?
-3. **Storage** — Database? File storage? Backups?
-4. **Security** — Authentication? HTTPS? Access control?
-5. **Monitoring** — How do you know if it's working?
+### لا تبدأ بالتنفيذ! فكك أولاً:
+
+1. **ما البيانات التي نجمعها؟**
+   - استخدام المعالج والذاكرة
+   - مساحة القرص
+   - زمن استجابة التطبيقات
+   - سجلات الأخطاء
+
+2. **أين نخزن البيانات؟**
+   - قاعدة بيانات زمنية (Prometheus / InfluxDB)
+   - كم حجم البيانات يومياً؟ (احسب: ٢٠٠ خادم × metrics = ؟)
+
+3. **كيف نعرض البيانات؟**
+   - لوحات تحكم (Grafana)
+   - تنبيهات (AlertManager → Slack/PagerDuty)
+
+4. **ما خطة التوسع؟**
+   - ماذا لو أصبحت ١٠٠٠ خادم؟
+   - هل النظام الحالي يتحمل؟
+
+5. **ما خطة الصيانة؟**
+   - من يدير نظام المراقبة؟
+   - ماذا لو تعطل نظام المراقبة نفسه؟
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

@@ -1,41 +1,60 @@
 ---
 sidebar_position: 1
-title: "Container Fundamentals"
-description: "Containers vs VMs, images, layers, registries, and security."
+title: "الحاويات من الداخل"
+description: "افهم كيف تعمل الحاويات: الفرق بينها وبين VM، طبقات الصور، السجلات، والأمان."
 ---
 
-# Container Fundamentals
+# الحاويات من الداخل
 
-Containers vs VMs, images, layers, registries, and security.
+> **"الحاويات ليست VM صغيراً. إنها طريقة مختلفة تماماً في التفكير."**
 
-## What You Will Learn
+## حاويات vs آلات افتراضية
 
-This module covers key concepts, hands-on exercises, and real CloudNova scenarios to build your production engineering skills.
+| الميزة | VM | حاوية |
+|---|---|---|
+| **زمن التشغيل** | دقائق | أجزاء من الثانية |
+| **الحجم** | GBs | MBs |
+| **العزل** | نظام تشغيل كامل لكل VM | مستوى العملية Process |
+| **الكثافة** | ١٠-٢٠ لكل خادم | ١٠٠+ لكل خادم |
+| **نظام التشغيل** | أي نظام | يشارك نواة host |
 
-## Containers vs VMs
+## كيف تعمل الحاوية؟
 
-| Feature   | VM             | Container     |
-| --------- | -------------- | ------------- |
-| Boot time | Minutes        | Milliseconds  |
-| Size      | GBs            | MBs           |
-| Isolation | Full OS per VM | Process-level |
-| Density   | 10s per host   | 100s per host |
-
-## Container Image Layers
-
-```dockerfile
-FROM ubuntu:22.04          # Layer 1: Base OS
-RUN apt-get update          # Layer 2: Packages
-COPY app.py /app/           # Layer 3: Application
-CMD ["python", "app.py"]  # Layer 4: Config
+```
+┌─────────────────────────────────────────┐
+│              الحاوية                      │
+│  ┌───────────────────────────────────┐  │
+│  │         التطبيق (طبقتك)            │  │
+│  ├───────────────────────────────────┤  │
+│  │     المكتبات والاعتماديات          │  │
+│  ├───────────────────────────────────┤  │
+│  │   نظام الملفات (طبقات للقراءة فقط)  │  │
+│  └───────────────────────────────────┘  │
+│         namespaces + cgroups              │
+│    (عزل العمليات + حدود الموارد)           │
+└─────────────────────────────────────────┘
 ```
 
-Each layer is cached. Only changed layers rebuild.
+## طبقات الصورة
 
-## CloudNova Exercise
+```dockerfile
+FROM ubuntu:22.04          # الطبقة ١: نظام التشغيل الأساسي (٧٧MB)
+RUN apt-get update          # الطبقة ٢: تحديث الحزم
+RUN apt-get install -y nginx # الطبقة ٣: تثبيت Nginx
+COPY index.html /var/www/html/ # الطبقة ٤: تطبيقنا
+CMD ["nginx", "-g", "daemon off;"] # الطبقة ٥: أمر التشغيل
+```
 
-Apply what you learned: review the key concepts above and identify how they apply to a real production cloud environment.
+**كل طبقة مخزنة كـ cache.** عندما تعدل `index.html` — فقط الطبقة ٤ تُعاد بناؤها. هذا يجعل البناء سريعاً جداً.
+
+## أمان الحاويات
+
+1. **لا تشغّل كـ root.** `USER 1000`
+2. **صورة أساسية موثوقة.** استخدم صور Docker الرسمية
+3. **افحص الصور.** Trivy, Aqua, Snyk
+4. **لا تضع أسراراً في الصورة.** استخدم secrets manager
+5. **قلل مساحة الهجوم.** صورة أصغر = ثغرات أقل
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

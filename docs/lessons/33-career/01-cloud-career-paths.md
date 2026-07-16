@@ -1,38 +1,49 @@
 ---
 sidebar_position: 1
-title: "Cloud Career Paths"
-description: "Junior → Architect career progression, specializations, and salary benchmarks."
+title: "المسار الوظيفي في السحابة"
+description: "Junior → Architect: مراحل التطور الوظيفي، التخصصات، والمهارات المطلوبة لكل مرحلة."
 ---
 
-# Cloud Career Paths
+# المسار الوظيفي في السحابة
 
-Junior → Architect career progression, specializations, and salary benchmarks.
+> **"رحلة الألف ميل تبدأ بخطوة. رحلتك في السحابة تبدأ من هنا."**
 
-## What You Will Learn
+## مراحل التطور الوظيفي
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
+| المستوى | سنوات الخبرة | التركيز |
+|---|---|---|
+| **Junior Cloud Engineer** | ٠-٢ | التعلم، التذاكر، المهام الصغيرة |
+| **Cloud Engineer** | ٢-٥ | الخدمات، الأتمتة، المشاريع |
+| **Senior Cloud Engineer** | ٥-٨ | المعمارية، التوجيه، الحوادث |
+| **Cloud Architect** | ٨+ | الاستراتيجية، السحابة المتعددة، الحوكمة |
+| **Principal/Staff** | ١٠+ | تأثير على مستوى المؤسسة |
 
-## Career Progression
+## التخصصات
 
-| Level                 | Years | Focus                              |
-| --------------------- | ----- | ---------------------------------- |
-| Junior Cloud Engineer | 0-2   | Learning, tickets, small tasks     |
-| Cloud Engineer        | 2-5   | Services, automation, projects     |
-| Senior Cloud Engineer | 5-8   | Architecture, mentoring, incidents |
-| Cloud Architect       | 8+    | Strategy, multi-cloud, governance  |
-| Principal/Staff       | 10+   | Organization-wide impact           |
+| التخصص | التركيز | الشهادات |
+|---|---|---|
+| **DevOps/SRE** | الموثوقية، الأتمتة، الاستجابة للحوادث | AZ-400, CKA |
+| **الأمن السحابي** | أمن السحابة، الامتثال | AZ-500, CISSP |
+| **البيانات والذكاء الاصطناعي** | منصات البيانات، MLOps | DP-203, AI-102 |
+| **هندسة المنصات** | منصات داخلية، أدوات المطورين | CKA, AZ-400 |
 
-## Specializations
+## كيف تنتقل للمستوى التالي؟
 
-- **DevOps/SRE:** Reliability, automation, incident response
-- **Security:** Cloud security architecture, compliance
-- **Data/ML:** Data platforms, MLOps, AI infrastructure
-- **Platform:** Internal developer platforms, tooling
+**Junior → Mid:**
+- أتقن الأساسيات (Linux، شبكات، سحابة واحدة)
+- احصل على AZ-104
+- ابنِ مشروعاً كاملاً (وليس مجرد دروس)
 
-## CloudNova Exercise
+**Mid → Senior:**
+- صمم أنظمة (وليس مجرد تنفيذ مهام)
+- درب المبتدئين
+- احصل على AZ-400 أو CKA
 
-Apply what you learned to a real production scenario at CloudNova.
+**Senior → Architect:**
+- افهم الأعمال (وليس فقط التقنية)
+- فكر في التكلفة، الحوكمة، الاستراتيجية
+- احصل على AZ-305
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

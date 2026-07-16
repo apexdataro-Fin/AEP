@@ -1,46 +1,95 @@
 ---
 sidebar_position: 1
-title: "GitOps Fundamentals"
-description: "Declarative deployments with ArgoCD, Flux, and pull-based GitOps."
+title: "GitOps — البنية التحتية من Git"
+description: "النشر التصريحي باستخدام Git كمصدر وحيد للحقيقة: ArgoCD، Flux، والنشر بالسحب Pull-based."
 ---
 
-# GitOps Fundamentals
+# GitOps — البنية التحتية من Git
 
-Declarative deployments with ArgoCD, Flux, and pull-based GitOps.
+> **"Git هو المصدر الوحيد للحقيقة. كل تغيير في البنية التحتية يمر عبر Pull Request. لا استثناءات."**
 
-## What You Will Learn
+## ما هو GitOps؟
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready cloud engineering skills.
+GitOps يعكس نموذج CI/CD التقليدي:
 
-## What is GitOps?
+| النموذج | كيف يعمل | المشكلة |
+|---|---|---|
+| **Push (تقليدي)** | CI/CD يدفع التغييرات للكلستر | ماذا لو فشل النشر جزئياً؟ |
+| **Pull (GitOps)** | الكلستر يسحب الحالة المرغوبة من Git | Git دائماً هو المرجع |
 
-Git is the single source of truth. The desired state lives in Git. A controller (ArgoCD/Flux) continuously reconciles the cluster to match Git.
+```mermaid
+graph LR
+    Dev[مهندس] -->|git push| Git[GitHub]
+    Git -->|يراقب التغييرات| ArgoCD
+    ArgoCD -->|يسحب ويطبق| K8s[Kubernetes]
+    ArgoCD -->|يقارن باستمرار| K8s
+```
+
+## ArgoCD — الأداة الأكثر شيوعاً
 
 ```yaml
-# Application manifest in Git
+# application.yaml — تعريف تطبيق في ArgoCD
 apiVersion: argoproj.io/v1alpha1
 kind: Application
+metadata:
+  name: cloudnova-api
 spec:
+  project: default
   source:
     repoURL: https://github.com/cloudnova/infra
+    targetRevision: main
     path: k8s/overlays/prod
   destination:
     server: https://kubernetes.default.svc
+    namespace: prod
   syncPolicy:
     automated:
-      prune: true
-      selfHeal: true
+      prune: true      # احذف الموارد المحذوفة من Git
+      selfHeal: true   # أصلح أي تغيير يدوي تلقائياً
 ```
 
-## Push vs Pull
+## مبادئ GitOps
 
-- **Push:** CI/CD pushes changes to cluster (traditional)
-- **Pull:** Cluster pulls desired state from Git (GitOps)
+1. **كل شيء في Git.** تطبيقات، إعدادات، بنية تحتية — كلها كود
+2. **Git هو المصدر الوحيد للحقيقة.** لا تغييرات يدوية على الكلستر أبداً
+3. **المراقب المستمر.** ArgoCD/Flux يقارن الكلستر بـ Git كل ٣ دقائق
+4. **التصحيح الذاتي.** أي تغيير يدوي يُعكس تلقائياً
 
-## CloudNova Exercise
+## هيكل المستودع
 
-Apply what you learned to a real production scenario at CloudNova, your virtual cloud engineering company.
+```
+infra/
+├── k8s/
+│   ├── base/                  # التكوين الأساسي
+│   │   ├── deployment.yaml
+│   │   └── kustomization.yaml
+│   └── overlays/
+│       ├── dev/
+│       │   └── kustomization.yaml
+│       └── prod/
+│           └── kustomization.yaml
+├── terraform/
+│   ├── modules/
+│   └── environments/
+└── .github/
+    └── workflows/
+        └── terraform-plan.yml
+```
+
+## سيناريو CloudNova: التغيير اليدوي الممنوع
+
+> **الموقف:** مهندس عدّل `replicas: 5` يدوياً على الكلستر لمعالجة ارتفاع مفاجئ. بعد ٣ دقائق — عاد إلى `replicas: 3`. لماذا؟
+
+**التفسير:** ArgoCD رأى فرقاً بين Git (`replicas: 3`) والكلستر (`replicas: 5`). `selfHeal: true` يعني "أصلح الفرق فوراً."
+
+**الدرس:** كل تغيير يجب أن يمر عبر Git:
+1. عدّل `replicas` في Git
+2. افتح PR
+3. ادمج
+4. ArgoCD يطبق تلقائياً
+
+**هذا يضمن:** كل تغيير مراجع، موثق، وقابل للعكس.
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

@@ -1,40 +1,90 @@
 ---
 sidebar_position: 1
-title: "Cloud Computing Concepts"
-description: "IaaS, PaaS, SaaS, regions, availability zones, and the shared responsibility model."
+title: "أساسيات الحوسبة السحابية"
+description: "افهم نماذج IaaS, PaaS, SaaS، المناطق Regions، مناطق التوفر Availability Zones، ونموذج المسؤولية المشتركة."
 ---
 
-# Cloud Computing Concepts
+# أساسيات الحوسبة السحابية
 
-IaaS, PaaS, SaaS, regions, availability zones, and the shared responsibility model.
+> **"السحابة ليست مجرد خوادم في مكان آخر. إنها طريقة جديدة للتفكير في البنية التحتية."**
 
-## What You Will Learn
+## نماذج الخدمة — ماذا تدير؟ وماذا يُدار عنك؟
 
-This module covers key concepts, hands-on exercises, and real CloudNova scenarios to build your production engineering skills.
+| النموذج | أنت تدير | السحابة تدير | مثال |
+|---|---|---|---|
+| **IaaS** | نظام التشغيل، التطبيقات، البيانات | العتاد، الشبكة، التخزين | Azure VM |
+| **PaaS** | التطبيقات، البيانات | نظام التشغيل، بيئة التشغيل | Azure App Service |
+| **SaaS** | لا شيء | كل شيء | Microsoft 365 |
 
-## Service Models
+### تشبيه واقعي
 
-| Model | You Manage     | Cloud Manages     | Example           |
-| ----- | -------------- | ----------------- | ----------------- |
-| IaaS  | OS, apps, data | Hardware, network | Azure VM          |
-| PaaS  | Apps, data     | OS, runtime       | Azure App Service |
-| SaaS  | Nothing        | Everything        | Microsoft 365     |
+- **IaaS** = استئجار مطبخ فارغ. لديك كل المعدات، لكنك تطبخ بنفسك
+- **PaaS** = مطبخ مجهز بالكامل. تركز على الطبخ فقط، لا تنظف ولا تغسل
+- **SaaS** = تطلب من المطعم. كل شيء جاهز، تدفع وتأكل
 
-## Shared Responsibility
+## نموذج المسؤولية المشتركة
 
-- **Customer:** Data, endpoints, accounts, access management
-- **Cloud Provider:** Physical security, host infrastructure, network fabric
+```
+🟦 Microsoft مسؤولة عن:          🟧 أنت مسؤول عن:
+─────────────────────────       ────────────────────
+• أمن مراكز البيانات            • بياناتك
+• العتاد المادي                  • نقاط النهاية
+• الشبكة المادية                 • الحسابات والهوية
+• المُحاكيات الافتراضية           • إدارة الوصول
+                                 • تشفير البيانات
+                                 • تكوين التطبيقات
+```
 
-## Regions & Availability Zones
+## المناطق ومناطق التوفر
 
-- **Region:** A geographic area with multiple datacenters
-- **Availability Zone:** Isolated datacenter within a region (power, cooling, network independent)
-- **Fault Domain:** Group of VMs sharing a common power source and network switch
+```
+Azure Region: West Europe
+├── Availability Zone 1 (مركز بيانات ١ — طاقة مستقلة، تبريد مستقل)
+├── Availability Zone 2 (مركز بيانات ٢ — طاقة مستقلة، تبريد مستقل)
+└── Availability Zone 3 (مركز بيانات ٣ — طاقة مستقلة، تبريد مستقل)
+```
 
-## CloudNova Exercise
+| المفهوم | المعنى | مثال |
+|---|---|---|
+| **Region** | منطقة جغرافية | West Europe, East US |
+| **Availability Zone** | مركز بيانات مستقل داخل المنطقة | مبنى في أمستردام |
+| **Fault Domain** | مجموعة خوادم تشترك في مصدر طاقة | رف Rack رقم ٤ |
+| **Update Domain** | مجموعة خوادم تُحدّث معاً | الدفعة الأولى من التحديثات |
 
-Apply what you learned: review the key concepts above and identify how they apply to a real production cloud environment.
+## متى تختار أي نموذج؟
+
+| السيناريو | النموذج المناسب | لماذا؟ |
+|---|---|---|
+| تطبيق قديم يحتاج نظام تشغيل محدد | IaaS | تحتاج تحكماً كاملاً |
+| تطبيق ويب جديد | PaaS | ركز على الكود فقط |
+| تحتاج سيطرة كاملة لأسباب تنظيمية | IaaS | تتحكم بكل طبقة |
+| تريد أقل جهد تشغيلي | SaaS | لا تدير شيئاً |
+
+## نموذج CloudNova: اختيار النموذج المناسب
+
+> **السيناريو:** CloudNova تبني منصة API جديدة. الفريق: ٤ مطورين. الميزانية: محدودة. المتطلبات: توفر عالي 99.9%.
+
+**الخيارات:**
+
+1. **IaaS (Azure VM):** تحكم كامل، لكن الفريق سيدير كل شيء — التحديثات، النسخ الاحتياطي، المراقبة. عبء كبير على ٤ أشخاص.
+
+2. **PaaS (Azure App Service + Azure SQL):** أقل عبئاً إدارياً. التحديثات تلقائية. التوفر العالي مدمج. الفريق يركز على الكود.
+
+3. **AKS (Kubernetes):** مرونة عالية، لكنه يحتاج خبرة Kubernetes. مبالغة لفريق صغير في البداية.
+
+**التوصية:** PaaS الآن. إذا نجح المنتج ونما الفريق — انتقل لـ Kubernetes لاحقاً. **اختر البساطة أولاً.**
+
+## تمرين: احسب التكلفة
+
+| المورد | IaaS | PaaS |
+|---|---|---|
+| خادمان ويب | ١٥٠$ | ١٠٠$ (مُدارة) |
+| قاعدة بيانات | ١٠٠$ (تُدار ذاتياً) | ١٥٠$ (مُدارة) |
+| جهد الصيانة | ٤٠ ساعة/شهر | ٥ ساعات/شهر |
+| **الإجمالي** | ٢٥٠$ + وقت كثير | ٢٥٠$ + وقت قليل |
+
+الفرق ليس في المال فقط — بل في الوقت. وقت المهندس أغلى من الخادم.
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

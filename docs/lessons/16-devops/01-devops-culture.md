@@ -1,40 +1,81 @@
 ---
 sidebar_position: 1
-title: "DevOps Culture"
-description: "CALMS framework, DORA metrics, blameless culture, and DevOps anti-patterns."
+title: "هندسة DevOps"
+description: "افهم ثقافة DevOps: إطار CALMS، مقاييس DORA، ثقافة اللوم الصفري، وكيف تبدأ رحلة DevOps."
 ---
 
-# DevOps Culture
+# هندسة DevOps
 
-CALMS framework, DORA metrics, blameless culture, and DevOps anti-patterns.
+> **"DevOps ليست وظيفة، ولا أداة، ولا فريق. إنها ثقافة. طريقة في التفكير والعمل."**
 
-## What You Will Learn
+## ما هو DevOps؟
 
-This module covers key concepts, hands-on exercises, and real CloudNova scenarios to build your production engineering skills.
+تعريف بسيط: **إزالة الجدار بين التطوير والعمليات.**
 
-## CALMS Framework
+قبل DevOps:
+- المطور: "الكود جاهز — ألقوه فوق الجدار للعمليات"
+- العمليات: "الكود لا يشتغل — أرجعوه للمطورين"
+- النتيجة: كل فريق يلقي اللوم على الآخر
 
-| Letter      | Meaning                        | Practice                        |
-| ----------- | ------------------------------ | ------------------------------- |
-| Culture     | Shared responsibility          | Devs on-call for their services |
-| Automation  | CI/CD, IaC, testing            | GitHub Actions + Terraform      |
-| Lean        | Small batches, eliminate waste | Short-lived branches            |
-| Measurement | Metrics, monitoring            | DORA metrics                    |
-| Sharing     | Knowledge transfer             | Runbooks, postmortems           |
+بعد DevOps: **"أنت تبنيها، أنت تشغلها."** نفس الفريق يطور وينشر ويدير.
 
-## DORA Metrics
+## إطار CALMS
 
-| Metric               | Elite     | Low       |
-| -------------------- | --------- | --------- |
-| Deployment Frequency | On-demand | Monthly   |
-| Lead Time            | < 1 hour  | > 1 month |
-| MTTR                 | < 1 hour  | > 1 month |
-| Change Failure Rate  | < 5%      | > 15%     |
+| العنصر | المعنى | مثال CloudNova |
+|---|---|---|
+| **C**ulture — ثقافة | مسؤولية مشتركة، لا لوم | المطورون تحت الطلب لخدماتهم |
+| **A**utomation — أتمتة | CI/CD، بنية تحتية ككود | GitHub Actions + Terraform |
+| **L**ean — رشاقة | دفعات صغيرة، إزالة الهدر | فروع قصيرة العمر |
+| **M**easurement — قياس | مقاييس، مراقبة | DORA metrics |
+| **S**haring — مشاركة | توثيق، نقل معرفة | postmortems، pair programming |
 
-## CloudNova Exercise
+## مقاييس DORA — كيف تقيس DevOps؟
 
-Apply what you learned: review the key concepts above and identify how they apply to a real production cloud environment.
+| المقياس | النخبة Elite | المتوسط | المتدني |
+|---|---|---|---|
+| **تكرار النشر** | حسب الطلب | أسبوعي | شهري |
+| **زمن التغيير (Lead Time)** | < ساعة | < أسبوع | > شهر |
+| **زمن استعادة الخدمة (MTTR)** | < ساعة | < يوم | > شهر |
+| **معدل فشل التغيير** | < ٥٪ | ١٠-١٥٪ | > ١٥٪ |
+
+**هدف CloudNova:** النخبة في جميع المقاييس.
+
+## أنماط DevOps الخاطئة
+
+| النمط الخاطئ | لماذا يفشل | التصحيح |
+|---|---|---|
+| "فريق DevOps منفصل" | أنشأت صومعة جديدة | ادمج مهارات العمليات في فرق التطوير |
+| "أدواتنا هي DevOps" | الأدوات بدون ثقافة = فوضى أسرع | الثقافة أولاً، ثم الأدوات |
+| "نستخدم Kubernetes إذاً نحن DevOps" | الخلط بين الأداة والفلسفة | DevOps عن التدفق، ليس أدوات محددة |
+| "رمي المشاكل للعمليات" | لا ملكية مشتركة | المطورون يمتلكون الإنتاج |
+
+## ثقافة Postmortem
+
+عندما يتعطل شيء — لا تبحث عن **من** الفاعل. ابحث عن **ماذا** حدث.
+
+### هيكل Postmortem جيد:
+
+1. **ماذا حدث؟** (جدول زمني)
+2. **ما التأثير؟** (كم عميلاً تأثر؟)
+3. **كيف اكتشفنا؟** (مراقبة؟ عميل غاضب؟)
+4. **كيف أصلحنا؟**
+5. **كيف نمنع التكرار؟** (Action items محددة ومواعيد)
+
+## سيناريو CloudNova: بناء ثقافة DevOps
+
+> **الموقف:** CloudNova تريد التحول من "فريق عمليات منفصل" إلى DevOps حقيقي. من أين تبدأ؟
+
+### خريطة الطريق:
+
+1. **الشهر ١:** ابدأ باجتماعات أسبوعية بين التطوير والعمليات
+2. **الشهر ٢:** أتمتة CI/CD لأول تطبيق (فوز سريع يبني الثقة)
+3. **الشهر ٣:** أول Postmortem بدون لوم بعد حادثة
+4. **الشهر ٤:** ضم مهندس عمليات لفريق تطوير (والعكس)
+5. **الشهر ٦:** قياس DORA baseline — أين نحن الآن؟
+6. **الشهر ١٢:** هدف النخبة في مقياسين على الأقل
+
+**تذكر:** التغيير الثقافي يستغرق وقتاً. لا تستعجل.
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

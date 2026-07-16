@@ -1,46 +1,70 @@
 ---
 sidebar_position: 1
-title: "Identity & Access Mastery"
-description: "Azure AD, RBAC, PIM, managed identities, conditional access, MFA."
+title: "إدارة الهوية والوصول"
+description: "Azure AD، RBAC، PIM، الهويات المُدارة، والوصول المشروط."
 ---
 
-# Identity & Access Mastery
+# إدارة الهوية والوصول
 
-Azure AD, RBAC, PIM, managed identities, conditional access, MFA.
+> **"الهوية هي محيط الأمان الجديد. لم تعد الجدران النارية كافية."**
 
-## What You Will Learn
-
-This module covers key concepts, patterns, and real-world scenarios to build production-ready cloud engineering skills.
-
-## Identity Hierarchy
+## التسلسل الهرمي للهوية
 
 ```
-Tenant (Azure AD)
-├── Management Groups
-│   ├── Subscriptions
-│   │   ├── Resource Groups
-│   │   │   └── Resources (RBAC applied here)
+Tenant (Azure AD — مؤسستك بأكملها)
+├── Management Groups (اختياري — للتجميع)
+│   ├── Subscription (الاشتراك — حدود الفوترة)
+│   │   ├── Resource Group (حاوية منطقية)
+│   │   │   └── Resources (تُطبق عليها RBAC)
 ```
 
-## PIM — Just-in-Time Access
+## RBAC — التحكم في الوصول
 
-Instead of permanent admin, use Privileged Identity Management:
+```bash
+# أعط صلاحية على مستوى Resource Group
+az role assignment create \
+  --assignee ahmed@cloudnova.com \
+  --role "Contributor" \
+  --resource-group app-prod-rg
 
-- Request elevation when needed
-- Auto-approved for 4 hours
-- All elevations are logged and audited
+# ليس على مستوى الـ Subscription!
+# هذا يمنع "الوصول بالخطأ" لموارد أخرى
+```
 
-## Managed Identities
+## PIM — الوصول في الوقت المناسب
 
-No passwords. No keys. Azure handles rotation automatically.
+بدلاً من صلاحيات دائمة:
+1. المستخدم يطلب التفعيل (مع تبرير)
+2. يمكن طلب موافقة مدير
+3. الصلاحية تُفعّل لمدة محددة (مثلاً ٤ ساعات)
+4. تنتهي تلقائياً — لا تنسى
 
-- **System-assigned:** Tied to a specific resource
-- **User-assigned:** Can be shared across resources
+## الهوية المُدارة — لا كلمات مرور
 
-## CloudNova Exercise
+```python
+# تطبيق على Azure VM يحتاج الوصول لـ Key Vault
+# الحل القديم (خطر):
+# client_secret = "SuperSecret123!" ← يُسرّب، يُنسى، لا يتجدد
 
-Apply what you learned to a real production scenario at CloudNova, your virtual cloud engineering company.
+# الحل الحديث:
+from azure.identity import DefaultAzureCredential
+credential = DefaultAzureCredential()
+# Azure يدير كل شيء — لا كلمات مرور
+```
+
+## سيناريو CloudNova: وصول طارئ آمن
+
+> **الموقف:** الساعة ٣ فجراً. مهندس يحتاج صلاحية Contributor على الإنتاج.
+
+**السيناريو الآمن:**
+1. يطلب PIM activation مع تبرير: "إصلاح عاجل لـ API"
+2. النظام: يتطلب موافقة مدير
+3. يرسل إشعاراً للمدير المناوب
+4. المدير يوافق — صلاحية ٣ ساعات فقط
+5. بعد ٣ ساعات — تنتهي تلقائياً
+
+**المراجعة لاحقاً:** كل شيء مسجّل: من طلب، لماذا، من وافق، ماذا تغير.
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

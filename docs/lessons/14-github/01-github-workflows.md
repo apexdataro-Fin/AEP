@@ -1,40 +1,85 @@
 ---
 sidebar_position: 1
-title: "GitHub Collaboration"
-description: "Pull Requests, Issues, Projects, Actions, and effective code review practices."
+title: "GitHub للمحترفين"
+description: "Pull Requests, Issues, Projects, Actions، ومراجعة الكود الفعّالة."
 ---
 
-# GitHub Collaboration
+# GitHub للمحترفين
 
-Pull Requests, Issues, Projects, Actions, and effective code review practices.
+> **"GitHub ليس مجرد مكان لتخزين الكود. إنه منصة تعاون كاملة."**
 
-## What You Will Learn
-
-This module covers key concepts, patterns, and real-world scenarios to build production-ready cloud engineering skills.
-
-## Pull Request Workflow
+## Pull Request — قلب التعاون
 
 ```bash
-git checkout -b feature/new-monitoring
+git checkout -b feature/add-alerts
+# ... عدّل الكود ...
 git add .
-git commit -m "Add Prometheus monitoring stack"
-git push origin feature/new-monitoring
-# Open PR on GitHub, request review, discuss, merge
+git commit -m "Add Prometheus alert for API latency"
+git push origin feature/add-alerts
+# افتح PR على GitHub ← راجع ← ناقش ← ادمج
 ```
 
-## Effective Code Review
+## وصف PR الجيد
 
-| Do                         | Dont                           |
-| -------------------------- | ------------------------------ |
-| Review for logic, security | Nitpick formatting (automate!) |
-| Ask questions              | Make demands                   |
-| Praise good solutions      | Only point out problems        |
-| Review within 24 hours     | Let PRs sit for days           |
+```markdown
+## ماذا؟
+- إضافة تنبيه Prometheus لزمن استجابة API
 
-## CloudNova Exercise
+## لماذا؟
+- اكتشفنا بطئاً في API الأسبوع الماضي ولم ننتبه إلا بعد شكوى عميل
 
-Apply what you learned to a real production scenario at CloudNova, your virtual cloud engineering company.
+## كيف اختبرت؟
+- [x] الخطة لا تغير أي موارد
+- [x] اختبرت التنبيه محلياً (curl للمقياس)
+- [x] طبقت في staging — التنبيه اشتغل
+
+## مرتبط بـ
+- Fixes #142 (حادثة API الأسبوع الماضي)
+```
+
+## مراجعة الكود الفعّالة
+
+| ✅ افعل | ❌ لا تفعل |
+|---|---|
+| راجع المنطق والأمان والأداء | دقق في التنسيق (هذه مهمة الأتمتة!) |
+| اسأل أسئلة، اقترح بدائل | افرض تغييرات بدون شرح |
+| راجع خلال ٢٤ ساعة | اترك PRs لأيام |
+| امدح الحلول الجيدة | انتقد فقط |
+
+## Issues — تتبع العمل
+
+```yaml
+# .github/ISSUE_TEMPLATE/bug.yml
+name: تقرير خطأ
+body:
+  - type: input
+    attributes:
+      label: البيئة
+      description: dev/staging/prod؟
+  - type: textarea
+    attributes:
+      label: السلوك المتوقع
+  - type: textarea
+    attributes:
+      label: السلوك الفعلي
+```
+
+## سيناريو CloudNova: مراجعة PR تنقذ الإنتاج
+
+> **الموقف:** PR لإضافة `terraform apply` تلقائي. المراجع لاحظ:
+
+```hcl
+resource "azurerm_postgresql_database" "main" {
+  name = "cloudnova-db-v2"  # ← تغير الاسم!
+}
+```
+
+**ما اكتشفه المراجع:** تغيير الاسم = Terraform سيحذف قاعدة البيانات القديمة وينشئ جديدة. دون ترحيل البيانات!
+
+**التعليق:** "تغيير الاسم سيحذف قاعدة البيانات. هل أعددت ترحيلاً للبيانات؟"
+
+**النتيجة:** منع كارثة. هذا هو هدف مراجعة الكود.
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

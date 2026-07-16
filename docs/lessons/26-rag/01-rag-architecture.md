@@ -1,42 +1,58 @@
 ---
 sidebar_position: 1
-title: "RAG Architecture"
-description: "Retrieval-Augmented Generation: chunking, embeddings, retrieval, and generation."
+title: "معمارية RAG"
+description: "التوليد المعزز بالاسترجاع: التقسيم، المتجهات، الاسترجاع، والتوليد."
 ---
 
-# RAG Architecture
+# معمارية RAG
 
-Retrieval-Augmented Generation: chunking, embeddings, retrieval, and generation.
+> **"RAG — Retrieval-Augmented Generation — يعطي نماذج اللغة ذاكرة خارجية."**
 
-## What You Will Learn
+## لماذا RAG؟
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
+المشكلة: نماذج اللغة لا تعرف بياناتك الخاصة. تدربت على بيانات عامة حتى تاريخ معين.
 
-## RAG Pipeline
+الحل: أعطها مستنداتك. ابحث عن المستندات ذات الصلة بالسؤال. أضفها للسياق.
+
+## خط أنابيب RAG
 
 ```mermaid
 graph LR
-    Q[User Query] --> E[Embed Query]
-    E --> VS[Vector Search]
-    VS --> D[(Documents)]
-    D --> P[Prompt: Context + Query]
-    P --> LLM[LLM Generation]
-    LLM --> R[Response]
+    Q[سؤال المستخدم] --> E[تضمين السؤال]
+    E --> V[بحث متجه]
+    V --> D[(المستندات)]
+    D --> P[سياق + سؤال]
+    P --> LLM[نموذج اللغة]
+    LLM --> R[الإجابة]
 ```
 
-## Key RAG Decisions
+## القرارات الرئيسية
 
-| Decision          | Options                                   |
-| ----------------- | ----------------------------------------- |
-| Chunking          | Fixed-size, semantic, recursive           |
-| Embedding model   | text-embedding-3-small, ada-002           |
-| Retrieval         | Top-k, similarity threshold, hybrid       |
-| Generation prompt | System prompt, few-shot, chain-of-thought |
+| القرار | الخيارات |
+|---|---|
+| **التقسيم Chunking** | حجم ثابت، تقسيم دلالي، تقسيم متكرر |
+| **نموذج التضمين** | text-embedding-3-small, ada-002 |
+| **الاسترجاع** | Top-k، عتبة تشابه، هجين |
+| **التوليد** | System prompt، few-shot |
 
-## CloudNova Exercise
+## مثال تطبيقي
 
-Apply what you learned to a real production scenario at CloudNova.
+```python
+# ١. تضمين المستندات
+docs = ["مستند ١...", "مستند ٢..."]
+embeddings = [embed(doc) for doc in docs]
+
+# ٢. تضمين السؤال
+query_embedding = embed("كيف أصلح الاتصال بقاعدة البيانات؟")
+
+# ٣. ابحث عن أقرب المستندات
+results = vector_search(query_embedding, embeddings, top_k=3)
+
+# ٤. أضف السياق واسأل النموذج
+context = "\n".join(results)
+answer = llm.generate(f"بناءً على:\n{context}\n\nأجب: {question}")
+```
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

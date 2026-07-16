@@ -1,39 +1,31 @@
 ---
 sidebar_position: 1
-title: "Building Your Portfolio"
-description: "Document projects, showcase skills, and build a compelling cloud engineering portfolio."
+title: "بناء المحفظة المهنية"
+description: "اعرض مشاريعك، وثق مهاراتك، وابنِ محفظة احترافية لمهندس السحابة."
 ---
 
-# Building Your Portfolio
+# بناء المحفظة المهنية
 
-Document projects, showcase skills, and build a compelling cloud engineering portfolio.
+> **"المحفظة القوية تتحدث عنك قبل أن تتكلم."**
 
-## What You Will Learn
+## مكونات المحفظة
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
+| القسم | المحتوى |
+|---|---|
+| **نبذة** | من أنت كمهندس |
+| **المشاريع** | ٣-٥ مشاريع جوهرية مع رسومات معمارية |
+| **المهارات** | التقنيات ومستوى الإتقان |
+| **الشهادات** | شهادات سارية مع روابط تحقق |
+| **كتابات تقنية** | مقالات أو توثيق يظهر عمق المعرفة |
 
-## Portfolio Structure
+## قالب توثيق المشروع
 
-| Section        | Content                                             |
-| -------------- | --------------------------------------------------- |
-| About          | Who you are as an engineer                          |
-| Projects       | 3-5 substantial projects with architecture diagrams |
-| Skills         | Technologies and proficiency                        |
-| Certifications | Active certifications with verification links       |
-| Blog/Articles  | Technical writing that demonstrates depth           |
-
-## Project Documentation Template
-
-1. Problem statement
-2. Architecture diagram (Mermaid or draw.io)
-3. Technology choices and tradeoffs
-4. Implementation highlights
-5. Results and learnings
-
-## CloudNova Exercise
-
-Apply what you learned to a real production scenario at CloudNova.
+1. **بيان المشكلة** — ماذا حللت؟
+2. **المعمارية** — رسم بياني (Mermaid)
+3. **القرارات التقنية** — لماذا اخترت هذه الأدوات؟
+4. **التنفيذ** — أبرز النقاط
+5. **النتائج** — تحسينات قابلة للقياس
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

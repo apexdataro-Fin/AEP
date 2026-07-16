@@ -1,41 +1,66 @@
 ---
 sidebar_position: 1
-title: "Observability Essentials"
-description: "Logs, metrics, traces — the three pillars of observability with OpenTelemetry."
+title: "الملاحظة Observability"
+description: "السجلات، المقاييس، التتبع — الأركان الثلاثة للملاحظة مع OpenTelemetry."
 ---
 
-# Observability Essentials
+# الملاحظة Observability
 
-Logs, metrics, traces — the three pillars of observability with OpenTelemetry.
+> **"المراقبة تخبرك أن هناك مشكلة. الملاحظة تخبرك لماذا."**
 
-## What You Will Learn
+## الفرق بين المراقبة والملاحظة
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready cloud engineering skills.
+| المراقبة | الملاحظة |
+|---|---|
+| تعرف مسبقاً ما تبحث عنه | تكتشف ما لم تكن تعرفه |
+| "هل CPU > 80%؟" | "لماذا المستخدمون بطيئون؟" |
+| لوحات معلومات ثابتة | استكشاف ديناميكي |
+| تنبيهات محددة مسبقاً | أسئلة مفتوحة |
 
-## Three Pillars
+## الأركان الثلاثة
 
-| Pillar  | Answers              | Tool          |
-| ------- | -------------------- | ------------- |
-| Logs    | What happened?       | Elastic, Loki |
-| Metrics | How much?            | Prometheus    |
-| Traces  | Where did it happen? | Jaeger, Tempo |
+| الركن | السؤال | الأداة |
+|---|---|---|
+| **السجلات Logs** | ماذا حدث؟ | Elastic, Loki |
+| **المقاييس Metrics** | كم؟ | Prometheus |
+| **التتبع Traces** | أين حدث؟ | Jaeger, Tempo |
 
 ## OpenTelemetry
 
-OpenTelemetry is the standard for collecting telemetry data. It provides vendor-neutral APIs, SDKs, and tools.
+المعيار المفتوح لجمع بيانات المراقبة. بائع محايد — يعمل مع أي منصة.
 
 ```python
 from opentelemetry import trace
+from opentelemetry.exporter.otlp import OTLPSpanExporter
+from opentelemetry.sdk.trace import TracerProvider
+
+# إعداد
+trace.set_tracer_provider(TracerProvider())
 tracer = trace.get_tracer(__name__)
-with tracer.start_as_current_span("process_order"):
-    # Your code here — automatically traced
-    pass
+
+# استخدام
+with tracer.start_as_current_span("process_order") as span:
+    span.set_attribute("order.id", "12345")
+    span.set_attribute("order.value", 99.99)
+    # ... منطق التطبيق هنا — يُتتبع تلقائياً
 ```
 
-## CloudNova Exercise
+## سيناريو CloudNova: لماذا الطلب بطيء؟
 
-Apply what you learned to a real production scenario at CloudNova, your virtual cloud engineering company.
+> **الموقف:** عميل يشتكي: "تأكيد الطلب يستغرق ٨ ثوانٍ."
+
+**بدون Observability:** تخمين. "ربما قاعدة البيانات؟" "ربما الشبكة؟"
+
+**مع Observability (Trace):**
+- API Gateway: ٥٠ms ✅
+- خدمة الطلبات: ١٠٠ms ✅
+- التحقق من المخزون: ٧.٤ ثوانٍ ❌ ← هنا المشكلة
+- معالج الدفع: ٢٠٠ms ✅
+
+**السبب:** استعلام قاعدة البيانات في خدمة المخزون يمسح جدولاً كاملاً بدل استخدام فهرس.
+
+**الحل:** أضف فهرساً — الوقت ينخفض من ٧.٤ ثوانٍ إلى ٨٠ms.
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

@@ -1,34 +1,60 @@
 ---
 sidebar_position: 1
-title: "Platform Engineering"
-description: "Internal Developer Platforms, Backstage, service catalogs, and developer self-service."
+title: "هندسة المنصات"
+description: "منصات المطورين الداخلية IDP، Backstage، كتالوجات الخدمات، والخدمة الذاتية للمطورين."
 ---
 
-# Platform Engineering
+# هندسة المنصات
 
-Internal Developer Platforms, Backstage, service catalogs, and developer self-service.
+> **"بدلاً من أن يبني كل فريق بنيته التحتية من الصفر — ابنِ منصة داخلية تخدم الجميع."**
 
-## What You Will Learn
+## ما هي هندسة المنصات؟
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready cloud engineering skills.
+فريق منصة يبني **منصة مطورين داخلية (IDP)** توفر:
+- بنية تحتية جاهزة بنقرة زر
+- مسارات ذهبية (Golden Paths) معتمدة
+- أدوات موحدة (مراقبة، تسجيل، CI/CD)
+- كتالوج خدمات
 
-## What is Platform Engineering?
+## لماذا تحتاج منصة داخلية؟
 
-Build an Internal Developer Platform (IDP) that provides self-service infrastructure, standardized tooling, and golden paths for development teams.
+| قبل المنصة | بعد المنصة |
+|---|---|
+| كل فريق يبني CI/CD خاصاً به | CI/CD موحد للجميع |
+| ١٠ طرق مختلفة للنشر | مسار ذهبي واحد للنشر |
+| لا أحد يعرف ماذا يوجد في الإنتاج | كتالوج خدمات كامل |
+| ٣ أسابيع لنشر خدمة جديدة | ٣ ساعات |
 
-## Key Components
+## Backstage — أشهر IDP
 
-| Component       | Tool                | Purpose                                 |
-| --------------- | ------------------- | --------------------------------------- |
-| Service Catalog | Backstage           | Discover services, APIs, docs           |
-| Scaffolding     | Backstage Templates | Create new services with best practices |
-| CI/CD           | GitHub Actions      | Standardized pipelines                  |
-| IaC Modules     | Terraform Registry  | Reusable infrastructure                 |
+```yaml
+# catalog-info.yaml
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: cloudnova-api
+  description: خدمة API الرئيسية
+  tags:
+    - go
+    - production
+spec:
+  type: service
+  lifecycle: production
+  owner: platform-team
+```
 
-## CloudNova Exercise
+## سيناريو CloudNova: من الفوضى إلى المنصة
 
-Apply what you learned to a real production scenario at CloudNova, your virtual cloud engineering company.
+> **الموقف:** ١٢ فريق تطوير. كل فريق لديه طريقة مختلفة في كل شيء.
+
+**الخطة:**
+
+1. **اكتشف:** اسأل كل فريق — ما أكثر شيء يهدر وقتك؟
+2. **ابنِ MVP:** ركز على أكبر ألم (مثلاً: النشر يستغرق أسبوعين)
+3. **قدم مساراً ذهبياً واحداً:** قالب Terraform + GitHub Actions
+4. **لا تفرض — اجذب:** "انظر، فريق X نشر في ١٠ دقائق باستخدام المنصة"
+5. **كرر:** أضف خدمات جديدة بناءً على الطلب
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

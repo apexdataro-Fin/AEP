@@ -1,52 +1,95 @@
 ---
 sidebar_position: 1
-title: "IAM & Security Fundamentals"
-description: "Master Identity and Access Management: authentication, authorization, RBAC, managed identities, and the principle of least privilege."
+title: "الأمن في السحابة"
+description: "IAM، RBAC، مبدأ الامتياز الأدنى، الهوية المُدارة، وأمن الشبكات."
 ---
 
-# IAM & Security Fundamentals
+# الأمن في السحابة
 
-Master Identity and Access Management: authentication, authorization, RBAC, managed identities, and the principle of least privilege.
+> **"الأمان ليس مرحلة أخيرة. إنه جزء من كل خطوة، من أول سطر كود إلى آخر نشر."**
 
-## What You Will Learn
+## المصادقة مقابل الصلاحية
 
-This module covers key concepts, hands-on exercises, and real CloudNova scenarios to build your production engineering skills.
+| المفهوم | السؤال | مثال |
+|---|---|---|
+| **Authentication — المصادقة** | من أنت؟ | تسجيل الدخول، MFA، كلمة المرور |
+| **Authorization — الصلاحية** | ماذا تستطيع أن تفعل؟ | الأدوار، الأذونات |
 
-## Authentication vs Authorization
+ببساطة: المصادقة = إثبات هويتك. الصلاحية = ما سُمح لك به بعد إثبات هويتك.
 
-| Concept        | Meaning                                         |
-| -------------- | ----------------------------------------------- |
-| Authentication | Who are you? (login, MFA, certificates)         |
-| Authorization  | What can you do? (roles, permissions, policies) |
+## مبدأ الامتياز الأدنى
 
-## Principle of Least Privilege
-
-Give only the permissions needed, nothing more. No one has admin by default.
-
-## RBAC in Azure
+> **لا تُعطِ أحداً أكثر مما يحتاج. أبداً.**
 
 ```bash
+# خطأ: إعطاء Contributor للجميع
 az role assignment create --assignee user@cloudnova.com \
-  --role "Contributor" --resource-group prod-rg
+  --role "Contributor" --scope /subscriptions/xxx
+
+# صحيح: تحديد النطاق بالضبط
+az role assignment create --assignee user@cloudnova.com \
+  --role "Contributor" --scope /subscriptions/xxx/resourceGroups/app-rg
 ```
 
-## Managed Identities
+## RBAC في Azure
 
-Instead of passwords and keys, use managed identities:
+| الدور | ماذا يسمح | لمن؟ |
+|---|---|---|
+| **Owner** | كل شيء (بما فيها إدارة الصلاحيات) | قادة الفريق فقط |
+| **Contributor** | إنشاء وتعديل الموارد | المطورين |
+| **Reader** | عرض فقط | المدققين، المتدربين |
+| **User Access Admin** | إدارة الصلاحيات | مسؤولي الأمن |
+
+## الهوية المُدارة — Managed Identity
 
 ```python
+# بدلاً من:
+# password = "SuperSecret123!"  ← خطر! لا تفعل هذا أبداً
+
+# استخدم Managed Identity:
 from azure.identity import ManagedIdentityCredential
 credential = ManagedIdentityCredential()
+# لا كلمة مرور. لا مفتاح. Azure يدير كل شيء.
 ```
 
-## CloudNova Scenario
+المزايا:
+- لا كلمات مرور للتسريب
+- لا مفاتيح للتجديد اليدوي
+- Azure يدير التدوير تلقائياً
+- تدقيق كامل — كل استخدام مُسجّل
 
-A developer accidentally deleted a production database. Root cause: they had Contributor role on the entire subscription. Fix: scope their access to specific resource groups with Reader + custom role.
+## PIM — الوصول المؤقت
 
-## CloudNova Exercise
+بدلاً من صلاحيات دائمة: اطلب الصلاحية عند الحاجة.
 
-Apply what you learned: review the key concepts above and identify how they apply to a real production cloud environment.
+```bash
+# مهندس يحتاج صلاحية Contributor لمدة ٤ ساعات
+# يطلب عبر Azure Portal > PIM > Activate
+# النظام: موافقة تلقائية؟ يحتاج موافقة مدير؟
+# بعد ٤ ساعات — الصلاحية تنتهي تلقائياً
+# كل شيء مُسجّل ومدقق
+```
+
+## سيناريو CloudNova: حذف قاعدة بيانات الإنتاج
+
+> **الموقف:** مطور جديد حذف قاعدة بيانات الإنتاج بالخطأ. التحقيق يكشف: كان لديه صلاحية Contributor على كامل الاشتراك.
+
+**كيف نمنع التكرار؟**
+
+1. **تقسيم الاشتراكات:** prod منفصل تماماً عن dev
+2. **RBAC دقيق:** صلاحيات على مستوى Resource Group، لا Subscription
+3. **Resource Lock:** `CanNotDelete` على الموارد الحرجة
+4. **PIM:** صلاحيات الإنتاج مؤقتة فقط
+5. **Azure Policy:** منع حذف قواعد البيانات بدون موافقة
+
+```bash
+# Resource Lock — خط الدفاع الأخير
+az lock create --name "prod-db-lock" \
+  --lock-type CanNotDelete \
+  --resource-group prod-rg \
+  --resource-name cloudnova-db
+```
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

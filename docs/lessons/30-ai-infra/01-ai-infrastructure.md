@@ -1,38 +1,30 @@
 ---
 sidebar_position: 1
-title: "AI Infrastructure"
-description: "GPU clusters, inference serving, model deployment strategies."
+title: "البنية التحتية للذكاء الاصطناعي"
+description: "مجموعات GPU، استدلال النماذج، استراتيجيات النشر."
 ---
 
-# AI Infrastructure
+# البنية التحتية للذكاء الاصطناعي
 
-GPU clusters, inference serving, model deployment strategies.
+> **"نماذج الذكاء الاصطناعي تحتاج بنية تحتية خاصة. ليست مجرد خوادم عادية."**
 
-## What You Will Learn
+## خيارات GPU على Azure
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
+| الخدمة | المعالج | الاستخدام |
+|---|---|---|
+| **NCas T4 v3** | T4 | استدلال خفيف |
+| **ND A100 v4** | A100 | تدريب كبير |
+| **ND H100 v5** | H100 | تدريب نماذج ضخمة |
+| **Azure ML Compute** | تلقائي | تدريب مُدار |
 
-## AI Compute Options
+## استراتيجيات الاستدلال
 
-| Service          | GPU        | Use Case             |
-| ---------------- | ---------- | -------------------- |
-| Azure NCas T4 v3 | T4         | Inference            |
-| Azure ND A100 v4 | A100       | Training             |
-| Azure ND H100 v5 | H100       | Large model training |
-| Azure ML Compute | Auto-scale | Managed training     |
-
-## Inference Strategies
-
-| Strategy                  | Latency | Cost          |
-| ------------------------- | ------- | ------------- |
-| Real-time endpoint        | < 100ms | Higher        |
-| Batch inference           | Minutes | Lower         |
-| Serverless (Azure OpenAI) | < 1s    | Pay-per-token |
-
-## CloudNova Exercise
-
-Apply what you learned to a real production scenario at CloudNova.
+| الاستراتيجية | زمن الاستجابة | التكلفة | الأنسب لـ |
+|---|---|---|---|
+| **نقطة نهاية آنية** | < ١٠٠ms | أعلى | تطبيقات المستخدم |
+| **استدلال دفعي** | دقائق | أقل | معالجة ليلية |
+| **Serverless** | < ١s | بالاستخدام | Azure OpenAI |
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

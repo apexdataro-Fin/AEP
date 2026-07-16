@@ -1,37 +1,29 @@
 ---
 sidebar_position: 1
-title: "LLMOps Fundamentals"
-description: "Prompt engineering, evaluation, guardrails, and production LLM deployment."
+title: "أساسيات LLMOps"
+description: "إدارة نماذج اللغة في الإنتاج: هندسة prompts، التقييم، الحماية."
 ---
 
-# LLMOps Fundamentals
+# أساسيات LLMOps
 
-Prompt engineering, evaluation, guardrails, and production LLM deployment.
-
-## What You Will Learn
-
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
+> **"إدارة نموذج لغة في الإنتاج أصعب من تدريبه."**
 
 ## LLMOps vs MLOps
 
-| Aspect     | MLOps               | LLMOps                 |
-| ---------- | ------------------- | ---------------------- |
-| Training   | Frequent retraining | Rare fine-tuning       |
-| Evaluation | Metrics (accuracy)  | Human + automated eval |
-| Monitoring | Data drift          | Prompt drift, safety   |
-| Rollback   | Model version       | Prompt version         |
+| الجانب | MLOps التقليدي | LLMOps |
+|---|---|---|
+| التدريب | إعادة تدريب متكرر | ضبط نادر |
+| التقييم | مقاييس quantifiable | بشري + آلي |
+| المراقبة | تدهور البيانات | تدهور الـ prompt، الأمان |
+| التراجع | إصدار النموذج | إصدار الـ prompt |
 
-## Guardrails
+## طبقات الحماية
 
-1. Content filtering (Azure AI Content Safety)
-2. Prompt injection prevention
-3. Output validation and formatting
-4. Rate limiting and cost controls
-
-## CloudNova Exercise
-
-Apply what you learned to a real production scenario at CloudNova.
+1. **فلترة المحتوى** — Azure AI Content Safety
+2. **منع الحقن** — Prompt Injection Prevention
+3. **التحقق من المخرجات** — Output validation والتنسيق
+4. **التحكم بالتكلفة** — Rate limiting، حدود الاستخدام
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

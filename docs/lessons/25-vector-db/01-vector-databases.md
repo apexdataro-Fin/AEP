@@ -1,40 +1,68 @@
 ---
 sidebar_position: 1
-title: "Vector Databases"
-description: "Embeddings, similarity search, Pinecone, pgvector, and Azure AI Search."
+title: "قواعد البيانات المتجهة"
+description: "المتجهات Embeddings، البحث بالتشابه، Pinecone، pgvector، و Azure AI Search."
 ---
 
-# Vector Databases
+# قواعد البيانات المتجهة
 
-Embeddings, similarity search, Pinecone, pgvector, and Azure AI Search.
+> **"البحث لم يعد بالكلمات المفتاحية. إنه بالمعنى. قواعد البيانات المتجهة تجعل هذا ممكناً."**
 
-## What You Will Learn
+## ما هي المتجهات؟
 
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
-
-## What are Vector Databases?
-
-Vector databases store data as mathematical vectors (embeddings) and enable semantic similarity search — finding content by meaning, not keywords.
-
-## How Embeddings Work
+المتجه هو تمثيل رياضي للمعنى. كلمتان متشابهتان في المعنى = متجهان متقاربان:
 
 ```
-"Kubernetes is a container orchestrator" → [0.12, -0.45, 0.78, ...]  (1536 dimensions)
-"Docker runs containers"              → [0.11, -0.43, 0.75, ...]  (very close!)
-"I like pizza"                        → [-0.67, 0.23, -0.12, ...] (far away)
+"Kubernetes هو منسق حاويات"     → [0.12, -0.45, 0.78, ...]
+"Docker يشغل الحاويات"          → [0.11, -0.43, 0.75, ...]  ← قريب جداً
+"أحب البيتزا"                   → [-0.67, 0.23, -0.12, ...] ← بعيد جداً
 ```
 
-| Database        | Type           | Best For                |
-| --------------- | -------------- | ----------------------- |
-| Pinecone        | Managed        | Production RAG          |
-| pgvector        | PostgreSQL ext | Existing Postgres users |
-| Chroma          | Open source    | Prototyping             |
-| Azure AI Search | Managed        | Azure-native RAG        |
+## لماذا نحتاج قواعد بيانات متجهة؟
 
-## CloudNova Exercise
+البحث التقليدي: `SELECT * FROM docs WHERE text LIKE '%kubernetes%'`
 
-Apply what you learned to a real production scenario at CloudNova.
+البحث المتجه: "أرني وثائق عن تنسيق الحاويات" — يجد Kubernetes حتى لو لم تُذكر الكلمة صراحةً.
+
+## مقارنة قواعد البيانات المتجهة
+
+| القاعدة | النوع | الأنسب لـ |
+|---|---|---|
+| **Pinecone** | مُدارة | إنتاج، RAG |
+| **pgvector** | إضافة لـ PostgreSQL | مستخدمي PostgreSQL الحاليين |
+| **Chroma** | مفتوحة المصدر | النماذج الأولية |
+| **Azure AI Search** | مُدارة | RAG على Azure |
+
+## مثال مع pgvector
+
+```sql
+-- تثبيت الإضافة
+CREATE EXTENSION vector;
+
+-- جدول مع متجهات
+CREATE TABLE documents (
+    id SERIAL PRIMARY KEY,
+    content TEXT,
+    embedding vector(1536)  -- 1536 بعداً (OpenAI embedding)
+);
+
+-- بحث بالتشابه
+SELECT content, 1 - (embedding <=> query_embedding) AS similarity
+FROM documents
+ORDER BY embedding <=> query_embedding
+LIMIT 5;
+```
+
+## سيناريو CloudNova: بحث ذكي عن الوثائق
+
+> **الموقف:** ١٠٠٠ وثيقة تقنية. البحث بالكلمات المفتاحية يفشل: "كيف أصلح مشكلة الاتصال؟" لا يجد شيئاً لأن الوثيقة تستخدم كلمة "تعطل الشبكة" وليس "مشكلة الاتصال".
+
+**الحل:**
+1. حوّل كل الوثائق إلى متجهات (OpenAI embeddings)
+2. خزنها في pgvector
+3. عند البحث: حوّل السؤال إلى متجه ← ابحث عن أقرب المتجهات
+4. النتيجة: يجد "تعطل الشبكة" عندما تسأل عن "مشكلة الاتصال"
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

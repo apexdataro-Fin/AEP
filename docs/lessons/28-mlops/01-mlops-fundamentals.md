@@ -1,36 +1,39 @@
 ---
 sidebar_position: 1
-title: "MLOps Fundamentals"
-description: "ML pipelines, model registry, feature stores, and continuous training."
+title: "أساسيات MLOps"
+description: "خطوط أنابيب ML، سجل النماذج، مخازن الميزات، والتدريب المستمر."
 ---
 
-# MLOps Fundamentals
+# أساسيات MLOps
 
-ML pipelines, model registry, feature stores, and continuous training.
+> **"MLOps: ما DevOps للتطبيقات، لكن لنماذج تعلم الآلة."**
 
-## What You Will Learn
-
-This module covers key concepts, patterns, and real-world scenarios to build production-ready skills.
-
-## MLOps Pipeline
+## خط أنابيب MLOps
 
 ```
-Data → Features → Training → Registry → Deploy → Monitor → Retrain
+بيانات ← ميزات ← تدريب ← تسجيل ← نشر ← مراقبة ← إعادة تدريب
 ```
 
-| Stage    | Azure Service                           |
-| -------- | --------------------------------------- |
-| Data     | Azure Data Lake                         |
-| Features | Azure ML Feature Store                  |
-| Training | Azure ML Compute                        |
-| Registry | Azure ML Model Registry                 |
-| Deploy   | Azure ML Endpoints                      |
-| Monitor  | Azure ML Monitor + Application Insights |
+## خدمات Azure لـ MLOps
 
-## CloudNova Exercise
+| المرحلة | خدمة Azure |
+|---|---|
+| البيانات | Azure Data Lake |
+| الميزات | Azure ML Feature Store |
+| التدريب | Azure ML Compute |
+| التسجيل | Azure ML Model Registry |
+| النشر | Azure ML Managed Endpoints |
+| المراقبة | Azure ML Monitor |
 
-Apply what you learned to a real production scenario at CloudNova.
+## تحديات MLOps
+
+| التحدي | الحل |
+|---|---|
+| تدهور النموذج | مراقبة مستمرة وإعادة تدريب تلقائي |
+| إصدار البيانات | DVC، تسجيل إصدار datasets |
+| قابلية إعادة الإنتاج | بيئات Docker + تثبيت المتطلبات |
+| الامتثال | تدقيق آلي، سجل قرارات |
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)

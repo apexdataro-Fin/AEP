@@ -1,69 +1,74 @@
 ---
 sidebar_position: 1
-title: "Python for Cloud Automation"
-description: "Write Python scripts to manage Azure resources, handle authentication, and process cloud data."
+title: "بايثون لأتمتة السحابة"
+description: "اكتب سكريبتات Python لأتمتة مهام Azure: إدارة الموارد، المصادقة الآمنة، ومعالجة البيانات."
 ---
 
-# Python for Cloud Automation
+# بايثون لأتمتة السحابة
 
-Python is the universal language of cloud automation. Every cloud engineer needs it.
+> **"Python هي اللغة العالمية لأتمتة السحابة. كل مهندس سحابة يحتاجها."**
 
-## What You Will Learn
+## لماذا Python؟
 
-- Use Azure SDK for Python to manage resources
-- Handle authentication securely (no hardcoded keys!)
-- Process JSON, CSV, and API responses
-- Implement retry logic for cloud API failures
+| الميزة | لماذا تهم مهندس السحابة |
+|---|---|
+| **سهلة القراءة** | تقرأ الكود بعد ٦ أشهر وتفهمه |
+| **مكتبات لكل شيء** | Azure SDK, AWS boto3, GCP SDK |
+| **مجتمع ضخم** | أي مشكلة — أحد حلها قبلك |
+| **متعددة الاستخدامات** | أتمتة، معالجة بيانات، AI |
 
-## Authentication — Never Hardcode Keys
+## المصادقة — لا تضع مفاتيح في الكود
 
 ```python
 from azure.identity import DefaultAzureCredential
 
-# Best practice: uses environment vars, managed identity, or CLI login
+# أبداً لا تفعل هذا:
+# api_key = "sk-abc123..."  ← خطر!
+
+# افعل هذا:
 credential = DefaultAzureCredential()
+# يحاول: متغيرات البيئة ← Managed Identity ← Azure CLI ← Interactive
 ```
 
-The credential chain tries: Environment variables → Managed Identity → Azure CLI → Interactive
-
-## List All VMs
+## إدارة الموارد
 
 ```python
 from azure.mgmt.compute import ComputeManagementClient
+from azure.mgmt.resource import ResourceManagementClient
 
+# قائمة بكل الخوادم في كل الاشتراكات
 compute = ComputeManagementClient(credential, subscription_id)
 
 for vm in compute.virtual_machines.list_all():
-    print(f"{vm.name}: {vm.provisioning_state} - {vm.location}")
+    print(f"{vm.name:30s} | {vm.provisioning_state:15s} | {vm.location}")
 ```
 
-## Error Handling for Cloud APIs
+## سيناريو CloudNova: تقرير الموارد غير الموسومة
 
 ```python
-from azure.core.exceptions import HttpResponseError
-import time
+#!/usr/bin/env python3
+"""تقرير الموارد التي تفتقد cost-center tag — CloudNova"""
 
-def retry_on_throttle(func, max_retries=3):
-    for attempt in range(max_retries):
-        try:
-            return func()
-        except HttpResponseError as e:
-            if e.status_code == 429:  # Too Many Requests
-                retry_after = int(e.response.headers.get("Retry-After", 30))
-                print(f"Rate limited. Waiting {retry_after}s...")
-                time.sleep(retry_after)
-            else:
-                raise
+from azure.mgmt.resource import ResourceManagementClient
+
+credential = DefaultAzureCredential()
+resource = ResourceManagementClient(credential, subscription_id)
+
+untagged = []
+for res in resource.resources.list():
+    tags = res.tags or {}
+    if "cost-center" not in tags:
+        untagged.append({
+            "name": res.name,
+            "type": res.type,
+            "resource_group": res.id.split("/")[4]
+        })
+
+print(f"❌ موارد بدون cost-center tag: {len(untagged)}")
+for r in untagged[:10]:  # أول ١٠
+    print(f"  - {r['name']} ({r['type']})")
 ```
-
-## CloudNova Exercise
-
-Write a script that:
-
-1. Lists all VMs across all subscriptions
-2. Identifies VMs without a `cost-center` tag
-3. Outputs a CSV report: `name, resource_group, subscription, status`
 
 ---
 
-[← Back to Module](index.md) | [🏠 Home](/)
+[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)
