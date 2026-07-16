@@ -1,251 +1,257 @@
 /* ============================================================
-   Home Page — Modern Academy Landing
+   Home Page — Code-Book-Smart Inspired
    ============================================================ */
 
 .page {
-  background: var(--celos-surface-alt);
+  background: hsl(var(--background));
   min-height: 100vh;
 }
 
 /* ============================================================
-   Hero Section
+   Hero
    ============================================================ */
-
 .hero {
-  padding: 4rem 0 3rem;
+  padding: 3.5rem 0 2.5rem;
   text-align: center;
-  background: linear-gradient(180deg, var(--celos-surface) 0%, var(--celos-surface-alt) 100%);
-  border-bottom: 1px solid var(--celos-border);
+  background: hsl(var(--card));
+  border-bottom: 1px solid hsl(var(--border));
 }
 
 .heroContent {
-  max-width: 720px;
+  max-width: 680px;
   margin: 0 auto;
   padding: 0 1.5rem;
 }
 
 .heroBadge {
   display: inline-block;
-  padding: 0.375rem 0.875rem;
-  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: rgba(124, 94, 74, 0.1);
-  color: var(--ifm-color-primary);
+  letter-spacing: 0.04em;
+  background: hsl(var(--primary) / 0.1);
+  color: hsl(var(--primary));
   border-radius: 9999px;
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .heroTitle {
-  font-size: 2.75rem;
-  font-weight: 800;
+  font-size: 2.5rem;
+  font-weight: 900;
   letter-spacing: -0.03em;
-  margin: 0 0 1rem;
-  color: var(--celos-text-primary);
+  margin: 0 0 0.75rem;
+  color: hsl(var(--foreground));
   line-height: 1.15;
 }
 
 .heroSubtitle {
-  font-size: 1.15rem;
-  color: var(--celos-text-secondary);
-  max-width: 540px;
-  margin: 0 auto 2rem;
-  line-height: 1.65;
+  font-size: 1.1rem;
+  color: hsl(var(--muted-foreground));
+  max-width: 520px;
+  margin: 0 auto 1.75rem;
+  line-height: 1.7;
 }
 
 .heroActions {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.875rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
-.heroPrimary,
+.heroPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.625rem 1.375rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  border-radius: 0.45rem;
+  text-decoration: none;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border: 1px solid hsl(var(--primary));
+  transition:
+    background 0.12s,
+    transform 50ms;
+}
+
+.heroPrimary:hover {
+  background: hsl(var(--primary) / 0.92);
+  text-decoration: none;
+  color: hsl(var(--primary-foreground));
+}
+
+.heroPrimary:active {
+  transform: translateY(1px);
+}
+
 .heroSecondary {
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 700;
-  border-radius: 0.75rem;
+  padding: 0.625rem 1.375rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  border-radius: 0.45rem;
   text-decoration: none;
-  transition: all 0.2s;
-}
-
-.heroPrimary {
-  background: var(--ifm-color-primary);
-  color: #fff;
-}
-
-.heroPrimary:hover {
-  background: var(--ifm-color-primary-dark);
-  text-decoration: none;
-  color: #fff;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(124, 94, 74, 0.3);
-}
-
-.heroSecondary {
-  background: var(--celos-surface-raised);
-  color: var(--celos-text-primary);
-  border: 1px solid var(--celos-border);
+  background: hsl(var(--card));
+  color: hsl(var(--foreground));
+  border: 1px solid hsl(var(--border));
+  transition:
+    background 0.12s,
+    border-color 0.12s,
+    transform 50ms;
 }
 
 .heroSecondary:hover {
-  background: var(--celos-surface-hover);
+  background: hsl(var(--accent));
+  border-color: hsl(var(--primary) / 0.4);
   text-decoration: none;
-  color: var(--celos-text-primary);
+  color: hsl(var(--foreground));
+}
+
+.heroSecondary:active {
+  transform: translateY(1px);
 }
 
 /* ============================================================
    Section Header
    ============================================================ */
-
 .sectionHeader {
   text-align: center;
-  margin-bottom: 2rem;
-  padding-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-top: 2.5rem;
 }
 
 .sectionHeader h2 {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: var(--celos-text-primary);
+  color: hsl(var(--foreground));
   margin-bottom: 0.5rem;
 }
 
 .sectionHeader p {
-  font-size: 1.05rem;
-  color: var(--celos-text-secondary);
-  max-width: 560px;
+  font-size: 1rem;
+  color: hsl(var(--muted-foreground));
+  max-width: 520px;
   margin: 0 auto;
 }
 
 /* ============================================================
-   Quick Links Grid
+   Quick Links
    ============================================================ */
-
 .quickSection {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .quickGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.875rem;
+  gap: 0.75rem;
 }
 
 .quickCard {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
-  padding: 1.25rem;
-  background: var(--celos-surface-raised);
-  border: 1px solid var(--celos-border);
-  border-radius: 0.75rem;
+  gap: 0.25rem;
+  padding: 1.125rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--ifm-global-radius);
   text-decoration: none;
   transition:
-    box-shadow 0.2s,
-    transform 0.2s,
-    border-color 0.2s;
+    border-color 0.12s,
+    box-shadow 0.12s;
 }
 
 .quickCard:hover {
-  box-shadow: 0 4px 16px rgba(45, 33, 24, 0.06);
-  transform: translateY(-2px);
-  border-color: var(--ifm-color-primary-lighter);
+  border-color: hsl(var(--primary) / 0.4);
+  box-shadow: 0 4px 16px hsl(240 10% 12% / 0.05);
   text-decoration: none;
 }
 
 .quickIcon {
-  font-size: 1.5rem;
+  font-size: 1.4rem;
   line-height: 1;
 }
 
 .quickCard strong {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: var(--celos-text-primary);
+  color: hsl(var(--foreground));
 }
 
 .quickCard span:last-child {
-  font-size: 0.8rem;
-  color: var(--celos-text-muted);
+  font-size: 0.78rem;
+  color: hsl(var(--muted-foreground));
 }
 
 /* ============================================================
    Module Grid
    ============================================================ */
-
 .modulesSection {
   margin-bottom: 1rem;
 }
 
 .moduleGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.625rem;
 }
 
 .moduleCard {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.375rem;
-  padding: 1rem 0.75rem;
-  background: var(--celos-surface-raised);
-  border: 1px solid var(--celos-border);
-  border-radius: 0.75rem;
+  gap: 0.25rem;
+  padding: 0.875rem 0.625rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--ifm-global-radius);
   text-decoration: none;
   text-align: center;
-  transition:
-    box-shadow 0.2s,
-    transform 0.2s,
-    border-color 0.2s;
+  transition: all 0.12s;
 }
 
 .moduleCard:hover {
-  box-shadow: 0 4px 16px rgba(45, 33, 24, 0.06);
-  transform: translateY(-2px);
-  border-color: var(--ifm-color-primary);
+  border-color: hsl(var(--primary) / 0.5);
+  box-shadow: 0 2px 12px hsl(240 10% 12% / 0.05);
   text-decoration: none;
+  transform: translateY(-1px);
 }
 
 .moduleEmoji {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   line-height: 1;
 }
 
 .moduleNum {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--ifm-color-primary);
+  letter-spacing: 0.06em;
+  color: hsl(var(--primary));
 }
 
 .moduleName {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--celos-text-primary);
+  color: hsl(var(--foreground));
   line-height: 1.3;
 }
 
 /* ============================================================
    Certification Section
    ============================================================ */
-
 .certSection {
   margin-bottom: 1rem;
 }
 
 .certGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 0.75rem;
 }
 
@@ -253,49 +259,44 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1.5rem;
-  background: var(--celos-surface-raised);
-  border: 1px solid var(--celos-border);
-  border-radius: 0.75rem;
+  gap: 0.375rem;
+  padding: 1.25rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--ifm-global-radius);
   text-decoration: none;
   text-align: center;
   transition:
-    box-shadow 0.2s,
-    transform 0.2s,
-    border-color 0.2s;
+    border-color 0.12s,
+    box-shadow 0.12s;
 }
 
 .certCard:hover {
-  box-shadow: 0 4px 16px rgba(45, 33, 24, 0.06);
-  transform: translateY(-2px);
-  border-color: var(--ifm-color-primary-lighter);
+  border-color: hsl(var(--primary) / 0.4);
   text-decoration: none;
 }
 
 .certCode {
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--ifm-color-primary);
-  text-transform: uppercase;
+  font-size: 1.15rem;
+  font-weight: 900;
+  color: hsl(var(--primary));
   letter-spacing: 0.03em;
 }
 
 .certName {
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: var(--celos-text-primary);
+  color: hsl(var(--foreground));
 }
 
 .certExam {
-  font-size: 0.8rem;
-  color: var(--celos-text-muted);
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
 }
 
 /* ============================================================
    Simulator Section
    ============================================================ */
-
 .simSection {
   margin-bottom: 3rem;
   padding-bottom: 2rem;
@@ -304,7 +305,7 @@
 .simGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
+  gap: 0.625rem;
 }
 
 .simCard {
@@ -312,41 +313,39 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: var(--celos-surface-raised);
-  border: 1px solid var(--celos-border);
-  border-radius: 0.75rem;
+  gap: 0.4rem;
+  padding: 0.875rem;
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--ifm-global-radius);
   text-decoration: none;
-  transition: all 0.2s;
+  transition: all 0.12s;
 }
 
 .simCard:hover {
-  background: var(--ifm-color-primary);
-  border-color: var(--ifm-color-primary);
+  background: hsl(var(--primary));
+  border-color: hsl(var(--primary));
   text-decoration: none;
-  transform: translateY(-2px);
 }
 
 .simCard:hover .simName {
-  color: #fff;
+  color: hsl(var(--primary-foreground));
 }
 
 .simIcon {
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   line-height: 1;
 }
 
 .simName {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  color: var(--celos-text-primary);
+  color: hsl(var(--foreground));
 }
 
 /* ============================================================
    Responsive
    ============================================================ */
-
 @media (max-width: 1100px) {
   .quickGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -358,16 +357,19 @@
 
 @media (max-width: 640px) {
   .hero {
-    padding: 2rem 0 2rem;
+    padding: 2rem 0 1.5rem;
   }
   .heroTitle {
-    font-size: 1.75rem;
+    font-size: 1.65rem;
+  }
+  .heroSubtitle {
+    font-size: 1rem;
   }
   .quickGrid {
     grid-template-columns: 1fr;
   }
   .moduleGrid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   }
   .simGrid {
     grid-template-columns: 1fr;
