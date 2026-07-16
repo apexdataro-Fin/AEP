@@ -99,7 +99,9 @@ function ModuleGrid() {
     <section className={styles.modulesSection}>
       <div className={styles.sectionHeader}>
         <Heading as="h2">📚 Complete Course Curriculum</Heading>
-        <p>33 modules from foundations to production cloud engineering. Click any module to explore.</p>
+        <p>
+          33 modules from foundations to production cloud engineering. Click any module to explore.
+        </p>
       </div>
       <div className={styles.moduleGrid}>
         {modules.map((m) => (
@@ -134,7 +136,9 @@ function CertSection() {
     <section className={styles.certSection}>
       <div className={styles.sectionHeader}>
         <Heading as="h2">🏆 Certification Roadmap</Heading>
-        <p>Every lesson maps to Microsoft Azure certification objectives. Track your exam readiness.</p>
+        <p>
+          Every lesson maps to Microsoft Azure certification objectives. Track your exam readiness.
+        </p>
       </div>
       <div className={styles.certGrid}>
         {certs.map((c) => (
