@@ -1,22 +1,39 @@
 ---
 sidebar_position: 1
 title: "CI/CD — من الكود إلى الإنتاج"
-description: "كل شيء عن CI/CD: GitHub Actions، Azure DevOps، استراتيجيات النشر، الاختبارات الآلية، والأمان."
+description: "GitHub Actions، Azure DevOps، استراتيجيات النشر، إدارة الأسرار، الحماية البيئية، والتراجع الآمن."
 ---
 
 # CI/CD — من الكود إلى الإنتاج
 
-> **"كل دقيقة تقضيها في النشر اليدوي هي دقيقة لا تُصلح فيها مشاكل حقيقية. أتمتة كل شيء."**
+> **"كل دقيقة تقضيها في النشر اليدوي هي دقيقة لا تُصلح فيها مشاكل حقيقية. أتمتة كل شيء — لكن بأمان."**
 
-## ما هو CI/CD؟
+## 🎯 أهداف التعلم
 
-| الحرف  | المعنى                 | السؤال                | المثال                        |
-| ------ | ---------------------- | --------------------- | ----------------------------- |
-| **CI** | Continuous Integration | "هل الكود يشتغل؟"     | Build + Test تلقائي عند كل PR |
-| **CD** | Continuous Delivery    | "هل هو جاهز للنشر؟"   | نشر تلقائي لـ staging         |
-| **CD** | Continuous Deployment  | "هل نُشر للمستخدمين؟" | نشر تلقائي للإنتاج            |
+بعد إكمال هذا الدرس، ستكون قادراً على:
+- بناء Pipeline كامل من commit إلى إنتاج بثقة
+- اختيار استراتيجية النشر المناسبة (Rolling, Blue-Green, Canary)
+- إدارة الأسرار بأمان في CI/CD
+- حماية بيئة الإنتاج من النشرات الخاطئة
+- التراجع بأمان عند فشل النشر
 
-## مراحل الـ Pipeline
+---
+
+## ١. ما هو CI/CD؟ — بعمق
+
+| الحرف | المعنى | السؤال | المثال من CloudNova |
+|-------|--------|--------|-------------------|
+| **CI** | Continuous Integration | "هل الكود يشتغل معاً؟" | Build + Test تلقائي عند كل PR |
+| **CD** | Continuous Delivery | "هل هو جاهز للنشر؟" | نشر تلقائي لـ staging، إنتاج بموافقة |
+| **CD** | Continuous Deployment | "هل نُشر للمستخدمين؟" | نشر تلقائي بالكامل للإنتاج |
+
+### 🟢 التفسير البسيط
+
+تخيل خط إنتاج في مصنع. كل قطعة تمر بمراحل: فحص، تركيب، اختبار، تغليف، شحن. لو فشلت في أي مرحلة — تتوقف. هذا هو CI/CD للكود: خط إنتاج آلي للبرمجيات.
+
+---
+
+## ٢. مراحل الـ Pipeline الكاملة
 
 ```mermaid
 graph LR
@@ -28,13 +45,218 @@ graph LR
     F --> G[Deploy Staging]
     G --> H[Integration Tests]
     H --> I{Approve?}
-    I -->|Yes| J[Deploy Production]
-    I -->|No| K[Notify]
-    J --> L[Smoke Tests]
-    L --> M[Monitor]
+    I -->|Yes| J[Canary 10%]
+    J --> K[Monitor 5min]
+    K --> L{Metrics OK?}
+    L -->|Yes| M[Deploy 100%]
+    L -->|No| N[Rollback]
+    I -->|No| O[Notify]
+    M --> P[Smoke Tests]
 ```
 
-## GitHub Actions — Pipeline كامل
+---
+
+## ٣. استراتيجيات النشر — متى تستخدم ماذا؟
+
+### Rolling Deployment
+
+```yaml
+# Kubernetes: استبدل Pods واحدة تلو الأخرى
+strategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 2         # أنشئ ٢ Pods جديدة قبل حذف القديمة
+    maxUnavailable: 1   # لا تفقد أكثر من Pod واحد أثناء النشر
+```
+
+**متى تستخدم:** أغلب النشرات اليومية. آمن، تدريجي، بسيط.
+
+### Blue-Green Deployment
+
+```mermaid
+graph LR
+    A[Blue - الإصدار الحالي v1] --> B[Green - الإصدار الجديد v2]
+    B --> C{اختبار Green}
+    C -->|نجح| D[بدل الحركة لـ Green]
+    C -->|فشل| E[احذف Green]
+    D --> F[Blue يصبح inactive]
+```
+
+**متى تستخدم:** عندما تحتاج تراجعاً فورياً (instant rollback). تكلفة مضاعفة (ضعف الموارد).
+
+### Canary Deployment
+
+```yaml
+# Istio VirtualService: ١٠٪ من الحركة للإصدار الجديد
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+spec:
+  http:
+  - route:
+    - destination:
+        host: api
+        subset: v1
+      weight: 90          # ٩٠٪ للإصدار الحالي
+    - destination:
+        host: api
+        subset: v2
+      weight: 10          # ١٠٪ للإصدار الجديد
+```
+
+**متى تستخدم:** نشرات عالية المخاطر. اختبر في الإنتاج الحقيقي بحذر.
+
+### متى تستخدم كل استراتيجية؟
+
+| السيناريو | الاستراتيجية | لماذا؟ |
+|-----------|-------------|--------|
+| تحديث يومي بسيط | Rolling | سريع، بسيط، آمن |
+| تغيير كبير في معمارية API | Canary | اختبر على ٥٪ أولاً |
+| ترقية قاعدة بيانات | Blue-Green | تراجع فوري لو فشلت |
+| تغيير ConfigMap فقط | Rolling | بسيط، تأثير منخفض |
+| يوم الجمعة ٤ مساءً | لا تنشر! | لا أحد يريد استدعاء weekend |
+
+---
+
+## ٤. إدارة الأسرار في CI/CD
+
+### ❌ ما لا تفعله أبداً
+
+```yaml
+# ❌❌❌ خطر مميت
+env:
+  DATABASE_URL: "postgres://user:SuperSecret123@prod-db:5432/cloudnova"
+  AZURE_CLIENT_SECRET: "abc123..."
+  # ← هذه الأسرار الآن في تاريخ git + مرئية في سجلات GitHub Actions!
+```
+
+### ✅ الطريقة الآمنة
+
+```yaml
+# ✅ استخدم GitHub Secrets
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+
+steps:
+  - name: Deploy
+    run: |
+      # السر موجود فقط في الذاكرة أثناء التنفيذ
+      az login --service-principal \
+        -u ${{ secrets.AZURE_CLIENT_ID }} \
+        -p ${{ secrets.AZURE_CLIENT_SECRET }}
+```
+
+### 🟣 المستوى المتقدم: Workload Identity Federation
+
+```yaml
+# الأفضل: لا أسرار على الإطلاق!
+# GitHub Actions ↔ Azure بدون secrets
+- name: Azure Login (OIDC)
+  uses: azure/login@v2
+  with:
+    client-id: ${{ secrets.AZURE_CLIENT_ID }}
+    tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+    # لا client-secret! المصادقة عبر OpenID Connect
+```
+
+---
+
+## ٥. حماية بيئة الإنتاج
+
+### Environment Protection Rules
+
+```yaml
+# في GitHub:
+# Settings → Environments → production
+# Protection rules:
+
+# ١. Required reviewers
+#    - على الأقل ٢ من كبار المهندسين يوافقون
+
+# ٢. Wait timer
+#    - انتظر ٥ دقائق قبل النشر (للتفكير)
+
+# ٣. Deployment branches
+#    - فقط من main (وليس من أي فرع)
+
+# ٤. Restricted secrets
+#    - أسرار الإنتاج لا تظهر إلا لـ production environment
+```
+
+### 🚨 قصة CloudNova: لماذا تحتاج حماية البيئة؟
+
+> **الموقف:** مهندس جديد يعمل على `feature/new-login`. بالخطأ، عدّل GitHub Actions workflow ليشير إلى production بدل staging. Pipeline اشتغل ونشر كود غير مكتمل للإنتاج. ٤ دقائق تعطل.
+
+**كيف نمنع التكرار:**
+
+```yaml
+# ١. افصل production secrets
+#    staging secrets ≠ production secrets
+#    حتى لو تسرب staging — لا يصل للإنتاج
+
+# ٢. environment: production يحمي
+jobs:
+  deploy-prod:
+    environment: production    # ← هذا الكلمة تحمي
+    # الآن: Required reviewers + Wait timer + Branch protection
+
+# ٣. deployment protection rule
+#    أي deployment لـ production يحتاج موافقة من Lead Engineer
+```
+
+---
+
+## ٦. التراجع الآمن (Rollback)
+
+### ماذا تفعل عندما يفشل النشر؟
+
+```bash
+# 🚨 النشر فشل — ٣٠٪ من المستخدمين يرون errors
+
+# الخطوة ١: تراجع فوراً (Rolling deployment)
+kubectl rollout undo deployment/api
+# يعود لآخر نسخة ناجحة — أقل من ٣٠ ثانية
+
+# الخطوة ٢: تأكد
+kubectl rollout status deployment/api
+curl -s https://api.cloudnova.com/health | grep "ok"
+
+# الخطوة ٣: حقق لاحقاً
+kubectl logs deployment/api --tail=100
+kubectl describe deployment api
+```
+
+### 🟣 استراتيجية التراجع الذكي
+
+```yaml
+# Kubernetes deployment مع تراجع تلقائي
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  replicas: 3
+  revisionHistoryLimit: 5    # احتفظ بآخر ٥ نسخ للتراجع
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0      # لا تفقد أي Pod
+  template:
+    spec:
+      containers:
+      - name: api
+        image: ghcr.io/cloudnova/api:v2.4.1
+        readinessProbe:       # تأكد قبل استقبال الحركة
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 3
+          failureThreshold: 3  # بعد ٣ فشل ← أوقف النشر
+```
+
+---
+
+## ٧. GitHub Actions — Pipeline كامل
 
 ```yaml
 # .github/workflows/ci-cd.yml
@@ -51,138 +273,82 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  # ========== المرحلة ١: الاختبار ==========
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Setup & Test
+        run: |
+          pip install -r requirements.txt
+          ruff check .
+          pytest --cov=. --cov-report=xml
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install
-        run: pip install -r requirements.txt
-
-      - name: Lint
-        run: ruff check .
-
-      - name: Unit Tests
-        run: pytest --cov=. --cov-report=xml
-
-      - name: Upload Coverage
-        uses: codecov/codecov-action@v4
-
-  # ========== المرحلة ٢: الأمان ==========
   security:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - name: SAST Scan
         uses: github/codeql-action/analyze@v3
-
       - name: Secret Scan
-        run: |
-          pip install detect-secrets
-          detect-secrets scan --all-files
-
+        run: pip install detect-secrets && detect-secrets scan --all-files
       - name: IaC Scan
         uses: bridgecrewio/checkov-action@master
         with:
           directory: terraform/
-          framework: terraform
 
-  # ========== المرحلة ٣: البناء ==========
   build:
     needs: [test, security]
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Build Container
+      - name: Build & Push
         run: |
-          docker build -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
-          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }} \
-                     ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          docker build -t $REGISTRY/$IMAGE_NAME:${{ github.sha }} .
+          echo ${{ secrets.GITHUB_TOKEN }} | docker login $REGISTRY -u ${{ github.actor }} --password-stdin
+          docker push $REGISTRY/$IMAGE_NAME:${{ github.sha }}
 
-      - name: Scan Image
-        uses: aquasecurity/trivy-action@master
-        with:
-          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          format: table
-          severity: HIGH,CRITICAL
-
-      - name: Push Image
-        run: |
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.actor }} --password-stdin
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-
-  # ========== المرحلة ٤: النشر ==========
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    environment: production
+    environment: production       # ← حماية البيئة
     steps:
-      - name: Deploy to Kubernetes
+      - name: Deploy
         run: |
-          kubectl set image deployment/api \
-            api=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          kubectl set image deployment/api api=$REGISTRY/$IMAGE_NAME:${{ github.sha }}
           kubectl rollout status deployment/api --timeout=5m
-
       - name: Smoke Test
-        run: |
-          curl -f https://api.cloudnova.com/health
-          curl -f https://api.cloudnova.com/api/v1/status
+        run: curl -f https://api.cloudnova.com/health
 ```
 
-## استراتيجيات النشر
+---
 
-| الاستراتيجية   | الوصف                        | متى تستخدم                |
-| -------------- | ---------------------------- | ------------------------- |
-| **Rolling**    | استبدل Pods واحدة تلو الأخرى | أغلب النشرات اليومية      |
-| **Blue-Green** | بيئتان — بدّل الحركة فوراً   | تراجع فوري مضمون          |
-| **Canary**     | ١٠٪ للمستخدمين للجديد أولاً  | اختبار في الإنتاج الحقيقي |
+## 🧠 أسئلة للمراجعة النشطة
 
-## مبادئ الـ Pipeline الجيد
+1. ما الفرق بين Continuous Delivery و Continuous Deployment؟
+2. متى تستخدم Canary Deployment بدلاً من Rolling؟
+3. كيف تحمي أسرار الإنتاج في CI/CD؟
+4. ما هي Environment Protection Rules ولماذا هي مهمة؟
+5. كم ثانية يستغرق `kubectl rollout undo` للتراجع؟
 
-1. **سرعة.** الاختبارات تستغرق دقائق لا ساعات
-2. **أمان.** فحص أمني مدمج — ليس مرحلة منفصلة
-3. **قابلية التكرار.** نفس الـ Pipeline لكل البيئات
-4. **قابلية التراجع.** أي نشر يمكن عكسه بنقرة واحدة
-5. **تغذية راجعة.** المهندس يعرف نتيجة Pipeline خلال ١٠ دقائق
+## ✍️ تمرين Feynman
 
-## سيناريو CloudNova: Pipeline فشل في الإنتاج
+اشرح Canary Deployment لشخص غير تقني باستخدام تشبيه "تذوق الحساء قبل تقديمه للضيوف".
 
-> **الموقف:** كل شيء يمر في staging. أول نشر إنتاجي — انهيار كامل.
+## 🎴 بطاقات مراجعة
 
-**التحقيق:**
+| السؤال | الإجابة |
+|--------|---------|
+| أمر للتراجع عن آخر نشر Kubernetes | `kubectl rollout undo deployment/name` |
+| استراتيجية نشر للتراجع الفوري | Blue-Green |
+| استراتيجية نشر للاختبار في الإنتاج | Canary |
+| كيفية إخفاء الأسرار في GitHub Actions | `${{ secrets.NAME }}` |
 
-1. الـ staging يستخدم ١٠ سجلات في قاعدة البيانات. الإنتاج ١٠ ملايين.
-2. Migration يستغرق ٤٥ دقيقة. الـ healthcheck يفشل بعد ٣٠ ثانية.
-3. Pipeline يتراجع تلقائياً — لكن migration لم يتراجع. البيانات في حالة غير متناسقة.
+## 🎤 أسئلة مقابلة العمل
 
-**الدروس المستفادة:**
-
-```yaml
-# ١. healthcheck واقعي
-readinessProbe:
-  httpGet:
-    path: /health?deep=true    # فحص عميق
-  initialDelaySeconds: 60      # انتظر migration
-  failureThreshold: 10         # اسمح بمحاولات أكثر
-
-# ٢. timeout مناسب
-- name: Run Migrations
-  run: python manage.py migrate
-  timeout-minutes: 60          # كان ٥ فقط!
-
-# ٣. اختبار staging بحجم بيانات حقيقي
-# استخدم نسخة من بيانات الإنتاج (منظفة من البيانات الحساسة)
-```
+1. **"كيف تنشر تغييراً خطيراً دون المخاطرة بكل المستخدمين؟"** ← Canary deployment + monitoring + auto-rollback
+2. **"ما الفرق بين GitHub Actions و Azure DevOps؟"** ← اشرح نقاط القوة والضعف
+3. **"كيف تضمن أن نشر الإنتاج لا يحدث بدون موافقة؟"** ← Environment protection + branch rules + required reviewers
 
 ---
 
