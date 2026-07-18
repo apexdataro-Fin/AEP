@@ -1,64 +1,27 @@
 import type { ReactNode } from "react";
 import Layout from "@theme/Layout";
 import Heading from "@theme/Heading";
-import Link from "@docusaurus/Link";
-import styles from "./index.module.css";
+import { SimulatorTabs, LinuxTerminalSimulator, DockerPracticeSimulator, KubernetesScenarioSimulator } from "../components/shared/SimulatorEngine";
 import simStyles from "./simulators.module.css";
 
-const simulators = [
-  {
-    icon: "💻",
-    name: "Linux Terminal",
-    desc: "Practice shell commands, permissions, and scripting in a safe terminal.",
-    status: "Ready",
-  },
-  {
-    icon: "☁️",
-    name: "Azure Portal",
-    desc: "Navigate Azure services, deploy resources, and manage subscriptions.",
-    status: "Ready",
-  },
-  {
-    icon: "🛠",
-    name: "Terraform",
-    desc: "Write and apply infrastructure-as-code configurations.",
-    status: "Ready",
-  },
-  {
-    icon: "🐳",
-    name: "Docker",
-    desc: "Build, run, and manage containers and images.",
-    status: "Ready",
-  },
-  {
-    icon: "☸️",
-    name: "Kubernetes",
-    desc: "Deploy and manage pods, services, and deployments.",
-    status: "Ready",
-  },
+const additionalSimulators = [
   {
     icon: "🌐",
-    name: "Networking",
-    desc: "Troubleshoot CIDR, DNS, load balancing, and routing.",
-    status: "Ready",
+    name: "Networking Lab",
+    desc: "تدرب على CIDR، DNS، Subnetting، و troubleshooting الشبكات.",
+    status: "قريباً",
   },
   {
     icon: "🏗",
     name: "Architecture Builder",
-    desc: "Design cloud architectures with drag-and-drop components.",
-    status: "Beta",
+    desc: "صمم معماريات سحابية بالسحب والإفلات — قريباً.",
+    status: "قريباً",
   },
   {
     icon: "🚨",
-    name: "Incident Simulator",
-    desc: "Respond to production incidents and lead war rooms.",
-    status: "Beta",
-  },
-  {
-    icon: "🤖",
-    name: "AI Playground",
-    desc: "Experiment with prompts, embeddings, and AI workflows.",
-    status: "Beta",
+    name: "Incident Response",
+    desc: "استجب لحوادث الإنتاج وقد war rooms افتراضية.",
+    status: "قريباً",
   },
 ];
 
@@ -70,30 +33,43 @@ export default function SimulatorsPage(): ReactNode {
           <header className={simStyles.header}>
             <span className={simStyles.badge}>Simulators</span>
             <Heading as="h1" className={simStyles.title}>
-              Interactive Labs
+              🕹️ مختبرات تفاعلية
             </Heading>
             <p className={simStyles.subtitle}>
-              Learn by doing in safe, browser-based environments.
+              تعلم بالممارسة في بيئات آمنة داخل المتصفح. لا حاجة لتثبيت أي شيء.
             </p>
           </header>
 
-          <div className={simStyles.grid}>
-            {simulators.map((sim) => (
-              <div key={sim.name} className={simStyles.card}>
-                <div className={simStyles.icon}>{sim.icon}</div>
-                <Heading as="h3" className={simStyles.cardTitle}>
-                  {sim.name}
-                </Heading>
-                <p className={simStyles.cardDesc}>{sim.desc}</p>
-                <div className={simStyles.cardFooter}>
-                  <span className={simStyles.status}>{sim.status}</span>
-                  <Link className={styles.linkButton} to="#">
-                    Launch →
-                  </Link>
+          {/* ===== Active Simulators ===== */}
+          <section style={{ marginBottom: "3rem" }}>
+            <Heading as="h2" style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "1.25rem", color: "var(--celos-text-primary)" }}>
+              🟢 المحاكيات النشطة
+            </Heading>
+            <SimulatorTabs />
+          </section>
+
+          {/* ===== Coming Soon ===== */}
+          <section>
+            <Heading as="h2" style={{ fontSize: "1.4rem", fontWeight: 700, marginBottom: "1.25rem", color: "var(--celos-text-primary)" }}>
+              🔜 قريباً
+            </Heading>
+            <div className={simStyles.grid}>
+              {additionalSimulators.map((sim) => (
+                <div key={sim.name} className={simStyles.card} style={{ opacity: 0.7 }}>
+                  <div className={simStyles.icon}>{sim.icon}</div>
+                  <Heading as="h3" className={simStyles.cardTitle}>
+                    {sim.name}
+                  </Heading>
+                  <p className={simStyles.cardDesc}>{sim.desc}</p>
+                  <div className={simStyles.cardFooter}>
+                    <span className={simStyles.status} style={{ background: "rgba(198, 156, 62, 0.1)", color: "var(--celos-accent-yellow, #c69c3e)" }}>
+                      {sim.status}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          </section>
         </div>
       </main>
     </Layout>
