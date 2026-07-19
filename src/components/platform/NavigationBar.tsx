@@ -15,50 +15,36 @@ interface NavigationBarProps {
 const navItems: NavigationItem[] = [
   {
     id: "learn",
-    label: "Learn",
-    href: "/curriculum",
+    label: "تعلّم",
+    href: "/docs/lessons",
     icon: "📚",
     children: [
-      { id: "books", label: "Books", href: "/books", icon: "📖" },
-      { id: "courses", label: "Courses", href: "/courses", icon: "🎓" },
-      { id: "paths", label: "Learning Paths", href: "/paths", icon: "🗺️" },
-      { id: "bootcamps", label: "Bootcamps", href: "/bootcamps", icon: "🚀" },
+      { id: "lessons", label: "الدروس", href: "/docs/lessons", icon: "📖" },
+      { id: "courses", label: "المسار التعليمي", href: "/courses", icon: "🎓" },
+      { id: "academy", label: "الأكاديميات", href: "/academy", icon: "🏛️" },
     ],
   },
   {
     id: "practice",
-    label: "Practice",
+    label: "تدرّب",
     href: "/labs",
     icon: "🧪",
     children: [
-      { id: "labs", label: "Labs", href: "/labs", icon: "🧪" },
-      { id: "projects", label: "Projects", href: "/projects", icon: "🛠️" },
-      { id: "simulators", label: "Simulators", href: "/simulators", icon: "⚡" },
+      { id: "labs", label: "مختبرات", href: "/labs", icon: "🧪" },
+      { id: "projects", label: "مشاريع", href: "/projects", icon: "🛠️" },
+      { id: "simulators", label: "محاكيات", href: "/simulators", icon: "⚡" },
     ],
   },
   {
     id: "grow",
-    label: "Grow",
+    label: "تقدّم",
     href: "/career",
     icon: "📈",
     children: [
-      { id: "career", label: "Career Tracks", href: "/career", icon: "👔" },
-      { id: "certifications", label: "Certifications", href: "/certifications", icon: "📜" },
-      { id: "skills", label: "Skill Tree", href: "/skills", icon: "🎯" },
+      { id: "career", label: "المسار الوظيفي", href: "/career", icon: "👔" },
+      { id: "certifications", label: "الشهادات", href: "/certifications", icon: "📜" },
     ],
   },
-  {
-    id: "reference",
-    label: "Reference",
-    href: "/reference",
-    icon: "📖",
-    children: [
-      { id: "glossary", label: "Glossary", href: "/glossary", icon: "📕" },
-      { id: "technologies", label: "Technologies", href: "/technologies", icon: "💻" },
-      { id: "kb", label: "Knowledge Base", href: "/knowledge-base", icon: "🧠" },
-    ],
-  },
-  { id: "docs", label: "Docs", href: "/architecture", icon: "📋" },
 ];
 
 export default function NavigationBar({
@@ -111,6 +97,11 @@ export default function NavigationBar({
 
         {/* Main Nav Items */}
         <div className="aep-nav-items" role="menubar">
+          {/* Home Link */}
+          <Link to="/" className="aep-nav-link aep-nav-home" aria-label="الرئيسية" style={{ fontWeight: 700, fontSize: "0.9rem" }}>
+            <span className="aep-nav-icon">🏠</span>
+            <span>الرئيسية</span>
+          </Link>
           {navItems.map((item) => (
             <div
               key={item.id}
