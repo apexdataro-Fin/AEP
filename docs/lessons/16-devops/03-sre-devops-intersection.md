@@ -37,30 +37,57 @@ description: "SRE vs DevOps — Service Level Objectives، Error Budgets، Toil 
 # إذا استهلكت الـ error budget:
 - أوقف deployments الجديدة
 - ركز على الموثوقية
-- لا features جديدة حتى يعود الاستقرار
 ```
 
 ### Toil Automation
 
 ```python
-# قبل الأتمتة: 3 ساعات أسبوعياً
-def manual_certificate_renewal():
-    ssh_to_server()
-    copy_new_cert()
-    restart_nginx()
-    verify_https()
-    # ... 3 hours
-
-# بعد الأتمتة: 0 دقائق
-# Let's Encrypt + Certbot auto-renewal + cron job
+# قبل: 3 ساعات أسبوعياً للشهادات
+# بعد: Let's Encrypt + Certbot auto-renewal
 ```
 
 ---
 
-## 🎤 مقابلة
+## 🏛️ سيناريو CloudNova: Error Budget
 
-1. "ما الفرق بين SRE و DevOps؟"
-2. "اشرح Error Budget لمدير غير تقني"
+استهلكنا 18 من 22 دقيقة error budget في أسبوعين. CTO أوقف deployments. فريق SRE قضى أسبوعاً في تحسين monitoring. رجعنا deployment بعد استعادة الموثوقية.
+
+### SLO Design
+
+| الخدمة | SLO | Error Budget/شهر |
+|--------|-----|-----------------|
+| API | 99.95% | 22 دقيقة |
+| Database | 99.99% | 4.3 دقيقة |
+| Frontend | 99.9% | 43 دقيقة |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: حدد SLO لخدمتك
+### تحدي: احسب error budget الشهري
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما الفرق بين SLA و SLO؟
+2. كيف تحسب error budget؟
+3. متى توقف deployments؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| SLO | Service Level Objective — هدف الموثوقية |
+| Error Budget | الوقت المسموح للـ downtime |
+| Toil | عمل يدوي متكرر |
+
+---
+
+## 🎤 مقابلة
+1. **"ما الفرق بين SRE و DevOps؟"** → DevOps: فلسفة. SRE: تطبيق مع مقاييس
+2. **"اشرح Error Budget لمدير غير تقني"** → "مثل ميزانية. إذا صرفت كل الميزانية (downtime)، توقف عن الصرف (deployments)"
 
 ---
 

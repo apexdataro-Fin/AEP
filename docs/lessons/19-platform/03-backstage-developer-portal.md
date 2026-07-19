@@ -50,24 +50,64 @@ spec:
   parameters:
     - title: Service Details
       properties:
-        name:
-          type: string
-        description:
-          type: string
+        name: { type: string }
+        description: { type: string }
   steps:
     - id: fetch-base
       action: fetch:template
-      input:
-        url: ./template
     - id: publish
       action: publish:github
       input:
         repoUrl: github.com?owner=cloudnova&repo={{ parameters.name }}
     - id: register
       action: catalog:register
-      input:
-        catalogInfoPath: /catalog-info.yaml
 ```
+
+---
+
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
+
+قبل Backstage: المطورون يسألون "أين API docs؟ من يملك هذه الخدمة؟ كيف أنشر خدمة جديدة؟"
+
+بعد Backstage: Service Catalog يجيب على كل الأسئلة. Software Template ينشئ خدمة جديدة في 3 دقائق.
+
+### Backstage Plugins
+
+| Plugin | الفائدة |
+|--------|---------|
+| **GitHub** | ربط الـ repos بـ catalog |
+| **Kubernetes** | عرض pods, deployments |
+| **PagerDuty** | عرض on-call schedule |
+| **TechDocs** | وثائق لكل خدمة |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: أنشئ catalog-info.yaml لخدمتك
+### تحدي: ابنِ Software Template لـ Node.js service
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما فائدة Service Catalog؟
+2. كيف يختصر Software Template وقت الـ onboarding؟
+3. ما هو TechDocs؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Backstage | Developer Portal من Spotify |
+| Service Catalog | سجل مركزي لكل الخدمات |
+| Software Template | قالب لإنشاء خدمات جديدة تلقائياً |
+
+---
+
+## 🎤 مقابلة
+1. **"لماذا Backstage وليس confluence pages؟"** → Backstage متصل بالـ code حي ومحدث تلقائياً
+2. **"كيف تقيس نجاح Backstage؟"** → Time to 10th PR, Developer NPS, onboarding time
 
 ---
 

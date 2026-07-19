@@ -22,19 +22,59 @@ description: "Pinecone vs Weaviate vs Qdrant vs Milvus — مقارنة شامل
 
 | | Pinecone | Weaviate | Qdrant | Milvus |
 |---|---------|----------|--------|--------|
-| **Managed** | ✅ فقط | ✅ Cloud + Self-hosted | ✅ Cloud + Self-hosted | ✅ Zilliz Cloud |
+| **Managed** | ✅ فقط | ✅ Cloud + Self | ✅ Cloud + Self | ✅ Zilliz |
 | **Open Source** | ❌ | ✅ | ✅ | ✅ |
-| **Filtering** | ✅ Metadata | ✅ GraphQL | ✅ Payload | ✅ Scalar |
-| **Hybrid Search** | ❌ | ✅ BM25 + Vector | ❌ | ✅ |
-| **التسعير** | $$$ | $$ | $ | مجاني (self-hosted) |
+| **Hybrid Search** | ❌ | ✅ | ❌ | ✅ |
+| **التسعير** | $$$ | $$ | $ | مجاني |
 | **الأفضل لـ** | سهولة البدء | Hybrid search | أداء عالي | حجم كبير |
 
-### متى تختار ماذا؟
+### شجرة القرار
 
-- **Pinecone**: إذا كنت تبدأ بسرعة ولا تريد إدارة أي شيء
-- **Weaviate**: إذا كنت تحتاج Hybrid Search (关键词 + vector)
-- **Qdrant**: إذا كنت تحتاج أداء عالي وتكلفة منخفضة
-- **Milvus**: إذا كان عندك مليارات الـ vectors
+```mermaid
+graph TD
+    Q{هل تحتاج Hybrid Search؟} -->|نعم| W[Weaviate]
+    Q -->|لا| Q2{كم عدد الـ vectors؟}
+    Q2 -->|< 1M| P[Pinecone]
+    Q2 -->|1M-100M| Qd[Qdrant]
+    Q2 -->|> 100M| M[Milvus]
+```
+
+---
+
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
+
+بدأنا مع Pinecone (سهل، سريع). بعد 6 أشهر: 5M vectors = فاتورة $800/شهر. انتقلنا إلى Qdrant self-hosted: فاتورة $100/شهر.
+
+**الدرس**: ابدأ بسيطاً. حسّن عند الحاجة.
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: قارن بين اثنين من الـ vector DBs
+### تحدي: ثبت Qdrant محلياً وجرب البحث
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. متى تختار Pinecone؟
+2. ما فائدة Hybrid Search؟
+3. لماذا Milvus للحجوم الكبيرة؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Vector DB | قاعدة بيانات للبحث بالتشابه الدلالي |
+| Hybrid Search | دمج keyword + vector search |
+| Milvus | Vector DB مفتوح المصدر للحجوم الكبيرة |
+
+---
+
+## 🎤 مقابلة
+1. **"أي Vector DB تختار لـ RAG؟"** → يعتمد على الحجم والميزانية. Weaviate خيار متوازن.
+2. **"كيف تخفض تكلفة Pinecone؟"** → انتقل إلى self-hosted (Qdrant/Milvus)
 
 ---
 

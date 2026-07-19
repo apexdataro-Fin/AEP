@@ -13,7 +13,6 @@ description: "DORA Metrics — Deployment Frequency، Lead Time، MTTR، Change 
 - فهم مقاييس DORA الأربعة
 - تصنيف Elite/High/Medium/Low
 - جمع المقاييس من GitHub + Azure DevOps
-- لوحة معلومات DORA
 
 ## ⏱️ الوقت المقدر: 30 دقيقة | المستوى: Intermediate
 
@@ -28,39 +27,69 @@ description: "DORA Metrics — Deployment Frequency، Lead Time، MTTR، Change 
 | **MTTR** | < 1 ساعة | يوم | أسبوع | شهر |
 | **Change Failure Rate** | 0-5% | 5-10% | 10-15% | >15% |
 
-### حساب Deployment Frequency
+### CloudNova اليوم
 
-```bash
-# من GitHub API
-gh api repos/cloudnova/api/deployments --jq 'length'
-```
+| المقياس | القيمة | التصنيف |
+|---------|--------|---------|
+| Deployment Frequency | 12/يوم | Elite |
+| Lead Time | 45 دقيقة | Elite |
+| MTTR | 15 دقيقة | Elite |
+| Change Failure Rate | 3% | Elite |
 
-### قياس MTTR
+---
+
+## 🏛️ طبقة الإنتاج: تتبع DORA
 
 ```python
-from datetime import datetime
-
-def calculate_mttr(incidents):
-    total_minutes = 0
-    for inc in incidents:
-        start = datetime.fromisoformat(inc['started_at'])
-        resolved = datetime.fromisoformat(inc['resolved_at'])
-        total_minutes += (resolved - start).total_seconds() / 60
-    return total_minutes / len(incidents)
-
-# CloudNova MTTR
-incidents = get_pagerduty_incidents('2026-07')
-mttr = calculate_mttr(incidents)
-print(f"MTTR: {mttr:.1f} minutes")
+def calculate_dora():
+    deployments_this_week = len(get_github_deployments("cloudnova/api", days=7))
+    mttr_minutes = avg_incident_duration("cloudnova", days=30)
+    failure_rate = failed_deployments / total_deployments * 100
+    
+    print(f"Deployments/week: {deployments_this_week}")
+    print(f"MTTR: {mttr_minutes:.1f} min")
+    print(f"Failure Rate: {failure_rate:.1f}%")
 ```
 
 ---
 
-## 🛠️ تدريب
+## 🎨 استخدم DORA للتحسين
 
-1. اجمع Deployment Frequency من GitHub Actions logs
-2. احسب MTTR من Azure Monitor alerts
-3. صنّف CloudNova حسب DORA
+| المقياس ضعيف | ماذا تحسن |
+|-------------|----------|
+| Deployment Frequency منخفض | أتمتة CI/CD أكثر |
+| Lead Time طويل | قلل حجم الـ PRs |
+| MTTR عالي | حسن الـ monitoring والـ runbooks |
+| Failure Rate عالي | أضف testing + canary deploys |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: احسب DORA metrics لفريقك
+### تحدي: ابنِ Grafana dashboard لـ DORA
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما هي مقاييس DORA الأربعة؟
+2. كيف تصنف فريقاً حسب DORA؟
+3. كيف تحسن MTTR؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| DORA | DevOps Research & Assessment |
+| Lead Time | من commit إلى production |
+| MTTR | Mean Time to Recovery |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تقيس أداء فريق DevOps؟"** → DORA metrics
+2. **"كيف انتقلت من Medium إلى Elite؟"** → خطط تحسين لكل metric
 
 ---
 

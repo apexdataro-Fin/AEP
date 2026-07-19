@@ -25,26 +25,16 @@ description: "Kubernetes Troubleshooting — CrashLoopBackOff، OOMKilled، Pend
 
 ```bash
 kubectl get pods
-# NAME        READY   STATUS             RESTARTS
-# api-7d5f    0/1     CrashLoopBackOff   15
-
 kubectl logs api-7d5f --previous
 kubectl describe pod api-7d5f | grep -A 10 "Events:"
 ```
 
-**الأسباب الشائعة**:
-- خطأ في الكود (application panic)
-- ConfigMap/Secret غير موجود
-- Database unreachable
-- Port already in use
+**الأسباب**: خطأ في الكود، ConfigMap غير موجود، DB unreachable، Port conflict
 
 ### 2. OOMKilled
 
 ```bash
 kubectl describe pod api-7d5f | grep OOM
-# State: Terminated, Reason: OOMKilled
-
-# الحل: زيادة limits أو تحسين الكود
 kubectl set resources deployment/api --limits=memory=512Mi
 ```
 
@@ -52,32 +42,94 @@ kubectl set resources deployment/api --limits=memory=512Mi
 
 ```bash
 kubectl describe pod api-7d5f | grep -A 5 "Events:"
-# 0/3 nodes are available: 3 Insufficient cpu
+# أسباب: Insufficient cpu/memory, no nodes match affinity, PVC not bound
 ```
-
-**الحلول**: زيادة nodes أو تقليل requests أو Cluster Autoscaler.
 
 ### أدوات debugging
 
 ```bash
 kubectl debug node/aks-agentpool-123 -it --image=ubuntu
 kubectl run tmp-shell --rm -it --image=alpine -- sh
-kubectl exec -it api-7d5f -- sh
 kubectl get events --sort-by='.lastTimestamp' | tail -20
 ```
 
 ---
 
-## 🏛️ سيناريو CloudNova
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
 **2 صباحاً**: Production down. 500 errors.
 
-1. `kubectl get pods`: 3 pods في CrashLoopBackOff
-2. `kubectl logs api-xxx --previous`: `Error: connect ECONNREFUSED postgres-service:5432`
-3. `kubectl get svc postgres-service`: لا يوجد! تم حذفه بالخطأ أثناء deployment
-4. **الحل**: `helm rollback postgres 1`
+```bash
+kubectl get pods  # 3 pods في CrashLoopBackOff
+kubectl logs api-xxx --previous  # Error: connect ECONNREFUSED postgres-service:5432
+kubectl get svc postgres-service  # لا يوجد! حُذف بالخطأ
+helm rollback postgres 1  # عودة فورية
+```
 
-الوقت الكلي: 4 دقائق. شكراً لـ Kubernetes!
+الوقت: 4 دقائق.
+
+### Debugging Workflow
+
+```mermaid
+graph TD
+    A[Pod failing?] -->|CrashLoop| B[kubectl logs --previous]
+    A -->|Pending| C[kubectl describe]
+    A -->|Slow| D[kubectl top + logs]
+    B --> E{Application error?}
+    C --> F{Resource issue?}
+    E -->|نعم| G[Fix code/config]
+    F -->|نعم| H[Scale/adjust requests]
+```
+
+---
+
+## 🎨 أدوات debugging
+
+| الأداة | الاستخدام |
+|--------|-----------|
+| `kubectl describe` | تفاصيل + Events |
+| `kubectl logs` | سجلات التطبيق |
+| `stern` | tail logs لعدة pods |
+| `k9s` | terminal UI تفاعلي |
+| `kubectl debug` | حاوية مؤقتة للفحص |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: شخّص CrashLoopBackOff عن عمد
+### تحدي: استخدم stern لمراقبة logs 5 pods معاً
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. كيف تشخص CrashLoopBackOff؟
+2. ما الفرق بين OOMKilled و Pending؟
+3. متى تستخدم `kubectl debug`؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| CrashLoopBackOff | pod يعيد التشغيل باستمرار بسبب خطأ |
+| OOMKilled | قُتل بسبب تجاوز memory limit |
+| `--previous` | logs من المحاولة السابقة للـ pod |
+
+---
+
+## 🎤 مقابلة
+1. **"احكِ عن أسوأ حادثة Kubernetes تعاملت معها"** → STAR format
+2. **"كيف تشخص بطء pod بدون أخطاء؟"** → `kubectl top` + `kubectl exec` + metrics inspection
+
+---
+
+## 📚 مراجع
+
+| النوع | الرابط |
+|-------|--------|
+| درس مرتبط | [Operators & CRDs](./05-kubernetes-operators-crds) |
+| أداة | [k9s](https://k9scli.io) |
 
 ---
 
