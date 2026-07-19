@@ -384,4 +384,374 @@ docker system prune -a --volumes
 
 ---
 
-[← العودة للموديول](./01-container-fundamentals) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: حاويات في ساحة المعركة
+
+### تنسيق الحاويات — لماذا تحتاج Kubernetes
+
+```
+تطبيق CloudNova — قبل التنسيق:
+├── ٥ حاويات API (موزعة يدوياً على ٣ خوادم)
+├── ٢ حاوية worker (خادم واحد)
+├── ١ Redis (خادم منفصل)
+└── المشكلة: إذا مات خادم، من يعيد تشغيل الحاويات؟
+
+بعد Kubernetes:
+├── Deployment: 5 replicas مضمونة
+├── Self-healing: ماتت حاوية؟ K8s يعيد تشغيلها
+├── Service Discovery: DNS داخلي تلقائي
+└── Rolling Updates: تحديث بدون downtime
+```
+
+### Container Registry — أكثر من مجرد تخزين
+
+```bash
+# Azure Container Registry مع ميزات الإنتاج
+az acr create \
+  --name cloudnovaregistry \
+  --resource-group prod-rg \
+  --sku Premium \
+  --admin-enabled false \
+  --public-network-enabled false  # Private Endpoint فقط
+
+# مسح الثغرات تلقائياً
+az acr task create \
+  --name scan-image \
+  --registry cloudnovaregistry \
+  --cmd "trivy image cloudnovaregistry.azurecr.io/api:latest" \
+  --schedule "0 6 * * *"
+
+# Retention policy — احذف الصور القديمة
+az acr config retention update \
+  --registry cloudnovaregistry \
+  --days 30 \
+  --type UntaggedManifests
+```
+
+### مراقبة الحاويات في الإنتاج
+
+```yaml
+# Prometheus metrics من داخل الحاوية
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+    prometheus.io/path: "/metrics"
+spec:
+  containers:
+  - name: api
+    image: cloudnova-api:v2.4.1
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "512Mi"
+      limits:
+        cpu: "2"
+        memory: "2Gi"
+    livenessProbe:
+      httpGet:
+        path: /healthz
+        port: 8080
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /ready
+        port: 8080
+      initialDelaySeconds: 5
+      periodSeconds: 5
+```
+
+### 🚨 سيناريو CloudNova: حاوية تلتهم الذاكرة
+
+> **الموقف:** الساعة ٢ ظهراً — تنبيه: `container_memory_usage > 90%`. الحاوية api-v2.3 تستهلك 1.8GB من 2GB.
+
+**التشخيص:**
+
+```bash
+# ١. ادخل الحاوية وافحص
+kubectl exec -it api-v2.3-7d8f9 -- /bin/sh
+
+# ٢. أكثر العمليات استهلاكاً
+ps aux --sort=-%mem | head -5
+
+# ٣. Python memory profile
+python -c "import tracemalloc; tracemalloc.start()"
+# ... شغّل الكود المريب ...
+snapshot = tracemalloc.take_snapshot()
+top_stats = snapshot.statistics('lineno')
+for stat in top_stats[:5]:
+    print(stat)
+# → Memory leak في `cache_results()` — لا يمسح cache القديم!
+```
+
+**الحل العاجل:** `kubectl rollout undo deployment/api` (ارجع للإصدار السابق)
+**الحل الدائم:** أضف `maxsize=1000` لـ `lru_cache` + memory limit alert.
+
+---
+
+## 🎨 طبقة المعماري: قرارات التصميم
+
+### Container vs VM — متى تختار ماذا (ولماذا)
+
+```mermaid
+graph TD
+    A{طبيعة التطبيق؟} -->|Monolith قديم| B{هل يحتاج OS معين؟}
+    A -->|Microservices جديدة| C[Containers ✅]
+    A -->|تطبيق GUI| D[VM ✅]
+    B -->|نعم — Windows 2012| E[VM ✅]
+    B -->|لا — Linux عادي| C
+    C --> F{كم عدد الخدمات؟}
+    F -->|1-2| G[Docker Compose يكفي]
+    F -->|3+| H[Kubernetes]
+```
+
+### Container Runtimes — المشهد المتغير
+
+| Runtime | النوع | متى تستخدم |
+|---------|-------|-----------|
+| **Docker** | High-level (daemon) | تطوير محلي، CI/CD |
+| **containerd** | Mid-level (daemon) | Kubernetes nodes |
+| **CRI-O** | Mid-level (K8s native) | Kubernetes (Red Hat/OpenShift) |
+| **Podman** | Daemonless | بديل Docker الخفيف |
+| **gVisor** | Sandboxed (userspace kernel) | تشغيل كود غير موثوق |
+| **Kata Containers** | Hardware VM per container | أمان عالي جداً |
+
+### استراتيجيات التصميم
+
+| النمط | الوصف | مثال |
+|-------|-------|------|
+| **Sidecar** | حاوية مساعدة بجانب الرئيسية | Envoy proxy لـ service mesh |
+| **Init Container** | تشغيل قبل الحاوية الرئيسية | تشغيل migrations قبل بدء API |
+| **Ambassador** | وسيط للاتصالات الخارجية | Redis proxy للـ sharding |
+
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: Dockerfile من الصفر (سهل)
+
+> ابنِ Dockerfile لـ تطبيق Python Flask:
+> - حجم الصورة أقل من 100MB
+> - يستخدم non-root user
+> - HEALTHCHECK كل ٣٠ ثانية
+> - Multi-stage: build + production
+
+### تمرين ٢: تصحيح حاوية مريضة (متوسط)
+
+> حاوية Nginx تعيد 502 Bad Gateway. شخّص:
+> 1. `docker logs` — ماذا يقول؟
+> 2. `docker exec` — هل العملية تعمل؟
+> 3. `docker inspect` — هل الشبكة مضبوطة؟
+> 4. اكتب الخطوات التي تتبعها.
+
+### تحدي: تشغيل آمن (متقدم)
+
+> شغّل حاوية nginx بأقصى إجراءات الأمان:
+> - Read-only root filesystem
+> - No new privileges
+> - Drop ALL capabilities (أضف فقط ما تحتاجه)
+> - Seccomp profile مخصص
+> - Pids limit: 50
+
+### مشروع CloudNova
+
+> **Ticket #CN-803:** "حوّل تطبيق Node.js القديم (750MB image!) إلى Docker. الهدف: صورة أقل من 50MB."
+
+---
+
+## 📝 تقييم المعرفة
+
+### ✅ تحقق من فهمك (5)
+
+1. ما الفرق الجوهري بين الحاوية والآلة الافتراضية؟ اشرح من حيث kernel sharing.
+2. كيف تستخدم Multi-stage build لتقليل حجم الصورة؟
+3. لماذا يجب تشغيل الحاوية بـ non-root user؟
+4. ما هي OCI؟ ولماذا هي مهمة؟
+5. كيف تكتشف memory leak في حاوية إنتاج؟
+
+### 📝 اختبار (3 أسئلة)
+
+**س١:** أي من التالي صحيح عن طبقات Docker؟
+
+- **أ)** التغيير في طبقة يعيد بناء كل الطبقات
+- **ب)** الطبقات تُشارك بين الصور لتوفير مساحة
+- **ج)** كل طبقة مستقلة تماماً
+
+<details><summary>الإجابة</summary>
+**ب) الطبقات تُشارك بين الصور.** إذا استخدمت 10 صور `FROM ubuntu:22.04`، طبقة ubuntu تخزّن مرة واحدة فقط. Docker يستخدم copy-on-write.
+</details>
+
+**س٢:** ما فائدة `.dockerignore`؟
+
+<details><summary>الإجابة</summary>
+يمنع إرسال ملفات غير ضرورية لـ build context (مثل `node_modules/`، `.git/`). الفوائد:
+1. أسرع build (context أصغر)
+2. أمان (لن تصل `.env` للصورة بالخطأ)
+3. cache أكثر فعالية
+</details>
+
+**س٣:** ما الفرق بين `livenessProbe` و `readinessProbe`؟
+
+<details><summary>الإجابة</summary>
+- **livenessProbe**: هل الحاوية حيّة؟ إذا فشلت → K8s يعيد تشغيلها
+- **readinessProbe**: هل الحاوية جاهزة لاستقبال طلبات؟ إذا فشلت → K8s يزيلها من الـ Service مؤقتاً
+
+مثال: حاوية تعمل لكن قاعدة البيانات لم تصل بعد = liveness OK ولكن readiness لا.
+</details>
+
+### 🧠 استدعاء نشط (5)
+
+1. ارسم هيكل حاوية Docker: namespaces + cgroups + image layers.
+2. كيف تبني Dockerfile احترافي (اذكر 7 أفضل ممارسات)؟
+3. ما هي مستويات الأمان المختلفة للحاويات؟ رتبها من الأضعف للأقوى.
+4. كيف تراقب حاوية في الإنتاج؟ اذكر 5 metrics أساسية.
+5. اشرح دورة حياة الحاوية من `docker run` إلى `docker stop`.
+
+### ✍️ تمرين Feynman
+
+اشرح الحاويات لـ ٣ شخصيات:
+- **طاهٍ**: "الحاوية = صندوق يحتوي الوصفة وكل المكونات. أي مطبخ يستطيع طهيها."
+- **مدير لوجستي**: "الحاوية = حاوية شحن بحري. تغلف المنتج وتنقله لأي مكان."
+- **طالب**: "الحاوية = لعبة جاهزة داخل صندوقها. لا تحتاج تثبيت أي شيء."
+
+### 🎴 بطاقات تعليمية (8)
+
+| السؤال | الإجابة |
+|--------|---------|
+| الحاوية = ؟ | عملية محاطة بـ namespaces + cgroups |
+| Image = ؟ | قالب للقراءة فقط بطبقات |
+| Namespace = ؟ | آلية Linux Kernel تعزل الموارد (PID, NET, MNT...) |
+| Cgroup = ؟ | آلية تحدد استخدام الموارد (CPU, RAM, I/O) |
+| OCI = ؟ | معيار مفتوح لصور و runtime الحاويات |
+| Multi-stage build = ؟ | بناء بمراحل متعددة — الصورة النهائية تحتوي binary فقط |
+| Liveness vs Readiness = ؟ | Liveness = هل هي حية؟ Readiness = هل تستقبل طلبات؟ |
+| Sidecar = ؟ | حاوية مساعدة تعمل بجانب الحاوية الرئيسية |
+
+---
+
+## 🎤 التحضير للمقابلة (موسع)
+
+### System Design
+
+**"صمم استراتيجية حاويات لشركة بـ 50 خدمة microservice."**
+
+<details>
+<summary>👀 نموذج الإجابة</summary>
+
+```
+طبقة الصور:
+├── Base image موحد لكل الخدمات (Python 3.12-slim)
+├── CI/CD يبني الصور تلقائياً (GitHub Actions)
+├── Multi-stage builds — حجم أقل من 100MB
+├── Trivy scanning في CI (block على CRITICAL)
+└── ACR Premium مع retention 30 يوم
+
+طبقة Kubernetes:
+├── Namespace لكل بيئة (prod, staging)
+├── Deployment مع 3 replicas minimum
+├── HPA (Horizontal Pod Autoscaler) — CPU > 70%
+├── Pod Disruption Budget — minimum 2 available
+├── Network Policies — عزل بين الخدمات
+└── Service Mesh (Istio) للتتبع والمراقبة
+
+طبقة الأمان:
+├── non-root users في كل الحاويات
+├── Read-only rootfs للحاويات الإنتاجية
+├── Pod Security Standards: Restricted
+├── Azure AD Pod Identity للوصول لـ Key Vault
+└── Falco لمراقبة سلوك الحاويات
+
+طبقة المراقبة:
+├── Prometheus + Grafana (metrics)
+├── Loki (logs)
+├── Tempo (traces)
+└── AlertManager (تنبيهات)
+```
+</details>
+
+### سؤال تقني
+
+**"كيف تقلص Docker image من 1.2GB إلى 15MB؟"**
+
+<details>
+<summary>👀 الإجابة</summary>
+
+```dockerfile
+# ❌ قبل: 1.2GB
+FROM ubuntu:22.04
+RUN apt-get install -y python3 nodejs npm gcc ...
+COPY . .
+RUN npm install
+RUN pip install -r requirements.txt
+CMD ["python3", "app.py"]
+
+# ✅ بعد: 15MB
+# Stage 1: Build
+FROM python:3.12-slim AS builder
+RUN pip install --user --no-cache-dir -r requirements.txt
+
+# Stage 2: Production
+FROM python:3.12-slim
+COPY --from=builder /root/.local /home/appuser/.local
+RUN useradd appuser && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+USER appuser
+ENV PATH=/home/appuser/.local/bin:$PATH
+COPY app.py .
+CMD ["python3", "app.py"]
+```
+
+التقنيات:
+1. Multi-stage: افصل البناء عن الإنتاج
+2. صورة أساسية خفيفة: `slim` بدل `ubuntu`
+3. `--no-cache-dir`: لا pip cache
+4. تنظيف apt: `rm -rf /var/lib/apt/lists/*`
+5. دمج RUN commands لتقليل الطبقات
+6. `.dockerignore`: استبعد node_modules, .git
+</details>
+
+### سؤال سلوكي (STAR)
+
+**"احكِ عن مرة انتقلت فيها من VMs إلى Containers."**
+
+> **S**: 20 VM تدير 15 تطبيقاً. نشر يستغرق 45 دقيقة. Scaling يدوي.  
+> **T**: توحيد النشر تحت 5 دقائق مع auto-scaling.  
+> **A**: صممت Docker images. هاجرنا من VMs لـ AKS تدريجياً — خدمة كل أسبوع. أضفنا CI/CD مع GitHub Actions.  
+> **R**: نشر في 3 دقائق (كان 45). Auto-scaling يضيف pods في ثوانٍ. وفرنا 40% من تكلفة VMs. Zero downtime deployment.
+
+---
+
+## 📚 المراجع والروابط
+
+### دروس مرتبطة
+- [Docker Mastery](../09-docker/01-docker-mastery) — تعمق في Docker
+- [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) — K8s
+- [DevSecOps Security Pipeline](../17-devsecops/01-security-pipeline) — أمان الحاويات
+
+### شهادات ذات صلة
+- **AZ-104**: Azure Administrator (ACR, ACI)
+- **CKA**: Certified Kubernetes Administrator
+- **DCA**: Docker Certified Associate
+
+### مصادر خارجية
+- 📖 [Docker Documentation](https://docs.docker.com/)
+- 📖 [OCI Specifications](https://github.com/opencontainers)
+- 📖 [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+- 📺 "Docker Deep Dive" — Nigel Poulton
+
+### مصطلحات التقنية
+| المصطلح | التعريف |
+|---------|---------|
+| **Image** | قالب للقراءة فقط بطبقات |
+| **Container** | نسخة مشغّلة من الصورة |
+| **Namespace** | آلية Kernel لعزل الموارد |
+| **Cgroup** | آلية للتحكم في حدود الموارد |
+| **OCI** | معيار مفتوح للصور و runtimes |
+| **Registry** | مستودع لتخزين وتوزيع الصور |
+| **Readiness Probe** | فحص جاهزية الحاوية لاستقبال الطلبات |
+
+---
+
+[→ الدرس التالي: Docker Mastery](../09-docker/01-docker-mastery) | [← العودة للموديول](./01-container-fundamentals) | [🏠 الرئيسية](/)

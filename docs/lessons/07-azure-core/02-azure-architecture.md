@@ -517,4 +517,347 @@ performance:
 
 ---
 
-**[→ الدرس التالي: Containers Fundamentals](/docs/lessons/containers/container-fundamentals)**
+---
+
+## 🏛️ طبقة الإنتاج: تشغيل المعمارية في العالم الحقيقي
+
+### Runbooks — ماذا تفعل عندما ينهار كل شيء
+
+```yaml
+# runbooks/critical-incident.yaml
+incident_types:
+  - name: "Front Door Down"
+    severity: P1
+    response:
+      - step: "تحقق من Azure Status"
+        command: "az rest --method GET --url 'https://management.azure.com/providers/Microsoft.ResourceHealth/availabilityStatuses?api-version=2020-05-01'"
+      - step: "فحص DNS"
+        command: "dig cloudnova.com"
+      - step: "توجيه حركة المرور يدوياً"
+        command: "az network front-door backend-pool backend update --address cloudnova-dr.azurewebsites.net"
+      - step: "إبلاغ stakeholders"
+        action: "إرسال رسالة في Slack #incidents مع ticket number"
+    
+  - name: "SQL Database High CPU"
+    severity: P2
+    response:
+      - step: "تحديد الاستعلامات الثقيلة"
+        kql: |
+          AzureDiagnostics
+          | where Category == "QueryStoreRuntimeStatistics"
+          | summarize TotalCPU = sum(cpu_time_ms) by query_hash
+          | order by TotalCPU desc
+          | take 10
+      - step: "Scale up مؤقت"
+        command: "az sql db update -g prod-rg -s sqlserver --service-objective GP_Gen5_8"
+      - step: "إبلاغ DBA لتحليل الاستعلامات"
+```
+
+### Capacity Planning — متى تحتاج المزيد؟
+
+```bash
+# مراقبة الاتجاهات الشهرية
+az monitor metrics list \
+  --resource /subscriptions/.../resourceGroups/prod-rg/providers/Microsoft.Web/sites/cloudnova-api \
+  --metric "CpuPercentage" \
+  --aggregation Average \
+  --interval PT1H \
+  --start-time $(date -d '30 days ago' -I) \
+  --query "value[].{Cpu:timeseries[0].data[].average}" \
+  --output table
+
+# إذا كان الاتجاه: 45% → 55% → 62% → 71%
+# المشروع: 80% خلال 3 أشهر ← افتح ticket لزيادة السعة الآن
+```
+
+### FinOps + Architecture
+
+```
+توفير دون التضحية بالأداء:
+├── Dev/Test: B-series VMs + auto-shutdown ليلاً (وفر 65%)
+├── Staging: 1 AZ بدلاً من 3 (وفر 50%)
+├── Production: Reserved 3 سنوات (وفر 57%)
+├── DR: Pilot Light (وفر 80% مقابل Active-Active)
+└── غير حرج: Spot VMs (وفر حتى 90%)
+```
+
+---
+
+## 🎨 طبقة المعماري: قرارات تتجاوز Azure
+
+### Azure vs AWS vs GCP — متى تختار ماذا؟
+
+| المعيار | Azure | AWS | GCP |
+|---------|-------|-----|-----|
+| **Microsoft ecosystem** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
+| **Kubernetes** | ⭐⭐⭐⭐⭐ (AKS رائد) | ⭐⭐⭐⭐ (EKS) | ⭐⭐⭐⭐⭐ (GKE) |
+| **AI/ML** | ⭐⭐⭐⭐ (OpenAI) | ⭐⭐⭐⭐ (SageMaker) | ⭐⭐⭐⭐⭐ (Vertex AI) |
+| **Serverless** | ⭐⭐⭐⭐ (Functions) | ⭐⭐⭐⭐⭐ (Lambda) | ⭐⭐⭐ (Cloud Functions) |
+| **Hybrid** | ⭐⭐⭐⭐⭐ (Arc, Stack) | ⭐⭐⭐ (Outposts) | ⭐⭐⭐ (Anthos) |
+| **Enterprise** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+
+### Multi-Cloud — هل هو ضرورة أم وهم؟
+
+```
+أسباب وجيهة لـ Multi-Cloud:
+✅ استحواذ شركة (فريقان يستخدمان سحابتين مختلفتين)
+✅ متطلب تنظيمي (بيانات في سحابة محددة)
+✅ أفضلية تقنية (Azure للـ enterprise + GCP للـ AI)
+
+أسباب وهمية:
+❌ "تجنب vendor lock-in" — تكلفة التعقيد أعلى من تكلفة التبديل
+❌ "Negotiate better prices" — Reserved Instances تعطي خصماً كافياً
+❌ "كل المنافسين يفعلونها" — Cargo cult
+```
+
+### الترحيل من On-Premises — خارطة طريق
+
+```mermaid
+graph LR
+    A[Assess] --> B[Plan]
+    B --> C[Migrate]
+    C --> D[Optimize]
+    D --> E[Modernize]
+    
+    A -->|Azure Migrate| A1[اكتشاف التطبيقات والاعتماديات]
+    C -->|Azure Site Recovery| C1[نقل VMs و قواعد البيانات]
+    D -->|Azure Advisor| D1[Right-sizing + Reserved]
+    E -->|App Service Migration| E1[تحويل VMs → PaaS]
+```
+
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: صمم Hub-Spoke (سهل)
+
+> صمم Hub-Spoke architecture لـ CloudNova:
+> - Hub: Azure Firewall + Bastion + VPN Gateway
+> - Spoke A: Development (10.1.0.0/16)
+> - Spoke B: Production (10.3.0.0/16) مع 3 Subnets (web, app, db)
+> - Peering بين Hub وكل Spoke
+> - Azure Policy: Spoke A لا يسمح بـ D-series VMs (فقط B-series للتطوير)
+
+### تمرين ٢: حادثة — تعطل Zone (متوسط)
+
+> Zone 1 في West Europe تعطل. أنت مهندس on-call. اكتب الـ runbook خطوة بخطوة:
+> 1. كيف تكتشف التعطل؟ (Alert configuration)
+> 2. كيف تؤكد أنه Zone-wide؟
+> 3. ماذا تفعل لاستعادة الخدمة؟
+> 4. كيف تتواصل مع الفريق والإدارة؟
+
+### تحدي: خطة DR كاملة (متقدم)
+
+> صمم خطة Disaster Recovery كاملة:
+> - RTO: 10 دقائق
+> - RPO: دقيقة واحدة
+> - يجب أن تشمل: Front Door failover، SQL geo-restore، AKS recovery، DNS update
+> - وثق كل خطوة مع الأوامر
+> - قدر التكلفة الإضافية الشهرية
+
+### مشروع CloudNova
+
+> **Ticket #CN-702:** "المستثمرون يطلبون إثبات أن CloudNova تستطيع النجاة من كارثة كاملة. خطط ونفذ DR drill."
+
+---
+
+## 📝 تقييم المعرفة
+
+### ✅ تحقق من فهمك (5)
+
+1. لماذا Hub-Spoke أفضل من VNet واحد كبير؟ اذكر ٣ أسباب.
+2. كيف تحمي Azure SQL من الإنترنت تماماً؟
+3. ما الفرق بين Azure Firewall و NSG و WAF؟
+4. كيف تصمم لـ 99.99% Availability في Azure؟
+5. ما هو Azure Well-Architected Framework؟ اذكر ركائزه الخمس.
+
+### 📝 اختبار (3 أسئلة)
+
+**س١:** Front Door يوفر أي نوع من الـ load balancing؟
+
+- **أ)** Layer 4 (TCP)
+- **ب)** Layer 7 (HTTP/HTTPS) مع global routing
+- **ج)** Layer 3 (Network)
+
+<details><summary>الإجابة</summary>
+**ب) Layer 7 مع global routing.** Front Door ليس load balancer عادي — إنه global anycast service يوجه المستخدمين لأقرب region ويوفر SSL termination و WAF.
+</details>
+
+**س٢:** كم تكلفة تشغيل 3 AZ + Region Pair لـ DR؟
+
+<details><summary>الإجابة</summary>
+
+```
+Primary (3 AZ):
+├── App Service: $438 (P1v3 × 3)
+├── SQL (BC, zone-redundant): $1,200
+├── Redis: $300
+└── Front Door: $50
+
+DR (Pilot Light):
+├── App Service: $146 (P1v3 × 1)
+├── SQL geo-replica: $600
+└── Front Door (included)
+
+الإجمالي: ~$2,734/شهر
+(Active-Passive يوفر 60% مقابل Active-Active)
+```
+</details>
+
+**س٣:** أيهما أفضل: Azure Firewall أم NSG؟
+
+<details><summary>الإجابة</summary>
+الاثنان معاً — ليس أحدهما:
+- **NSG**: Layer 4 filtering على subnet/NIC. بسيط وسريع ومجاني
+- **Azure Firewall**: Layer 7 inspection، threat intelligence، FQDN filtering، IDPS. مدفوع (~$900/شهر)
+
+استخدم NSG للقواعد البسيطة (allow HTTPS). استخدم Firewall للـ egress filtering والتهديدات المتقدمة.
+</details>
+
+### 🧠 استدعاء نشط (5)
+
+1. ارسم Hub-Spoke architecture من الذاكرة مع كل المكونات.
+2. اشرح الفرق بين RTO و RPO — بمثال: لو تعطل Azure SQL لمدة ساعة.
+3. كيف تحمي تطبيق ويب من OWASP Top 10 في Azure؟
+4. ما فائدة Private DNS Zone مع Private Endpoint؟
+5. اذكر 5 أسئلة من Well-Architected Framework لتقييم معماريتك.
+
+### ✍️ تمرين Feynman
+
+اشرح Availability Zones لشخص غير تقني:
+
+> "مدينة الملاهي CloudNova فيها ٣ محطات كهرباء مستقلة. إذا احترقت محطة، المدينتان الأخريان تواصلان العمل. الزوار لا يلاحظون شيئاً. هذه هي Availability Zones."
+
+### 🎴 بطاقات تعليمية (8)
+
+| السؤال | الإجابة |
+|--------|---------|
+| Hub-Spoke = ؟ | نموذج شبكات: Hub للموارد المشتركة، Spoke للبيئات |
+| Private Endpoint = ؟ | نقطة اتصال خاصة بخدمة Azure داخل VNet |
+| WAF = ؟ | Web Application Firewall — يحمي من OWASP Top 10 |
+| Front Door = ؟ | Global load balancer + CDN + WAF |
+| RTO = ؟ | Recovery Time Objective — أقصى وقت تعطل |
+| RPO = ؟ | Recovery Point Objective — أقصى فقدان بيانات |
+| Well-Architected = ؟ | إطار عمل من 5 ركائز لتصميم سحابي مثالي |
+| Azure Policy = ؟ | قواعد تمنع/تسمح بإنشاء موارد وفق معايير |
+
+---
+
+## 🎤 التحضير للمقابلة (موسع)
+
+### System Design
+
+**"صمم بنية تحتية لمؤسسة مالية على Azure — تخدم 5 ملايين عميل."**
+
+<details>
+<summary>👀 نموذج الإجابة</summary>
+
+```
+الأمان أولاً:
+├── Hub-Spoke: كل بيئة Spoke معزولة
+├── Azure Firewall في Hub (egress filtering)
+├── Private Endpoints لكل الخدمات (0 public endpoints)
+├── WAF + Front Door (DDoS + OWASP)
+├── Key Vault HSM (FIPS 140-2 Level 3)
+├── Azure Policy: deny public IPs, require encryption
+└── Sentinel + Defender for Cloud
+
+التوفر:
+├── 3 AZ لكل region
+├── Active-Active: West Europe + North Europe
+├── SQL: Auto-failover group مع 2 replicas
+├── AKS: 3 nodes minimum per AZ
+└── RTO: < 5 min, RPO: < 1 min
+
+الامتثال:
+├── PCI DSS: WAF + encryption + audit logs
+├── GDPR: EU data residency + right to deletion
+├── SOC 2: Access reviews + change management
+└── Azure Policy enforces compliance automatically
+
+التكلفة:
+├── Production (Active-Active): ~$12,000/شهر
+├── Dev/Test: ~$3,000/شهر
+└── Reserved 3 سنوات: وفر 40%
+```
+</details>
+
+### سؤال تقني
+
+**"كيف تصمم شبكة لمؤسسة بـ 500 مهندس و 50 تطبيقاً؟"**
+
+<details>
+<summary>👀 الإجابة</summary>
+
+```
+Hub-Spoke على نطاق المؤسسة:
+
+Hub:
+├── Azure Firewall Premium (TLS inspection, IDPS)
+├── VPN Gateway (للـ 500 مهندس)
+├── Bastion (للوصول الآمن)
+├── DNS Private Resolver
+└── Log Analytics
+
+Spokes (منفصلة):
+├── Spoke-Prod (10.100.0.0/16)
+│   ├── 3 Subnets: web, app, db
+│   └── Azure Policy: deny public IP
+├── Spoke-Staging (10.200.0.0/16)
+│   └── Azure Policy: deny D-series+
+├── Spoke-Dev (10.50.0.0/16)
+│   └── Azure Policy: require auto-shutdown
+└── Spoke-Shared (10.10.0.0/16)
+    └── خدمات مشتركة (CI/CD, Monitoring)
+
+VNet Peering:
+├── Hub ↔ Spoke-Prod
+├── Hub ↔ Spoke-Staging
+└── Spoke-Shared (مسموح لجميع الـ spokes)
+
+التكلفة: ~$1,500/شهر للـ networking
+```
+</details>
+
+### سؤال سلوكي (STAR)
+
+**"احكِ عن مرة حسّنت فيها معمارية Azure."**
+
+> **S**: تطبيق CloudNova كان بطيئاً ومكلفاً — monolith على VMs.  
+> **T**: خفض latency 60% وخفض التكلفة 30%.  
+> **A**: صممت Hub-Spoke. نقلت web tier لـ App Service (مع auto-scaling). أضفت Redis Cache. Private Endpoints لـ SQL بدل public. Front Door + WAF.  
+> **R**: Latency من 800ms → 320ms. تكلفة من $3,500 → $2,450. Zero downtime خلال Black Friday.
+
+---
+
+## 📚 المراجع والروابط
+
+### دروس مرتبطة
+- [Azure Fundamentals](./01-azure-fundamentals) — الأساسيات
+- [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) — AKS
+- [Observability Essentials](../21-observability/01-observability-essentials) — مراقبة المعمارية
+- [Identity Mastery](../23-identity/01-identity-mastery)
+
+### شهادات ذات صلة
+- **AZ-104**: Azure Administrator
+- **AZ-305**: Azure Solutions Architect Expert
+- **AZ-700**: Azure Networking Engineer
+
+### مصادر خارجية
+- 📖 [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/)
+- 📖 [Cloud Adoption Framework](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/)
+- 📖 [Azure Networking Best Practices](https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices)
+
+### مصطلحات التقنية
+| المصطلح | التعريف |
+|---------|---------|
+| **Hub-Spoke** | نموذج شبكات: Hub مركزي + Spokes بيئات |
+| **VNet Peering** | ربط شبكتين افتراضيتين مباشر |
+| **WAF** | Web Application Firewall — جدار حماية تطبيقات |
+| **Front Door** | موزع أحمال عالمي مع CDN و WAF |
+| **Private Link** | خدمة توصل Azure PaaS لـ VNet بدون إنترنت |
+| **DR Drill** | اختبار خطة التعافي من الكوارث |
+
+---
+
+[← العودة للموديول](./01-azure-fundamentals) | [→ الدرس التالي: Container Fundamentals](../08-containers/01-container-fundamentals) | [🏠 الرئيسية](/)

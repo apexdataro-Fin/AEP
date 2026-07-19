@@ -481,4 +481,333 @@ az vm auto-shutdown \
 
 ---
 
-[← العودة للموديول](./01-azure-fundamentals) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: تشغيل Azure على مستوى المؤسسة
+
+### Azure Blueprints — معايير مسبقة للبيئات
+
+```json
+{
+  "displayName": "CloudNova Production Blueprint",
+  "targetScope": "subscription",
+  "resourceGroups": {
+    "networking": { "location": "westeurope" },
+    "compute": { "location": "westeurope" },
+    "data": { "location": "westeurope" }
+  },
+  "policyAssignments": [
+    { "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/enforce-tls12" },
+    { "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/enforce-managed-identity" }
+  ],
+  "roleAssignments": [
+    { "principalId": "<dba-group>", "roleDefinitionId": "Contributor", "scope": "data-rg" }
+  ]
+}
+```
+
+### Azure Monitor المتقدم — من logs إلى insights
+
+```kusto
+// KQL: ابحث عن VMs باستهلاك CPU > 80% لمدة 30 دقيقة
+Perf
+| where ObjectName == "Processor" and CounterName == "% Processor Time"
+| summarize AvgCPU = avg(CounterValue) by Computer, bin(TimeGenerated, 5m)
+| where AvgCPU > 80
+| join kind=inner (
+    AzureActivity
+    | where OperationNameValue contains "Deallocate"
+    | project Computer, DeallocationTime=TimeGenerated
+) on Computer
+| project Computer, AvgCPU, DeallocationTime
+```
+
+### Azure Policy المتقدم — منع الكوارث قبل حدوثها
+
+```bash
+# منع إنشاء VMs في مناطق غير معتمدة
+az policy definition create --name "allowed-locations" \
+  --rules '{
+    "if": { "field": "location", "notIn": ["westeurope", "northeurope"] },
+    "then": { "effect": "Deny" }
+  }'
+
+# منع حذف Resource Groups الإنتاجية
+az policy definition create --name "protect-prod-rg" \
+  --rules '{
+    "if": { "field": "tags.Environment", "equals": "Production" },
+    "then": { "effect": "DenyAction", "details": { "actionNames": ["delete"] } }
+  }'
+```
+
+### 🚨 سيناريو CloudNova: حادثة أمنية
+
+> **الموقف:** الساعة ٣ فجراً — تنبيه من Defender: ٥٠٠ محاولة فاشلة لتسجيل الدخول من IP في الصين. CloudNova لا تعمل في الصين.
+
+**الاستجابة:**
+
+1. **حظر فوري**:
+```bash
+az network nsg rule create --name "BlockThreatIP" \
+  --nsg-name web-nsg --priority 50 \
+  --direction Inbound --source-address-prefixes "45.33.32.0/24" \
+  --access Deny
+```
+
+2. **تحقيق**:
+```kusto
+// هل وصلوا لأي شيء؟
+SigninLogs | where IPAddress startswith "45.33.32"
+| project TimeGenerated, UserPrincipalName, ResultType
+```
+
+3. **إجراء دائم**: إضافة Geo-IP filtering إلى WAF policy.
+
+---
+
+## 🎨 طبقة المعماري: قرارات مصيرية
+
+### IaaS vs PaaS vs Serverless — متى تختار ماذا في Azure؟
+
+```mermaid
+graph TD
+    A{ما نوع التطبيق؟} -->|Legacy .NET 4.x| B[Azure VM ✓]
+    A -->|Web App حديث| C{كم عدد المطورين؟}
+    A -->|Event-driven| D[Azure Functions]
+    C -->|1-3 مطورين| E[App Service ✓]
+    C -->|5+ مطورين, microservices| F{هل تحتاج تحكم كامل؟}
+    F -->|نعم| G[AKS]
+    F -->|لا| H[Container Apps]
+```
+
+### متى لا تستخدم Azure؟
+
+| السيناريو | لماذا لا Azure؟ | البديل |
+|-----------|----------------|--------|
+| **حمل ثابت 24/7 بدون تقلبات** | Reserved VMs أغلى من شراء خوادم | On-Premises أو colocation |
+| **تطبيق أحادي مستخدم واحد** | Azure overkill | DigitalOcean، VPS |
+| **بيانات شديدة الحساسية (حكومة/عسكرية)** | مخاوف سيادية | On-Premises مع اعتماد حكومي |
+| **Edge computing في مناطق نائية** | Azure Regions بعيدة جداً | Azure Stack Edge أو AWS Outposts |
+
+### المقارنة الخفية: التكلفة الحقيقية
+
+```
+ظاهرياً: Azure VM D4s_v3 = $150/شهر
+حقيقياً:
+├── OS Disk (128GB Premium SSD)   +$25
+├── Bandwidth (1TB outbound)      +$87
+├── Backup (30 days retention)    +$30
+├── Monitor (Logs + Metrics)      +$15
+├── Public IP (static)            +$3.6
+├── مهندس DevOps (¼ وقت)          +$2,500
+└── الإجمالي الحقيقي:             ~$2,810/شهر
+```
+
+> **القاعدة:** السعر المعلن = 30-50% فقط من التكلفة الحقيقية للإنتاج.
+
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: ابنِ بيئة كاملة (سهل)
+
+> باستخدام Azure CLI، ابنِ:
+> 1. Resource Group
+> 2. VNet مع 3 Subnets
+> 3. VM في web-subnet مع NSG يسمح فقط بـ HTTPS
+> 4. Azure SQL في db-subnet مع Private Endpoint
+
+### تمرين ٢: مراقب التكاليف (متوسط)
+
+> اكتب KQL query في Log Analytics يكتشف:
+> - VMs تعمل 24/7 لكن average CPU < 5%
+> - Disks غير مرتبطة بأي VM (orphaned)
+> - Public IPs غير مستخدمة
+
+### تحدي: Autoscaling ذكي (متقدم)
+
+> صمم نظام autoscaling لـ App Service:
+> - Scale out عندما CPU > 70% لمدة 5 دقائق
+> - Scale in عندما CPU < 30% لمدة 30 دقيقة
+> - لا تتجاوز 10 instances (تكلفة)
+> - لا تنزل عن 2 instances (توفر)
+> - استخدم Terraform.
+
+### مشروع CloudNova
+
+> **Ticket #CN-601:** "ميزانية Azure هذا الشهر $8,500 — أعلى بـ 40% من المخطط. اكتشف السبب واقترح خطة توفير."
+
+---
+
+## 📝 تقييم المعرفة
+
+### ✅ تحقق من فهمك (5)
+
+1. ارسم هيكل Azure من Tenant → Management Group → Subscription → Resource Group → Resource.
+2. كيف تختار بين D-series و E-series لـ VM؟
+3. لماذا Private Endpoint أفضل من Public IP لقاعدة البيانات؟
+4. ما فائدة Deployment Slots في App Service؟
+5. كيف تمنع فريق dev من إنشاء D16s_v5 للتطوير؟
+
+### 📝 اختبار (3 أسئلة)
+
+**س١:** أي خدمة تختار لـ background job يعالج 10,000 صورة أسبوعياً؟
+
+- **أ)** Azure VM 24/7
+- **ب)** Azure Functions (Consumption Plan)
+- **ج)** AKS cluster
+
+<details><summary>الإجابة</summary>
+**ب) Azure Functions.** الـ job دوري (أسبوعي) وليس مستمراً. Consumption Plan = تدفع فقط عند التنفيذ. VM 24/7 = تدفع 168 ساعة أسبوعياً مقابل بضع ساعات معالجة.
+</details>
+
+**س٢:** كم تكلفة تشغيل App Service P1v2 (٢ instances) + Azure SQL GP (٢ vCores) شهرياً تقريباً؟
+
+<details><summary>الإجابة</summary>
+App Service P1v2: ~$146/instance × 2 = $292
+Azure SQL GP 2 vCores: ~$375
+الإجمالي التقريبي: ~$667/شهر
+(مع Reserved Instances سنة: ~$450/شهر — وفر 33%)
+</details>
+
+**س٣:** ما الفرق بين Azure Policy و Azure RBAC؟
+
+<details><summary>الإجابة</summary>
+- **RBAC**: من يستطيع فعل ماذا (صلاحيات). مثال: "Ahmed يستطيع قراءة VMs في prod-rg"
+- **Azure Policy**: ما يمكن فعله (قواعد). مثال: "لا أحد يستطيع إنشاء VM بدون managed disk"
+
+RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
+</details>
+
+### 🧠 استدعاء نشط (5)
+
+1. اذكر 5 خدمات Azure Compute ومتى تستخدم كل منها.
+2. ارسم هيكل شبكة 3-tier في Azure مع subnets.
+3. كيف تبني Disaster Recovery لـ Azure SQL بدون فقدان بيانات؟
+4. ما الفرق بين Azure Monitor و Application Insights و Log Analytics؟
+5. كيف تؤمن اشتراك Azure من أول يوم؟
+
+### ✍️ تمرين Feynman
+
+اشرح Azure لـ ٣ شخصيات:
+- **مدير مالي**: ركز على OpEx vs CapEx، Reserved Instances.
+- **مطور مبتدئ**: ركز على App Service، deployment slots.
+- **CEO**: ركز على SLA، scale، global reach.
+
+### 🎴 بطاقات تعليمية (8)
+
+| السؤال | الإجابة |
+|--------|---------|
+| مكونات Azure التنظيمية | Tenant → MG → Subscription → RG → Resource |
+| أنواع الـ Storage Account | Blob, File, Table, Queue |
+| App Service Plan = ؟ | مجموعة VMs تديرها Azure تشغّل تطبيقاتك |
+| Private Endpoint = ؟ | واجهة شبكة في VNet خاص تربط خدمة Azure بدون إنترنت |
+| Azure Policy = ؟ | قواعد تفرض معايير على الموارد (تمنع/تسمح) |
+| Deployment Slots = ؟ | بيئات موازية لنفس الـ App Service — تنشر بدون downtime |
+| RBAC roles الأساسية | Owner > Contributor > Reader |
+| B-series VMs = ؟ | Burstable — أداء منخفض مع credits للانفجار المؤقت |
+
+---
+
+## 🎤 التحضير للمقابلة (موسع)
+
+### System Design
+
+**"صمم منصة SaaS على Azure تخدم 50,000 مستخدم وتنمو 20% شهرياً."**
+
+<details>
+<summary>👀 نموذج الإجابة</summary>
+
+```
+الطبقة الأمامية:
+├── Azure Front Door (global load balancing + CDN)
+├── WAF Policy (OWASP protection)
+└── Custom domain + managed TLS
+
+طبقة التطبيق:
+├── App Service (P2v3, 3 instances, auto-scale 3-20)
+├── Deployment Slots (staging/production)
+├── Redis Cache (Premium, clustered)
+└── Azure Functions (background processing)
+
+طبقة البيانات:
+├── Azure SQL (Business Critical, zone-redundant)
+├── Cosmos DB (لبيانات المستخدمين غير العلائقية)
+├── Storage Account (media, logs, backups)
+└── Private Endpoints لجميع الخدمات
+
+طبقة الأمان:
+├── Key Vault (secrets, certs, keys)
+├── Managed Identities (لا connection strings)
+├── Azure AD B2C (مصادقة العملاء)
+└── Defender for Cloud
+
+التكلفة التقديرية: ~$4,200/شهر
+قابلية النمو: تلقائية مع auto-scaling
+```
+</details>
+
+### سؤال تقني
+
+**"كيف تنقل تطبيق NET Framework 4.8 ضخم إلى Azure؟"**
+
+<details>
+<summary>👀 الإجابة</summary>
+
+المرحلة ١: Rehost (Lift & Shift)
+- انقل VMs الحالية إلى Azure VMs (D-series)
+- Azure Migrate لتقييم التوافق
+- VPN بين on-prem و Azure للانتقال التدريجي
+
+المرحلة ٢: Replatform
+- انقل SQL Server → Azure SQL Managed Instance
+- استخدم Azure App Service مع Windows containers
+- File Server → Azure Files
+
+المرحلة ٣: Modernize (مستقبلي)
+- أعد كتابة الأجزاء الحرجة بـ NET 8
+- Function apps للأجزاء المستقلة
+- CI/CD مع GitHub Actions + deployment slots
+</details>
+
+### سؤال سلوكي (STAR)
+
+**"احكِ عن مرة وفّرت فيها تكاليف Azure."**
+
+> **S**: فاتورة Azure ارتفعت لـ $15K/شهر.  
+> **T**: خفض 30% خلال ربع سنة.  
+> **A**: حللت الـ Cost Analysis: 40% من VMs تستخدم < 10% CPU. Right-sized 35 VM. أضفت auto-shutdown لـ dev/staging. 3-year Reserved Instances للإنتاج.  
+> **R**: فاتورة $10.5K/شهر = توفير $54K/سنة. استثمرنا التوفير في Kubernetes migration.
+
+---
+
+## 📚 المراجع والروابط
+
+### دروس مرتبطة
+- [Azure Architecture](../07-azure-core/02-azure-architecture) — تصميم متقدم
+- [FinOps Fundamentals](../22-finops/01-finops-fundamentals) — تحسين التكلفة
+- [Identity Mastery](../23-identity/01-identity-mastery) — Azure AD
+- [Terraform Fundamentals](../12-terraform/01-terraform-fundamentals) — البنية ككود
+
+### شهادات ذات صلة
+- **AZ-900**: Azure Fundamentals
+- **AZ-104**: Azure Administrator
+- **AZ-305**: Azure Solutions Architect Expert
+
+### مصادر خارجية
+- 📖 [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/)
+- 📖 [Azure CLI Documentation](https://learn.microsoft.com/en-us/cli/azure/)
+- 📺 "Azure Master Class" — John Savill
+- 📺 "Microsoft Azure Fundamentals (AZ-900)" — freeCodeCamp
+
+### مصطلحات التقنية
+| المصطلح | التعريف |
+|---------|---------|
+| **Tenant** | تمثيل المؤسسة في Azure AD |
+| **Subscription** | حدود فواتير + صلاحيات لمجموعة موارد |
+| **Resource Group** | حاوية منطقية تجمع الموارد المرتبطة |
+| **Managed Identity** | هوية في Azure AD للخدمات بدون كلمات سر |
+| **Private Endpoint** | واجهة شبكة خاصة لخدمة Azure |
+| **Reserved Instance** | حجز VM/خدمة لمدة 1-3 سنوات مقابل خصم كبير |
+
+---
+
+[→ الدرس التالي: Azure Architecture](./02-azure-architecture) | [← العودة للموديول](./01-azure-fundamentals) | [🏠 الرئيسية](/)
