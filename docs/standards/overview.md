@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 1
 title: Standards Overview
 slug: /standards
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [standards, conventions, quality]
 ---
+displayed_sidebar: devSidebar
 
 # Standards Overview
 

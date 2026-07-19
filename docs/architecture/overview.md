@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 1
 title: Architecture Overview
 slug: /architecture
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [introduction]
   tags: [architecture, system-design, platform]
 ---
+displayed_sidebar: devSidebar
 
 # Architecture Overview
 

@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 2
 title: Style Guide
 slug: /standards/style-guide
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [style, formatting, prettier]
 ---
+displayed_sidebar: devSidebar
 
 # Style Guide
 

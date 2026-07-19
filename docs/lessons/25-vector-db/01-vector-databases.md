@@ -320,4 +320,4 @@ def smart_search(query: str) -> dict:
 
 ---
 
-[← العودة إلى الموديول](../index.md) | [🏠 الرئيسية](/)
+[← العودة للموديول](./01-vector-databases) | [🏠 الرئيسية](/)

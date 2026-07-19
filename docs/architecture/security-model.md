@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 5
 title: Security Model
 slug: /architecture/security-model
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [system-design]
   tags: [security, model, best-practices]
 ---
+displayed_sidebar: devSidebar
 
 # Security Model
 

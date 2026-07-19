@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 5
 title: Knowledge Graph Guide
 slug: /guides/knowledge-graph-guide
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [metadata-guide, ai-integration]
   tags: [knowledge-graph, concepts, relationships]
 ---
+displayed_sidebar: devSidebar
 
 # Knowledge Graph Guide
 

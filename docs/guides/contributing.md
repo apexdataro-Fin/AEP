@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 4
 title: Contributing Guide
 slug: /guides/contributing
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [getting-started]
   tags: [contributing, community, open-source]
 ---
+displayed_sidebar: devSidebar
 
 # Contributing Guide
 

@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 6
 title: API Reference
 slug: /reference/api-reference
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [architecture-overview]
   tags: [api, reference, specification]
 ---
+displayed_sidebar: devSidebar
 
 # API Reference
 

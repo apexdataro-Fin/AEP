@@ -407,4 +407,4 @@ def generate_weekly_report():
 
 ---
 
-[← العودة إلى الموديول](../index.md) | [🏠 الرئيسية](/)
+[← العودة للموديول](./01-python-cloud-automation) | [🏠 الرئيسية](/)

@@ -382,4 +382,4 @@ sum(rate(http_requests_total{status=~"5.."}[5m])) = 47%
 
 ---
 
-[← العودة إلى الموديول](../index.md) | [🏠 الرئيسية](/)
+[← العودة للموديول](./01-monitoring-fundamentals) | [🏠 الرئيسية](/)

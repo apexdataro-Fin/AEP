@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 5
 title: Quality Standards
 slug: /reference/quality-standards
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [code-quality]
   tags: [quality, standards, metrics]
 ---
+displayed_sidebar: devSidebar
 
 # Quality Standards
 

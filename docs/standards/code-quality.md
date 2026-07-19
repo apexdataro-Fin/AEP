@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 4
 title: Code Quality
 slug: /standards/code-quality
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [style-guide, naming-conventions]
   tags: [code-quality, review, automation]
 ---
+displayed_sidebar: devSidebar
 
 # Code Quality
 

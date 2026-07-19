@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 1
 title: Reference Overview
 slug: /reference
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [reference]
 ---
+displayed_sidebar: devSidebar
 
 # Reference Overview
 

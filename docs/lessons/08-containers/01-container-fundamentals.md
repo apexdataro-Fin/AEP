@@ -384,4 +384,4 @@ docker system prune -a --volumes
 
 ---
 
-[← العودة إلى الموديول](../index.md) | [🏠 الرئيسية](/)
+[← العودة للموديول](./01-container-fundamentals) | [🏠 الرئيسية](/)

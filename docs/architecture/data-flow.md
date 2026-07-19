@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 3
 title: Data Flow
 slug: /architecture/data-flow
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [system-design]
   tags: [data-flow, build-pipeline, runtime]
 ---
+displayed_sidebar: devSidebar
 
 # Data Flow
 

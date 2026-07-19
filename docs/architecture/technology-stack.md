@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 4
 title: Technology Stack
 slug: /architecture/technology-stack
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [architecture-overview]
   tags: [technology, stack, dependencies]
 ---
+displayed_sidebar: devSidebar
 
 # Technology Stack
 

@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 3
 title: Environment Setup
 slug: /development/environment-setup
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [getting-started]
   tags: [environment, tools, configuration]
 ---
+displayed_sidebar: devSidebar
 
 # Environment Setup
 

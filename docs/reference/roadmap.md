@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 3
 title: Roadmap
 slug: /reference/roadmap
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [roadmap, planning, future]
 ---
+displayed_sidebar: devSidebar
 
 # Roadmap
 

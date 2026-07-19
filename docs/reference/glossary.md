@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 2
 title: Glossary
 slug: /reference/glossary
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [glossary, definitions, terminology]
 ---
+displayed_sidebar: devSidebar
 
 # Glossary
 

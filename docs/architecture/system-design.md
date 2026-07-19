@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 2
 title: System Design
 slug: /architecture/system-design
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [architecture-overview]
   tags: [system-design, architecture, components]
 ---
+displayed_sidebar: devSidebar
 
 # System Design
 
@@ -122,6 +124,7 @@ Every MDX document follows a standardized frontmatter schema:
 
 ```yaml
 ---
+displayed_sidebar: devSidebar
 sidebar_position: number
 title: string
 slug: string
@@ -135,4 +138,5 @@ ai_metadata:
   tags: string[]
   learning_objectives: string[]
 ---
+displayed_sidebar: devSidebar
 ```

@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 4
 title: Project Structure
 slug: /development/project-structure
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [getting-started]
   tags: [structure, organization, directories]
 ---
+displayed_sidebar: devSidebar
 
 # Project Structure
 

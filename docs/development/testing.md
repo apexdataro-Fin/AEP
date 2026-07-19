@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 6
 title: Testing
 slug: /development/testing
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [workflows]
   tags: [testing, quality, validation]
 ---
+displayed_sidebar: devSidebar
 
 # Testing
 

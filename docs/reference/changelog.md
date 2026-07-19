@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 4
 title: Changelog
 slug: /reference/changelog
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [changelog, version, history]
 ---
+displayed_sidebar: devSidebar
 
 # Changelog
 

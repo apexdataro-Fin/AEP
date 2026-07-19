@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 3
 title: AI Integration Guide
 slug: /guides/ai-integration
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [metadata-guide, architecture-overview]
   tags: [ai, integration, metadata, llm]
 ---
+displayed_sidebar: devSidebar
 
 # AI Integration Guide
 

@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 6
 title: Content Standards
 slug: /standards/content-standards
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [documentation-standards]
   tags: [content, education, quality]
 ---
+displayed_sidebar: devSidebar
 
 # Content Standards
 
@@ -31,8 +33,10 @@ Every lesson must follow this structure:
 
 ```mdx
 ---
+displayed_sidebar: devSidebar
 # Frontmatter (see Metadata Guide)
 ---
+displayed_sidebar: devSidebar
 
 # Lesson Title
 

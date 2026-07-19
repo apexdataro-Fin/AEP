@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 2
 title: Getting Started
 slug: /development/getting-started
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [getting-started, setup, first-time]
 ---
+displayed_sidebar: devSidebar
 
 # Getting Started
 

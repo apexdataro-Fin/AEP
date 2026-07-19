@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 3
 title: Naming Conventions
 slug: /standards/naming-conventions
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [naming, conventions, files]
 ---
+displayed_sidebar: devSidebar
 
 # Naming Conventions
 

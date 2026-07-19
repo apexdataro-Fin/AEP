@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 2
 title: Mermaid Guide
 slug: /guides/mermaid-guide
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [documentation-standards]
   tags: [mermaid, diagrams, visualization]
 ---
+displayed_sidebar: devSidebar
 
 # Mermaid Guide
 

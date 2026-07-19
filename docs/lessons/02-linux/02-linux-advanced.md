@@ -418,4 +418,4 @@ sudo sysctl -p /etc/sysctl.d/99-cloudnova.conf
 
 ---
 
-[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)
+[← العودة للوحدة](01-linux-essentials) | [🏠 الرئيسية](/)

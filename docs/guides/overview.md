@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 1
 title: Guides Overview
 slug: /guides
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [guides, how-to]
 ---
+displayed_sidebar: devSidebar
 
 # Guides Overview
 

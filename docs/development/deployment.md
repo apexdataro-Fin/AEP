@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 7
 title: Deployment
 slug: /development/deployment
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [project-structure]
   tags: [deployment, github-pages, ci-cd]
 ---
+displayed_sidebar: devSidebar
 
 # Deployment
 

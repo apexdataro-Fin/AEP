@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 7
 title: Metadata Guide
 slug: /standards/metadata-guide
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [documentation-standards]
   tags: [metadata, ai, schema, frontmatter]
 ---
+displayed_sidebar: devSidebar
 
 # Metadata Guide
 
@@ -21,6 +23,7 @@ Every content file in the platform includes **structured frontmatter** that make
 
 ```yaml
 ---
+displayed_sidebar: devSidebar
 sidebar_position: number # Position in sidebar navigation
 title: string # Display title (H1)
 slug: string # URL path (unique)
@@ -32,12 +35,14 @@ ai_metadata:
   prerequisites: string[] # Slugs of prerequisite content
   tags: string[] # Search and classification tags
 ---
+displayed_sidebar: devSidebar
 ```
 
 ## Optional Fields
 
 ```yaml
 ---
+displayed_sidebar: devSidebar
 keywords: string[] # Additional SEO keywords
 image: string # Social card image path
 ai_metadata:
@@ -47,6 +52,7 @@ ai_metadata:
   last_validated: string # ISO date of last accuracy review
   author: string # Content author
 ---
+displayed_sidebar: devSidebar
 ```
 
 ## Category Taxonomy

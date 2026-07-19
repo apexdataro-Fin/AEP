@@ -552,4 +552,4 @@ kubectl get events --sort-by='.lastTimestamp' | tail -20
 
 ---
 
-[← العودة للوحدة](index.md) | [🏠 الرئيسية](/)
+[← العودة للوحدة](01-kubernetes-architecture) | [🏠 الرئيسية](/)

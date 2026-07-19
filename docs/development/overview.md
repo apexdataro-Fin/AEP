@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 1
 title: Development Overview
 slug: /development
@@ -10,6 +11,7 @@ ai_metadata:
   prerequisites: [architecture-overview]
   tags: [development, setup, contribution]
 ---
+displayed_sidebar: devSidebar
 
 # Development Overview
 

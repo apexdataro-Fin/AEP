@@ -1,4 +1,5 @@
 ---
+displayed_sidebar: devSidebar
 sidebar_position: 1
 title: Introduction
 slug: /welcome
@@ -14,6 +15,7 @@ ai_metadata:
   prerequisites: []
   tags: [introduction, overview]
 ---
+displayed_sidebar: devSidebar
 
 # Cloud Engineering Learning OS
 
