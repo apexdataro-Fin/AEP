@@ -483,4 +483,99 @@ updates:
 
 ---
 
-[← العودة للموديول](./01-github-workflows) | [🏠 الرئيسية](/)
+---
+
+## 🏛️ طبقة الإنتاج: GitHub في المؤسسة
+
+### GitHub Packages — Container Registry خاص
+
+```bash
+# دفع صورة Docker لـ GHCR
+ echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+docker build -t ghcr.io/cloudnova/api:v1.0.0 .
+docker push ghcr.io/cloudnova/api:v1.0.0
+
+# صور خاصة (داخل المؤسسة فقط)
+# Settings → Packages → Package visibility → Private
+```
+
+### Actions Permissions — الأمان أولاً
+
+```yaml
+# Settings → Actions → General
+# ❌ Allow all actions and reusable workflows
+# ✅ Allow CloudNova, and GitHub-created actions
+
+# Fork PRs:
+# ❌ Run workflows from fork PRs immediately
+# ✅ Require approval for fork PR workflows
+```
+
+---
+
+## 🎨 طبقة المعماري: من CI البسيط لـ DevOps الكامل
+
+### GitHub Actions vs Azure DevOps vs Jenkins
+
+| المعيار | GitHub Actions | Azure DevOps | Jenkins |
+|---------|---------------|-------------|---------|
+| **التكلفة** | 2000 min/month free | 1800 min/month | مجاني (self-hosted) |
+| **التعقيد** | بسيط | متوسط | عالي |
+| **Ecosystem** | 20,000+ actions | محدود | 2,000+ plugins |
+| **OIDC** | ✅ مدمج | ✅ | ❌ |
+| **YAML** | ✅ | ✅ | ❌ (Groovy) |
+
+### متى تختار ماذا؟
+- **GitHub Actions**: الكود على GitHub = الخيار الطبيعي
+- **Azure DevOps**: Microsoft ecosystem، boards + repos + pipelines متكاملة
+- **Jenkins**: تحتاج تحكماً كاملاً + self-hosted
+
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: CI Pipeline (سهل)
+> ابنِ workflow: lint + test + build. علّق النتائج على PR.
+
+### تمرين ٢: Deployment Environment (متوسط)
+> أنشئ `staging` و `production` environments. production يتطلب موافقة senior engineer.
+
+### تحدي: Release Please (متقدم)
+> فعّل Release Please مع semantic versioning و changelog تلقائي.
+
+### 📝 تقييم
+
+**س١:** لماذا OIDC أفضل من secrets الدائمة؟
+<details><summary>الإجابة</summary>OIDC يطلب token مؤقت من Azure/AWS لكل workflow run. لا secrets دائمة يمكن أن تتسرب. الـ token ينتهي بعد minutes.</details>
+
+**س٢:** كيف تمنع نشر كود بدون مراجعة؟
+<details><summary>الإجابة</summary>Branch protection: require PR + 2 approvals + CI checks passing. Deployment environments: required reviewers قبل النشر.</details>
+
+**س٣:** ما فائدة CODEOWNERS؟
+<details><summary>الإجابة</summary>يحدد من يجب أن يراجع ملفات معينة. مثال: `*.tf @platform-team` = أي تغيير في Terraform يحتاج مراجعة فريق المنصة.</details>
+
+### 🧠 استدعاء نشط
+1. ارسم CI/CD pipeline: push → build → test → deploy → monitor.
+2. كيف تؤمّن workflow من fork PRs الخبيثة؟
+3. اذكر 5 أفضل ممارسات لـ GitHub Actions.
+
+### 🎤 مقابلة
+
+**"صمم CI/CD لـ 20 microservice."**
+→ Reusable workflows. Matrix builds. Path filtering (شغّل CI للخدمة المتغيرة فقط). Deployment environments (dev→staging→prod). OIDC للمصادقة. Release Please للـ semantic versioning.
+
+**"كيف تتعامل مع workflow فشل في الإنتاج؟"**
+→ `gh run watch` لمراقبة. `gh run view --log-failed` للتشخيص. أعد تشغيل `gh run rerun`. إذا متكرر: افتح issue وأوقف automated deploy مؤقتاً.
+
+---
+
+## 📚 مراجع
+
+- [CI/CD Pipelines](../15-cicd/01-cicd-pipelines) — تدفق CI/CD المتقدم
+- [Git Fundamentals](../13-git/01-git-fundamentals) — أساس Git
+- 📖 [GitHub Actions Documentation](https://docs.github.com/en/actions)
+- 📖 [GitHub Security Best Practices](https://docs.github.com/en/actions/security-guides)
+
+---
+
+[← العودة للموديول](./01-github-workflows) | [→ CI/CD Pipelines](../15-cicd/01-cicd-pipelines) | [🏠 الرئيسية](/)

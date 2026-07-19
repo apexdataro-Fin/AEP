@@ -517,6 +517,95 @@ kubectl edit deployment api -n production
 
 <div align="center">
 
-**[→ الدرس التالي: Helm Fundamentals](/docs/lessons/helm/helm-fundamentals)**
+**[→ Helm Fundamentals](../11-helm/01-helm-fundamentals)
+
+---
+
+## 🏛️ طبقة الإنتاج: الشبكات تحت الضغط
+
+### kube-proxy — كيف يعمل الـ Service Routing
+
+```bash
+# kube-proxy iptables mode — القواعد تولد عشوائياً (statistical)
+kubectl exec -it debug-pod -- iptables -t nat -L KUBE-SERVICES -n | grep api
+# 3 Pods = 3 قواعد iptables، كل منها باحتمال 33.3%
+```
+
+### Cilium eBPF — مستقبل شبكات K8s
+
+بدلاً من iptables (بطيء مع 1000+ services)، Cilium يستخدم eBPF:
+- يبرمج kernel مباشرة — أسرع 10x
+- Hubble UI للتتبع المباشر بين الخدمات
+- L7 Network Policies (HTTP method, path, headers)
+
+### 🚨 سيناريو CloudNova: DNS لا يستجيب
+
+> CoreDNS pods ماتت. لا DNS = لا Service Discovery = كل شيء ميت.
+
+```bash
+kubectl get pods -n kube-system | grep coredns
+kubectl logs -n kube-system -l k8s-app=kube-dns --tail=20
+# level=fatal msg="Failed to read Corefile"
+kubectl rollout restart deployment/coredns -n kube-system
+```
+
+---
+
+## 🎨 طبقة المعماري
+
+### CNI Selection Matrix
+
+| المعيار | Flannel | Calico | Cilium | Azure CNI |
+|---------|---------|--------|--------|-----------|
+| البساطة | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ |
+| NetworkPolicy | ❌ | ✅✅ | ✅✅✅ (L7) | ✅ (NSG) |
+| الأداء | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| المراقبة | ❌ | محدود | Hubble UI | Azure Monitor |
+| التكلفة | مجاني | مجاني | مجاني | IP exhaustion risk |
+
+### Service Mesh Decision
+
+- **Istio**: الأقوى. Envoy sidecar، mTLS، circuit breaking. للـ enterprises.
+- **Linkerd**: الأبسط. Rust proxy خفيف. للفرق الصغيرة.
+- **Cilium Service Mesh**: بدون sidecar! eBPF في kernel.
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين ١: NetworkPolicy (سهل)
+> أنشئ namespace `isolated`. امنع كل الـ ingress/egress. ثم اسمح فقط لـ pod معين بالوصول للإنترنت.
+
+### تمرين ٢: تشخيص انقطاع (متوسط)
+> `api` لا يصل لـ `postgres`. ارجع للخطوات في سيناريو CloudNova ونفذها.
+
+### تحدي: Service Mesh (متقدم)
+> ثبت Istio. انشر تطبيقين. راقب الـ mTLS و distributed tracing.
+
+### 📝 تقييم
+
+**س١:** لماذا prefer Ingress over LoadBalancer؟
+<details><summary>الإجابة</summary>Ingress واحد = LB واحد = تكلفة أقل. Path-based routing. TLS termination موحد.</details>
+
+**س٢:** كيف تمنع Pod من الاتصال بأي شيء خارج namespace؟
+<details><summary>الإجابة</summary>NetworkPolicy مع `podSelector: {}` و `policyTypes: [Egress]` بدون أي `to` rules.</details>
+
+**س٣:** ما فائدة Service Mesh؟
+<details><summary>الإجابة</summary>mTLS تلقائي، distributed tracing، retry/circuit breaking، traffic splitting للـ canary deployments.</details>
+
+### 🧠 استدعاء نشط
+1. ارسم مسار الحزمة من Pod A → Service → Pod B.
+2. متى تختار Calico ومتى Cilium؟
+3. كيف تشخص DNS failure في K8s؟
+
+### 🎤 مقابلة
+
+**"صمم شبكة K8s لمؤسسة مالية."**
+→ Cilium (L7 policies + eBPF performance). mTLS مع Istio. NetworkPolicies deny-all لكل namespace. Private AKS + Azure CNI.
+
+---
+
+[← K8s Architecture](./01-kubernetes-architecture) | [→ Helm](../11-helm/01-helm-fundamentals) | [🏠 الرئيسية](/)
+**
 
 </div>

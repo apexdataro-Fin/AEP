@@ -569,4 +569,50 @@ inputs = {
 
 ---
 
-[← العودة للوحدة](01-terraform-fundamentals) | [🏠 الرئيسية](/)
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: ابنِ بيئتك الأولى (سهل)
+> باستخدام Terraform: VNet + Subnet + NSG + VM. استخدم variables للبيئات.
+
+### تمرين ٢: أصلح drift (متوسط)
+> شخص في الفريق عدّل NSG rule يدوياً في Azure portal. اكتشف الـ drift وأصلحه.
+
+### تحدي: CI/CD Pipeline (متقدم)
+> ابنِ GitHub Actions workflow: fmt → validate → plan (مع تعليق على PR) → apply بعد merge.
+
+### 📝 تقييم
+
+**س١:** لماذا لا ترفع `terraform.tfstate` لـ Git؟
+<details><summary>الإجابة</summary>يحتوي resource IDs وقد يحتوي secrets (مثل passwords). استخدم remote backend.</details>
+
+**س٢:** ما فائدة `terraform plan -detailed-exitcode`؟
+<details><summary>الإجابة</summary>Exit code 0 = no changes, 1 = error, 2 = drift detected. مفيد لـ CI/CD للكشف عن التغييرات اليدوية.</details>
+
+**س٣:** `count` vs `for_each`؟
+<details><summary>الإجابة</summary>count يستخدم list index — حذف عنصر يغير كل العناصر بعده. for_each يستخدم map keys — حذف عنصر يؤثر عليه فقط.</details>
+
+### 🧠 استدعاء نشط
+1. ارسم دورة Terraform: init → plan → apply → destroy.
+2. كيف تحمي production resources من الحذف الخطأ؟
+3. كيف تدمج Terraform مع Azure Key Vault للأسرار؟
+
+### 🎤 مقابلة
+
+**"كيف تدير Terraform في فريق كبير؟"**
+→ Remote state في Azure Storage مع locking. Modules للقابلية لإعادة الاستخدام. CI/CD (plan on PR, apply on merge). Sentinel/OPA policies. Drift detection يومي.
+
+**"ماذا تفعل إذا فسد state file؟"**
+→ لا داعي للذعر. استعد من backup. أعد import الموارد إذا لزم. وثق الدرس وأضف soft-delete للـ storage account.
+
+---
+
+## 📚 مراجع
+- [Terraform Modules](./02-terraform-modules)
+- [GitHub Workflows](../14-github/01-github-workflows)
+- 📖 [Terraform Documentation](https://developer.hashicorp.com/terraform)
+
+---
+
+[← العودة للموديول](01-terraform-fundamentals) | [→ Terraform Modules](./02-terraform-modules) | [🏠 الرئيسية](/)

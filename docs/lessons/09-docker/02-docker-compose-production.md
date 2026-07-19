@@ -548,8 +548,90 @@ docker compose -f docker-compose.prod.yml down
 
 ---
 
-<div align="center">
+---
 
-**[→ الدرس التالي: Kubernetes Architecture](/docs/lessons/kubernetes/kubernetes-architecture)**
+## 🏛️ طبقة الإنتاج: ما بعد الملف الواحد
 
-</div>
+### Secrets Management متقدم
+
+```bash
+# Docker Secrets (Swarm فقط) — الأفضل لـ Compose
+echo "my-db-password" | docker secret create db_password -
+
+# للمشاريع بدون Swarm: HashiCorp Vault + envsubst
+# ١. اسحب الـ secrets من Vault
+vault kv get -format=json secret/cloudnova | \
+  jq -r '.data.data | to_entries | map("export \(.key)=\(.value)") | .[]' > .env
+
+# ٢. شغّل compose
+source .env && docker compose -f docker-compose.prod.yml up -d
+```
+
+### Zero-Downtime Deployment مع Compose
+
+```bash
+# استراتيجية blue-green يدوية
+# ١. شغّل البيئة الجديدة على port آخر
+docker compose -p cloudnova-green -f docker-compose.prod.yml up -d
+# ٢. اختبر البيئة الجديدة
+curl http://localhost:8081/healthz
+# ٣. بدّل Nginx لـ upstream الجديد
+sed -i 's/blue:3000/green:3000/' nginx/nginx.conf
+docker compose restart nginx
+# ٤. أوقف البيئة القديمة بعد تأكيد النجاح
+docker compose -p cloudnova-blue down
+```
+
+### Docker Compose vs Swarm vs Kubernetes
+
+| المعيار | Compose | Swarm | Kubernetes |
+|---------|---------|-------|------------|
+| **التعقيد** | منخفض | متوسط | عالي |
+| **النطاق** | جهاز واحد | عدة أجهزة | عدة clusters |
+| **Auto-scaling** | ❌ | يدوي | ✅ مدمج |
+| **Rolling updates** | ❌ | ✅ | ✅ |
+| **الأفضل لـ** | تطوير، إنتاج صغير | إنتاج متوسط | إنتاج كبير |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين ١: هجرة compose إلى swarm (سهل)
+> حوّل `docker-compose.prod.yml` لـ Docker Swarm stack. أضف `deploy` blocks لـ 3 replicas و rolling updates.
+
+### تمرين ٢: كارثة (متوسط)
+> `docker compose up -d` يفشل: "port 5432 already in use". شخّص وأصلح.
+
+### تحدي: أتمتة (متقدم)
+> اكتب Makefile targets: `make deploy`, `make backup`, `make restore`, `make logs`, `make status`. كل target = compose command(s).
+
+### 📝 تقييم (5 checks, 3 quiz)
+
+**س١:** ما فائدة `internal: true` في network؟
+<details><summary>الإجابة</summary>يمنع الحاويات على هذه الشبكة من الوصول للإنترنت. للـ backend networks مثل database — أمان إضافي.</details>
+
+**س٢:** متى تستخدم `deploy.resources.reservations` vs `limits`؟
+<details><summary>الإجابة</summary>reservations = الحد الأدنى المضمون. limits = السقف. مثال: api يحتاج 256MB على الأقل لكن قد يصل لـ 512MB في الذروة.</details>
+
+**س٣:** كيف تنقل بيانات PostgreSQL من compose قديم لجديد؟
+<details><summary>الإجابة</summary>`docker exec old-postgres pg_dump -U user db | docker exec -i new-postgres psql -U user db`</details>
+
+### 🎤 مقابلة
+
+**"كيف تختار بين Docker Compose و Kubernetes؟"**
+→ Compose: فريق صغير، تطبيق 1-5 خدمات، جهاز واحد. K8s: فريق كبير، 10+ خدمات، scaling مطلوب.
+
+**"كيف تتعامل مع secrets في Docker Compose بدون Swarm؟"**
+→ ملف `.env` (محمي بـ `.gitignore`)، Vault agent sidecar، أو Azure Key Vault + envsubst.
+
+---
+
+## 📚 مراجع
+- [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture)
+- [CI/CD Pipelines](../15-cicd/01-cicd-pipelines)
+- 📖 [Docker Compose Specification](https://docs.docker.com/compose/compose-file/)
+
+---
+
+[← Docker Mastery](./01-docker-mastery) | [→ Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) | [🏠 الرئيسية](/)
+

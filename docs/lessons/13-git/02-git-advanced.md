@@ -404,6 +404,86 @@ git push origin <commit-hash>:refs/heads/main
 
 <div align="center">
 
-**[→ الدرس التالي: GitHub Workflows](/docs/lessons/github/github-workflows)**
+**[→ GitHub Workflows](../14-github/01-github-workflows)
+
+---
+
+## 🏛️ طبقة الإنتاج: Git في المؤسسات
+
+### Monorepo مع Git
+
+```bash
+# هيكل Monorepo
+monorepo/
+├── apps/
+│   ├── api/
+│   └── web/
+├── packages/
+│   ├── shared/
+│   └── config/
+├── infrastructure/
+│   └── terraform/
+└── .github/
+    └── CODEOWNERS
+
+# CODEOWNERS للـ monorepo
+apps/api/     @cloudnova/api-team
+apps/web/     @cloudnova/web-team
+infrastructure/ @cloudnova/platform-team
+.github/      @cloudnova/devops-team
+```
+
+### Git LFS للملفات الكبيرة
+
+```bash
+# النماذج والصور الكبيرة لا ترفع مباشرة لـ Git
+git lfs track "*.bin" "*.h5" "*.tar.gz"
+git add .gitattributes
+git commit -m "Configure Git LFS for model files"
+```
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين ١: Squash commits (سهل)
+> ادمج آخر 5 commits في commit واحد مع رسالة واضحة.
+
+### تمرين ٢: bisect آلي (متوسط)
+> اكتب script يختبر endpoint. استخدمه مع `git bisect run`.
+
+### تحدي: كارثة محاكاة (متقدم)
+> أحدهم force push على main. استعد الحالة. فعّل branch protection.
+
+### 📝 تقييم
+
+**س١:** كيف تدمج آخر 3 commits في واحد؟
+<details><summary>الإجابة</summary>`git rebase -i HEAD~3` ثم `squash` للـ commits 2 و 3.</details>
+
+**س٢:** ما فائدة `git worktree`؟
+<details><summary>الإجابة</summary>العمل على فرعين في نفس الوقت بدون clone جديد. مثالي لـ hotfix أثناء العمل على feature.</details>
+
+**س٣:** كيف تمنع force push على main؟
+<details><summary>الإجابة</summary>Branch protection rules في GitHub: "Block force pushes" + "Require PR before merging".</details>
+
+### 🎤 مقابلة
+
+**"كيف تجد bug في 200 commit خلال 8 خطوات؟"**
+→ `git bisect`. إنه binary search — log₂(200) ≈ 8 خطوات. زد script آلي مع `bisect run` لتسريع العملية.
+
+**"ماذا تفعل إذا أفسدت history بـ rebase؟"**
+→ `git reflog` يعرض كل العمليات. `git reset --hard HEAD@{N}` للعودة لما قبل الـ rebase.
+
+---
+
+## 📚 مراجع
+- [Git Fundamentals](./01-git-fundamentals)
+- [GitHub Workflows](../14-github/01-github-workflows)
+- 📖 [Pro Git Book](https://git-scm.com/book/en/v2)
+
+---
+
+[← Git Fundamentals](./01-git-fundamentals) | [🏠 الرئيسية](/)
+**
 
 </div>

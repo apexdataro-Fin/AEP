@@ -335,4 +335,118 @@ Plan: 3 to add, 1 to change, 0 to destroy.
 
 ---
 
-[← العودة للوحدة](01-git-fundamentals) | [🏠 الرئيسية](/)
+---
+
+## 🏛️ طبقة الإنتاج: Git في المؤسسة
+
+### Trunk-Based Development
+
+```
+main ─────●──●──●──●──●──●──●── (دائماً قابل للنشر)
+           \  /
+feature     ●──●  (عمرها < يومين)
+
+القواعد:
+├── فروع قصيرة العمر (ساعات لا أسابيع)
+├── دمج للمخزن الرئيسي عدة مرات يومياً
+├── Feature flags للميزات غير المكتملة
+└── CI/CD يجب أن يمر قبل الدمج
+```
+
+### Git + Terraform: أفضل ممارسات
+
+```bash
+# .gitignore لمشاريع IaC
+*.tfstate*
+.terraform/
+*.tfvars
+!example.tfvars
+.terraformrc
+override.tf
+
+# ما يُرفع:
+# ✅ .terraform.lock.hcl — يضمن تناسق الـ provider versions
+# ✅ modules/ — كود الـ modules
+# ✅ environments/ — تكوينات البيئات
+```
+
+### 🚨 سيناريو CloudNova: Force Push كارثي
+
+> مهندس دفع `git push --force` على main. 3 أيام من commits اختفت.
+
+```bash
+# لا panic. GitHub يحتفظ بالـ commits:
+gh api /repos/CloudNova/infra/git/refs/heads/main
+# آخر commit قبل force push كان abc1234
+
+# استعد commit من الـ reflog الخاص بـ GitHub
+git fetch origin abc1234:recovered-main
+git push origin recovered-main:main --force
+
+# الحماية للمستقبل:
+# Settings → Branches → Add Rule → "Block force pushes"
+```
+
+---
+
+## 🎨 طبقة المعماري: Git Flow vs Trunk-Based vs GitHub Flow
+
+| الاستراتيجية | الأفضل لـ | الفروع | التعقيد |
+|-------------|----------|--------|---------|
+| **Git Flow** | فرق كبيرة، releases مجدولة | main, develop, feature, release, hotfix | عالي |
+| **Trunk-Based** | CI/CD متقدم، نشر مستمر | main فقط + فروع قصيرة | منخفض |
+| **GitHub Flow** | معظم الفرق الحديثة | main + feature branches | منخفض-متوسط |
+
+### متى تختار ماذا؟
+- **Git Flow**: منتج بإصدارات (v1.0, v2.0) وفريق > 10
+- **Trunk-Based**: فريق < 10 + CI/CD قوي + feature flags
+- **GitHub Flow**: الحل الوسط — PR على main، نشر بعد الدمج
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين ١: كارثة محاكاة (سهل)
+> `git reset --hard HEAD~3` بالخطأ. استعد الـ commits.
+
+### تمرين ٢: تفعيل hooks (متوسط)
+> فعّل pre-commit hook يمنع secrets + commit-msg يفرض Conventional Commits.
+
+### تحدي: bisect (متقدم)
+> استخدم bisect مع script للعثور على commit سبب فشل test.
+
+### 📝 تقييم
+
+**س١:** كيف تستعيد commit "محذوف"؟
+<details><summary>الإجابة</summary>`git reflog` → ابحث عن commit hash → `git cherry-pick <hash>` أو `git checkout -b recovered <hash>`.</details>
+
+**س٢:** لماذا لا ترفع `.tfstate`؟
+<details><summary>الإجابة</summary>يحتوي resource IDs وأحياناً secrets. استخدم remote backend مع encryption.</details>
+
+**س٣:** `merge` vs `rebase` — متى كل منهما؟
+<details><summary>الإجابة</summary>merge = دمج PR لـ main (تاريخ حقيقي). rebase = تحديث feature branch من main (تاريخ نظيف).</details>
+
+### 🧠 استدعاء نشط
+1. ارسم مسار commit: Working Directory → Staging → Local → Remote.
+2. كيف تمنع secrets من دخول Git؟ (3 طرق)
+3. ما هي Conventional Commits؟ اذكر 5 أنواع.
+
+### 🎤 مقابلة
+
+**"كيف تصمم branching strategy لفريق 15 مهندساً؟"**
+→ Git Flow مع: main (إنتاج)، develop (تطوير)، feature/* للعمل اليومي، release/* للإصدارات، hotfix/* للإصلاحات الطارئة. Branch protection على main + develop.
+
+**"كيف تتعامل مع merge conflict كبير؟"**
+→ `git merge --abort`. قسّم التغيير لـ commits أصغر. `git rebase main` خطوة خطوة. تواصل مع المؤلف الأصلي.
+
+---
+
+## 📚 مراجع
+- [Git Advanced](./02-git-advanced) — rebase, bisect, reflog
+- [GitHub Workflows](../14-github/01-github-workflows) — CI/CD
+- 📖 [Pro Git Book](https://git-scm.com/book/en/v2)
+- 📖 [Conventional Commits](https://www.conventionalcommits.org/)
+
+---
+
+[← العودة للموديول](01-git-fundamentals) | [→ Git Advanced](./02-git-advanced) | [🏠 الرئيسية](/)

@@ -475,4 +475,323 @@ trivy image cloudnova-api:${{ github.sha }}
 
 ---
 
-[← العودة للوحدة](01-docker-mastery) | [🏠 الرئيسية](/)
+---
+
+## 🏛️ طبقة الإنتاج: Docker في المعركة
+
+### Docker Registry في الإنتاج — ACR Premium
+
+```bash
+# Azure Container Registry - Premium tier
+az acr create \
+  --name cloudnovaregistry \
+  --resource-group prod-rg \
+  --sku Premium \
+  --admin-enabled false \
+  --public-network-enabled false
+
+# Private Endpoint لـ ACR
+az network private-endpoint create \
+  --name pe-acr \
+  --resource-group prod-rg \
+  --vnet-name cloudnova-vnet \
+  --subnet registry-subnet \
+  --private-connection-resource-id $(az acr show --name cloudnovaregistry --query id -o tsv) \
+  --group-id registry
+
+# Geo-replication للصور
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --push -t cloudnovaregistry.azurecr.io/api:v3 .
+
+# Content Trust — توقيع الصور
+az acr config content-trust update \
+  --registry cloudnovaregistry \
+  --status enabled
+```
+
+### مراقبة Docker Daemon
+
+```bash
+# Docker daemon metrics
+docker system info
+curl http://localhost:9323/metrics  # إذا مفعل metrics
+
+# Metricbeat for Docker
+# docker-compose.yml:
+#   metricbeat:
+#     image: docker.elastic.co/beats/metricbeat:8.4.0
+#     volumes:
+#       - /var/run/docker.sock:/var/run/docker.sock:ro
+#     environment:
+#       - output.elasticsearch.hosts=["elasticsearch:9200"]
+```
+
+### 🚨 سيناريو CloudNova ٤: Daemon يموت
+
+> **الموقف:** `docker ps` لا يستجيب. الخادم يعمل لكن Docker مات.
+
+```bash
+# تشخيص
+sudo systemctl status docker
+# Active: failed (Result: timeout)
+
+# سجلات Docker daemon
+sudo journalctl -u docker.service --since "10 minutes ago" | tail -30
+# level=error msg="failed to start containerd"
+# level=fatal msg="no space left on device"
+
+# السبب: /var/lib/docker ممتلئ
+sudo du -sh /var/lib/docker/*
+# 48G  /var/lib/docker/overlay2
+# 12G  /var/lib/docker/containers
+# 2G   /var/lib/docker/volumes
+
+# الحل العاجل
+docker system prune -a --volumes --force
+
+# الحل الدائم: cron job للتنظيف الأسبوعي
+echo "0 3 * * 0 docker system prune -a --filter 'until=168h' --force" | sudo crontab -
+```
+
+---
+
+## 🎨 طبقة المعماري: قرارات التصميم
+
+### Docker vs Podman vs containerd — مقارنة معمارية
+
+| المعيار | Docker | Podman | containerd |
+|---------|--------|--------|------------|
+| **Daemon** | ✅ (dockerd) | ❌ (fork-exec model) | ✅ (containerd) |
+| **Rootless** | مؤخراً (v20+) | ✅ افتراضي | ❌
+| **Compose** | docker-compose | podman-compose | ❌ (K8s native) |
+| **K8s integration** | عبر cri-dockerd | ❌ | ✅ (مباشر) |
+| **Images** | OCI | OCI | OCI |
+| **حجم التثبيت** | كبير | متوسط | صغير |
+
+### متى لا تستخدم Docker؟
+
+| السيناريو | لماذا؟ | البديل |
+|-----------|-------|--------|
+| **Kubernetes 1.24+** | Docker runtime أُزيل | containerd (مدمج) |
+| **حاويات بدون root مطلقاً** | Docker يحتاج root للـ daemon | Podman (rootless) |
+| **بناء صور لـ ARM** | Docker buildx يعمل لكن Podman أسرع | Podman multi-arch |
+
+### استراتيجية التخزين المؤقت (Caching)
+
+```dockerfile
+# الترتيب الصحيح للاستفادة من cache
+FROM python:3.12-slim
+WORKDIR /app
+
+# ١. الاعتماديات أولاً (نادراً ما تتغير)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ٢. الكود ثانياً (يتغير كثيراً)
+COPY src/ ./src/
+COPY app.py .
+```
+
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: صورة مثالية (سهل)
+> ابنِ Dockerfile لـ Node.js app:
+> - Multi-stage: builder (npm build) + production (nginx)
+> - حجم أقل من 30MB
+> - non-root user
+> - HEALTHCHECK
+
+### تمرين ٢: تحقيق security scan (متوسط)
+> شغّل Trivy على صور CloudNova. وثّق كل HIGH/CRITICAL vulnerabilities وخطة علاجها.
+
+### تحدي: CI/CD Pipeline (متقدم)
+> صمم GitHub Actions workflow:
+> 1. Build multi-arch image
+> 2. Scan with Trivy (block on CRITICAL)
+> 3. Push to ACR
+> 4. Deploy to staging
+> 5. Smoke tests
+
+### مشروع CloudNova
+> **Ticket #CN-901:** "صور Docker تستهلك 45GB على الخادم. نظف وامنع التراكم."
+
+---
+
+## 📝 تقييم المعرفة
+
+### ✅ تحقق من فهمك (5)
+1. كيف تقلل حجم صورة من 900MB إلى 150MB؟
+2. لماذا `USER 1000` أفضل من `USER root`؟
+3. ما فائدة BuildKit secrets؟
+4. كيف تكتشف secrets مسربة في Docker image؟
+5. اشرح دورة حياة Docker: Dockerfile → Image → Registry → Container.
+
+### 📝 اختبار (3 أسئلة)
+
+**س١:** ما الترتيب الصحيح لطبقات Dockerfile للاستفادة القصوى من cache؟
+
+- **أ)** COPY . . ثم RUN pip install
+- **ب)** COPY requirements.txt ثم RUN pip install ثم COPY . .
+- **ج)** لا فرق
+
+<details><summary>الإجابة</summary>
+**ب.** ضع الاعتماديات أولاً لأنها تتغير أقل من الكود. Docker يعيد استخدام كل طبقة قبل الطبقة التي تغيرت.
+</details>
+
+**س٢:** كيف تسحب صورة من ACR خاص بـ Private Endpoint؟
+
+<details><summary>الإجابة</summary>
+```bash
+# يجب أن تكون على VNet المرتبط بـ Private Endpoint
+az acr login --name cloudnovaregistry
+docker pull cloudnovaregistry.azurecr.io/api:v3
+# أو استخدم Managed Identity:
+az acr login --name cloudnovaregistry --expose-token
+```
+</details>
+
+**س٣:** ما فائدة `--mount=type=cache` في BuildKit؟
+
+<details><summary>الإجابة</summary>
+يحفظ cache directory عبر builds المختلفة.
+```dockerfile
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+```
+المكتبات تُحمل مرة واحدة فقط. البناء التالي: pip install فوري تقريباً — وفر 90% من وقت البناء.
+</details>
+
+### 🧠 استدعاء نشط
+1. ارسم مراحل Multi-stage build من الذاكرة.
+2. اذكر 7 قواعد أمنية لـ Dockerfile.
+3. كيف تشخص حاوية لا تستجيب؟ (5 خطوات)
+4. ما الفرق بين bind mount و named volume؟
+5. كيف تبني صورة لـ ARM و x86 معاً؟
+
+### ✍️ تمرين Feynman
+اشرح Docker لـ 3 شخصيات:
+- **طاهٍ**: "الصورة = وصفة مجمدة. الحاوية = وجبة جاهزة للأكل."
+- **مدير شحن**: "الحاوية = حاوية شحن بحري ISO. تغلف المنتج وتنقله لأي مكان."
+- **طفل ١٢ سنة**: "Docker = صندوق سحري يحمل لعبتك المفضلة بكل إعداداتها. تفتح الصندوق على أي كمبيوتر وتلعب فوراً."
+
+### 🎴 بطاقات (8)
+
+| السؤال | الإجابة |
+|--------|---------|
+| Layer | كل أمر في Dockerfile = طبقة |
+| BuildKit | محرك بناء حديث — cache أفضل، secrets آمنة |
+| Multi-stage | فصل البناء عن التشغيل — حجم أقل 80%+ |
+| Volume | تخزين دائم ينجو من حذف الحاوية |
+| HEALTHCHECK | أمر يفحص صحة الحاوية دورياً |
+| Registry | مستودع لتخزين وتوزيع الصور |
+| .dockerignore | ملف يمنع نسخ ملفات غير ضرورية للصورة |
+| Trivy | أداة فحص ثغرات أمنية في صور الحاويات |
+
+---
+
+## 🎤 التحضير للمقابلة (موسع)
+
+### System Design
+
+**"صمم CI/CD pipeline لـ 30 microservice كل منها في repo منفصل."**
+
+<details><summary>نموذج الإجابة</summary>
+
+```
+استراتيجية الصور:
+├── Base image موحد (Python 3.12-slim + common libs)
+├── 30 Dockerfile (واحد لكل خدمة)
+├── Multi-stage builds — حجم نهائي < 150MB
+└── .dockerignore مخصص لكل خدمة
+
+CI/CD:
+├── GitHub Actions (push on main)
+├── Build: docker build --cache-from registry/base:latest
+├── Test: container structure tests + integration tests
+├── Scan: Trivy (block CRITICAL/HIGH)
+├── Push: ACR مع tag = git SHA + latest
+└── Deploy: Argo CD Image Updater
+
+التحسينات:
+├── BuildKit cache registry (مشترك بين كل الـ repos)
+├── Build only changed services (path filtering)
+├── Parallel builds (matrix strategy)
+└── Nightly rebuild of base image
+```
+</details>
+
+### سؤال تقني
+
+**"كيف تحقق build reproducible (نفس الـ hash كل مرة)؟"**
+
+<details><summary>الإجابة</summary>
+
+```dockerfile
+# ١. Pin versions (لا latest)
+FROM python:3.12.3-slim-bookworm@sha256:abc123...
+
+# ٢. Pin pip packages
+COPY requirements.txt ./
+RUN pip install --no-cache-dir \
+    flask==3.0.0 \
+    requests==2.31.0
+
+# ٣. BuildKit + cache busting
+ARG CACHE_BUST=1  # اضبطه في CI
+
+# ٤. Build args للـ metadata
+ARG BUILD_DATE
+ARG GIT_COMMIT
+LABEL org.label-schema.build-date=$BUILD_DATE \
+      org.label-schema.vcs-ref=$GIT_COMMIT
+```
+
+```bash
+docker build \
+  --build-arg BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ') \
+  --build-arg GIT_COMMIT=$(git rev-parse HEAD) \
+  -t api:v1.2.3 .
+```
+</details>
+
+### سؤال سلوكي (STAR)
+
+**"احكِ عن مرة أنقذت فيها الموقف بحل Docker."**
+
+> **S**: بيئة staging تعطلت 3 ساعات بسبب اختلاف إصدارات Python.  
+> **T**: توحيد البيئات عبر Docker في أسبوع واحد.  
+> **A**: بنيت Dockerfiles، هاجرت docker-compose للإنتاج المصغر، وثّقت كل خطوة.  
+> **R**: صفر مشاكل بيئة منذ ذلك الحين. وقت الـ onboarding من 3 أيام → 30 دقيقة.
+
+---
+
+## 📚 المراجع والروابط
+
+### دروس مرتبطة
+- [Container Fundamentals](../08-containers/01-container-fundamentals) — Namespaces, cgroups
+- [Docker Compose Production](./02-docker-compose-production) — Compose في الإنتاج
+- [CI/CD Pipelines](../15-cicd/01-cicd-pipelines) — Docker في CI/CD
+
+### شهادات
+- **DCA**: Docker Certified Associate
+- **AZ-104**: Azure Administrator (ACR, ACI)
+
+### مصادر خارجية
+- 📖 [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
+- 📖 [BuildKit Documentation](https://docs.docker.com/build/buildkit/)
+- 📺 "Docker Deep Dive" — Nigel Poulton
+
+### مصطلحات
+| المصطلح | التعريف |
+|---------|---------|
+| **Multi-stage Build** | بناء بمراحل — الصورة النهائية تحتوي binary فقط |
+| **BuildKit** | محرك بناء حديث — caching ذكي، secrets آمن |
+| **OCI** | معيار مفتوح لصور و runtimes الحاويات |
+| **Registry** | مستودع لتخزين وتوزيع الصور |
+
+---
+
+[← العودة للموديول](01-docker-mastery) | [→ Docker Compose Production](./02-docker-compose-production) | [🏠 الرئيسية](/)

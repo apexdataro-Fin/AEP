@@ -552,4 +552,139 @@ kubectl get events --sort-by='.lastTimestamp' | tail -20
 
 ---
 
-[← العودة للوحدة](01-kubernetes-architecture) | [🏠 الرئيسية](/)
+---
+
+## 🏛️ طبقة الإنتاج: K8s في المؤسسة
+
+### etcd Backup — أهم عملية في الكلستر
+
+```bash
+# نسخ احتياطي etcd
+ETCDCTL_API=3 etcdctl snapshot save /backup/etcd-$(date +%Y%m%d).db \
+  --endpoints=https://127.0.0.1:2379 \
+  --cacert=/etc/kubernetes/pki/etcd/ca.crt \
+  --cert=/etc/kubernetes/pki/etcd/server.crt \
+  --key=/etc/kubernetes/pki/etcd/server.key
+
+# استعادة
+etcdctl snapshot restore /backup/etcd-20260716.db \
+  --data-dir=/var/lib/etcd-restored
+```
+
+### Resource Quotas — لا تثق بالمطورين
+
+```yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: dev-quota
+  namespace: development
+spec:
+  hard:
+    requests.cpu: "20"
+    requests.memory: "40Gi"
+    limits.cpu: "40"
+    limits.memory: "80Gi"
+    persistentvolumeclaims: "10"
+    pods: "50"
+```
+
+### Pod Disruption Budget
+
+```yaml
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: api-pdb
+spec:
+  minAvailable: 2  # لا تنزل أبداً عن 2 pods
+  selector:
+    matchLabels:
+      app: api
+```
+
+### 🚨 سيناريو CloudNova ٤: etcd فقد
+
+> **الموقف:** ساعة 2am — etcd corrupted. الكلستر موجود لكن لا يمكن تعديل أي شيء.
+
+```bash
+# لا ذعر. etcd backup ينقذك:
+# ١. أوقف API server
+# ٢. استعد etcd من آخر backup
+etcdctl snapshot restore /backup/etcd-20260716-0200.db
+# ٣. أعد تشغيل API server
+# ٤. تحقق: هل كل الـ workloads عادت؟
+
+# مدة التعافي: 15 دقيقة. بدون backup: إعادة بناء الكلستر من الصفر — أيام.
+```
+
+---
+
+## 🎨 طبقة المعماري: قرارات الكلستر
+
+### K8s vs Docker Compose vs Nomad
+
+| المعيار | K8s | Docker Compose | Nomad |
+|---------|-----|---------------|-------|
+| **النطاق** | أي حجم | جهاز واحد | أي حجم |
+| **التعقيد** | عالي | منخفض | متوسط |
+| **Ecosystem** | ضخم (Helm, Istio, Argo) | محدود | جيد (Consul, Vault) |
+| **منحنى التعلم** | steep | سهل | معتدل |
+| **المؤسسات** | ✅ المعيار | ❌ | ✅ (HashiCorp stack) |
+
+### متى لا تستخدم Kubernetes؟
+- فريق أصغر من 3 مهندسين
+- أقل من 5 خدمات
+- لا تحتاج scaling تلقائي
+- ميزانية محدودة جداً
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين ١: نشر تطبيق (سهل)
+> انشر تطبيق web مع Deployment (3 replicas) + Service + Ingress.
+
+### تمرين ٢: تحقيق حادثة (متوسط)
+> Pod في CrashLoopBackOff. لا سجلات. `exit code 137`. شخّص.
+
+### تحدي: HPA + VPA (متقدم)
+> صمم autoscaling: HPA للـ CPU + VPA للـ memory. اختبر بزيادة حمل اصطناعي وراقب السلوك.
+
+### 📝 تقييم
+
+**س١:** ماذا يحدث عندما يموت kubelet؟
+<details><summary>الإجابة</summary>الـ Control Plane يعلّم Node كـ NotReady. بعد 5 دقائق (pod-eviction-timeout)، pods تُجدول على nodes أخرى. الـ pods الميتة تبقى في Terminating حتى يعود kubelet.</details>
+
+**س٢:** ما الفرق بين Deployment و StatefulSet؟
+<details><summary>الإجابة</summary>Deployment: Pods متطابقة، أي pod يستبدل الآخر. StatefulSet: Pods بهوية ثابتة و persistent volumes — للـ databases.</details>
+
+**س٣:** كيف تصمم K8s cluster لـ 500 microservice؟
+<details><summary>الإجابة</summary>Namespaces للفرق. ResourceQuota لكل ns. NetworkPolicies (deny-all). Istio للمراقبة والـ mTLS. Argo CD للنشر. Cluster Autoscaler. Backup etcd كل 6 ساعات.</details>
+
+### 🧠 استدعاء نشط
+1. ارسم معمارية K8s من الذاكرة (Control Plane + Worker).
+2. ما مسار طلب HTTP من Ingress → Service → Pod؟
+3. كيف تكتشف Pod يستهلك ذاكرة زائدة قبل OOMKill؟
+4. اذكر 5 أنواع من Services ومتى تستخدم كل منها.
+5. كيف تحمي etcd؟
+
+### 🎤 مقابلة
+
+**"صمم K8s cluster لـ fintech بـ 99.99% uptime."**
+→ 3 Control Plane nodes. etcd cluster منفصل مع backup كل 6 ساعات. Multi-AZ workers. Cluster Autoscaler + HPA. Istio mTLS. PodDisruptionBudgets صارمة.
+
+**"كيف تنتقل من Docker Compose لـ Kubernetes؟"**
+→ `kompose convert` للبداية. شغّل compose و K8s جنباً إلى جنب. وزع 10% من الحركة أولاً. زد تدريجياً.
+
+---
+
+## 📚 مراجع
+- [Kubernetes Networking](./02-kubernetes-networking) — CNI, Ingress, Service Mesh
+- [Helm Fundamentals](../11-helm/01-helm-fundamentals) — مدير الحزم
+- [GitOps Fundamentals](../18-gitops/01-gitops-fundamentals) — Argo CD
+- 📖 [Kubernetes Documentation](https://kubernetes.io/docs/)
+
+---
+
+[← العودة للوحدة](01-kubernetes-architecture) | [→ Kubernetes Networking](./02-kubernetes-networking) | [🏠 الرئيسية](/)

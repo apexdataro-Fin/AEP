@@ -497,4 +497,109 @@ helm install api-prod ./cloudnova-api \
 
 ---
 
-[← العودة للموديول](./01-helm-fundamentals) | [🏠 الرئيسية](/)
+---
+
+## 🏛️ طبقة الإنتاج: Helm في المؤسسة
+
+### Helm + Argo CD = GitOps
+
+```yaml
+# Argo CD Application — ينشر Helm Chart تلقائياً من Git
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cloudnova-api
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/CloudNova/helm-charts
+    targetRevision: main
+    path: charts/cloudnova-api
+    helm:
+      valueFiles:
+        - values-prod.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true  # drift detection
+    syncOptions:
+      - CreateNamespace=true
+```
+
+### Helm Secrets مع External Secrets Operator
+
+```yaml
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: cloudnova-db-secret
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: azure-keyvault
+    kind: ClusterSecretStore
+  target:
+    name: cloudnova-db-secret
+  data:
+    - secretKey: password
+      remoteRef:
+        key: database-password
+```
+
+### متى لا تستخدم Helm؟
+
+- **Kustomize أفضل**: إذا كنت تعدل manifests قليلة فقط ولا تريد templates
+- **Argo CD مباشر**: إذا كنت تنشر raw manifests من Git
+- **Pulumi/CDK**: إذا كنت تفضل لغات برمجة على YAML templates
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين ١: Helm Chart من الصفر (سهل)
+> `helm create my-app` ثم عدل templates لتناسب تطبيق Python.
+
+### تمرين ٢: Hook للـ migrations (متوسط)
+> أضف Job hook لترحيل قاعدة البيانات قبل upgrade.
+
+### تحدي: Library Chart (متقدم)
+> ابنِ Library Chart يحتوي _helpers.tpl فقط. استخدمه في 3 تطبيقات مختلفة.
+
+### 📝 تقييم
+
+**س١:** لماذا أزال Helm v3 Tiller؟
+<details><summary>الإجابة</summary>Tiller يحتاج cluster-admin permissions = خطر أمني. Helm v3 يتصل مباشرة بـ K8s API ويخزن releases كـ Secrets داخل namespace التطبيق.</details>
+
+**س٢:** ما الفرق بين `helm install` و `helm upgrade --install`؟
+<details><summary>الإجابة</summary>install يفشل إذا الـ release موجود. upgrade --install يثبّت إذا لم يوجد أو يرقّي إذا وجد. الأفضل لـ CI/CD.</details>
+
+**س٣:** كيف تدير secrets في Helm؟
+<details><summary>الإجابة</summary>External Secrets Operator، Sealed Secrets، أو `existingSecret`. ولا تخزّن secrets أبداً في values.yaml.</details>
+
+### 🧠 استدعاء نشط
+1. ارسم دورة حياة Helm release: install → upgrade → rollback → uninstall.
+2. كيف تبني Chart يدعم 3 بيئات (dev/staging/prod)؟
+3. ما فائدة `helm.sh/hook` annotations؟
+
+### 🎤 مقابلة
+
+**"كيف تصمم Helm Charts لـ 30 microservice؟"**
+→ Library chart لـ _helpers.tpl المشترك. Chart لكل خدمة. Umbrella chart للتثبيت الكامل. Argo CD للـ GitOps.
+
+**"كيف تتعامل مع Helm drift؟"**
+→ `helm diff upgrade` قبل التطبيق. Argo CD selfHeal للتصحيح التلقائي.
+
+---
+
+## 📚 مراجع
+- [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) — الأساس
+- [GitOps Fundamentals](../18-gitops/01-gitops-fundamentals) — Argo CD + Helm
+- 📖 [Helm Documentation](https://helm.sh/docs/)
+
+---
+
+[← العودة للموديول](./01-helm-fundamentals) | [→ Terraform Fundamentals](../12-terraform/01-terraform-fundamentals) | [🏠 الرئيسية](/)
