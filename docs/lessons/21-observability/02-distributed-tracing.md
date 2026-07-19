@@ -35,14 +35,7 @@ sequenceDiagram
 ### Jaeger Query
 
 ```bash
-# نشر Jaeger
 kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/latest/download/jaeger-operator.yaml
-
-# البحث عن traces بطيئة
-# في Jaeger UI:
-# Service: api-gateway
-# Operation: GET /orders
-# Min Duration: 500ms
 ```
 
 ### تحليل Bottleneck
@@ -52,15 +45,52 @@ kubectl apply -f https://github.com/jaegertracing/jaeger-operator/releases/lates
 | Auth | 50ms | 6% |
 | Orders DB | 150ms | 19% |
 | Payment DB | 100ms | 13% |
-| **Payment Service** | **300ms** | **38%** ← المشكلة هنا! |
+| **Payment Service** | **300ms** | **38%** ← المشكلة! |
 
 ---
 
-## 🛠️ تدريب
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
-1. ثبّت Jaeger على Kubernetes
-2. أضف tracing إلى تطبيق Python مع OpenTelemetry
-3. اكتشف أبطأ span في طلب معين
+بطء غامض في `/checkout`. لا logs تظهر خطأ. Jaeger كشف: Payment Service يستدعي 3rd party API يأخذ 5 ثوانٍ.
+
+**الحل**: Circuit breaker + timeout 2s + fallback.
+
+### Sampling Strategies
+
+| Strategy | متى تستخدم |
+|----------|-----------|
+| **Always (100%)** | Development فقط |
+| **Probabilistic (10%)** | Production عادي |
+| **Adaptive** | Production متقدم — يحتفظ بـ slow traces |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: ثبّت Jaeger وارسل trace من تطبيق Python
+### تحدي: اكتشف أبطأ span في طلب حقيقي
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما الفرق بين trace و span؟
+2. لماذا sampling ضروري في الإنتاج؟
+3. كيف تكتشف bottleneck مع Jaeger؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Trace | مجموعة spans تمثل طلباً واحداً |
+| Span | وحدة عمل واحدة داخل trace |
+| Sampling | نسبة traces المخزنة |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تشخص بطء في API؟"** → Jaeger trace → أطول span → سببه
+2. **"Distributed Tracing vs Logging؟"** → Logging: ماذا حدث. Tracing: أين ومتى حدث في الـ flow كله
 
 ---
 

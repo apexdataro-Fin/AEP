@@ -31,9 +31,9 @@ graph LR
 
 ### المبادئ الثلاثة:
 
-1. **Verify Explicitly**: تحقق من كل طلب (من، من أين، إلى أين، متى)
-2. **Least Privilege**: أعطِ الصلاحيات الدنيا المطلوبة فقط
-3. **Assume Breach**: افترض أنك مخترق وصمم دفاعاتك بناءً على ذلك
+1. **Verify Explicitly**: تحقق من كل طلب
+2. **Least Privilege**: صلاحيات دنيا فقط
+3. **Assume Breach**: افترض أنك مخترق
 
 ### Conditional Access
 
@@ -42,21 +42,11 @@ graph LR
   "conditions": {
     "userRiskLevels": ["high"],
     "signInRiskLevels": ["medium", "high"],
-    "clientAppTypes": ["all"],
-    "locations": {
-      "includeLocations": ["All"],
-      "excludeLocations": ["TrustedIPs"]
-    }
+    "locations": { "includeLocations": ["All"], "excludeLocations": ["TrustedIPs"] }
   },
   "grantControls": {
     "operator": "AND",
     "builtInControls": ["mfa", "compliantDevice"]
-  },
-  "sessionControls": {
-    "signInFrequency": {
-      "value": 4,
-      "type": "hours"
-    }
   }
 }
 ```
@@ -71,7 +61,51 @@ az security jit-policy create \
   --max-request-access-duration PT3H
 ```
 
-الآن SSH غير متاح إلا بعد طلب صريح، ويُغلق تلقائياً بعد 3 ساعات.
+---
+
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
+
+مهندس DevOps حاول SSH إلى production من مقهى. Conditional Access: "جهاز غير متوافق + موقع غير موثوق" → رُفض. طلب MFA إضافي → لم يجتز compliance check → حُظر.
+
+**الدرس**: Zero Trust أوقف هجوماً محتملاً.
+
+### Zero Trust Journey
+
+```mermaid
+graph LR
+    P1[Identity: MFA + Conditional Access] --> P2[Device: Intune Compliance]
+    P2 --> P3[Network: Micro-segmentation]
+    P3 --> P4[Data: Classification + Encryption]
+```
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: أنشئ Conditional Access policy
+### تحدي: فعّل JIT VM Access
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما هي مبادئ Zero Trust الثلاثة؟
+2. كيف يختلف عن الأمن التقليدي؟
+3. ما فائدة JIT Access؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Zero Trust | لا تثق بشيء. تحقق من كل طلب |
+| Conditional Access | سياسات تحكم الوصول بناءً على شروط |
+| JIT | Just-in-Time — وصول مؤقت ومحدود |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تطبق Zero Trust في مؤسستك؟"** → Identity → Device → Network → Data
+2. **"ما الفرق بين Zero Trust و traditional security؟"** → Traditional: ثق بالشبكة الداخلية. Zero Trust: لا تثق بشيء
 
 ---
 

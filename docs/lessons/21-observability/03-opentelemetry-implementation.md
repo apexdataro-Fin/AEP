@@ -67,12 +67,50 @@ spec:
 ```bash
 pip install opentelemetry-distro opentelemetry-exporter-otlp
 opentelemetry-bootstrap -a install
-
-# تشغيل التطبيق مع auto-instrumentation
 opentelemetry-instrument python app.py
 ```
 
-بدون تغيير كود واحد! كل الـ HTTP calls و DB queries تُراقب تلقائياً.
+---
+
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
+
+قبل OTel: 3 مكتبات مختلفة (Jaeger, Prometheus, Azure SDK). بعد OTel: مكتبة واحدة + Collector واحد يوزع لكل وجهة.
+
+### OTel vs Vendor Lock-in
+
+| قبل OTel | بعد OTel |
+|---------|----------|
+| Jaeger SDK في الكود | OTel SDK فقط |
+| تبديل إلى Zipkin = إعادة كتابة | تغيير exporter فقط |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: ثبت OTel Collector على Kubernetes
+### تحدي: أضف instrumentation يدوي لـ metric مخصصة
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. لماذا OTel أفضل من SDKs المباشرة؟
+2. ما دور الـ Collector؟
+3. كيف تغير وجهة الـ traces بدون تغيير الكود؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| OTel | OpenTelemetry — معيار مفتوح للمراقبة |
+| Collector | وسيط يستقبل ويعالج ويصدر البيانات |
+| Auto-instrumentation | مراقبة بدون تغيير الكود |
+
+---
+
+## 🎤 مقابلة
+1. **"لماذا تختار OpenTelemetry؟"** → معيار واحد، لا vendor lock-in، مجتمع ضخم
+2. **"كيف تهاجر من Jaeger SDK إلى OTel؟"** → استبدل SDK + اضبط exporter إلى Jaeger
 
 ---
 

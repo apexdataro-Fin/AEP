@@ -82,4 +82,69 @@ scrape_configs:
 
 ---
 
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
+
+**Alert: HighErrorRate triggered 2AM**
+
+```bash
+# تشخيص سريع عبر PromQL في Grafana
+# 1. أي endpoint يسبب الأخطاء؟
+sum(rate(http_requests_total{status=~"5.."}[5m])) by (endpoint)
+
+# 2. هل هي مشكلة في DB؟
+rate(db_connection_errors_total[5m])
+
+# 3. هل هناك deployment حديث؟
+changes(kube_deployment_status_observed_generation[30m])
+```
+
+**النتيجة**: Deployment حديث غيّر connection string. Rollback خلال دقيقتين.
+
+### Alert Design Best Practices
+
+1. **لا alert على كل شيء** — فقط ما يحتاج استيقاظ 3AM
+2. **Runbook URL** — كل alert معه رابط runbook
+3. **pages vs tickets** — Critical → PagerDuty. Warning → Jira ticket
+
+---
+
+## 🎨 Recording Rules vs Ad-hoc Queries
+
+| | Recording Rules | Ad-hoc Queries |
+|---|---------------|---------------|
+| **السرعة** | فورية (pre-computed) | تحسب عند الطلب |
+| **الاستخدام** | Dashboards, alerts | استكشاف الأخطاء |
+| **التكلفة** | RAM/CPU إضافي | لا شيء |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: اكتب PromQL query يحسب P99 latency لكل endpoint
+### تحدي: صمم alert rule مع runbook
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما فائدة Recording Rules؟
+2. كيف تصمم alert جيد؟
+3. متى تستخدم Federation؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| PromQL | لغة استعلام Prometheus |
+| Recording Rule | Pre-computed metric لتسريع الـ dashboards |
+| AlertManager | إدارة وتوجيه التنبيهات |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تراقب 1000 خدمة؟"** → Federation + Recording Rules + Thanos/Cortex
+2. **"كيف تصمم alert لا يسبب fatigue؟"** → threshold مناسب + runbook + pages فقط للحالات الحرجة
+
+---
+
 [← Monitoring Fundamentals](./01-monitoring-fundamentals) | [→ Grafana](./03-grafana-dashboards-alerting) | [🏠 الرئيسية](/)
