@@ -31,15 +31,8 @@ Root Management Group
 ```
 
 ```bash
-# إنشاء Management Group
-az account management-group create \
-  --name Production \
-  --display-name "Production Resources"
-
-# نقل اشتراك إلى Management Group
-az account management-group subscription add \
-  --name Production \
-  --subscription "cloudnova-prod-sub"
+az account management-group create --name Production --display-name "Production Resources"
+az account management-group subscription add --name Production --subscription "cloudnova-prod-sub"
 ```
 
 ### Azure Policy — قواعد إلزامية
@@ -61,50 +54,119 @@ az account management-group subscription add \
 }
 ```
 
-```bash
-az policy definition create --name allowed-vm-skus --rules policy.json
-az policy assignment create --policy allowed-vm-skus --scope /providers/Microsoft.Management/managementGroups/Production
-```
-
 ### Cost Management
 
 ```bash
-# إنشاء Budget مع alert
-az consumption budget create \
-  --budget-name monthly-budget \
-  --amount 5000 \
-  --time-grain Monthly \
-  --start-date 2026-01-01 \
-  --end-date 2026-12-31 \
-  --contact-emails ops@cloudnova.com
+az consumption budget create --budget-name monthly-budget --amount 5000 --time-grain Monthly --contact-emails ops@cloudnova.com
+az consumption budget create --budget-name monthly-budget-80 --amount 4000 --threshold 80
+```
 
-# إرسال alert عند 80%
-az consumption budget create \
-  --budget-name monthly-budget-80 \
-  --amount 4000 \
-  --threshold 80 \
-  --contact-emails ops@cloudnova.com
+### Resource Locks
+
+```bash
+az lock create --name CanNotDelete --lock-type CanNotDelete --resource-group cloudnova-prod
+az lock create --name ReadOnly --lock-type ReadOnly --resource cloudnova-dns-zone
 ```
 
 ---
 
-## 🏛️ سيناريو CloudNova
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
-أحد المطورين الجدد أنشأ 5 VMs من SKU `Standard_E64s_v3` "للتجربة". الفاتورة الشهرية: $2,500 × 5 = $12,500.
+أحد المطورين أنشأ 5 VMs من SKU `Standard_E64s_v3` "للتجربة". الفاتورة: $12,500.
 
-بعد الحادثة، طبقنا:
-1. Azure Policy: يمنع إنشاء أي VM أكبر من `Standard_D4s_v3` بدون موافقة
-2. Budget Alert: إشعار عند 50% من الميزانية الشهرية
-3. Resource Locks: قفل `CanNotDelete` على موارد الإنتاج
+**بعد الحادثة**:
+1. Azure Policy: يمنع أي VM أكبر من `Standard_D4s_v3`
+2. Budget Alert: إشعار عند 50%
+3. Resource Locks: `CanNotDelete` على الإنتاج
+4. RBAC: المطورون لا يملكون `Contributor` في production
+
+### Tagging Strategy
+
+```bash
+# إلزام tags عبر Azure Policy
+az policy definition create --name require-tags --rules '{
+  "if": {
+    "field": "tags",
+    "exists": "false"
+  },
+  "then": {
+    "effect": "Deny"
+  }
+}'
+
+# Tags إلزامية: Environment, CostCenter, Owner
+```
+
+### Monitoring Compliance
+
+```bash
+az policy state list --query "[?complianceState=='NonCompliant']" -o table
+```
 
 ---
 
-## 🛠️ تدريب
+## 🎨 طبقة المعماري
 
-اكتب 3 Azure Policies:
+### Policy Effects
+
+| Effect | متى تستخدمه |
+|--------|-----------|
+| **Deny** | منع إنشاء موارد غير مسموحة |
+| **Audit** | تسجيل المخالفات بدون منع |
+| **DeployIfNotExists** | نشر موارد تلقائياً (مثل diagnostic settings) |
+| **Modify** | تعديل خصائص الموارد (مثل إضافة tags) |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: اكتب 3 Azure Policies
 1. منع إنشاء موارد خارج West Europe
-2. إلزام جميع الـ Storage Accounts بـ TLS 1.2
+2. إلزام Storage Accounts بـ TLS 1.2
 3. فرض tags: `Environment` و `CostCenter`
+
+### تحدي: Cost Alert Automation
+أنشئ Azure Function ترسل إشعار Slack عندما تقترب الفاتورة من الـ budget.
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما الفرق بين Management Group و Subscription؟
+2. متى تستخدم `Deny` vs `Audit` effect في Policy؟
+3. كيف تمنع حذف موارد الإنتاج؟
+4. ما فائدة tagging؟
+5. كيف تراقب compliance؟
+
+### 🃏 بطاقات
+
+| السؤال | الإجابة |
+|--------|---------|
+| Management Group | حاوية لتنظيم الاشتراكات |
+| Azure Policy | قواعد إلزامية تتحكم في الموارد |
+| Resource Lock | منع حذف أو تعديل الموارد |
+| Budget Alert | إشعار عند تجاوز حد الإنفاق |
+
+---
+
+## 🎤 مقابلة
+
+1. **"كيف تحكم 50 اشتراك Azure؟"**
+   → Management Groups + Policies + RBAC + Budgets + Monitoring
+
+2. **"كيف تمنع فريق التطوير من إنشاء موارد باهظة؟"**
+   → Azure Policy (Deny expensive SKUs) + Budget alerts
+
+---
+
+## 📚 مراجع
+
+| النوع | الرابط |
+|-------|--------|
+| درس مرتبط | [Azure Storage](./04-azure-storage-deep-dive) |
+| درس مرتبط | [FinOps](../../22-finops/01-finops-fundamentals) |
+| شهادة | AZ-104 (Governance) |
 
 ---
 

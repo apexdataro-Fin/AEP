@@ -2,7 +2,6 @@
 sidebar_position: 3
 title: "شبكات Azure المتقدمة"
 description: "VNet Peering، Private Endpoints، Service Endpoints، Hub-Spoke — تصميم شبكات Azure على نطاق المؤسسة."
----
 
 # شبكات Azure المتقدمة
 
@@ -59,10 +58,9 @@ az network vnet peering create \
   --use-remote-gateways
 ```
 
-### Private Endpoints — وصول خاص كلياً
+### Private Endpoints
 
 ```bash
-# إنشاء Private Endpoint لـ Azure SQL
 az network private-endpoint create \
   --name sql-private-endpoint \
   --resource-group cloudnova-data \
@@ -71,27 +69,24 @@ az network private-endpoint create \
   --private-connection-resource-id /subscriptions/.../sqlServers/cloudnova-sql \
   --group-ids sqlServer \
   --connection-name sql-connection
-
-# الآن SQL لا يمكن الوصول إليه إلا من داخل الـ VNet
-# Public access معطل تماماً
 ```
 
 ---
 
-## 🏛️ سيناريو CloudNova: مشكلة اتصال
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
 **المشكلة**: App Service في Spoke 2 لا يستطيع الاتصال بـ SQL Database في Spoke 3.
 
-**التحقيق**:
-1. هل Service Endpoint مفعل على subnet Spoke 2؟ ✅
-2. هل Private Endpoint موجود في Spoke 3؟ ✅
-3. هل DNS يحل إلى الـ private IP؟ ❌ — المشكلة هنا!
-
-**الحل**: DNS Private Zone غير مرتبط بـ Spoke 2 VNet.
-
 ```bash
-# ربط Private DNS Zone
-az network private-dns zone link create \
+# 1. فحص Service Endpoint
+az network vnet subnet show --vnet-name spoke2-vnet --name app-subnet \
+  --query "serviceEndpoints"
+
+# 2. فحص Private DNS Zone
+az network private-dns zone list --query "[?zoneName=='privatelink.database.windows.net']"
+
+# 3. المشكلة: DNS Zone غير مرتبط بـ Spoke 2!
+az network private-dns link vnet create \
   --zone-name privatelink.database.windows.net \
   --name spoke2-link \
   --resource-group cloudnova-dns \
@@ -99,17 +94,82 @@ az network private-dns zone link create \
   --registration-enabled false
 ```
 
+**الدرس**: DNS هو المتهم الخفي في 80% من مشاكل الشبكة!
+
+---
+
+## 🎨 طبقة المعماري
+
+### Service Endpoints vs Private Link
+
+| | Service Endpoint | Private Link |
+|---|-----------------|-------------|
+| **التكلفة** | مجاني | مدفوع |
+| **IP** | Public IP (لكن عبر Azure backbone) | Private IP في VNet |
+| **الوصول من On-Prem** | ❌ (بدون VPN/ER) | ✅ (عبر VPN) |
+| **Data Exfiltration** | ممكن (إذا خمن الـ IP) | مستحيل |
+
+**القاعدة**: Service Endpoints جيدة. Private Link أفضل. استخدم Private Link للبيانات الحساسة.
+
+### Global Peering
+
+```bash
+az network vnet peering create \
+  --name eu-to-us \
+  --resource-group cloudnova-eu \
+  --vnet-name eu-vnet \
+  --remote-vnet /subscriptions/.../us-vnet \
+  --allow-vnet-access
+# الاتصال عبر Azure backbone — ليس عبر الإنترنت!
+```
+
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: صمم شبكة CloudNova
+صمم topology: Hub + 3 Spokes + Private Endpoints + Firewall.
 
-ارسم topology لـ CloudNova:
-- Hub: Azure Firewall + VPN Gateway
-- 3 Spokes: Web, App, Data
-- Private Endpoints لقاعدة البيانات
-- كل الـ outbound traffic يمر عبر Firewall
+### تحدي: استكشاف مشكلة اتصال
+صمم سيناريو فشل اتصال بين خدمتين واستخدم `az network` لتشخيصه.
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما الفرق بين Service Endpoint و Private Link؟
+2. لماذا Hub-Spoke أفضل من mesh topology؟
+3. كيف يختلف Global Peering عن VNet Peering العادي؟
+4. متى تستخدم Private DNS Zone؟
+
+### 🃏 بطاقات
+
+| السؤال | الإجابة |
+|--------|---------|
+| VNet Peering | ربط VNets عبر Azure backbone |
+| Private Link | وصول خاص لخدمات PaaS عبر Private IP |
+| Hub-Spoke | Hub مركزي + Spokes متفرعة |
+
+---
+
+## 🎤 مقابلة
+
+1. **"صمم شبكة Azure لـ 500 مهندس"**
+   → Hub-Spoke + Firewall + VPN/ER + Private Link + DNS resolution
+
+2. **"كيف تستكشف مشكلة اتصال بين خدمتين في Azure؟"**
+   → DNS check → NSG rules → Route tables → VNet peering → Firewall logs
+
+---
+
+## 📚 مراجع
+
+| النوع | الرابط |
+|-------|--------|
+| درس مرتبط | [Azure Storage](./04-azure-storage-deep-dive) |
+| شهادة | AZ-700 (Azure Networking) |
+| شهادة | AZ-104 (Administrator) |
 
 ---
 
