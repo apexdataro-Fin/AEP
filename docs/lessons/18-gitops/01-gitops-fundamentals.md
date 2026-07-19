@@ -409,4 +409,36 @@ argocd app set cloudnova-api --sync-policy none
 
 ---
 
-[← العودة للموديول](./01-gitops-fundamentals) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: GitOps في المؤسسة
+
+### Argo CD Health Checks
+```yaml
+healthChecks:
+  - apiVersion: apps/v1
+    kind: Deployment
+    name: cloudnova-api
+```
+
+### متى يفشل GitOps؟
+- **Drift**: شخص عدّل يدوياً في K8s → Argo CD يصحح تلقائياً
+- **Secrets**: لا تخزن secrets في Git → External Secrets Operator
+
+### 🚨 CloudNova: Drift detection saves the day
+> مهندس عدّل replicas يدوياً. Argo CD أعادها بعد 3 دقائق.
+
+---
+
+## 🛠️ تدريبات
+**تمرين ١:** ثبت Argo CD. **تمرين ٢:** Flux Image Automation. **تحدي:** Argo Rollouts canary.
+
+### 📝 تقييم
+**س١:** Push vs Pull CD؟ → Push: CI يدفع. Pull: agent يسحب من Git.
+**س٢:** Drift = ؟ → فرق بين Git والحالة الفعلية.
+**س٣:** Argo vs Flux؟ → Argo: UI ممتازة. Flux: GitOps Toolkit كامل.
+
+### 🎤 مقابلة
+**"كيف تختلف GitOps عن CI/CD التقليدي؟"** → Pull-based. Agent داخل K8s. Self-healing.
+
+---
+
+[← العودة للموديول](./01-gitops-fundamentals) | [→ Platform Engineering](../19-platform/01-platform-engineering) | [🏠 الرئيسية](/)

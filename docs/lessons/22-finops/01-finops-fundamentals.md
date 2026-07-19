@@ -471,4 +471,28 @@ ResourceCosts
 
 ---
 
-[🏠 العودة للرئيسية](/) | [📚 جميع الدروس](/docs/lessons)
+## 🏛️ طبقة الإنتاج: ثقافة FinOps
+
+### FinOps Champions
+- كل فريق = FinOps Champion واحد
+- تقرير شهري للتكاليف لكل CostCenter
+
+### 🚨 CloudNova: أزمة $78,200
+> GPU VMs منسية + logs explosion. إصلاح: إيقاف فوري → توفير $32,700/شهر.
+
+---
+
+## 🛠️ تدريبات
+**تمرين ١:** KQL cost analysis. **تمرين ٢:** Budget alerts.
+
+### 📝 تقييم
+**س١:** FinOps cycle؟ → Inform → Optimize → Operate.
+**س٢:** RI vs Savings Plan؟ → RI: VM محدد. SP: مرونة أكثر.
+**س٣:** Spot VMs متى؟ → Non-critical workloads.
+
+### 🎤 مقابلة
+**"كيف توفر 50% من تكلفة السحابة؟"** → RI + Right-sizing + Auto-shutdown + Spot + Cleanup.
+
+---
+
+[← العودة للموديول](./01-finops-fundamentals) | [🏠 الرئيسية](/)

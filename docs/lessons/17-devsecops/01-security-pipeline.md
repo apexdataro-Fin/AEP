@@ -362,4 +362,28 @@ Dependabot اكتشف ثغرة Log4Shell في إحدى خدمات CloudNova.
 
 ---
 
-[← العودة للموديول](./01-security-pipeline) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: Security Champions + Incident Response
+
+### Security Champions Program
+- كل فريق = Security Champion واحد
+- تدريب أمني شهري + threat model review
+
+### 🚨 CloudNova: Log4Shell
+> Dependabot اكتشف Log4Shell (CVSS 10.0). 3 ساعات discovery → fix.
+
+---
+
+## 🛠️ تدريبات
+**تمرين ١:** فعّل Semgrep. **تمرين ٢:** OPA policy. **تحدي:** SBOM + signing.
+
+### 📝 تقييم
+**س١:** SAST vs DAST؟ → SAST: static code. DAST: running app.
+**س٢:** SCA = ؟ → تحليل مكتبات الطرف الثالث.
+**س٣:** Shift Left = ؟ → الأمان من أول commit.
+
+### 🎤 مقابلة
+**"كيف تدمج الأمان في CI/CD؟"** → Pre-commit hooks + SAST + SCA + Container scan + DAST + IaC.
+
+---
+
+[← العودة للموديول](./01-security-pipeline) | [→ Container Security](./02-container-security) | [🏠 الرئيسية](/)

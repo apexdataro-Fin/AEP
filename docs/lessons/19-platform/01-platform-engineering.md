@@ -299,4 +299,30 @@ Platform Adoption:
 
 ---
 
-[← العودة للموديول](./01-platform-engineering) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: قياس نجاح المنصة
+
+### Developer NPS
+> "هل توصي زميلك باستخدام منصتنا؟" الهدف > 60.
+
+### Time to 10th PR
+> من onboarding → 10th merged PR. الهدف < أسبوعين.
+
+### 🚨 CloudNova: من 12 إلى 67 NPS
+> بعد 6 أشهر: إنشاء خدمة: 3 أسابيع → 4 ساعات. وقت النشر: ساعتين → 10 دقائق.
+
+---
+
+## 🛠️ تدريبات
+**تمرين ١:** Software Template. **تمرين ٢:** Backstage catalog. **تحدي:** Scorecards.
+
+### 📝 تقييم
+**س١:** DevOps vs Platform Engineering؟ → PE: منصة داخلية موحدة.
+**س٢:** Team Topologies الأربعة؟ → Stream-aligned, Platform, Enabling, Complicated Subsystem.
+**س٣:** Golden Paths = ؟ → المسار الموصى به للنشر.
+
+### 🎤 مقابلة
+**"متى تحتاج Platform Engineering؟"** → > 5 فرق + طرق نشر متعددة.
+
+---
+
+[← العودة للموديول](./01-platform-engineering) | [→ Monitoring](../20-monitoring/01-monitoring-fundamentals) | [🏠 الرئيسية](/)

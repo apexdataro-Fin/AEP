@@ -543,6 +543,38 @@ kubectl set image deployment/api api=cloudnova.azurecr.io/api:v2.1.1
 
 <div align="center">
 
-**[→ الدرس التالي: GitOps](/docs/lessons/gitops/gitops-fundamentals)**
+**[→ GitOps](../18-gitops/01-gitops-fundamentals)
+
+---
+
+## 🏛️ طبقة الإنتاج: Container Security في المؤسسة
+
+### Supply Chain Security (SLSA)
+```bash
+# SLSA Level 3: Provenance + Signing
+cosign sign --key vault://... cloudnova.azurecr.io/api:v2.1.0
+cosign verify --key vault://... cloudnova.azurecr.io/api:v2.1.0
+```
+
+### 🚨 CloudNova: صورة مخترقة
+> مهاجم دفع صورة للـ registry. Trivy scan في CI اكتشف malware ومنع النشر.
+
+---
+
+## 🛠️ تدريبات
+**تمرين ١:** Trivy scan. **تمرين ٢:** Pod Security Standards. **تحدي:** cosign signing.
+
+### 📝 تقييم
+**س١:** Pod Security levels؟ → Privileged, Baseline, Restricted.
+**س٢:** Trivy = ؟ → فحص ثغرات في صور الحاويات.
+**س٣:** Supply chain security؟ → SBOM + signing + provenance.
+
+### 🎤 مقابلة
+**"كيف تؤمن حاويات Kubernetes؟"** → Pod Security + NetworkPolicies + Trivy + cosign.
+
+---
+
+[← Security Pipeline](./01-security-pipeline) | [🏠 الرئيسية](/)
+**
 
 </div>

@@ -542,6 +542,53 @@ jobs:
 
 <div align="center">
 
-**[→ الدرس التالي: DevOps Culture](/docs/lessons/devops/devops-culture)**
+**[→ DevOps Culture](../16-devops/01-devops-culture)
+
+---
+
+## 🏛️ طبقة الإنتاج
+
+### Auto-Rollback — لا تنتظر البشر
+
+```yaml
+# Argo Rollouts مع auto-rollback
+analysis:
+  templates:
+  - templateName: error-rate-check
+  args:
+  - name: threshold
+    value: "0.02"  # 2% errors = rollback فوري
+```
+
+### 🚨 CloudNova: N+1 query في Canary
+> v2 فيه N+1 query. Canary 10% = 50 فاتورة فاشلة. Auto-rollback أنقذ.
+
+---
+
+## 🛠️ تدريبات
+
+**تمرين ١:** نفذ Blue-Green مع Service selector switch.
+**تمرين ٢:** Canary deployment مع Istio.
+**تحدي:** Argo Rollouts مع automated analysis.
+
+### 📝 تقييم
+
+**س١:** Rolling vs Blue-Green؟
+→ Rolling: تدريجي على نفس الـ pods. Blue-Green: بيئتان كاملتان.
+
+**س٢:** Canary vs A/B Testing؟
+→ Canary: تقليل مخاطر النشر. A/B: قياس تأثير الميزات.
+
+**س٣:** Readiness Probe فائدته؟
+→ يمنع إرسال حركة لـ Pod غير جاهز.
+
+### 🎤 مقابلة
+**"كيف تنشر بدون downtime؟"**
+→ RollingUpdate + maxUnavailable: 0 + readinessProbes.
+
+---
+
+[← CI/CD Pipelines](./01-cicd-pipelines) | [🏠 الرئيسية](/)
+**
 
 </div>

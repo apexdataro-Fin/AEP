@@ -352,4 +352,78 @@ jobs:
 
 ---
 
-[← العودة للوحدة](01-cicd-pipelines) | [🏠 الرئيسية](/)
+---
+
+## 🏛️ طبقة الإنتاج: Pipeline في المؤسسة
+
+### متى يفشل CI/CD؟
+
+| السبب | المثال | الوقاية |
+|-------|--------|--------|
+| **Flaky tests** | test ينجح أحياناً ويفشل أحياناً | quarantine + fix |
+| **Secret leak** | `echo $SECRET` في log | GitHub push protection |
+| **Drift** | شخص عدّل شيئاً يدوياً في K8s | GitOps + selfHeal |
+| **Deploy storm** | 5 deployments متزامنة | queue + rolling |
+
+### 🚨 سيناريو: نشر فاشل يوم الجمعة
+
+> الجمعة 4pm — deploy يفشل. 30% errors. 
+
+```bash
+kubectl rollout undo deployment/api  # 15 seconds
+kubectl rollout status deployment/api
+curl -f https://api.cloudnova.com/health
+# ✅ Back to normal. Never deploy on Friday.
+```
+
+---
+
+## 🎨 طبقة المعماري
+
+### GitHub Actions vs Azure DevOps vs GitLab CI
+
+| المعيار | GitHub Actions | Azure DevOps | GitLab CI |
+|---------|---------------|-------------|-----------|
+| **التكلفة** | 2000 min/month free | 1800 min/month | 400 min/month |
+| **OIDC** | ✅ | ✅ | ✅ |
+| **YAML** | ✅ | ✅ | ✅ |
+| **Ecosystem** | 20K+ actions | محدود | جيد |
+| **Self-hosted** | ✅ | ✅ | ✅ |
+
+### متى لا تؤتمت النشر بالكامل؟
+
+- **تطبيقات حرجة جداً** (medical, financial) — manual approval إجباري
+- **Compliance requirements** — بعض الصناعات تمنع النشر التلقائي
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين ١: Pipeline بسيط (سهل)
+> ابنِ GitHub Actions: lint → test → build.
+
+### تمرين ٢: حماية البيئة (متوسط)
+> أنشئ production environment مع required reviewer.
+
+### تحدي: Canary Pipeline (متقدم)
+> Pipeline ينشر 10%، يختبر 5 دقائق، ثم 100%.
+
+### 📝 تقييم
+
+**س١:** CI vs CD؟
+<details><summary>الإجابة</summary>CI = build + test تلقائي. CD = deploy تلقائي.</details>
+
+**س٢:** متى Canary أفضل من Rolling؟
+<details><summary>الإجابة</summary>تغييرات عالية المخاطر — اختبر على 5% أولاً.</details>
+
+**س٣:** كيف تحمي production secrets؟
+<details><summary>الإجابة</summary>GitHub Secrets + Environment protection + OIDC.</details>
+
+### 🎤 مقابلة
+
+**"صمم CI/CD لـ 20 microservice."**
+→ Reusable workflows. Matrix builds. Path filtering. Deployment environments.
+
+---
+
+[← العودة للموديول](01-cicd-pipelines) | [→ Advanced Deployment](./02-advanced-deployment) | [🏠 الرئيسية](/)

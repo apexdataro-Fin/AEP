@@ -382,4 +382,29 @@ sum(rate(http_requests_total{status=~"5.."}[5m])) = 47%
 
 ---
 
-[← العودة للموديول](./01-monitoring-fundamentals) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: Alert Design
+
+### Anti-Alert Fatigue
+- لا تنبه على symptoms (CPU > 80%). نبه على SLO burn rate.
+- `for: 5m` لتجنب flapping.
+- مراجعة شهرية للتنبيهات.
+
+### 🚨 CloudNova: HighErrorRate
+> p95 latency من 200ms → 3s. Metrics كشفت، Logs أكدت، fix في دقائق.
+
+---
+
+## 🛠️ تدريبات
+**تمرين ١:** Prometheus + Grafana dashboard. **تمرين ٢:** AlertManager rules.
+
+### 📝 تقييم
+**س١:** RED = ؟ → Rate, Errors, Duration.
+**س٢:** USE = ؟ → Utilization, Saturation, Errors.
+**س٣:** Counter vs Gauge؟ → Counter يزيد فقط. Gauge يصعد ويهبط.
+
+### 🎤 مقابلة
+**"كيف تراقب distributed system؟"** → Metrics + Logs + Traces. RED+USE.
+
+---
+
+[← العودة للموديول](./01-monitoring-fundamentals) | [→ Observability](../21-observability/01-observability-essentials) | [🏠 الرئيسية](/)

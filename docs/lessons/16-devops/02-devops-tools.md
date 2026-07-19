@@ -441,6 +441,53 @@ groups:
 
 <div align="center">
 
-**[→ الدرس التالي: DevSecOps Pipeline](/docs/lessons/devsecops/security-pipeline)**
+**[→ DevSecOps Pipeline](../17-devsecops/01-security-pipeline)
+
+---
+
+## 🏛️ طبقة الإنتاج
+
+### Ansible + Terraform = ثنائي قوي
+
+```bash
+# Terraform ينشئ VM، Ansible يهيئه
+terraform apply -auto-approve
+ansible-playbook -i azure_rm.yml playbooks/provision.yml
+```
+
+### Vault في الإنتاج
+
+```bash
+vault operator init -key-shares=5 -key-threshold=3
+vault operator unseal  # 3 مفاتيح من 5
+```
+
+---
+
+## 🛠️ تدريبات
+
+**تمرين ١:** Playbook لتثبيت Nginx + TLS.
+**تمرين ٢:** Vault dynamic secrets لـ PostgreSQL.
+**تحدي:** Packer image مع Ansible provisioner.
+
+### 📝 تقييم
+
+**س١:** Ansible vs Terraform؟
+→ Terraform = بنية تحتية. Ansible = تهيئة.
+
+**س٢:** Vault dynamic secrets = ؟
+→ كلمات مرور مؤقتة تنتهي تلقائياً.
+
+**س٣:** Packer = ؟
+→ بناء صور VMs جاهزة مرة واحدة.
+
+### 🎤 مقابلة
+**"كيف تختار بين Ansible و Terraform؟"**
+→ Terraform يبني البيت. Ansible يفرشه.
+
+---
+
+[← DevOps Culture](./01-devops-culture) | [🏠 الرئيسية](/)
+**
 
 </div>

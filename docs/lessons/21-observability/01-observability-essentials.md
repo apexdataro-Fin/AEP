@@ -324,4 +324,28 @@ groups:
 
 ---
 
-[← العودة للموديول](./01-observability-essentials) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: LGTM Stack
+
+### Loki + Grafana + Tempo + Mimir = Observability Stack
+- Metrics (Mimir) + Logs (Loki) + Traces (Tempo) في UI واحد
+- من Trace → اقفز لـ Logs المرتبطة
+
+### 🚨 CloudNova: تشخيص 4 دقائق
+> قبل LGTM: 3 ساعات لتشخيص error. بعد: 4 دقائق.
+
+---
+
+## 🛠️ تدريبات
+**تمرين ١:** Structured logging. **تمرين ٢:** SLO dashboard.
+
+### 📝 تقييم
+**س١:** SLI vs SLO vs SLA؟ → SLI: ماذا نقيس. SLO: الهدف. SLA: الوعد للعميل.
+**س٢:** Burn rate = ؟ → سرعة استهلاك error budget.
+**س٣:** Observability vs Monitoring؟ → Monitoring: known. Observability: unknown unknowns.
+
+### 🎤 مقابلة
+**"كيف تصمم observability stack؟"** → LGTM + OpenTelemetry + SLO-based alerting.
+
+---
+
+[← العودة للموديول](./01-observability-essentials) | [→ FinOps](../22-finops/01-finops-fundamentals) | [🏠 الرئيسية](/)
