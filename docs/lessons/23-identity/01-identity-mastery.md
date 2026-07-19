@@ -454,4 +454,28 @@ spec:
 
 ---
 
+## 🏛️ طبقة الإنتاج: الدفاع الأخير
+
+### Emergency Break Glass
+```bash
+# حساب طوارئ — لا MFA، لا Conditional Access
+# لكن: تنبيه فوري لكل Global Admins عند استخدامه
+az ad user create --display-name "Emergency Admin" --user-principal-name breakglass@cloudnova.com
+```
+
+---
+
+## 🛠️ تدريبات
+**تمرين:** أنشئ Conditional Access policy. **تحدي:** PIM مع approval workflow.
+
+### 📝 تقييم
+**س١:** AuthN vs AuthZ؟ → من أنت vs ماذا تستطيع.
+**س٢:** PIM؟ → صلاحيات مؤقتة مع MFA + مبرر.
+**س٣:** FIDO2 ضد phishing؟ → private key لا يغادر الجهاز.
+
+### 🎤 مقابلة
+**"كيف تبني Zero Trust؟"** → Conditional Access + PIM + Managed Identity + audit.
+
+---
+
 [🏠 العودة للرئيسية](/) | [📚 جميع الدروس](/docs/lessons)

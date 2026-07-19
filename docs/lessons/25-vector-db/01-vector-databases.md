@@ -320,4 +320,29 @@ def smart_search(query: str) -> dict:
 
 ---
 
-[← العودة للموديول](./01-vector-databases) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج
+
+### Chunking Strategy
+```python
+splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000, chunk_overlap=200,
+    separators=["\n\n", "\n", ". ", " ", ""]
+)
+```
+
+---
+
+## 🛠️ تدريبات
+**تمرين:** FAISS index. **تحدي:** Hybrid search Azure AI Search.
+
+### 📝 تقييم
+**س١:** Cosine vs Euclidean؟ → Cosine للدلالة. Euclidean للمسافة.
+**س٢:** HNSW؟ → بحث log(N) للـ vectors.
+**س٣:** Hybrid search؟ → Text + Vector معاً.
+
+### 🎤 مقابلة
+**"Azure AI Search vs Pinecone؟"** → Azure: Hybrid + Azure integration. Pinecone: أبسط للتجارب.
+
+---
+
+[← العودة للموديول](./01-vector-databases) | [→ RAG Architecture](../26-rag/01-rag-architecture) | [🏠 الرئيسية](/)

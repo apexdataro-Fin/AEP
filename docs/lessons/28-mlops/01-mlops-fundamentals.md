@@ -453,4 +453,32 @@ else:
 
 ---
 
+## 🏛️ طبقة الإنتاج: Model Cards
+
+```yaml
+model_card:
+  name: fraud-detection-v3
+  fairness:
+    demographic_parity: 0.95
+    equal_opportunity: 0.92
+  monitoring:
+    data_drift_psi: 0.08
+    accuracy_7d: 0.941
+```
+
+---
+
+## 🛠️ تدريبات
+**تمرين:** Azure ML pipeline. **تحدي:** PSI drift detection.
+
+### 📝 تقييم
+**س١:** DevOps vs MLOps؟ → Data + Code + Model vs Code only.
+**س٢:** Feature Store؟ → مصدر واحد للـ features للـ training + serving.
+**س٣:** PSI > 0.2؟ → Retrain فوري!
+
+### 🎤 مقابلة
+**"كيف تكتشف نموذجاً فاشلاً؟"** → Data drift + Model metrics + Business impact.
+
+---
+
 [🏠 العودة للرئيسية](/) | [📚 جميع الدروس](/docs/lessons)

@@ -418,4 +418,37 @@ sudo sysctl -p /etc/sysctl.d/99-cloudnova.conf
 
 ---
 
-[← العودة للوحدة](01-linux-essentials) | [🏠 الرئيسية](/)
+## 🏛️ طبقة الإنتاج: تشغيل آمن
+
+### CIS Benchmark Hardening
+```bash
+# فحص الامتثال
+wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_*.deb
+sudo dpkg -i trivy_*.deb
+trivy fs --security-checks vuln,config --severity HIGH,CRITICAL /
+```
+
+### Auditd — تتبع كل شيء
+```bash
+auditctl -w /etc/passwd -p wa -k identity_changes
+auditctl -w /etc/ssh/sshd_config -p wa -k ssh_config_changes
+aureport --failed
+```
+
+---
+
+## 🛠️ تدريبات
+**تمرين:** اكتب systemd unit لتطبيق مع memory limits و sandboxing.
+**تحدي:** ابنِ cron script مع error handling + Slack alerts.
+
+### 📝 تقييم
+**س١:** `ProtectSystem=strict`؟ → يمنع الخدمة من الكتابة لأي مكان خارج مساراتها.
+**س٢:** Load Average > cores؟ → الخادم مختنق.
+**س٣:** `flock`؟ → يمنع تشغيل نسختين من نفس السكريبت.
+
+### 🎤 مقابلة
+**"كيف تشخص خادم بطيء؟"** → top → iostat → vmstat → strace → perf.
+
+---
+
+[← Linux Essentials](01-linux-essentials) | [→ Networking](../03-networking/01-networking-fundamentals) | [🏠 الرئيسية](/)

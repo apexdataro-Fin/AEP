@@ -425,4 +425,31 @@ def check_content(text: str) -> bool:
 
 ---
 
+## 🏛️ طبقة الإنتاج: Cost Control
+
+### Token Budget
+```python
+class TokenBudget:
+    def __init__(self, daily_limit=500000):
+        self.limit = daily_limit
+    def track(self, tokens):
+        if self.used + tokens > self.limit:
+            raise BudgetExceededError()
+```
+
+---
+
+## 🛠️ تدريبات
+**تمرين:** Semantic Cache. **تحدي:** A/B testing للـ prompts.
+
+### 📝 تقييم
+**س١:** LLMOps vs MLOps؟ → LLMOps: تكلفة/استدعاء + جودة غير حتمية.
+**س٢:** Semantic Cache؟ → يخزن إجابات الأسئلة المتشابهة — يوفر 60%+.
+**س٣:** Guardrails؟ → ToxicLanguage + SecretsPresent + ValidLength.
+
+### 🎤 مقابلة
+**"كيف تخفض تكاليف LLM 70%؟"** → Cache + Smart Router + Prompt optimization.
+
+---
+
 [🏠 العودة للرئيسية](/) | [📚 جميع الدروس](/docs/lessons)
