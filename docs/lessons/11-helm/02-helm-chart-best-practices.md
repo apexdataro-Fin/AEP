@@ -88,10 +88,83 @@ helm test myapp -n production
 
 ---
 
-## 🛠️ تدريب
+## 🏛️ طبقة الإنتاج
 
-1. أنشئ Chart library للـ labels و annotations المشتركة
-2. أضف Helm test يتحقق من صحة الـ deployment
+### سيناريو CloudNova: Chart سيء يكلف 3 ساعات
+
+نشر أحدهم Chart بدون `resources.limits`. الـ pod استهلك كل ذاكرة الـ node. 3 pods أخرى تعطلت.
+
+**الحل**:
+```yaml
+# values-prod.yaml — دائماً حدد limits
+resources:
+  limits:
+    cpu: 1000m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+```
+
+### استراتيجيات الترقية
+
+```yaml
+# Rolling Update (افتراضي)
+strategy:
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 0  # صفر downtime!
+```
+
+---
+
+## 🎨 طبقة المعماري: Chart Organization
+
+| النمط | متى تستخدمه |
+|-------|-----------|
+| **Monochart** | تطبيق بسيط، خدمة واحدة |
+| **Library + App** | عدة تطبيقات تشترك في templates |
+| **Umbrella Chart** | عدة خدمات في Chart واحد |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: أنشئ Chart library
+أنشئ library chart يحتوي على labels و annotations مشتركة.
+
+### تحدي: Helm Test متقدم
+اكتب Helm test يتحقق من اتصال الـ pod بقاعدة البيانات.
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. لماذا `resources.limits` ضرورية في الإنتاج؟
+2. ما فائدة Library Charts؟
+3. كيف تدير قيم مختلفة لكل بيئة؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| values-prod.yaml | قيم مخصصة لبيئة الإنتاج |
+| Library Chart | Chart يحتوي templates قابلة لإعادة الاستخدام |
+| `helm test` | تشغيل اختبارات التحقق بعد النشر |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تنظم Helm Charts لمؤسسة؟"** → Library + App charts + Helmfile + Argo CD
+2. **"كيف تضمن عدم وجود downtime أثناء الترقية؟"** → Rolling update + readiness probes + Helm hooks
+
+---
+
+## 📚 مراجع
+| النوع | الرابط |
+|-------|--------|
+| درس مرتبط | [Helmfile & GitOps](./03-helmfile-gitops-integration) |
+| شهادة | CKA |
 
 ---
 

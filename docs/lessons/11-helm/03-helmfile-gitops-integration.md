@@ -44,11 +44,6 @@ releases:
     values:
       - ./environments/{{ .Environment.Name }}/api-values.yaml
 
-  - name: cloudnova-frontend
-    namespace: production
-    chart: cloudnova/frontend
-    version: 2.1.0
-
 environments:
   dev:
     values:
@@ -60,8 +55,8 @@ environments:
 
 ```bash
 helmfile -e prod apply    # نشر كل شيء في production
-helmfile -e prod diff     # معاينة التغييرات
-helmfile -e prod destroy  # حذف كل شيء
+helmfile -e prod diff     # معاينة التغييرات قبل النشر
+helmfile -e prod lint     # فحص الـ charts
 ```
 
 ### مع Argo CD
@@ -83,14 +78,77 @@ spec:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
 ```
 
 ---
 
-## 🛠️ تدريب
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
-1. أنشئ `helmfile.yaml` يدير 3 إصدارات (frontend, api, database)
-2. اربطه بـ Argo CD للنشر التلقائي
+**نشر 12 خدمة معاً**: Helmfile يضمن الترتيب الصحيح:
+1. ingress-nginx (أولاً)
+2. cert-manager
+3. databases
+4. APIs
+5. frontends
+
+```yaml
+# التحكم في ترتيب النشر
+releases:
+  - name: ingress-nginx
+    ...
+  - name: databases
+    needs: [ingress-nginx]  # انتظر حتى ينتهي ingress-nginx
+```
+
+### Rollback سريع
+
+```bash
+helmfile -e prod rollback
+```
+
+---
+
+## 🎨 Helmfile vs Argo CD
+
+| | Helmfile | Argo CD |
+|---|---------|---------|
+| **التحكم** | CLI مباشر | GitOps تلقائي |
+| **Diff preview** | ✅ | ✅ |
+| **Automatic sync** | ❌ | ✅ |
+| **UI** | ❌ | ✅ |
+
+**الأفضل**: Helmfile للمهام اليدوية + Argo CD للنشر التلقائي.
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: أنشئ helmfile لـ 3 تطبيقات
+### تحدي: اربط helmfile مع Argo CD
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما فائدة `helmfile diff`؟
+2. كيف تتحكم في ترتيب النشر؟
+3. متى تستخدم Argo CD بدلاً من Helmfile؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Helmfile | إدارة عدة Helm releases من ملف واحد |
+| `needs` | انتظر release آخر قبل النشر |
+| `helmfile diff` | معاينة التغييرات قبل تطبيقها |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تنشر 20 خدمة معاً؟"** → Helmfile + Argo CD
+2. **"ماذا تفعل إذا فشل نشر release واحد؟"** → `helmfile apply --skip-needs=false` + rollback
 
 ---
 

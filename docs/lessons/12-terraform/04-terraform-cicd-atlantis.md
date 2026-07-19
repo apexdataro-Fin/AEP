@@ -31,19 +31,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Terraform Plan
-        uses: hashicorp/setup-terraform@v2
+      - uses: hashicorp/setup-terraform@v2
         with:
           terraform_wrapper: false
-      
       - run: |
           cd infra
           terraform init
           terraform fmt -check
           terraform validate
           terraform plan -out=tfplan
-      
       - name: Post Plan to PR
         uses: actions/github-script@v6
         with:
@@ -58,27 +54,74 @@ jobs:
 
 ### Atlantis — GitOps for Terraform
 
-Atlantis يستمع لـ GitHub webhooks وينفذ `plan` و `apply` تلقائياً:
+Atlantis يستمع لـ GitHub webhooks:
 
 ```
-# PR Comment:
 atlantis plan
-# Atlantis يرد:
-# Plan: 5 to add, 2 to change, 1 to destroy
+# Atlantis: Plan: 5 to add, 2 to change, 1 to destroy
 
 atlantis apply
-# Atlantis ينفذ ويرد:
-# Apply complete! Resources: 5 added, 2 changed, 1 destroyed.
+# Atlantis: Apply complete!
 ```
 
 ---
 
-## 🛠️ تدريب
+## 🏛️ طبقة الإنتاج
 
-ابنِ GitHub Actions workflow:
-1. `terraform fmt` و `validate` عند كل PR
-2. `terraform plan` مع output في PR comment
-3. `terraform apply` فقط عند merge إلى main
+### سيناريو CloudNova: Plan فاشل
+
+فتح أحدهم PR لتغيير NSG. Terraform Plan أظهر: `Plan: 0 to add, 5 to change, 3 to destroy`.
+
+الـ 3 destroy كانت VMs إنتاج! السبب: `count` index تغير.
+
+**الدرس**: دائماً راجع Plan قبل merge. Terraform Plan كـ PR comment أنقذنا.
+
+### Pipeline كامل
+
+```yaml
+# 1. Pull Request: plan + comment
+# 2. Merge to main: apply تلقائي
+# 3. Apply: workspace production فقط
+```
+
+---
+
+## 🎨 Atlantis vs GitHub Actions
+
+| | Atlantis | GitHub Actions |
+|---|---------|---------------|
+| **التفاعل** | PR comments | YAML triggers |
+| **State Locking** | ✅ مدمج | يدوي |
+| **Apply** | عبر PR comment | عند merge |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: ابنِ GitHub Actions مع Terraform Plan كـ PR comment
+### تحدي: أضف `terraform apply` عند merge إلى main فقط
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. لماذا Terraform Plan مهم قبل merge؟
+2. كيف تمنع تشغيل apply على PR؟
+3. ما فائدة Atlantis؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| `terraform plan` | معاينة التغييرات قبل التطبيق |
+| Atlantis | GitOps for Terraform — plan/apply من PR comments |
+| PR comment | نشر خطة Terraform في تعليق على PR |
+
+---
+
+## 🎤 مقابلة
+1. **"صمم CI/CD pipeline لـ Terraform"** → PR → plan comment → review → merge → apply
+2. **"كيف تمنع تدمير موارد الإنتاج؟"** → `prevent_destroy` lifecycle + PR review + plan inspection
 
 ---
 
