@@ -16,12 +16,6 @@ description: "Load Balancers، Reverse Proxy، Nginx، HAProxy، Azure Load Bala
 - تصميم High Availability مع Azure Load Balancer
 - استكشاف أخطاء الـ Load Balancer وإصلاحها
 
-## 📋 المتطلبات الأساسية
-
-- Networking Fundamentals
-- Linux أساسيات
-- فهم HTTP/HTTPS
-
 ## ⏱️ الوقت المقدر: 45 دقيقة | المستوى: Intermediate
 
 ---
@@ -38,9 +32,7 @@ description: "Load Balancers، Reverse Proxy، Nginx، HAProxy، Azure Load Bala
 
 ---
 
-## 🏗️ الطبقة الأساسية
-
-### Forward Proxy vs Reverse Proxy
+## 🏗️ Forward Proxy vs Reverse Proxy
 
 ```mermaid
 graph LR
@@ -163,21 +155,12 @@ graph TB
 
 ### سيناريو CloudNova: الجمعة السوداء
 
-في CloudNova، قبل الجمعة السوداء بأسبوعين، حدث التالي:
+قبل الجمعة السوداء بأسبوعين:
 
-1. **المشكلة**: الـ health probe كان يفحص `/` بدلاً من `/health`
-2. **النتيجة**: التطبيق كان يرد بـ 200 لكنه بطيء جداً (8 ثوانٍ)
+1. **المشكلة**: health probe كان يفحص `/` بدلاً من `/health`
+2. **النتيجة**: التطبيق يرد بـ 200 لكنه بطيء جداً (8 ثوانٍ)
 3. **الحل**: تغيير الـ probe إلى `/health` الذي يفحص قاعدة البيانات والـ Redis
-4. **الدرس**: الـ Health Check يجب أن يكون ذكياً، وليس مجرد "هل الخادم يعمل؟"
-
-```bash
-# Health Check سيء
-curl -o /dev/null -s -w '%{http_code}' http://server/
-
-# Health Check جيد - يفحص التبعيات
-curl -o /dev/null -s -w '%{http_code}' http://server/health
-# /health يفحص: DB connection + Redis ping + Disk space + Queue depth
-```
+4. **الدرس**: Health Check يجب أن يكون ذكياً، وليس مجرد "هل الخادم يعمل؟"
 
 ### استكشاف الأخطاء
 
@@ -186,7 +169,7 @@ curl -o /dev/null -s -w '%{http_code}' http://server/health
 | 502 Bad Gateway | الخادم الخلفي معطل | تحقق من عمل الخادم على البورت الصحيح |
 | 504 Gateway Timeout | استجابة بطيئة جداً | زد `proxy_read_timeout` أو حسّن الكود |
 | توزيع غير متساوٍ | Sticky sessions أو IP Hash | استخدم `least_conn` |
-| Health probe fail | التطبيق لا يستجيب على `/health` | أنشئ endpoint صحي |
+| Health probe fail | التطبيق لا يستجيب | أنشئ endpoint صحي حقيقي |
 
 ---
 
@@ -216,10 +199,7 @@ curl -o /dev/null -s -w '%{http_code}' http://server/health
 ### تمرين 1: تكوين Nginx Reverse Proxy
 
 ```bash
-# على جهاز Linux:
 sudo apt install nginx -y
-
-# أنشئ upstream
 sudo tee /etc/nginx/conf.d/backend.conf << 'EOF'
 upstream myapp {
     server 127.0.0.1:3001;
@@ -227,93 +207,64 @@ upstream myapp {
 }
 server {
     listen 8080;
-    location / {
-        proxy_pass http://myapp;
-    }
+    location / { proxy_pass http://myapp; }
 }
 EOF
-
-# شغّل تطبيقين وهميين
-python3 -m http.server 3001 &
-python3 -m http.server 3002 &
-
-# اختبر
+sudo nginx -s reload
 curl http://localhost:8080/
 ```
 
-### تحدي: تصميم High Availability
+### تمرين 2: اختبار فشل خادم
 
-صمم HA Architecture لـ CloudNova API مع:
-- Load Balancer أمام 3 خوادم
-- Health Check كل 5 ثوانٍ
-- Failover تلقائي إلى Region ثانية
-- Session Affinity للمستخدمين المسجلين
+أوقف أحد الخوادم الخلفية ولاحظ كيف يتعامل Nginx.
+
+### تحدي: تصميم HA
+صمم HA Architecture لـ CloudNova API مع: LB أمام 3 خوادم، Health Check كل 5 ثوانٍ، Failover تلقائي إلى Region ثانية.
 
 ---
 
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
-
 1. ما الفرق بين Layer 4 و Layer 7 Load Balancer؟
 2. متى تستخدم `ip_hash` بدلاً من `least_conn`؟
 3. لماذا Health Check مهم جداً في الإنتاج؟
+4. ما الفرق بين Forward Proxy و Reverse Proxy؟
+5. متى تستخدم Azure Application Gateway بدلاً من Nginx؟
 
-### 📝 اختبار
+### 🃏 بطاقات
 
-1. **أي خوارزمية توزيع الأفضل لـ WebSocket؟**
-   - أ) Round Robin
-   - ب) Least Connections
-   - ج) IP Hash ✅ (يحافظ على الاتصال المستمر)
-
-2. **ماذا يحدث عند فشل كل الخوادم الخلفية؟**
-   - يعرض Nginx خطأ 502 أو يستخدم `backup` server
-
-### 🧠 Active Recall
-
-- ارسم مكونات Load Balancer على ورقة بيضاء
-- اشرح كيف يعمل Health Check لشخص غير تقني
-- اكتب Nginx config من الذاكرة
-
-### 🎓 Feynman: اشرح لشخص غير تقني
-
-"تخيل أنك مدير مطعم. الزبائن (المستخدمون) يأتون باستمرار. بدلاً من أن يجلسوا بأنفسهم، أنت توجههم إلى الطاولات الفارغة. إذا طاولة مكسورة، لا ترسل أحداً إليها أبداً."
-
-### 🃏 بطاقات تعليمية
-
-- **س**: ما هو Reverse Proxy؟ **ج**: خادم يقف أمام الخوادم الخلفية ويوزع الطلبات
-- **س**: Layer 4 vs Layer 7؟ **ج**: Layer 4 يرى IP/Port، Layer 7 يرى HTTP headers
-- **س**: أفضل خوارزمية للتطبيقات عديمة الحالة؟ **ج**: Least Connections
-- **س**: ما هو Health Check؟ **ج**: فحص دوري للتأكد من أن الخادم يعمل ويستجيب
+| السؤال | الإجابة |
+|--------|---------|
+| Reverse Proxy | خادم يقف أمام الخوادم الخلفية ويوزع الطلبات |
+| Layer 4 vs Layer 7 | Layer 4 يرى IP/Port، Layer 7 يرى HTTP headers |
+| Health Check | فحص دوري للتأكد من أن الخادم يعمل |
+| `least_conn` | يرسل الطلب للخادم الأقل اتصالات |
 
 ---
 
-## 🎤 أسئلة المقابلة
+## 🎤 مقابلة
 
 1. **"صمم Load Balancing لتطبيق e-commerce يتعامل مع 50,000 طلب/ثانية"**
-   - Global: Azure Front Door للتوزيع الجغرافي
-   - Regional: Azure Load Balancer + VM Scale Sets
-   - Application: Nginx أو Application Gateway لـ path-based routing
-   - Database: Read replicas + connection pooling
+   → Global: Front Door + Regional: Azure LB + Application: Nginx + DB: Read replicas
 
 2. **"كيف تتعامل مع session في Load Balanced environment؟"**
-   - Sticky Sessions (IP Hash / Cookie-based)
-   - External Session Store (Redis)
-   - Stateless JWT tokens
+   → Sticky Sessions / Redis session store / Stateless JWT
 
-3. **"احكِ لي عن وقت انهار فيه Load Balancer وكيف أصلحته"**
-   - نموذج STAR: Health check كان يفحش صفحة ثابتة بدلاً من فحص حقيقي...
+3. **"احكِ عن وقت انهار فيه Load Balancer وكيف أصلحته"**
+   → STAR: Health check كان يفحش صفحة ثابتة...
 
 ---
 
 ## 📚 المراجع
 
-| النوع | الروابط |
-|-------|---------|
-| دروس مرتبطة | [Networking Fundamentals](./01-networking-fundamentals)، [Kubernetes Networking](../../10-kubernetes/02-kubernetes-networking) |
-| شهادات | AZ-104 (Load Balancing)، AZ-700 (Networking) |
-| مصادر خارجية | [Nginx Docs](https://nginx.org/en/docs/)، [Azure LB Docs](https://learn.microsoft.com/azure/load-balancer/) |
+| النوع | الرابط |
+|-------|--------|
+| **Networking Fundamentals** | [→](./01-networking-fundamentals) |
+| **Kubernetes Networking** | [→](../../10-kubernetes/02-kubernetes-networking) |
+| شهادة | AZ-104 (Load Balancing) |
+| شهادة | AZ-700 (Networking) |
 
 ---
 
-[← DNS Deep Dive](./02-dns-deep-dive) | [→ Network Security & Firewalls](./04-network-security-firewalls) | [🏠 الرئيسية](/)
+[← DNS Deep Dive](./02-dns-deep-dive) | [→ Network Security](./04-network-security-firewalls) | [🏠 الرئيسية](/)

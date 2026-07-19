@@ -30,9 +30,7 @@ description: "Network Security، Firewalls، NSG، Azure Firewall، WAF — حم
 
 ---
 
-## 🏗️ الطبقة الأساسية
-
-### أنواع الحماية
+## 🏗️ أنواع الحماية
 
 ```mermaid
 graph TB
@@ -68,20 +66,14 @@ az network nsg rule create \
   --access Allow \
   --protocol Tcp
 
-# قاعدة: رفض كل شيء آخر (Deny All - ضمني في Azure)
-# الأولويات: 100-4096 (الأقل = الأعلى أولوية)
-
 # قاعدة: السماح بـ SSH من مكتب CloudNova فقط
 az network nsg rule create \
-  --resource-group cloudnova-prod \
   --nsg-name web-tier-nsg \
   --name AllowSSH \
   --priority 200 \
-  --direction Inbound \
   --source-address-prefixes 203.0.113.0/24 \
   --destination-port-ranges 22 \
-  --access Allow \
-  --protocol Tcp
+  --access Allow
 ```
 
 ### WAF — Web Application Firewall
@@ -99,7 +91,6 @@ az network application-gateway waf-policy create \
   --name cloudnova-waf \
   --resource-group cloudnova-prod
 
-# تفعيل managed rule set (OWASP Top 10)
 az network application-gateway waf-policy managed-rule set add \
   --policy-name cloudnova-waf \
   --resource-group cloudnova-prod \
@@ -109,11 +100,11 @@ az network application-gateway waf-policy managed-rule set add \
 
 ---
 
-## 🏛️ طبقة الإنتاج
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
-### سيناريو CloudNova: هجوم DDoS
+### هجوم DDoS
 
-الجمعة 11 مساءً. فجأة:
+الجمعة 11 مساءً:
 1. **التنبيه**: 500,000 request/sec على الـ API (الطبيعي: 2,000/sec)
 2. **الاستجابة**: Azure DDoS Protection Standard تفعّل تلقائياً
 3. **التحقيق**: الـ traffic من 50,000 IP موزع عالمياً — Botnet
@@ -126,6 +117,7 @@ az network application-gateway waf-policy managed-rule set add \
 2. **Network Segmentation**: 3 tiers على الأقل (Web/App/Data)
 3. **Just-In-Time Access**: افتح البورتات فقط عند الحاجة
 4. **Logging**: كل شيء مسجل في Azure Monitor + Sentinel
+5. **Automated Response**: Playbook يحظر IPs المهاجمة تلقائياً
 
 ---
 
@@ -141,21 +133,39 @@ az network application-gateway waf-policy managed-rule set add \
 | حماية من DDoS | Azure DDoS Protection Standard |
 | فحص SSL/TLS العميق | Azure Firewall Premium (TLS Inspection) |
 
+### تصميم DMZ
+
+```mermaid
+graph LR
+    IN[الإنترنت] --> FW[Firewall]
+    FW --> DMZ[DMZ: Web Servers]
+    DMZ --> FW2[Internal Firewall]
+    FW2 --> CORE[Core Network]
+    CORE --> APPS[App Servers]
+    CORE --> DB[(Databases)]
+```
+
 ---
 
 ## 🛠️ تدريبات
 
-### تمرين: اكتشف بورتاً مفتوحاً وأغلقه
+### تمرين 1: اكتشف بورتاً مفتوحاً وأغلقه
 
 ```bash
-# افحص الشبكة
 nmap -sV cloudnova-api.westeurope.cloudapp.azure.com
-
-# إذا وجدت port 22 مفتوحاً للإنترنت، أغلقه عبر NSG
+# إذا وجدت port 22 مفتوحاً للإنترنت:
 az network nsg rule delete \
   --resource-group cloudnova-prod \
   --nsg-name web-tier-nsg \
   --name AllowSSH
+```
+
+### تمرين 2: سكربت تدقيق NSG
+
+```bash
+# افحص أي NSG rules مفتوحة للإنترنت
+az network nsg rule list --nsg-name web-tier-nsg -g cloudnova -o json |
+  jq '.[] | select(.sourceAddressPrefix == "Internet" and .access == "Allow")'
 ```
 
 ### تحدي: صمم DMZ لـ CloudNova
@@ -164,7 +174,7 @@ az network nsg rule delete \
 - DMZ للأجهزة المواجهة للإنترنت
 - Web Tier (NSG: 443 فقط)
 - App Tier (NSG: من Web Tier فقط)
-- Data Tier (NSG: من App Tier فقط، 1433 SQL)
+- Data Tier (NSG: من App Tier فقط)
 - Azure Firewall للـ outbound filtering
 
 ---
@@ -175,15 +185,37 @@ az network nsg rule delete \
 1. ما الفرق بين NSG و Azure Firewall؟
 2. لماذا Network Segmentation مهم؟
 3. متى تستخدم WAF؟
+4. ما هو DMZ؟
+5. كيف تمنع DDoS attack في Azure؟
 
-### 📝 اختبار
-1. **أي priority هو الأعلى في Azure NSG؟** → 100 (الأقل رقماً)
-2. **هل Deny All موجود افتراضياً في Azure NSG؟** → نعم، ضمني
+### 🃏 بطاقات
 
-### 🎤 أسئلة مقابلة
-1. "كيف تحمي شبكة Azure من الهجمات؟"
-2. "صمم network architecture لتطبيق مالي (PCI-DSS)"
+| السؤال | الإجابة |
+|--------|---------|
+| NSG | جدار ناري على مستوى subnet/NIC |
+| Azure Firewall | جدار ناري على مستوى VNet كامل |
+| WAF | Web Application Firewall (طبقة 7) |
+| DMZ | منطقة منزوعة السلاح بين الإنترنت والشبكة الداخلية |
+| JIT Access | فتح البورتات فقط عند الطلب ولفترة محدودة |
 
 ---
 
-[← Load Balancing](./03-load-balancing-reverse-proxy) | [→ IAM Fundamentals](../../04-security/01-iam-fundamentals) | [🏠 الرئيسية](/)
+## 🎤 مقابلة
+
+1. "كيف تحمي شبكة Azure من الهجمات؟"
+2. "صمم network architecture لتطبيق مالي (PCI-DSS)"
+3. "اشرح Zero Trust لمدير غير تقني"
+
+---
+
+## 📚 مراجع
+
+| النوع | الرابط |
+|-------|--------|
+| NSG & Firewalls | [→](../../04-security/02-network-security-groups-firewalls) |
+| IAM | [→](../../04-security/01-iam-fundamentals) |
+| شهادة | AZ-500 (Security) |
+
+---
+
+[← Load Balancing](./03-load-balancing-reverse-proxy) | [→ NSG & Firewalls](../../04-security/02-network-security-groups-firewalls) | [🏠 الرئيسية](/)
