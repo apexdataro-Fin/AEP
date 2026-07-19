@@ -1,261 +1,159 @@
 ---
 sidebar_position: 1
 title: "وكلاء الذكاء الاصطناعي"
-description: "AI Agents: LangChain، AutoGen، function calling، والأدوات — بناء وكلاء مستقلين."
+description: "AI Agents: LangChain، AutoGen، function calling، guardrails، observability، وإدارة التكاليف — بناء وكلاء مستقلين آمنين."
 ---
 
 # وكلاء الذكاء الاصطناعي (AI Agents)
 
-> "الـ Agent ليس مجرد chatbot. إنه كيان يفكر، يخطط، ينفذ، ويتعلم."
+> "الـ Agent ليس مجرد chatbot. إنه كيان يفكر، يخطط، ينفذ، ويتعلم من أخطائه."
 
 ## 🎯 أهداف التعلم
 
-- فهم معمارية AI Agents (التخطيط، الذاكرة، الأدوات)
-- بناء Agents مع LangChain و Semantic Kernel
-- إتقان Function Calling للأدوات
-- تصميم Agent آمن وموثوق
-- استخدام AutoGen للوكلاء المتعددين
+- فهم معمارية AI Agents (Planning, Memory, Tools, Action)
+- بناء Agents آمنة مع Guardrails و Human-in-the-loop
+- إتقان Function Calling و Tool Use
+- تطبيق Observability على Agents
+- إدارة التكاليف في Agents الإنتاجية
 
 ---
 
 ## 📖 الطبقة الأساسية: معمارية الـ Agent
 
-### تشريح الـ Agent
-
-```
-AI Agent:
-┌─────────────────────────────────────────────┐
-│               Planning                       │
-│  (تحليل المهمة → تقسيم → خطة)               │
-├─────────────────────────────────────────────┤
-│               Memory                         │
-│  ├── Short-term (المحادثة الحالية)           │
-│  ├── Long-term (قاعدة معرفة / Vector DB)     │
-│  └── Working (حالة المهمة الحالية)           │
-├─────────────────────────────────────────────┤
-│               Tools                          │
-│  ├── Search (web, docs, databases)           │
-│  ├── Code execution (Python, SQL)            │
-│  ├── APIs (Azure, GitHub, Jira)              │
-│  └── Custom tools                            │
-├─────────────────────────────────────────────┤
-│               Action                         │
-│  (تنفيذ الأداة → تقييم النتيجة → تعديل)      │
-└─────────────────────────────────────────────┘
-```
-
-### أنماط الـ Agents
-
-| النمط              | الوصف                           | مثال            |
-| ------------------ | ------------------------------- | --------------- |
-| **ReAct**          | Reasoning + Acting — فكر ثم نفذ | البحث + التحليل |
-| **Plan & Execute** | خطط كاملاً ثم نفذ               | مشروع معقد      |
-| **Multi-Agent**    | عدة وكلاء يتعاونون              | فريق AI         |
-| **Tool-Use**       | Agent يستخدم أدوات محددة        | CLI assistant   |
-
----
-
-## 🧱 الطبقة المهنية: Function Calling
-
-```python
-from openai import AzureOpenAI
-import json
-
-client = AzureOpenAI(...)
-
-# تعريف الأدوات
-tools = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_azure_vms",
-            "description": "جلب قائمة الآلات الافتراضية في مجموعة موارد",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "resource_group": {
-                        "type": "string",
-                        "description": "اسم مجموعة الموارد"
-                    },
-                    "status_filter": {
-                        "type": "string",
-                        "enum": ["running", "stopped", "all"],
-                        "description": "تصفية حسب الحالة"
-                    }
-                },
-                "required": ["resource_group"]
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "restart_vm",
-            "description": "إعادة تشغيل Virtual Machine",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "vm_name": {"type": "string"},
-                    "resource_group": {"type": "string"}
-                },
-                "required": ["vm_name", "resource_group"]
-            }
-        }
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "get_cost_analysis",
-            "description": "تحليل التكاليف الشهرية",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                    "month": {"type": "string", "description": "YYYY-MM"}
-                }
-            }
-        }
-    }
-]
-
-# Agent loop
-def agent_loop(user_query: str):
-    messages = [{"role": "user", "content": user_query}]
-
-    while True:
-        response = client.chat.completions.create(
-            model="gpt-4",
-            messages=messages,
-            tools=tools,
-            tool_choice="auto"
-        )
-
-        msg = response.choices[0].message
-
-        if msg.tool_calls:
-            messages.append(msg)
-
-            for tool_call in msg.tool_calls:
-                function_name = tool_call.function.name
-                function_args = json.loads(tool_call.function.arguments)
-
-                # تنفيذ الأداة
-                if function_name == "get_azure_vms":
-                    result = get_vms(**function_args)
-                elif function_name == "restart_vm":
-                    result = restart_vm_azure(**function_args)
-                elif function_name == "get_cost_analysis":
-                    result = analyze_costs(**function_args)
-
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": json.dumps(result)
-                })
-
-        else:
-            # الـ Agent انتهى — إجابة نهائية
-            return msg.content
+```mermaid
+graph TD
+    U[User Query] --> P[Planning]
+    P --> M[Memory Check]
+    M --> T{Need Tools?}
+    T -->|Yes| TO[Tool Selection]
+    TO --> EX[Execute Tool]
+    EX --> EV[Evaluate Result]
+    EV --> T
+    T -->|No| G[Generate Response]
+    G --> GU[Guardrails Check]
+    GU -->|Pass| R[Response to User]
+    GU -->|Fail| P
 ```
 
 ---
 
-## 🏗️ الطبقة الإنتاجية: Agent مع LangChain
+## 🧱 الطبقة المهنية: Guardrails
 
 ```python
-from langchain.agents import AgentExecutor, create_openai_functions_agent
-from langchain.tools import tool
-from langchain_openai import AzureChatOpenAI
-from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-
-# تعريف الأدوات
-@tool
-def get_resource_groups() -> str:
-    """جلب كل Resource Groups في الاشتراك"""
-    # ... Azure SDK logic
-    return json.dumps(["prod-weu-rg", "dev-weu-rg", "staging-weu-rg"])
-
-@tool
-def get_vms_in_rg(resource_group: str) -> str:
-    """جلب VMs في Resource Group معينة"""
-    return json.dumps([
-        {"name": "web-01", "size": "D4s_v3", "state": "running"},
-        {"name": "worker-01", "size": "D8s_v3", "state": "running"}
-    ])
-
-@tool
-def check_vm_metrics(vm_name: str, resource_group: str) -> str:
-    """فحص metrics لـ VM (CPU, memory)"""
-    return json.dumps({"cpu_percent": 78.5, "memory_percent": 62.1})
-
-# إنشاء Agent
-llm = AzureChatOpenAI(
-    azure_deployment="gpt-4",
-    temperature=0
+from guardrails import Guard
+from guardrails.hub import (
+    CompetitorCheck, ToxicLanguage, SecretsPresent,
+    RegexMatch, ValidLength
 )
 
-tools = [get_resource_groups, get_vms_in_rg, check_vm_metrics]
+# تعريف guardrails
+agent_guard = Guard().use_many(
+    ToxicLanguage(on_fail="exception"),        # لا سب ولا شتائم
+    SecretsPresent(on_fail="exception"),        # لا مفاتيح API
+    CompetitorCheck(competitors=["AWS", "GCP"], # لا تذكر منافسين
+                    on_fail="fix"),
+    ValidLength(min=5, max=2000,               # طول الإجابة
+               on_fail="fix"),
+)
 
-prompt = ChatPromptTemplate.from_messages([
-    ("system", """أنت Azure Infrastructure Agent.
-    أنت تساعد في إدارة البنية التحتية لـ CloudNova على Azure.
-    استخدم الأدوات المتاحة للإجابة عن الأسئلة.
-    كن دقيقاً ومحدداً في إجاباتك."""),
-    ("user", "{input}"),
-    MessagesPlaceholder(variable_name="agent_scratchpad")
-])
+@agent_guard
+def agent_respond(query: str) -> str:
+    """الـ Agent يمر عبر guardrails قبل الإرسال"""
+    return agent.run(query)
+```
 
-agent = create_openai_functions_agent(llm, tools, prompt)
-executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+### Human-in-the-Loop
 
-# استخدام الـ Agent
-result = executor.invoke({
-    "input": "ما هي VMs التي تعمل حالياً في بيئة الإنتاج؟"
-})
-print(result["output"])
+```python
+class SafeAgent:
+    DANGEROUS_ACTIONS = [
+        "delete_resource", "restart_production",
+        "modify_firewall", "drop_database"
+    ]
+    
+    def execute(self, action: str, params: dict):
+        if action in self.DANGEROUS_ACTIONS:
+            # طلب موافقة بشرية
+            approval = self.request_approval(action, params)
+            if not approval:
+                return {"status": "rejected", "reason": "human declined"}
+        
+        return self._execute_action(action, params)
+    
+    def request_approval(self, action, params):
+        # إرسال لـ Slack/Teams للموافقة
+        return slack_approval(
+            text=f"Agent wants to `{action}` with {params}",
+            channel="#platform-ops"
+        )
 ```
 
 ---
 
-## 🎨 الطبقة المعمارية: AutoGen — وكلاء متعددون
+## 🏗️ الطبقة الإنتاجية: Observability للـ Agents
+
+```python
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
+class ObservableAgent:
+    def run(self, query: str):
+        with tracer.start_as_current_span("agent.run") as span:
+            span.set_attribute("agent.query", query)
+            
+            # تتبع كل خطوة
+            with tracer.start_as_current_span("agent.plan"):
+                plan = self.planner.plan(query)
+                span.set_attribute("agent.steps", len(plan))
+            
+            for step in plan:
+                with tracer.start_as_current_span(
+                    f"agent.step.{step.tool}"
+                ) as step_span:
+                    step_span.set_attribute("tool.name", step.tool)
+                    result = self.execute_step(step)
+                    step_span.set_attribute(
+                        "tool.success", result.success
+                    )
+                    step_span.set_attribute(
+                        "tool.duration_ms", result.duration_ms
+                    )
+            
+            return self.synthesize()
+
+# Metrics للتتبع
+agent_metrics = {
+    "runs_total": Counter,
+    "steps_per_run": Histogram,
+    "tool_success_rate": Gauge,
+    "tokens_used": Counter,
+    "cost_per_run": Histogram,
+    "guardrail_rejections": Counter,
+}
+```
+
+---
+
+## 🎨 الطبقة المعمارية: Multi-Agent مع AutoGen
 
 ```python
 import autogen
 
-# تكوين الـ LLM
-config_list = [{
-    "model": "gpt-4",
-    "api_type": "azure",
-    "api_key": os.environ["AZURE_OPENAI_KEY"],
-    "base_url": os.environ["AZURE_OPENAI_ENDPOINT"],
-    "api_version": "2024-02-01"
-}]
-
-# تعريف الوكلاء
+# فريق Agents لـ CloudNova
 planner = autogen.AssistantAgent(
     name="Planner",
-    system_message="""أنت مخطط الحلول. مهمتك:
-    1. تحليل طلب المستخدم
-    2. تقسيم المهمة إلى خطوات
-    3. توزيع المهام على الوكلاء المتخصصين""",
-    llm_config={"config_list": config_list}
+    system_message="خطط المهمة، وزع على المتخصصين، اجمع النتائج"
 )
 
 azure_expert = autogen.AssistantAgent(
     name="AzureExpert",
-    system_message="""أنت خبير Azure. مهمتك:
-    1. تصميم حلول Azure
-    2. كتابة أوامر CLI
-    3. اقتراح best practices""",
-    llm_config={"config_list": config_list}
+    system_message="خبير Azure: صمم حلول Azure، اكتب CLI، اقترح best practices"
 )
 
 security_reviewer = autogen.AssistantAgent(
     name="SecurityReviewer",
-    system_message="""أنت مراجع أمني. مهمتك:
-    1. مراجعة الحلول من منظور أمني
-    2. اقتراح تحسينات أمنية
-    3. التحقق من الامتثال للمعايير""",
-    llm_config={"config_list": config_list}
+    system_message="مراجع أمني: راجع الحلول أمنياً، تحقق من الامتثال"
 )
 
 user_proxy = autogen.UserProxyAgent(
@@ -264,23 +162,21 @@ user_proxy = autogen.UserProxyAgent(
     code_execution_config={"work_dir": "workspace"}
 )
 
-# إنشاء مجموعة الوكلاء
+# إنشاء المجموعة
 groupchat = autogen.GroupChat(
     agents=[planner, azure_expert, security_reviewer, user_proxy],
     messages=[],
     max_round=15
 )
-
-manager = autogen.GroupChatManager(
-    groupchat=groupchat,
-    llm_config={"config_list": config_list}
-)
+manager = autogen.GroupChatManager(groupchat=groupchat)
 
 # تشغيل
 user_proxy.initiate_chat(
     manager,
-    message="صمم لي بنية تحتية آمنة لتطبيق ويب مع قاعدة بيانات"
+    message="صمم بنية تحتية آمنة لتطبيق ويب مع PostgreSQL"
 )
+
+# النتيجة: Planner يوزع → AzureExpert يصمم → SecurityReviewer يراجع
 ```
 
 ### سيناريو: AI Team يحل مشكلة
@@ -288,14 +184,14 @@ user_proxy.initiate_chat(
 ```
 المستخدم: "التكاليف ارتفعت 200%، أحتاج تحليلاً فورياً"
 
-Planner: سأوزع المهمة:
-  ├── AzureExpert: فحص الموارد
-  ├── SecurityReviewer: هل هناك اختراق؟
-  └── أنا: تجميع التقرير
+Planner:
+├── AzureExpert: فحص الموارد والتكاليف
+├── SecurityReviewer: هل هناك اختراق؟
+└── أنا: تجميع التقرير النهائي
 
-AzureExpert: وجدت 3 VMs GPU غير مستخدمة منذ أسبوعين
-SecurityReviewer: لا يوجد اختراق، لكن الـ VMs مكشوفة للإنترنت
-Planner: التوصية النهائية:
+AzureExpert: 3 VMs GPU غير مستخدمة منذ أسبوعين
+SecurityReviewer: لا اختراق، لكن VMs مكشوفة للإنترنت
+Planner: التوصية:
   1. إيقاف VMs GPU فوراً (توفير $13,500/شهر)
   2. إضافة NSG rules
   3. تفعيل budget alerts
@@ -303,97 +199,106 @@ Planner: التوصية النهائية:
 
 ---
 
-## 🏥 سيناريو CloudNova: DevOps Agent
+## ⚡ الإنتاج وما بعده: إدارة التكاليف
+
+```python
+class CostManagedAgent:
+    DAILY_BUDGET = 50  # سقف يومي
+    
+    def __init__(self):
+        self.spent_today = 0
+        self.model_router = {
+            "simple": "gpt-3.5-turbo",   # $0.002/1K tokens
+            "complex": "gpt-4",          # $0.03/1K tokens
+        }
+    
+    def route_query(self, query: str) -> str:
+        """اختيار النموذج حسب تعقيد السؤال"""
+        complexity = self.assess_complexity(query)
+        
+        if self.spent_today > self.DAILY_BUDGET * 0.8:
+            return "gpt-3.5-turbo"  # تجاوزنا 80% من الميزانية
+        
+        return self.model_router[complexity]
+    
+    def assess_complexity(self, query: str) -> str:
+        # كلمات تدل على تعقيد
+        complex_keywords = ["design", "architecture", "migrate", "debug"]
+        if any(kw in query.lower() for kw in complex_keywords):
+            return "complex"
+        return "simple"
+```
+
+---
+
+## 🚨 سيناريو CloudNova: DevOps Agent
 
 ```python
 class CloudNovaDevOpsAgent:
-    """Agent يرد على حوادث الإنتاج"""
-
+    """Agent يرد على حوادث الإنتاج تلقائياً"""
+    
     def respond_to_incident(self, alert: dict):
         alert_type = alert["type"]
-        severity = alert["severity"]
-
+        
         if alert_type == "HighCPU":
             return self.handle_high_cpu(alert)
         elif alert_type == "HighErrorRate":
             return self.handle_high_errors(alert)
         elif alert_type == "DiskSpace":
             return self.handle_disk_space(alert)
-
-    def handle_high_cpu(self, alert: dict):
-        """معالجة ارتفاع CPU"""
-
-        # 1. تشخيص
+    
+    def handle_high_cpu(self, alert):
+        # ١. تشخيص
         metrics = get_cpu_metrics(alert["resource"])
+        
+        # ٢. إجراء (مع human approval)
         if metrics["avg"] > 90:
-            diagnosis = "CPU مرتفع جداً"
-
-            # 2. إجراءات
-            actions = [
-                "Scale up replica count",
-                "Check for infinite loops",
-                "Review recent deployments"
-            ]
-
-            # 3. تنفيذ
+            actions = ["Scale replicas +2", "Check recent deploys"]
+            
             if confirm_auto_remediation(alert):
                 scale_replicas(alert["resource"], "+2")
-
+                notify_slack(f"Auto-scaled {alert['resource']}")
+            
             return {
-                "diagnosis": diagnosis,
+                "diagnosis": "CPU saturation detected",
                 "actions_taken": ["scaled_replicas"],
-                "recommendation": "مراجعة الكود للـ CPU optimization"
+                "recommendation": "Review code for CPU optimization"
             }
 ```
 
 ---
 
-## ⚡ الإنتاج وما بعده
-
-### Agent Safety
-
-| المبدأ                | التنفيذ                       |
-| --------------------- | ----------------------------- |
-| **Human-in-the-loop** | تأكيد الإجراءات الخطيرة       |
-| **Sandbox**           | تنفيذ الكود في بيئة معزولة    |
-| **Rate limiting**     | تحديد عدد العمليات في الدقيقة |
-| **Audit logging**     | تسجيل كل قرار وكل إجراء       |
-| **Cost guardrails**   | سقف للتكاليف اليومية          |
-
----
-
 ## 🧠 التذكّر النشط
 
-1. ما الفرق بين chatbot و AI Agent؟
+1. ما الفرق بين chatbot و AI Agent؟ (3 فروق)
 2. كيف يعمل ReAct pattern؟
 3. لماذا human-in-the-loop مهم في Agents الإنتاجية؟
-4. متى تستخدم Multi-Agent بدلاً من Single-Agent؟
-5. كيف تؤمّن Agent يتعامل مع Infrastructure؟
+4. كيف تختار بين Single-Agent و Multi-Agent؟
+5. كيف تمنع Agent من تجاوز ميزانيته اليومية؟
 
-## 📝 بطاقات تعليمية
+## ✍️ تمرين Feynman
 
-- **Agent**: كيان AI يخطط وينفذ ويستخدم أدوات
-- **Tool**: وظيفة يمكن للـ Agent استدعاؤها
-- **Multi-Agent**: عدة وكلاء يتعاونون لحل مشكلة
-- **ReAct**: Reasoning + Acting — نمط تفكير وتنفيذ
-- **Guardrails**: قيود أمان على سلوك الـ Agent
+اشرح AI Agent لمدير: "Agent مثل موظف ذكي. تعطيه مهمة (query)، يفكر في خطة (planning)، يستخدم أدواته (tools)، وينفذ. لكن أحياناً يحتاج توقيع المدير (human-in-the-loop) قبل الإجراءات الخطيرة."
 
 ## 🎤 أسئلة المقابلة
 
 1. **"متى تستخدم Agent ومتى تستخدم RAG بسيط؟"**
-   - Agent: مهام متعددة الخطوات، تحتاج أدوات
+   - Agent: مهام متعددة الخطوات، تحتاج أدوات وتخطيط
    - RAG: أسئلة وأجوبة، استرجاع معلومات
+   - قاعدة: إذا المهمة تحتاج > 2 خطوات → Agent
 
 2. **"كيف تختبر Agent؟"**
    - Unit tests لكل tool على حدة
    - Eval dataset لسيناريوهات متنوعة
    - Human evaluation للجودة
-   - Monitoring في الإنتاج
+   - Monitoring في الإنتاج (traces + metrics)
 
-3. **"ما هي حدود الـ Agents حالياً؟"**
-   - التكلفة (استدعاءات متعددة لـ LLM)
-   - latency (عدة round-trips)
-   - الموثوقية (قد يتخذ قرارات خاطئة)
+3. **"كيف تؤمّن Agent يتعامل مع Production؟"**
+   - Human-in-the-loop للإجراءات الخطيرة
+   - Guardrails (لا secrets، لا toxic language)
+   - Sandbox execution
+   - Audit logging لكل قرار
+   - Rate limiting + cost caps
 
 ---
 

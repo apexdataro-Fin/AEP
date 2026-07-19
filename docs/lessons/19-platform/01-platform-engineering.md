@@ -1,94 +1,73 @@
 ---
 sidebar_position: 1
 title: "هندسة المنصات"
-description: "بناء منصة داخلية للمطورين: Backstage، IDP، الخدمة الذاتية، والمعايير الذهبية."
+description: "بناء منصة داخلية للمطورين: Backstage، IDP، Golden Paths، Team Topologies، Platform Maturity Model، وقياس النجاح."
 ---
 
 # هندسة المنصات (Platform Engineering)
 
-> "لا تعطِ المطورين أدوات مبعثرة. ابنِ لهم منصة واحدة تحتوي كل ما يحتاجونه."
+> "لا تعطِ المطورين أدوات مبعثرة. ابنِ لهم منصة واحدة تحتوي كل ما يحتاجونه — واجعل الطريق السهل هو الطريق الصحيح."
 
 ## 🎯 أهداف التعلم
 
 - فهم نموذج Internal Developer Platform (IDP)
-- بناء بوابة خدمة ذاتية مع Backstage
-- تصميم Golden Paths للمطورين
-- قياس نجاح المنصة (DORA metrics)
-- تطبيق Platform as a Product
+- بناء Golden Paths مع Backstage
+- تطبيق Team Topologies
+- قياس نجاح المنصة (DORA + Developer NPS)
+- تطبيق Platform as a Product mindset
 
 ---
 
-## 📖 الطبقة الأساسية: لماذا هندسة المنصات؟
-
-### تطور DevOps إلى Platform Engineering
+## 📖 الطبقة الأساسية: تطور DevOps إلى Platform Engineering
 
 ```
 DevOps التقليدي:
 "كل فريق يدير كل شيء"
-→ كل فريق يخترع عجلته الخاصة
 → 10 فرق = 10 طرق مختلفة للنشر
+→ كل فريق يخترع عجلته الخاصة
+→ Cognitive load مرتفع جداً
 
 Platform Engineering:
-"المنصة توفر كل شيء جاهز"
+"المنصة توفر كل شيء جاهز كخدمة"
 → المنصة توفر Golden Paths
 → الفرق تختار المسار المناسب
-→ 10 فرق = طريق واحد موحد للنشر
+→ طريق واحد موحد للنشر
+→ Cognitive load منخفض — المطور يركز على الـ business logic
 ```
 
 ### مكونات المنصة الداخلية
 
-```
-Internal Developer Platform (IDP):
-┌────────────────────────────────────────────────────┐
-│                  Developer Portal                  │
-│         (Backstage / Port / custom)                │
-├────────────────────────────────────────────────────┤
-│  Scaffolding │ CI/CD │ Monitoring │ Secrets │ Docs │
-├────────────────────────────────────────────────────┤
-│  Kubernetes │ Terraform │ Helm │ Argo CD │ Vault  │
-├────────────────────────────────────────────────────┤
-│              Cloud Infrastructure                  │
-│        (Azure / AWS / GCP)                        │
-└────────────────────────────────────────────────────┘
+```mermaid
+graph TD
+    subgraph "Developer Portal"
+        BS[Backstage]
+    end
+    subgraph "Platform Capabilities"
+        SC[Scaffolding]
+        CI[CI/CD]
+        MON[Monitoring]
+        SEC[Secrets]
+        DOC[Docs]
+    end
+    subgraph "Infrastructure"
+        K8S[Kubernetes]
+        TF[Terraform]
+        AC[Argo CD]
+        VLT[Vault]
+    end
+    subgraph "Cloud"
+        AZ[Azure / AWS / GCP]
+    end
+    BS --> SC & CI & MON & SEC & DOC
+    SC & CI & MON --> K8S & TF & AC & VLT
+    K8S & TF --> AZ
 ```
 
 ---
 
-## 🧱 الطبقة المهنية: بناء منصة مع Backstage
+## 🧱 الطبقة المهنية: Backstage — مدخل المطور
 
-### Backstage — مدخل المطور
-
-```yaml
-# catalog-info.yaml — تعريف خدمة في Backstage
-apiVersion: backstage.io/v1alpha1
-kind: Component
-metadata:
-  name: cloudnova-api
-  description: CloudNova Core API Service
-  annotations:
-    github.com/project-slug: cloudnova/api
-    backstage.io/techdocs-ref: dir:.
-  tags:
-    - python
-    - fastapi
-    - microservice
-  links:
-    - url: https://api.cloudnova.com/docs
-      title: API Documentation
-      icon: docs
-spec:
-  type: service
-  lifecycle: production
-  owner: platform-team
-  system: cloudnova-core
-  providesApis:
-    - cloudnova-api
-  dependsOn:
-    - resource:postgres-db
-    - resource:redis-cache
-```
-
-### Software Templates — الخدمة الذاتية
+### Software Template — إنشاء خدمة بنقرة
 
 ```yaml
 apiVersion: scaffolder.backstage.io/v1beta3
@@ -96,15 +75,13 @@ kind: Template
 metadata:
   name: python-microservice
   title: Python Microservice
-  description: قالب لإنشاء خدمة Python مع Docker + K8s + CI/CD
+  description: قالب لإنشاء خدمة Python مع Docker + K8s + CI/CD + Monitoring
 spec:
   owner: platform-team
   type: service
   parameters:
     - title: معلومات الخدمة
-      required:
-        - name
-        - owner
+      required: [name, owner]
       properties:
         name:
           title: اسم الخدمة
@@ -120,170 +97,171 @@ spec:
 
   steps:
     - id: fetch-base
-      name: Fetch Base
       action: fetch:template
       input:
         url: https://github.com/cloudnova/templates/python-service
-        values:
-          name: ${{ parameters.name }}
-          description: ${{ parameters.description }}
-
     - id: publish
-      name: Publish to GitHub
       action: publish:github
       input:
         repoUrl: github.com?owner=cloudnova&repo=${{ parameters.name }}
-
     - id: register
-      name: Register in Catalog
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
 ```
 
----
-
-## 🏗️ الطبقة الإنتاجية: Golden Paths
-
-### ما هو Golden Path؟
+### النتيجة: المطور يحصل في 5 دقائق
 
 ```
-المطور يريد إنشاء خدمة جديدة:
-
-المسار الذهبي (Golden Path):
-1. يفتح Backstage
-2. يختار "Create New Service"
-3. يملأ نموذج (اسم، لغة، نوع)
-4. يضغط "Create"
-5. يحصل على:
-   ✅ Repository جاهز
-   ✅ CI/CD pipeline
-   ✅ Docker + K8s manifests
-   ✅ Monitoring dashboards
-   ✅ Secrets management
-   ✅ Documentation scaffold
-```
-
-### هيكل الـ Golden Path
-
-```
-templates/
-├── python-service/
-│   ├── template.yaml
-│   ├── skeleton/
-│   │   ├── Dockerfile
-│   │   ├── k8s/
-│   │   │   ├── deployment.yaml
-│   │   │   ├── service.yaml
-│   │   │   └── kustomization.yaml
-│   │   ├── .github/
-│   │   │   └── workflows/
-│   │   │       ├── ci.yaml
-│   │   │       └── cd.yaml
-│   │   ├── terraform/
-│   │   │   └── main.tf
-│   │   ├── .pre-commit-config.yaml
-│   │   └── README.md
-│   └── docs/
-│       └── index.md
-├── go-service/
-│   └── ...
-└── static-website/
-    └── ...
+✅ Repository جاهز مع Dockerfile + K8s manifests
+✅ CI/CD pipeline (GitHub Actions)
+✅ Monitoring dashboards (Grafana)
+✅ Secrets management (External Secrets Operator)
+✅ Documentation scaffold (MkDocs)
+✅ Scorecard لقياس جودة الخدمة
 ```
 
 ---
 
-## 🎨 الطبقة المعمارية: قياس نجاح المنصة
+## 🏗️ الطبقة الإنتاجية: Team Topologies
+
+| النوع | الوصف | مثال في CloudNova |
+|-------|------|-------------------|
+| **Stream-aligned** | فريق منتج متكامل | فريق API، فريق Web |
+| **Platform** | يبني المنصة الداخلية | فريق Platform Engineering |
+| **Enabling** | يساعد الفرق الأخرى | فريق SRE، فريق Security |
+| **Complicated Subsystem** | يبني أنظمة معقدة | فريق AI/ML |
+
+```
+Stream-aligned: "نريد نشر خدمة جديدة"
+Platform: "هذا الـ Golden Path — اضغط Create"
+Enabling: "سنساعدكم في تحسين الـ performance"
+
+القاعدة: Platform تُخدِم Stream-aligned، لا العكس!
+```
+
+---
+
+## 🎨 الطبقة المعمارية: Platform Maturity Model
+
+```
+Level 1: Basic Automation
+├── Terraform modules مشتركة
+├── CI/CD templates
+└── الفرق تنسخ وتلصق
+
+Level 2: Service Catalog
+├── Backstage catalog لجميع الخدمات
+├── من يملك ماذا؟ (ownership واضح)
+└── توثيق مركزي
+
+Level 3: Golden Paths
+├── Software Templates
+├── خدمة ذاتية كاملة
+└── الفرق لا تحتاج لفتح tickets
+
+Level 4: Self-Service Platform
+├── كل شيء عبر Developer Portal
+├── Scorecards تقيس جودة الخدمات
+├── Platform as a Product mindset
+└── Developer NPS > 60
+
+Level 5: Federated Platform
+├── منصات متعددة تتعاون
+├── Cross-organization sharing
+└── Marketplace داخلي
+```
+
+---
+
+## ⚡ الإنتاج وما بعده: قياس نجاح المنصة
 
 ### DORA Metrics
 
-| المقياس                   | الهدف (Elite)   | كيف نقيسه                     |
-| ------------------------- | --------------- | ----------------------------- |
-| **Deployment Frequency**  | عدة مرات يومياً | عدد deployments في Argo CD    |
-| **Lead Time for Changes** | أقل من ساعة     | من commit إلى production      |
-| **Change Failure Rate**   | 0-15%           | نسبة deployments المرتجعة     |
-| **Time to Restore**       | أقل من ساعة     | من اكتشاف الحادثة إلى الإصلاح |
+| المقياس | Elite | كيف نقيسه |
+|---------|-------|----------|
+| Deployment Frequency | عدة مرات يومياً | Argo CD sync count |
+| Lead Time for Changes | < 1 ساعة | Commit → Production |
+| Change Failure Rate | 0-15% | Deployments مرتجعة |
+| Time to Restore | < 1 ساعة | Incident → Resolution |
 
-### لوحة قياس المنصة
+### مقاييس إضافية
 
-```sql
--- قياس اعتماد المنصة
-SELECT
-  COUNT(DISTINCT repo) as services_using_platform,
-  COUNT(DISTINCT team) as teams_onboarded,
-  AVG(deploy_frequency_days) as avg_deploy_frequency
-FROM platform_metrics
-WHERE month = '2026-07';
+```
+Time to Hello World:
+من فكرة → أول deployment
+الهدف: < 4 ساعات
 
--- قياس رضا المطورين
-SELECT
-  AVG(nps_score) as developer_nps,
-  AVG(time_to_first_deploy_hours) as time_to_hello_world
-FROM developer_survey
-WHERE quarter = '2026-Q2';
+Developer NPS:
+"هل توصي زميلك باستخدام منصتنا؟"
+الهدف: > 60
+
+Time to 10th PR:
+من onboarding → 10th merged PR
+الهدف: < أسبوعين
+
+Platform Adoption:
+% من الفرق تستخدم المنصة
+الهدف: > 80%
 ```
 
 ---
 
-## 🏥 سيناريو CloudNova: بناء المنصة
+## 🚨 سيناريو CloudNova: بناء IDP
+
+> **المشروع:** CloudNova نمت من 3 خدمات إلى 47 خدمة. الفرق تعاني.
 
 ```
-📋 التذكرة: HYD-1450
-النوع: مبادرة منصة
-الأولوية: عالية
+المشاكل:
+├── كل فريق ينشر بطريقة مختلفة
+├── لا أحد يعرف من يملك أي خدمة
+├── 3 أسابيع لإنشاء خدمة جديدة من الصفر
+└── Developer NPS = 12 (سيء جداً!)
 
-المهمة:
-CloudNova نمت من 3 خدمات إلى 47 خدمة.
-الفرق تعاني من:
-- كل فريق ينشر بطريقة مختلفة
-- لا أحد يعرف من يملك أي خدمة
-- 3 أسابيع لإنشاء خدمة جديدة من الصفر
+الحل — بناء IDP على 3 مراحل:
 
-الحل — بناء IDP:
-
-المرحلة 1: Service Catalog
+المرحلة 1: Service Catalog (شهر 1)
 ├── حصر جميع الخدمات
 ├── تعريف المالكين
 └── Backstage catalog-info.yaml لكل خدمة
 
-المرحلة 2: Golden Paths
+المرحلة 2: Golden Paths (شهر 2-3)
 ├── قالب Python service
 ├── قالب Go service
 ├── قالب static website
-└── CI/CD تلقائي لكل قالب
+└── CI/CD + Monitoring تلقائي لكل قالب
 
-المرحلة 3: Developer Portal
+المرحلة 3: Developer Portal (شهر 4-6)
 ├── TechDocs (توثيق تلقائي)
 ├── Scorecards (جودة الخدمات)
-└── Plugins (Kubernetes, Argo CD, PagerDuty)
+├── Plugins (K8s, Argo CD, PagerDuty)
+└── Developer Surveys شهرية
 
-النتيجة بعد 3 أشهر:
-✅ إنشاء خدمة جديدة: من 3 أسابيع إلى 4 ساعات
-✅ وقت النشر: من ساعتين إلى 10 دقائق
-✅ Developer NPS: من 12 إلى 67
+النتيجة بعد 6 أشهر:
+✅ إنشاء خدمة جديدة: من 3 أسابيع → 4 ساعات
+✅ وقت النشر: من ساعتين → 10 دقائق
+✅ Developer NPS: من 12 → 67
+✅ Platform adoption: 85%
 ```
 
 ---
 
-## ⚡ الإنتاج وما بعده
-
-### Platform as a Product
+## 🛡️ Platform as a Product
 
 ```
-عامل المنصة كمنتج:
+عامل المنصة كمنتج — وليس كمشروع مؤقت:
 
-1. المستخدمون = المطورون
-2. المنتج = المنصة
-3. الميزات = Golden Paths + أدوات
-4. القياس = DORA metrics + NPS
-5. التحسين = حلقات تغذية راجعة مستمرة
+1. المستخدمون = المطورون في شركتك
+2. المنتج = المنصة الداخلية
+3. الـ PM = Platform Product Manager (دور حقيقي!)
+4. الـ Roadmap = أولويات مبنية على feedback
+5. القياس = DORA + NPS + Adoption
 
 مبادئ أساسية:
-- لا تفرض، بل أقنع
-- لا تبني ما لا يحتاجه أحد
-- اجعل الطريق السهل هو الطريق الصحيح
-- المنصة ليست مشروعاً، بل منتج مستمر
+├── لا تفرض، بل أقنع (opt-in أفضل من mandatory)
+├── لا تبني ما لا يحتاجه أحد (اسأل أولاً!)
+├── اجعل الطريق السهل هو الطريق الصحيح
+└── المنصة ليست مشروعاً — بل منتج مستمر
 ```
 
 ---
@@ -292,36 +270,32 @@ CloudNova نمت من 3 خدمات إلى 47 خدمة.
 
 1. ما الفرق بين DevOps و Platform Engineering؟
 2. كيف تصمم Golden Path لا يحتاج المطور لقراءة توثيق؟
-3. ما هي DORA Metrics الأربعة؟
-4. كيف تقيس نجاح منصتك الداخلية؟
-5. لماذا نعامل المنصة كمنتج وليس كمشروع؟
+3. ما هي Team Topologies الأربعة؟ وأيها ينطبق على فريق Platform؟
+4. كيف تقيس نجاح منصتك الداخلية (4 metrics)؟
+5. لماذا "Platform as a Product" وليس "Platform as a Project"؟
 
-## 📝 بطاقات تعليمية
+## ✍️ تمرين Feynman
 
-- **IDP**: Internal Developer Platform — منصة داخلية توحد تجربة المطورين
-- **Golden Path**: مسار موصى به ومدعوم لتنفيذ مهمة (مثل إنشاء خدمة جديدة)
-- **Scaffolding**: إنشاء مشروع جديد من قالب جاهز تلقائياً
-- **Backstage**: إطار عمل مفتوح المصدر لبناء Developer Portals
-- **Service Catalog**: سجل مركزي بكل الخدمات ومالكيها واعتمادياتها
+اشرح Platform Engineering لمدير: "تخيل مطاراً. كل شركة طيران كانت تبني مدرجها الخاص (DevOps القديم). المنصة هي برج المراقبة والمدرج الموحد — كل الشركات تستخدمه، وهو آمن، سريع، وموحد."
 
 ## 🎤 أسئلة المقابلة
 
 1. **"متى تحتاج المؤسسة لـ Platform Engineering؟"**
-   - عندما يصبح عدد الفرق > 5
-   - عندما تختلف طرق النشر بين الفرق
-   - عندما cognitive load على المطورين مرتفع جداً
-   - عندما تريد توحيد المعايير دون فرضها
+   - عدد الفرق > 5
+   - طرق النشر مختلفة بين الفرق
+   - Cognitive load مرتفع جداً
+   - تريد توحيد المعايير دون فرضها
 
 2. **"كيف تقنع الإدارة بالاستثمار في منصة داخلية؟"**
-   - احسب الوقت الضائع في المهام المتكررة
-   - قارن تكلفة المنصة بتوفير الوقت
-   - ابدأ صغيراً وأظهر النتائج
+   - احسب الوقت الضائع في المهام المتكررة × عدد المطورين × rate
+   - قارن: تكلفة بناء المنصة vs توفير الوقت السنوي
+   - ابدأ صغيراً (MVP) وأظهر results في 3 أشهر
    - اعرض DORA metrics قبل وبعد
 
-3. **"ما الفرق بين Backstage و Port و custom portal؟"**
-   - Backstage: مفتوح المصدر، مجتمع كبير، إعداد معقد
-   - Port: SaaS، سهل البدء، أقل مرونة
-   - Custom: تحكم كامل، تكلفة بناء عالية
+3. **"ما الفرق بين Backstage و Port؟"**
+   - Backstage: مفتوح المصدر، مجتمع ضخم، إعداد معقد، تحكم كامل
+   - Port: SaaS، سهل البدء، أقل مرونة، رسوم شهرية
+   - القاعدة: فريق Platform < 3 أشخاص → Port. فريق > 5 → Backstage
 
 ---
 

@@ -1,20 +1,20 @@
 ---
 sidebar_position: 1
 title: "أساسيات المراقبة الشاملة"
-description: "Observability: Metrics، Logs، Traces — الثالوث الذهبي لفهم أنظمتك من الداخل."
+description: "Observability: Metrics، Logs، Traces — الثالوث الذهبي، SLOs/SLIs، RED/USE Methods، وتصميم التنبيهات الذكية."
 ---
 
 # أساسيات المراقبة الشاملة (Observability)
 
-> "Monitoring يخبرك أن هناك مشكلة. Observability يخبرك لماذا."
+> "Monitoring يخبرك أن هناك مشكلة. Observability يخبرك لماذا، أين، وكيف تصلحها."
 
 ## 🎯 أهداف التعلم
 
-- فهم الأركان الثلاثة: Metrics, Logs, Traces
-- إتقان OpenTelemetry للتطبيقات
-- استخدام Loki للتجميع المركزي للسجلات
-- تتبع الطلبات عبر الخدمات مع Tempo/Jaeger
-- بناء ثقافة Observability في الفريق
+- إتقان الأركان الثلاثة: Metrics, Logs, Traces
+- تصميم SLOs/SLIs لقياس موثوقية الخدمة
+- استخدام RED و USE Methods
+- بناء تنبيهات ذكية (لا noisy alerts!)
+- تطبيق OpenTelemetry في بيئة إنتاجية
 
 ---
 
@@ -34,8 +34,6 @@ description: "Observability: Metrics، Logs، Traces — الثالوث الذه
 │  RPS 1200    │  timeout     │  → Cache miss  │
 │  p95 340ms   │              │  → 340ms total │
 └─────────────────────────────────────────────┘
-
-معاً = الصورة الكاملة!
 ```
 
 ### السيناريو: لماذا نحتاج الثلاثة معاً؟
@@ -56,158 +54,81 @@ Log: "slow query detected: missing index on users.email"
 
 ---
 
-## 🧱 الطبقة المهنية: السجلات المركزية
+## 🧱 الطبقة المهنية: SLOs و SLIs — قياس الموثوقية
 
-### Grafana Loki
+### المفهوم
+
+```
+SLI (Service Level Indicator) = ماذا نقيس؟
+├── Availability: 99.9% من الطلبات ناجحة
+├── Latency: p95 < 200ms
+└── Error Rate: < 0.1%
+
+SLO (Service Level Objective) = الهدف
+├── "99.9% availability في آخر 28 يوماً"
+
+Error Budget = 100% - SLO
+├── 100% - 99.9% = 0.1% أخطاء مسموحة
+└── إذا استهلكنا الـ error budget → نوقف الميزات الجديدة ونصلح
+```
+
+### مثال عملي
 
 ```yaml
-# Loki + Promtail Architecture
-┌──────────┐  ┌──────────┐  ┌──────────┐
-│  App 1   │  │  App 2   │  │  App 3   │
-│ stdout   │  │ stdout   │  │ stdout   │
-└────┬─────┘  └────┬─────┘  └────┬─────┘
-│             │             │
-▼             ▼             ▼
-┌────────────────────────────────────────┐
-│           Promtail Agent               │
-│  (يجمع السجلات ويضيف labels)           │
-└────────────────┬───────────────────────┘
-│ push
-▼
-┌────────────────────────────────────────┐
-│              Loki                      │
-│  (تخزين + فهرسة + استعلام)            │
-└────────────────┬───────────────────────┘
-│ LogQL
-▼
-┌────────────────────────────────────────┐
-│             Grafana                    │
-│  (استعلام + visualization)            │
-└────────────────────────────────────────┘
-```
-
-### LogQL — لغة استعلام Loki
-
-```logql
-# كل الأخطاء في آخر ساعة
-{job="api", env="production"} |= "ERROR"
-
-# أخطاء مع استثناءات
-{job="api"} |~ "panic|fatal|timeout"
-
-# تحليل: أكثر 10 endpoints خطأً
-topk(10,
-  sum by (endpoint) (
-    count_over_time({job="api"} |= "ERROR" [1h])
-  )
-)
-
-# تتبع طلب محدد عبر كل الخدمات
-{trace_id="abc123456"}
-
-# سجلات بطيئة (>1 ثانية)
-{job="api"}
-| json
-| duration > 1s
-| line_format "{{.method}} {{.path}} {{.duration}}s"
-```
-
-### Structured Logging
-
-```python
-import structlog
-import sys
-
-# إعداد structured logging
-structlog.configure(
-    processors=[
-        structlog.stdlib.filter_by_level,
-        structlog.stdlib.add_log_level,
-        structlog.processors.TimeStamper(fmt="iso"),
-        structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
-        structlog.processors.JSONRenderer()
-    ],
-    wrapper_class=structlog.stdlib.BoundLogger,
-    context_class=dict,
-    logger_factory=structlog.stdlib.LoggerFactory(),
-)
-
-logger = structlog.get_logger()
-
-# استخدام
-logger.info("order_created",
-    order_id="ORD-12345",
-    customer_id="CUST-789",
-    amount=150.00,
-    items=3)
+# slo.yaml — تعريف SLO في Git
+apiVersion: monitoring/v1
+kind: SLO
+metadata:
+  name: cloudnova-api-availability
+spec:
+  service: cloudnova-api
+  indicator:
+    type: availability
+    goodEvents: "rate(http_requests_total{status=~'2..|3..'}[5m])"
+    totalEvents: "rate(http_requests_total[5m])"
+  objective: 99.9
+  window: 28d
+  alerting:
+    - name: burn-rate-1h
+      threshold: 14.4  # يستهلك error budget خلال ساعة
+    - name: burn-rate-6h
+      threshold: 6
 ```
 
 ---
 
-## 🏗️ الطبقة الإنتاجية: تتبع الطلبات
+## 🏗️ الطبقة الإنتاجية: RED و USE Methods
 
-### Distributed Tracing مع OpenTelemetry
-
-```python
-from opentelemetry import trace
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from opentelemetry.instrumentation.httpx import HTTPXClientInstrumentor
-from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor
-
-# إعداد OpenTelemetry
-provider = TracerProvider()
-processor = BatchSpanProcessor(
-    OTLPSpanExporter(endpoint="http://tempo:4317")
-)
-provider.add_span_processor(processor)
-trace.set_tracer_provider(provider)
-
-# تلقيم FastAPI + HTTP client
-FastAPIInstrumentor.instrument_app(app)
-HTTPXClientInstrumentor().instrument()
-
-tracer = trace.get_tracer(__name__)
-
-@app.post("/orders")
-async def create_order(order: OrderCreate):
-    with tracer.start_as_current_span("create_order") as span:
-        span.set_attribute("order.customer_id", order.customer_id)
-        span.set_attribute("order.items_count", len(order.items))
-
-        # التحقق من المخزون
-        with tracer.start_as_current_span("check_inventory"):
-            inventory = await inventory_service.check(order.items)
-
-        # معالجة الدفع
-        with tracer.start_as_current_span("process_payment"):
-            payment = await payment_service.charge(order.total)
-
-        # حفظ الطلب
-        with tracer.start_as_current_span("save_order"):
-            result = await db.orders.insert(order)
-
-        span.set_attribute("order.id", str(result.id))
-        return result
-```
-
-### Trace كامل عبر الخدمات
+### RED Method (لـ Services)
 
 ```
-طلب: POST /orders
-├── API Gateway: 2ms
-└── Order Service:
-    ├── Validate Order: 3ms
-    ├── Check Inventory: 45ms ────► Inventory Service
-    │   └── PostgreSQL Query: 40ms
-    ├── Process Payment: 230ms ───► Payment Service
-    │   └── Stripe API Call: 220ms
-    └── Send Email: 15ms ──────────► Notification Service
-        └── SendGrid API: 12ms
+Rate      — كم طلب في الثانية؟
+Errors    — كم خطأ؟
+Duration  — كم تستغرق الطلبات؟
 
-Total: 295ms
+مثال:
+Rate: 1200 req/s
+Errors: 0.1% = 1.2 errors/s
+Duration: p50=45ms, p95=200ms, p99=500ms
+
+إذا p99 قفز من 200ms إلى 2s:
+→ مشكلة في قاعدة البيانات؟ شبكة؟
+```
+
+### USE Method (لـ Resources)
+
+```
+Utilization  — كم % من المورد مستخدم؟
+Saturation   — هل هناك طوابير انتظار؟
+Errors       — هل هناك أخطاء في المورد؟
+
+مثال:
+CPU Utilization: 85%
+CPU Saturation: run queue length = 8 (مرتفع!)
+Memory Errors: 0 OOM kills
+
+إذا Saturation مرتفع مع Utilization طبيعي:
+→ bottleneck في I/O أو locks
 ```
 
 ---
@@ -226,124 +147,180 @@ Grafana LGTM Stack:
 │  (Mimir)    │  (Loki)  │  (Tempo)  │        │
 └─────────────────────────────────────────────┘
 
-التكامل:
-- من Trace تستطيع القفز إلى Logs المرتبطة ✓
-- من Logs تستطيع رؤية Metrics المتعلقة ✓
-- من Metric anomaly تستطيع فتح Trace للتحقيق ✓
+التكامل السحري:
+- من Trace → اقفز لـ Logs المرتبطة (Tempo → Loki) ✓
+- من Log → شاهد Metric anomaly المرتبط ✓
+- من Alert → افتح Trace للتحقيق ✓
 ```
 
-### تكامل Metrics + Logs + Traces
+### LogQL — لغة استعلام Loki
 
-```yaml
-# Grafana datasource مع exemplars
-apiVersion: 1
-datasources:
-  - name: Prometheus
-    type: prometheus
-    url: http://mimir:9009
-    jsonData:
-      exemplarTraceIdDestinations:
-        - name: traceID
-          datasourceUid: tempo
+```logql
+# كل الأخطاء في آخر ساعة
+{job="api", env="production"} |= "ERROR"
 
-  - name: Tempo
-    type: tempo
-    url: http://tempo:3200
-    jsonData:
-      tracesToLogsV2:
-        datasourceUid: loki
-        tags: ["pod", "namespace"]
-        mappedTags: [{ key: "service.name", value: "service" }]
+# أخطاء مع استثناءات panic/fatal
+{job="api"} |~ "panic|fatal|timeout"
 
-  - name: Loki
-    type: loki
-    url: http://loki:3100
+# أكثر 10 endpoints خطأً
+topk(10,
+  sum by (endpoint) (
+    count_over_time({job="api"} |= "ERROR" [1h])
+  )
+)
+
+# تتبع طلب محدد عبر trace_id
+{trace_id="abc123456"}
+
+# سجلات بطيئة مع بارسينج JSON
+{job="api"}
+| json
+| duration > 1s
+| line_format "{{.method}} {{.path}} {{.duration}}s"
+```
+
+### Structured Logging في Python
+
+```python
+import structlog
+
+structlog.configure(
+    processors=[
+        structlog.stdlib.filter_by_level,
+        structlog.stdlib.add_log_level,
+        structlog.processors.TimeStamper(fmt="iso"),
+        structlog.processors.StackInfoRenderer(),
+        structlog.processors.format_exc_info,
+        structlog.processors.JSONRenderer()
+    ],
+    wrapper_class=structlog.stdlib.BoundLogger,
+    context_class=dict,
+    logger_factory=structlog.stdlib.LoggerFactory(),
+)
+
+logger = structlog.get_logger()
+
+# استخدام مع trace_id
+logger.info("order_created",
+    order_id="ORD-12345",
+    trace_id="0af7651916cd43dd8448eb211c80319c",
+    customer_id="CUST-789",
+    amount=150.00)
 ```
 
 ---
 
-## 🏥 سيناريو CloudNova: تشخيص مشكلة غامضة
+## ⚡ الإنتاج وما بعده: تنبيهات ذكية
+
+### قواعد التنبيه الذهبية
+
+```yaml
+# ١. لا تنبه على symptoms — نبه على SLO burn rate
+groups:
+  - name: slo-alerts
+    rules:
+      # Burn rate سريع: error budget يستهلك خلال ساعة
+      - alert: HighErrorBurnRate
+        expr: |
+          rate(http_errors_total[1h]) 
+          / rate(http_requests_total[1h]) 
+          > 14.4 * 0.001
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Error budget burning fast"
+          description: "Service {{ $labels.service }} will exhaust budget in ~1h"
+
+      # Burn rate بطيء: error budget يستهلك خلال 3 أيام
+      - alert: LowErrorBurnRate
+        expr: |
+          rate(http_errors_total[6h]) 
+          / rate(http_requests_total[6h]) 
+          > 1 * 0.001
+        for: 5m
+        labels:
+          severity: warning
+```
+
+### Anti-Patterns في التنبيهات
 
 ```
-📋 التذكرة: INC-2026-078
-العنوان: بعض المستخدمين يرون أخطاء 500 بشكل متقطع
-الأولوية: P1
+❌ لا تفعل:
+├── صفحة (page) لكل مشكلة صغيرة
+├── تنبيهات بدون runbook
+├── تنبيهات على symptoms مثل "CPU > 80%"
+└── فريق on-call يتجاهل التنبيهات (alert fatigue)
 
-منصة المراقبة الحالية: لا يوجد Observability!
+✅ افعل:
+├── صفحة فقط إذا SLO مهدد
+├── كل تنبيه له runbook واضح
+├── نبه على SLO burn rate — ليس على metrics مباشرة
+└── Ticket للتحذيرات، Page للـ critical
+```
 
-التشخيص (قبل Observability):
+---
+
+## 🚨 سيناريو CloudNova: تشخيص مشكلة غامضة
+
+> **الموقف:** بعض المستخدمين يرون أخطاء 500. لا أحد يعرف السبب.
+
+```
+قبل Observability:
 ├── البحث في سجلات 12 خدمة = 3 ساعات
 └── لم نجد السبب!
 
 بعد تثبيت LGTM Stack:
 
-1. فتح Grafana:
-   ├── Metrics: Error rate 2% (طبيعي 0.1%)
-   ├── Traces: 80% من الطلبات البطيئة تمر عبر inventory-service
-   └── Logs (Loki): {service="inventory", level="error"}
-       "connection pool exhausted after 200ms"
+١. Grafana Dashboard:
+   ├── Error rate: 2% (SLO = 0.1%) ← SLO محروق!
+   
+٢. Tempo Traces:
+   ├── 80% من الطلبات البطيئة تمر عبر inventory-service
+   └── Span: "check_inventory" = 3.2s!
 
-2. السبب:
-   Connection pool في inventory-service:
-   max_connections = 5
-   لكن الحمل تضاعف!
+٣. Loki Logs:
+   {service="inventory"} |= "ERROR"
+   → "connection pool exhausted after 200ms"
+   → max_connections = 5 فقط!
 
-3. الإصلاح:
-   max_connections = 20
-   timeout = 500ms
+الحل: max_connections = 20 → error rate يعود لـ 0.05%
 
-4. وقت التشخيص:
-   قبل: 3 ساعات
-   بعد: 4 دقائق
+وقت التشخيص: من 3 ساعات → 4 دقائق
 ```
-
----
-
-## ⚡ الإنتاج وما بعده
-
-### أفضل ممارسات Observability
-
-| الممارسة                  | التنفيذ                       |
-| ------------------------- | ----------------------------- |
-| **Structured Logging**    | JSON logs دائماً              |
-| **Trace context في logs** | trace_id + span_id في كل log  |
-| **Sampling ذكي**          | 100% للأخطاء، 10% للنجاح      |
-| **Retention policies**    | Logs: 30 يوم، Metrics: 13 شهر |
-| **Dashboards as Code**    | Grafana dashboards في Git     |
 
 ---
 
 ## 🧠 التذكّر النشط
 
-1. ما الأركان الثلاثة لـ Observability؟ ماذا يجيب كل منها؟
-2. كيف تربط Metrics بـ Logs بـ Traces؟
-3. ما الفرق بين structured و unstructured logging؟
-4. كيف تختار sampling rate للـ traces؟
-5. لماذا OpenTelemetry مهم كمبادرة صناعية؟
+1. ما الفرق بين SLI و SLO و SLA؟
+2. كيف تحدد burn rate المناسب للتنبيه؟
+3. متى تستخدم RED Method ومتى USE Method؟
+4. كيف تربط Metrics بـ Logs بـ Traces في جلسة تحقيق واحدة؟
+5. لماذا التنبيه على CPU > 80% يعتبر anti-pattern؟
 
-## 📝 بطاقات تعليمية
+## ✍️ تمرين Feynman
 
-- **Trace**: رحلة طلب واحد عبر الخدمات المختلفة
-- **Span**: وحدة عمل واحدة داخل Trace (مثلاً: استعلام DB)
-- **Exemplar**: ربط metric معين بـ trace محدد
-- **OpenTelemetry**: معيار مفتوح لجمع metrics, logs, traces
-- **Correlation ID**: معرف فريد يربط logs و traces معاً
+اشرح Observability لمدير مطعم: "Metrics = كم طبق تم تحضيره في الساعة. Logs = ماذا كتب الطاهي في دفتر الملاحظات. Traces = متابعة طبق واحد من الطلب حتى التقديم. SLO = وعدنا للزبون: الطلب جاهز في 15 دقيقة."
 
 ## 🎤 أسئلة المقابلة
 
 1. **"كيف تختلف Observability عن Monitoring؟"**
    - Monitoring: تعرف ما ستراقبه مسبقاً (known unknowns)
    - Observability: تستطيع استكشاف ما لا تعرفه (unknown unknowns)
-   - Observability = Monitoring + استكشاف + ربط البيانات
+   - Observability = Monitoring + استكشاف + ربط البيانات + SLOs
 
-2. **"كيف تتعامل مع كميات ضخمة من الـ traces؟"**
-   - Head-based sampling: قرار العينة عند بداية الطلب
-   - Tail-based sampling: قرار العينة بعد اكتمال الطلب (يحتفظ بالبطيء/الخاطئ)
-   - Adaptive sampling: تعديل تلقائي للنسبة
+2. **"كيف تصمم نظام تنبيهات لإنتاج؟"**
+   - نبه على SLO burn rate — ليس على metrics
+   - Critical → Page (حريق). Warning → Ticket (دخان)
+   - كل alert له runbook + dashboard link
+   - اختبر التنبيهات شهرياً (chaos engineering)
 
-3. **"كيف تختار بين Elasticsearch و Loki للسجلات؟"**
-   - Loki: أخف، أرخص، يتكامل مع Grafana، مثالي لـ Kubernetes
-   - Elastic: أقوى في البحث النصي، أقدم، أغلى
+3. **"كيف تتعامل مع Alert Fatigue؟"**
+   - قلل عدد التنبيهات — نبه فقط إذا SLO مهدد
+   - حسّن signal-to-noise ratio
+   - أضف aggregation: لا تنبه 50 مرة لنفس المشكلة
+   - استخدم escalation policies ذكية
 
 ---
 

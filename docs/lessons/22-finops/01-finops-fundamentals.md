@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 title: "أساسيات FinOps"
-description: "إدارة التكاليف السحابية: الميزانيات، التوفير، Reserved Instances، والقضاء على الهدر."
+description: "إدارة التكاليف السحابية: الميزانيات، التوفير، Reserved Instances، anomaly detection، وثقافة FinOps."
 ---
 
 # أساسيات FinOps
@@ -10,11 +10,11 @@ description: "إدارة التكاليف السحابية: الميزانيات
 
 ## 🎯 أهداف التعلم
 
-- فهم ثقافة FinOps: الإعلام، التحسين، التشغيل
+- فهم دورة FinOps: الإعلام، التحسين، التشغيل
 - تحديد الهدر وإزالته من البيئة السحابية
 - تطبيق Reserved Instances و Savings Plans
-- بناء تقارير التكاليف والتوعية
-- إنشاء سياسات حوكمة التكاليف
+- بناء تقارير التكاليف والتنبيهات التلقائية
+- اكتشاف anomalies بالـ KQL
 
 ---
 
@@ -22,70 +22,54 @@ description: "إدارة التكاليف السحابية: الميزانيات
 
 ### دورة FinOps
 
-```
-        ┌──────────────────────────┐
-        │      الإعلام (Inform)    │
-        │   الرؤية + التخصيص       │
-        │   من ينفق؟ على ماذا؟     │
-        └──────────┬───────────────┘
-                   │
-        ┌──────────▼───────────────┐
-        │      التحسين (Optimize)  │
-        │   تقليل الاستهلاك        │
-        │   استخدام أفضل للخصومات   │
-        └──────────┬───────────────┘
-                   │
-        ┌──────────▼───────────────┐
-        │     التشغيل (Operate)    │
-        │   أتمتة السياسات         │
-        │   قياس مستمر              │
-        └──────────────────────────┘
+```mermaid
+graph LR
+    A[Inform - الإعلام] --> B[Optimize - التحسين]
+    B --> C[Operate - التشغيل]
+    C --> A
 ```
 
-### أنواع الهدر السحابي
-
-| الهدر                    | مثال                   | التكلفة المقدرة |
-| ------------------------ | ---------------------- | --------------- |
-| **موارد غير مستخدمة**    | VM تعمل بدون حركة مرور | 30-40%          |
-| **أحجام مبالغ فيها**     | D8s لخدمة تحتاج D2s    | 15-25%          |
-| **Snapshots قديمة**      | نسخ احتياطية من 2024   | 5-10%           |
-| **IPs غير مرتبطة**       | Public IPs بدون VM     | $4/IP/شهر       |
-| **Load Balancers خاملة** | ALB بدون targets       | $20/LB/شهر      |
-| **Logs لا نهائية**       | 90 يوماً لـ debug logs | 10-20%          |
+| المرحلة | السؤال | الأدوات |
+|---------|--------|---------|
+| **Inform** | من ينفق؟ على ماذا؟ | Cost Management, Tags |
+| **Optimize** | كيف نوفر؟ | RI, Spot, Right-size |
+| **Operate** | كيف نضمن الاستمرار؟ | Budgets, Policies, Automation |
 
 ---
 
 ## 🧱 الطبقة المهنية: تحليل التكاليف
 
-### هيكل التكاليف في Azure
+### KQL لتحليل التكاليف
 
-```bash
-# عرض التكاليف حسب الخدمة
-az consumption usage list \
-  --start-date "2026-06-01" \
-  --end-date "2026-06-30" \
-  --query "sort_by([].{Service:consumedService,Cost:pretaxCost},&Cost)" \
-  --output table
+```kusto
+// التكاليف اليومية لآخر 30 يوماً
+ResourceCosts
+| where TimeGenerated > ago(30d)
+| summarize TotalCost = sum(Cost) by bin(TimeGenerated, 1d)
+| order by TimeGenerated asc
+| render timechart
 
-# الناتج:
-# Service                    Cost
-# ────────────────────────   ──────────
-# Microsoft.Compute          $12,450.00
-# Microsoft.Sql              $4,200.00
-# Microsoft.Storage          $890.00
-# Microsoft.Network          $650.00
-# Microsoft.ContainerService $3,100.00
+// اكتشاف زيادة غير طبيعية (>20%)
+ResourceCosts
+| where TimeGenerated > ago(30d)
+| summarize DailyCost = sum(Cost) by bin(TimeGenerated, 1d)
+| serialize
+| extend PrevDay = prev(DailyCost, 1)
+| extend Increase = iff(PrevDay > 0, (DailyCost - PrevDay) / PrevDay * 100, 0)
+| where Increase > 20
+| project TimeGenerated, DailyCost, PrevDay, Increase
+
+// التكاليف حسب الـ resource group
+ResourceCosts
+| where TimeGenerated between (datetime(2026-06-01) .. datetime(2026-06-30))
+| summarize Total = sum(Cost) by ResourceGroup
+| order by Total desc
+| take 10
 ```
 
-### تخصيص التكاليف (Cost Allocation)
+### Tags للتتبع
 
 ```bash
-# تطبيق Tags للتتبع
-az tag create --name CostCenter
-az tag create --name Environment
-az tag create --name Project
-
-# تخصيص التكاليف لكل فريق
 az group update \
   --name cloudnova-api-prod-rg \
   --set tags.CostCenter=Engineering \
@@ -94,32 +78,11 @@ az group update \
          tags.CreatedBy=terraform
 ```
 
-### تحليل مفصل
-
-```kusto
-// KQL في Azure Cost Management
-// التكاليف حسب الـ resource group
-ResourceCosts
-| where TimeGenerated between (datetime(2026-06-01) .. datetime(2026-06-30))
-| summarize TotalCost = sum(Cost) by ResourceGroup
-| order by TotalCost desc
-
-// زيادة غير طبيعية في التكاليف
-ResourceCosts
-| where TimeGenerated > ago(30d)
-| summarize DailyCost = sum(Cost) by bin(TimeGenerated, 1d)
-| serialize
-| extend PreviousDayCost = prev(DailyCost, 1)
-| extend Increase = iff(PreviousDayCost > 0,
-    (DailyCost - PreviousDayCost) / PreviousDayCost * 100, 0)
-| where Increase > 20
-```
-
 ---
 
 ## 🏗️ الطبقة الإنتاجية: استراتيجيات التوفير
 
-### 1. Reserved Instances + Savings Plans
+### 1. Reserved Instances vs Savings Plans
 
 ```
 VM D4s v3:
@@ -127,97 +90,74 @@ VM D4s v3:
 ├── 1-year Reserved: $140/شهر (توفير 33%)
 └── 3-year Reserved: $96/شهر  (توفير 54%)
 
-Savings Plan (Compute):
-├── Hourly commit: $10/hr
+Savings Plan ($10/hr commit):
 ├── Flexible across VM families
-└── Automatic optimization
+├── Automatic optimization
+└── Best for: dynamic workloads
 ```
 
-```bash
-# شراء Reservation
-az reservations reservation order purchase \
-  --reservation-order-id "vm-reservation-2026" \
-  --sku "Standard_D4s_v3" \
-  --location westeurope \
-  --term P1Y \
-  --quantity 5 \
-  --billing-scope "/subscriptions/12345" \
-  --applied-scope-type Shared
+### 2. Right-Sizing الآلي
+
+```python
+# Azure Advisor recommendations via SDK
+from azure.mgmt.advisor import AdvisorManagementClient
+
+advisor = AdvisorManagementClient(credential, subscription_id)
+
+for rec in advisor.recommendations.list():
+    if "rightsize" in rec.category.lower():
+        print(f"""
+        ⚠️ {rec.impacted_field} {rec.impacted_value}
+        التوفير المقدر: ${rec.extended_properties['savingsAmount']}/شهر
+        الإجراء: {rec.short_description['problem']}
+        """)
 ```
 
-### 2. Auto-shutdown لبيئات التطوير
+### 3. Anomaly Detection
 
-```bash
-# إيقاف تلقائي ليلاً
-az vm auto-shutdown \
-  --resource-group dev-weu-rg \
-  --name dev-server-01 \
-  --time 2100 \
-  --timezone "Europe/Helsinki"
+```python
+# اكتشاف الشذوذ في التكاليف
+from azure.mgmt.costmanagement import CostManagementClient
 
-# سياسة Azure: إيقاف VMs غير المنتجة
-az policy definition create \
-  --name "auto-shutdown-dev-vms" \
-  --rules '{
-    "if": {
-      "allOf": [
-        {"field": "type", "equals": "Microsoft.Compute/virtualMachines"},
-        {"field": "tags[Environment]", "equals": "Development"}
-      ]
-    },
-    "then": {
-      "effect": "deployIfNotExists",
-      "details": {
-        "type": "Microsoft.DevTestLab/schedules",
-        "existenceCondition": {
-          "field": "Microsoft.DevTestLab/schedules/status",
-          "equals": "Enabled"
+client = CostManagementClient(credential)
+
+# إنشاء alert
+client.alerts.create_or_update(
+    scope="/subscriptions/...",
+    alert_name="DailyCostAnomaly",
+    parameters={
+        "definition": {
+            "type": "Microsoft.CostManagement/alerts",
+            "category": "Anomaly",
+            "criteria": "Cost",
+            "threshold": 20  # تنبيه عند زيادة >20%
         }
-      }
     }
-  }'
+)
 ```
-
-### 3. Right-Sizing
-
-```bash
-# تحليل استخدام الموارد لآخر 30 يوماً
-az monitor metrics list \
-  --resource /subscriptions/.../virtualMachines/web-01 \
-  --metric "Percentage CPU" \
-  --aggregation Average \
-  --interval PT1H \
-  --start-time 2026-06-01T00:00:00Z \
-  --end-time 2026-06-30T23:59:59Z \
-  --query "value[0].timeseries[0].data[?average < 10]"
-```
-
-| الحجم الحالي             | الاستخدام   | الحجم المقترح            | التوفير |
-| ------------------------ | ----------- | ------------------------ | ------- |
-| Standard_D8s_v3 (8 vCPU) | 12% CPU avg | Standard_D2s_v3 (2 vCPU) | 75%     |
-| Standard_E16s_v3 (128GB) | 18GB used   | Standard_E4s_v3 (32GB)   | 75%     |
 
 ---
 
 ## 🎨 الطبقة المعمارية: حوكمة التكاليف
 
-### Azure Policy للتكاليف
+### Azure Policy
 
 ```json
 {
-  "properties": {
-    "displayName": "منع أحجام VMs الكبيرة",
-    "policyRule": {
-      "if": {
-        "allOf": [
-          { "field": "type", "equals": "Microsoft.Compute/virtualMachines" },
-          {
-            "field": "Microsoft.Compute/virtualMachines/sku.name",
-            "in": ["Standard_M128s", "Standard_E96s_v5"]
-          }
-        ]
-      },
-      "then": { "effect": "deny" }
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Compute/virtualMachines"
+    },
+    "then": {
+      "effect": "audit",
+      "details": {
+        "type": "Microsoft.Compute/virtualMachines",
+        "existenceCondition": {
+          "field": "tags[CostCenter]",
+          "exists": false
+        }
+      }
     }
   }
 }
@@ -226,72 +166,38 @@ az monitor metrics list \
 ### هيكل الميزانيات
 
 ```
-Cloud Budget: $48,000/شهر
+ميزانية CloudNova: $48,000/شهر
 ├── Production: $35,000 (73%)
-│   ├── Compute (AKS + VMs): $18,000
-│   ├── Databases: $10,000
-│   ├── Networking: $4,000
-│   └── Storage + Backup: $3,000
-│
 ├── Staging: $8,000 (17%)
-│   ├── Compute: $5,000
-│   └── Databases: $3,000
-│
 └── Development: $5,000 (10%)
-    ├── Compute: $4,000
-    └── Everything else: $1,000
+    ├── Auto-shutdown 9PM-7AM
+    └── Spot VMs حيث أمكن
 ```
 
 ---
 
-## 🏥 سيناريو CloudNova: أزمة تكاليف
+## 🚨 سيناريو CloudNova: أزمة تكاليف
 
-```
-📋 التذكرة: FINOPS-2026-003
-العنوان: التكاليف تضاعفت هذا الشهر!
+> **الموقف:** التكاليف قفزت من $42K إلى $78K في شهر واحد!
 
-التحقيق:
+```bash
+# ١. تحليل KQL
+ResourceCosts | where TimeGenerated > ago(30d)
+| summarize Total = sum(Cost) by Service
+| order by Total desc
 
-1. فتح Cost Management:
-   ├──上月: $42,000
-   ├── هذا الشهر: $78,000
-   └── زيادة: 85%!
+# النتيجة:
+# Microsoft.Compute: +$22,500 (GPU VMs!)
+# Microsoft.Insights: +$3,000 (logs)
+# Microsoft.Network: +$48 (unused IPs)
 
-2. تحليل السبب الجذري:
-   ├── فريق AI نشر 5 VMs مع GPU (NC96ads_A100_v4)
-   │   └── $4,500/VM/شهر = $22,500 إضافي
-   ├── Log Analytics workspace يجمع 500GB/يوم
-   │   └── $3,000 إضافي
-   └── 12 Public IP غير مستخدمة
-       └── $48 إضافي
+# ٢. الإجراءات:
+# ✅ Spot VMs للـ AI workloads (توفير 80%)
+# ✅ Logs retention: 90d → 30d
+# ✅ حذف IPs غير المستخدمة
+# ✅ Budget alerts عند 50%, 80%, 100%
 
-3. الإجراءات التصحيحية:
-   ├── ✅ Spot VMs للـ AI workloads (توفير 80%)
-   ├── ✅ تقليل retention للـ logs (30 يوم بدل 90)
-   ├── ✅ حذف IPs غير المستخدمة
-   ├── ✅ Auto-shutdown لـ VMs التطوير
-   └── ✅ ميزانية أسبوعية مع alert عند 80%
-
-4. النتيجة:
-   التكاليف عادت إلى $45,000/شهر
-```
-
----
-
-## ⚡ الإنتاج وما بعده
-
-### قائمة تدقيق FinOps
-
-```
-□ هل كل VM لديها Tag (CostCenter, Environment)؟
-□ هل Reserved Instances تغطي 70%+ من VMs الإنتاج؟
-□ هل بيئات التطوير تنطفئ ليلاً؟
-□ هل الـ Logs retention مناسب (وليس 90 يوم لكل شيء)؟
-□ هل هناك ميزانية شهرية مع alert؟
-□ هل الـ Storage lifecycle policy تنقل البيانات القديمة لـ Cool/Archive؟
-□ هل Snapshots أقدم من 30 يوماً تُحذف؟
-□ هل Public IPs غير المستخدمة تُزال؟
-□ هل الـ Load Balancers لديها targets؟
+# النتيجة: التكاليف عادت لـ $45K
 ```
 
 ---
@@ -299,35 +205,28 @@ Cloud Budget: $48,000/شهر
 ## 🧠 التذكّر النشط
 
 1. ما الفرق بين Reserved Instance و Savings Plan؟
-2. كيف تحسب التوفير من Right-sizing VM؟
+2. كيف تكتشف anomaly في التكاليف قبل نهاية الشهر؟
 3. لماذا Tags ضرورية لـ FinOps؟
-4. كيف ترد على مدير يقول "التطوير يحتاج نفس موارد الإنتاج"؟
-5. ما هي أكبر 3 مصادر للهدر السحابي؟
+4. ما هي أكبر 3 مصادر للهدر السحابي؟
+5. كيف تقنع المطورين بتقليل استهلاك الموارد؟
 
-## 📝 بطاقات تعليمية
+## ✍️ تمرين Feynman
 
-- **FinOps**: ممارسة إدارة التكاليف السحابية بتعاون مالي وتقني
-- **Reserved Instance**: التزام لمدة سنة أو 3 سنوات مقابل خصم 30-60%
-- **Spot VM**: VM بسعر مخفض (80%) لكن Azure قد تستردها في أي وقت
-- **Chargeback**: تحميل كل فريق تكلفة موارده الفعلية
-- **Showback**: إظهار التكاليف لكل فريق دون محاسبتهم فعلياً
+"FinOps مثل إدارة ميزانية البيت. تعرف كم تنفق (Inform)، تبحث عن طرق للتوفير (Optimize)، وتضع قواعد للاستمرار (Operate)."
 
 ## 🎤 أسئلة المقابلة
 
-1. **"كيف تقنع فريق التطوير بتقليل استخدام الموارد؟"**
-   - أظهر لهم فاتورتهم الشهرية
-   - اربط التكاليف بالميزات (cost per feature)
-   - وفر أدوات Self-service لمراقبة تكاليفهم
-   - اجعل التوفير جزءاً من OKRs
+1. **"كيف تخفض فاتورة Azure 30% في 3 أشهر؟"**
+   - RI/Savings Plans للـ production (توفير 30-50%)
+   - Auto-shutdown للـ dev environments
+   - Right-sizing: تقليل 40% من الـ oversized VMs
+   - Spot VMs للـ batch/ML workloads
+   - Lifecycle policies للـ storage
 
-2. **"متى تختار Reserved Instance ومتى Savings Plan؟"**
-   - RI: لحمل ثابت ومحدد (مثلاً: 5 VMs D4s للإنتاج)
-   - Savings Plan: لحمل متغير (compute فقط، أكثر مرونة)
-
-3. **"كيف تتعامل مع Shadow IT في السحابة؟"**
+2. **"كيف تتعامل مع Shadow IT؟"**
    - Azure Policy لمنع الموارد غير المصرحة
    - تقارير شهرية للإدارة
-   - منصة Self-service سهلة (حتى لا يلجأوا لـ Shadow IT)
+   - بوابة Self-service كبديل
 
 ---
 
