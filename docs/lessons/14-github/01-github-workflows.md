@@ -1,7 +1,7 @@
 ---
 sidebar_position: 1
 title: "سير عمل GitHub"
-description: "GitHub Actions، الحماية المتقدمة للفروع، CODEOWNERS، وإدارة المشاريع الاحترافية."
+description: "GitHub Actions، الحماية المتقدمة للفروع، CODEOWNERS، OIDC، Deployment Environments، وإدارة المشاريع الاحترافية."
 ---
 
 # سير عمل GitHub الاحترافي
@@ -12,9 +12,9 @@ description: "GitHub Actions، الحماية المتقدمة للفروع، CO
 
 - إتقان GitHub Actions من الصفر للإنتاج
 - حماية الفروع ومنع الدمج بدون مراجعة
-- إدارة المشاريع الكبيرة مع CODEOWNERS
-- استخدامGitHub Packages و Container Registry
-- أتمتة كل شيء من Issues إلى Releases
+- تأمين CI/CD مع OIDC (بدون secrets دائمة)
+- إدارة Deployment Environments للموافقات
+- أتمتة Releases و changelogs و Semantic Versioning
 
 ---
 
@@ -23,7 +23,7 @@ description: "GitHub Actions، الحماية المتقدمة للفروع، CO
 ### تشريح Workflow
 
 ```yaml
-name: CI Pipeline # اسم الـ workflow
+name: CI Pipeline
 
 on: # المحفّزات
   push:
@@ -31,21 +31,21 @@ on: # المحفّزات
   pull_request:
     branches: [main]
   schedule:
-    - cron: "0 6 * * 1" # كل اثنين
+    - cron: "0 6 * * 1" # كل اثنين 6AM
 
 env: # متغيرات بيئة
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-jobs: # الوظائف
-  build: # اسم الوظيفة
-    runs-on: ubuntu-latest # نظام التشغيل
-    strategy: # مصفوفة
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
       matrix:
         python-version: ["3.11", "3.12"]
 
-    steps: # الخطوات
-      - uses: actions/checkout@v4 # استنساخ الكود
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -66,10 +66,12 @@ jobs: # الوظائف
           path: results.xml
 ```
 
-### Reusable Workflows
+---
+
+## 🧱 الطبقة المهنية: Reusable Workflows + OIDC
 
 ```yaml
-# .github/workflows/_deploy.yml
+# .github/workflows/_deploy.yml — Reusable Workflow
 name: Reusable Deploy
 
 on:
@@ -78,20 +80,29 @@ on:
       environment:
         required: true
         type: string
-    secrets:
-      AZURE_CREDENTIALS:
-        required: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
+
+    # OIDC — مصادقة بدون secrets دائمة!
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
       - uses: actions/checkout@v4
-      - uses: azure/login@v2
+
+      - name: Azure Login via OIDC
+        uses: azure/login@v2
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - run: |
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Terraform Apply
+        run: |
           terraform init
           terraform apply -auto-approve \
             -var="environment=${{ inputs.environment }}"
@@ -103,13 +114,12 @@ jobs:
     uses: ./.github/workflows/_deploy.yml
     with:
       environment: production
-    secrets:
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_PROD_CREDS }}
+    secrets: inherit
 ```
 
 ---
 
-## 🧱 الطبقة المهنية: حماية الفروع
+## 🏗️ الطبقة الإنتاجية: حماية الفروع + Deployment Environments
 
 ### Branch Protection Rules
 
@@ -120,23 +130,37 @@ Branch: main
 
 □ Require a pull request before merging
   □ Require approvals: 2
-  □ Dismiss stale reviews
+  □ Dismiss stale reviews when new commits are pushed
 
-□ Require status checks to pass
+□ Require status checks to pass before merging
   □ build (3.11)
   □ build (3.12)
   □ lint
   □ security-sast
   □ security-sca
 
-□ Require conversation resolution
+□ Require conversation resolution before merging
 
-□ Require branches to be up to date
+□ Require branches to be up to date before merging
 
 □ Require signed commits
 
-□ Do not allow bypassing
+□ Do not allow bypassing the above settings
 ```
+
+### Deployment Environments — الموافقات قبل النشر
+
+```yaml
+# إعداد Environment: Settings > Environments > production
+
+Production:
+  □ Required reviewers: @cloudnova/senior-engineers (at least 1)
+  □ Wait timer: 0 minutes
+  □ Deployment branches: main
+  □ Secrets: AZURE_CLIENT_ID, AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID
+```
+
+> **فائدة Deployment Environment:** لا أحد يستطيع النشر للإنتاج بدون موافقة Senior Engineer.
 
 ### CODEOWNERS
 
@@ -152,11 +176,9 @@ Branch: main
 
 # Kubernetes
 /kubernetes/ @cloudnova/platform-team
-*.yaml @cloudnova/platform-team
 
 # Security (فريق الأمان + مراجعة إلزامية)
 /.github/workflows/security* @cloudnova/security-team
-/.zap/ @cloudnova/security-team
 
 # Documentation
 /docs/ @cloudnova/tech-writers
@@ -167,7 +189,7 @@ Branch: main
 
 ---
 
-## 🏗️ الطبقة الإنتاجية: GitHub Container Registry
+## 🎨 الطبقة المعمارية: GitHub Container Registry + Semantic Versioning
 
 ```yaml
 name: Build and Publish Container
@@ -175,7 +197,7 @@ name: Build and Publish Container
 on:
   push:
     tags:
-      - "v*"
+      - "v*.*.*"
 
 jobs:
   publish:
@@ -201,8 +223,9 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix=,format=short
-            type=raw,value=latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/tags/v*' }}
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -217,7 +240,142 @@ jobs:
 
 ---
 
-## 🎨 الطبقة المعمارية: Dependabot + Renovate
+## 📊 رسم بياني: تدفق CI/CD كامل
+
+```mermaid
+graph TD
+    A[git push to feature branch] --> B[GitHub Actions: CI]
+    B --> C{Lint + Tests OK?}
+    C -->|Yes| D[Build Docker Image]
+    C -->|No| E[❌ Fix & Push Again]
+    D --> F[Push Image to GHCR]
+    F --> G[Open Pull Request]
+    G --> H{2 Approvals?}
+    H -->|No| I[Request Review]
+    H -->|Yes| J[Merge to main]
+    J --> K[GitHub Actions: Deploy to Staging]
+    K --> L{Tests Pass in Staging?}
+    L -->|Yes| M[Request Production Deployment]
+    L -->|No| N[❌ Rollback & Fix]
+    M --> O{Senior Engineer Approves?}
+    O -->|Yes| P[Deploy to Production ✅]
+    O -->|No| Q[Discuss & Revise]
+```
+
+---
+
+## ⚡ الإنتاج وما بعده: Release Please (أتمتة كاملة)
+
+```yaml
+# .github/workflows/release.yml
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          release-type: simple
+          token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+ماذا يفعل؟ عند كل push لـ main:
+- يحلل commit messages (يحتاج Conventional Commits)
+- يفتح Release PR مع changelog تلقائي
+- عند دمج Release PR: يصدر tag + GitHub Release
+
+### Conventional Commits
+
+```
+feat: add auto-scaling to API deployment
+^──^  ^────────────────────────────────
+│     └── وصف التغيير
+└── النوع: feat, fix, docs, chore, refactor, test, ci
+
+feat → MINOR version bump (1.0.0 → 1.1.0)
+fix  → PATCH version bump (1.0.0 → 1.0.1)
+feat! → MAJOR version bump (1.0.0 → 2.0.0)
+```
+
+---
+
+## 🚨 سيناريو CloudNova ١: إدارة حادثة في GitHub
+
+```
+📋 الحادثة: Memory leak in API v2.1.0
+
+1. إنشاء Issue:
+   ├── العنوان: "Memory leak in API connection pool"
+   ├── Labels: bug, P1, production
+   ├── Assignee: @ahmed (on-call)
+   └── Project: CloudNova Sprint 26
+
+2. إنشاء Branch:
+   git checkout -b fix/memory-leak-api
+
+3. إصلاح + Commit (Conventional):
+   git commit -m "fix: resolve memory leak in connection pool
+
+   - Close idle connections after 300s timeout
+   - Add connection pool metrics to Prometheus
+   - Add connection age alert at > 250s
+
+   Fixes #456"
+
+4. فتح PR:
+   ├── وصف مفصل مع screenshots
+   ├── Linked Issue: #456
+   ├── Reviewers: @platform-team
+   └── Checks: ✅ CI ✅ security
+
+5. مراجعة:
+   ├── @sarah: code review
+   ├── @omar: approves (CODEOWNERS)
+   └── ✅ 2 approvals
+
+6. دمج: Squash & Merge → Auto-delete branch
+
+7. ✅ Issue #456 closes automatically
+8. 🏷️ Release Please يفتح Release PR تلقائياً
+9. 📦 صورة Docker جديدة تنشر لـ GHCR
+```
+
+---
+
+## 🚨 سيناريو CloudNova ٢: إعداد Branch Protection
+
+```
+📋 المشكلة: Junior engineer دمج كوداً مباشرة لـ main بدون مراجعة.
+النتيجة: Production outage لمدة 30 دقيقة.
+
+الحل: Branch Protection Rules
+
+الإعدادات الجديدة:
+1. Require PR before merging to main ✅
+2. Require 2 approvals from CODEOWNERS ✅
+3. Require all status checks to pass ✅
+4. Require branches to be up to date ✅
+5. Do not allow bypassing ✅
+
+النتيجة: لا أحد يستطيع الدمج المباشر لـ main — حتى الـ admin.
+كل تغيير للإنتاج = PR + 2 reviews + CI passing.
+
+الدرس: لا تنتظر الحادثة لتحمي الفروع. احمِها من اليوم الأول.
+```
+
+---
+
+## 🛡️ Dependabot + Secret Scanning
 
 ```yaml
 # .github/dependabot.yml
@@ -255,99 +413,73 @@ updates:
       - ci
 ```
 
----
-
-## 🏥 سيناريو CloudNova: إدارة حادثة في GitHub
-
-```
-📋 الحادثة: Bug في الإنتاج
-
-1. إنشاء Issue:
-   ├── العنوان: "Memory leak in API v2.1.0"
-   ├── Labels: bug, P1, production
-   ├── Assignee: @ahmed (on-call engineer)
-   └── Project: CloudNova Sprint 26
-
-2. إنشاء Branch:
-   git checkout -b fix/memory-leak-api
-
-3. إصلاح + Commit:
-   git commit -m "fix: resolve memory leak in connection pool
-
-   - Close idle connections after 300s
-   - Add connection pool metrics
-   - Fixes #456"
-
-4. فتح PR:
-   ├── وصف مفصل مع screenshots
-   ├── Linked Issue: #456
-   ├── Reviewers: @platform-team
-   └── Checks: ✅ build ✅ tests ✅ security
-
-5. مراجعة:
-   ├── @sarah reviews code
-   ├── @omar approves (CODEOWNERS)
-   └── ✅ 2 approvals
-
-6. دمج:
-   ├── Squash & Merge
-   └── Auto-delete branch
-
-7. ✅ Issue #456 يُغلق تلقائياً
-8. 🏷️ Release v2.1.1 يُنشأ تلقائياً
+```yaml
+# تفعيل Secret Scanning + Push Protection
+# Settings > Code security > Secret scanning
+□ Push protection — امنع push إذا فيه secret
+□ Alert when secrets detected
 ```
 
 ---
 
-## ⚡ الإنتاج وما بعده
+## 📋 أفضل ممارسات GitHub
 
-### أفضل ممارسات GitHub
-
-| الممارسة                 | التنفيذ                                |
-| ------------------------ | -------------------------------------- |
-| **Conventional Commits** | `feat:`, `fix:`, `docs:`, `chore:`     |
-| **PR Templates**         | `.github/PULL_REQUEST_TEMPLATE.md`     |
-| **Issue Templates**      | `.github/ISSUE_TEMPLATE/bug_report.md` |
-| **Protected Branches**   | main + production branches             |
-| **CODEOWNERS**           | مراجعة إلزامية من الفريق المناسب       |
-| **Secret Scanning**      | تفعيل push protection                  |
-| **Actions Permissions**  | تقييد الأذونات (ليس `write-all`)       |
+| الممارسة                 | التنفيذ                                    |
+| ------------------------ | ------------------------------------------ |
+| **Conventional Commits** | `feat:`, `fix:`, `docs:`, `chore:`         |
+| **PR Templates**         | `.github/PULL_REQUEST_TEMPLATE.md`         |
+| **Issue Templates**      | `.github/ISSUE_TEMPLATE/bug_report.yml`    |
+| **Protected Branches**   | main + release branches                    |
+| **CODEOWNERS**           | مراجعة إلزامية من الفريق المناسب           |
+| **Deployment Environments** | موافقة إلزامية قبل نشر الإنتاج          |
+| **OIDC**                 | مصادقة Azure/AWS بدون secrets دائمة        |
+| **Release Please**       | Changelog + Releases تلقائية               |
+| **Secret Scanning**      | امنع push إذا فيه secret                   |
+| **Actions Permissions**  | قيد الأذونات (ليس `write-all`)             |
 
 ---
 
 ## 🧠 التذكّر النشط
 
 1. ما الفرق بين `GITHUB_TOKEN` و Personal Access Token؟
-2. كيف تحمي فرع main من الدمج المباشر؟
-3. متى تستخدم reusable workflows؟
-4. كيف يدير Dependabot تحديثات الاعتماديات تلقائياً؟
-5. ما فائدة CODEOWNERS في المشاريع الكبيرة؟
+2. كيف تحمي فرع main من الدمج المباشر؟ (5 إعدادات على الأقل)
+3. متى تستخدم reusable workflows بدلاً من نسخ الشفرة؟
+4. لماذا OIDC أفضل من secrets الدائمة للتواصل مع Azure؟
+5. كيف يحدد Release Please رقم الإصدار الجديد من commit messages؟
+
+## ✍️ تمرين Feynman
+
+اشرح لمدير غير تقني: "كيف يضمن GitHub Actions أن الكود الجديد لا يكسر الإنتاج؟"
 
 ## 📝 بطاقات تعليمية
 
-- **Actions**: نظام CI/CD مدمج في GitHub
-- **Runner**: الخادم الذي ينفذ الـ workflow
-- **Artifact**: ملفات ناتجة من workflow (مثل: نتائج الاختبارات)
-- **Environment**: بيئة نشر مع أسرار وحماية خاصة
-- **Matrix**: تشغيل نفس الوظيفة بإعدادات متعددة (مثلاً: Python 3.11 و 3.12)
+- **OIDC**: مصادقة بدون secrets. GitHub يطلب token مؤقت من Azure لكل workflow
+- **Deployment Environment**: بيئة نشر محمية بموافقات وأسرار خاصة
+- **Conventional Commits**: صيغة موحدة لرسائل commit. تفعّل semantic versioning تلقائياً
+- **Release Please**: أتمتة releases و changelogs من commit history
+- **Runner**: الخادم الذي ينفذ الـ workflow. hosted أو self-hosted
 
 ## 🎤 أسئلة المقابلة
 
-1. **"كيف تفرض مراجعة الكود قبل الدمج؟"**
-   - Branch protection rules
-   - CODEOWNERS
-   - Status checks
-   - Required approvals (2 على الأقل)
+1. **"كيف تفرض مراجعة الكود قبل الدمج في GitHub؟"**
+   - Branch protection: Require PR + 2 approvals
+   - CODEOWNERS: مراجعة إلزامية من الفريق الصحيح
+   - Status checks: CI يجب أن ينجح
+   - لا استثناءات لأحد
 
-2. **"كيف تدير الأسرار في GitHub Actions؟"**
-   - Repository/Environment secrets
-   - OIDC للتواصل مع Azure/AWS (بدون secrets)
-   - Secret scanning لمنع التسريب
-   - لا hardcoded secrets أبداً
+2. **"كيف تؤمّن CI/CD pipeline؟"**
+   - OIDC للمصادقة (بدون secrets دائمة)
+   - Deployment environments مع reviewers إلزاميين
+   - Secret scanning + push protection
+   - Actions permissions محدودة (ليس write-all)
+   - Dependabot لتحديث dependencies
 
-3. **"ما الفرق بين GitHub Actions و Jenkins؟"**
-   - Actions: مدمج، YAML، hosted runners، أبسط
-   - Jenkins: مستقل، Groovy، self-hosted، أقدم وأكثر مرونة
+3. **"كيف تصمم CI/CD لفريق من 20 مهندساً؟"**
+   - Reusable workflows (لا تكرر الكود)
+   - Matrix builds للـ cross-platform testing
+   - Deployment environments متعددة (dev → staging → prod)
+   - Branch protection لمنع الدمج المباشر
+   - Release Please للأتمتة الكاملة
 
 ---
 
