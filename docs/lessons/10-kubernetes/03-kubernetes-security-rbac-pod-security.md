@@ -19,10 +19,16 @@ description: "RBAC، Pod Security، Network Policies، OPA Gatekeeper — تأم
 
 ---
 
+## 🧠 الطبقة البسيطة
+
+تخيل فندقاً. كل نزيل (pod) له مفتاح غرفته فقط. لا يمكنه دخول الغرف الأخرى. RBAC هو نظام المفاتيح: من يستطيع فعل ماذا. Network Policy هي الجدران بين الغرف.
+
+---
+
 ## 🏗️ RBAC
 
 ```yaml
-# Role: صلاحيات محدودة لقراءة pods في namespace
+# Role: صلاحيات محدودة لقراءة pods
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -71,7 +77,7 @@ metadata:
     pod-security.kubernetes.io/warn: restricted
 ```
 
-### Network Policy — عزل الـ Pods
+### Network Policy
 
 ```yaml
 apiVersion: networking.k8s.io/v1
@@ -82,9 +88,7 @@ spec:
   podSelector:
     matchLabels:
       app: api
-  policyTypes:
-  - Ingress
-  - Egress
+  policyTypes: [Ingress, Egress]
   ingress:
   - from:
     - podSelector:
@@ -105,20 +109,76 @@ spec:
 
 ---
 
-## 🏛️ سيناريو CloudNova
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
-اكتشفنا أن أحد الـ pods في `development` namespace كان لديه **cluster-admin** صلاحيات! السبب: ServiceAccount استُخدم مع RoleBinding خاطئ.
+اكتشفنا أن أحد الـ pods في `development` كان لديه **cluster-admin**! السبب: ServiceAccount خاطئ.
 
-**الحل**:
-1. `kubectl auth can-i --list` لكل namespace
-2. OPA Gatekeeper يمنع أي RoleBinding لـ cluster-admin
+```bash
+# تدقيق RBAC
+kubectl auth can-i --list --as=system:serviceaccount:development:default
+kubectl get clusterrolebindings -o json | jq '.items[] | select(.subjects[]?.kind=="ServiceAccount")'
+```
+
+**الحل**: OPA Gatekeeper يمنع أي RoleBinding لـ cluster-admin.
+
+### OPA Gatekeeper
+
+```yaml
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequiredLabels
+metadata:
+  name: require-team-label
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Namespace"]
+  parameters:
+    labels: ["team", "environment"]
+```
 
 ---
 
-## 🛠️ تدريب
+## 🛠️ تدريبات
 
-1. أنشئ Role يسمح فقط بقراءة ConfigMaps
-2. طبق Network Policy تمنع كل الـ ingress ما عدا من `frontend`
+### تمرين: أنشئ Role يسمح فقط بقراءة ConfigMaps
+### تحدي: طبق Network Policy تمنع كل ingress ما عدا من `frontend`
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما الفرق بين Role و ClusterRole؟
+2. لماذا Network Policy مهمة؟
+3. كيف تمنع pods من التشغيل كـ root؟
+
+### 🃏 بطاقات
+
+| السؤال | الإجابة |
+|--------|---------|
+| RBAC | Role-Based Access Control |
+| PSS | Pod Security Standards |
+| NetworkPolicy | يتحكم في اتصالات الـ pods |
+| OPA | Open Policy Agent — سياسات مخصصة |
+
+---
+
+## 🎤 مقابلة
+
+1. **"كيف تؤمن Kubernetes cluster؟"**
+   → RBAC + PSS + Network Policies + OPA + audit logging
+2. **"كيف تكتشف صلاحيات زائدة؟"**
+   → `kubectl auth can-i --list` + OPA auditing
+
+---
+
+## 📚 مراجع
+
+| النوع | الرابط |
+|-------|--------|
+| درس مرتبط | [K8s Storage](./04-kubernetes-storage-persistent-volumes) |
+| شهادة | CKA / CKS |
 
 ---
 
