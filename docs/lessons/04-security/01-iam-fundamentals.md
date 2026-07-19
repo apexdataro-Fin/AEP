@@ -383,4 +383,453 @@ az policy definition create \
 
 ---
 
+---
+
+## 🏛️ الطبقة الإنتاجية: أمان الإنتاج
+
+### Security Operations Center (SOC) — كيف تراقب الأمان
+
+```mermaid
+graph LR
+    A[Azure AD Logs] --> D[Sentinel]
+    B[Azure Activity Logs] --> D
+    C[VM Syslog] --> D
+    D --> E[Analytics Rules]
+    E --> F[Incidents]
+    F --> G[Playbook - Auto Response]
+    F --> H[SOC Engineer]
+```
+
+```kusto
+// Sentinel: كشف محاولات اختراق — أكثر من 5 محاولات فاشلة في 5 دقائق
+SigninLogs
+| where ResultType == "50057"  // User account is disabled
+| summarize FailedAttempts = count() by UserPrincipalName, IPAddress, bin(TimeGenerated, 5m)
+| where FailedAttempts > 5
+| project TimeGenerated, UserPrincipalName, IPAddress, FailedAttempts
+
+// كشف: Global Admin يستخدم صلاحياته
+AuditLogs
+| where Category == "RoleManagement"
+| where OperationName has "Add member to role"
+| where TargetResources has "Global Administrator"
+| project TimeGenerated, InitiatedBy, TargetResources
+```
+
+### Incident Response Automation
+
+```yaml
+# Azure Logic App — استجابة تلقائية لحادث أمني
+trigger:
+  type: "When_a_Sentinel_incident_is_created"
+
+actions:
+  # ١. إبلاغ فريق الأمن فوراً
+  - send_teams_message:
+      channel: "Security-Alerts"
+      message: "🚨 New Sentinel Incident: @{triggerBody()?['title']}"
+  
+  # ٢. تعطيل المستخدم تلقائياً إذا كان High severity
+  - condition:
+      if: "@equals(triggerBody()?['severity'], 'High')"
+      then:
+        - disable_user:
+            user_id: "@triggerBody()?['entities'][0]?['userId']"
+            reason: "Automated response to High severity incident"
+        - revoke_sessions:
+            user_id: "@triggerBody()?['entities'][0]?['userId']"
+  
+  # ٣. إنشاء ticket في نظام التذاكر
+  - create_jira_ticket:
+      project: "SEC"
+      type: "Incident"
+      summary: "Sentinel: @triggerBody()?['title']"
+```
+
+### DR للأمان — ماذا لو اختُرقت الحسابات؟
+
+```
+خطة طوارئ أمنية — CloudNova:
+
+المرحلة ١: احتواء (أول 15 دقيقة)
+├── تعطيل الحساب المخترق
+├── إلغاء جميع refresh tokens
+├── عزل الـ VM المصابة (NSG: deny all)
+└── أخذ snapshot للتحقيق الجنائي
+
+المرحلة ٢: تحقيق (أول 4 ساعات)
+├── مراجعة audit logs لآخر 90 يوماً
+├── تحديد: ماذا وصل؟ ماذا فعل؟ ماذا سُرق؟
+└── تقرير مبدئي للإدارة
+
+المرحلة ٣: استعادة (24-48 ساعة)
+├── استعادة من backup نظيف (قبل الاختراق)
+├── تدوير كل المفاتيح والشهادات
+├── فرض MFA على كل المستخدمين
+└── مراجعة كل Conditional Access policies
+
+المرحلة ٤: تحسين (أسبوع)
+├── Postmortem مفصل
+├── تحديث playbooks
+├── تدريب إضافي للفريق
+└── Penetration test للتحقق من الإصلاحات
+```
+
+---
+
+## 🎨 الطبقة المعمارية: استراتيجيات الأمان المتقدمة
+
+### Zero Trust Architecture — بالتفصيل
+
+```yaml
+Zero Trust Implementation في CloudNova:
+
+Pillar 1 — Identity:
+  - Azure AD Conditional Access لكل شيء
+  - MFA إجباري للجميع
+  - Passwordless للـ privileged accounts
+  - PIM لكل الأدوار الحساسة
+
+Pillar 2 — Device:
+  - Intune enrollment إجباري
+  - Compliance policy: disk encryption, antivirus, updates
+  - غير compliant = منع الوصول
+
+Pillar 3 — Network:
+  - Micro-segmentation: كل تطبيق له subnet معزول
+  - Private Endpoints: لا IPs عامة للـ PaaS
+  - JIT VM Access: SSH فقط عند الحاجة
+
+Pillar 4 — Application:
+  - OAuth2/OIDC لكل API
+  - API Management مع rate limiting
+  - WAF أمام كل تطبيق ويب
+
+Pillar 5 — Data:
+  - Classification: Public, Internal, Confidential, Secret
+  - Encryption at rest + in transit + in use
+  - DLP policies لمنع تسرب البيانات
+  - Customer Lockbox للموافقة على وصول Microsoft
+```
+
+### Trade-off: الأمان vs سهولة الاستخدام
+
+```
+معضلة كل مهندس أمان:
+
+الخيار A: أمان مشدد
+├── MFA لكل طلب (وليس كل جلسة!) ← أمان عالي
+├── 5 دقائق session timeout
+├── 3 موافقات لأي تغيير في الإنتاج
+└── النتيجة: المطورون يبحثون عن طرق التفافية
+
+الخيار B: توازن CloudNova
+├── MFA كل 8 ساعات + عند suspicious activity
+├── جلسة 4 ساعات (قابلة للتمديد)
+├── موافقة واحدة + PIM auto-approval للمهام الروتينية
+└── النتيجة: أمان جيد + إنتاجية مقبولة
+
+المبدأ: "Security should be an enabler, not a blocker"
+```
+
+### متى لا تستخدم Azure AD؟
+
+```
+❌ لا تستخدم Azure AD (واستخدم بديلاً) عندما:
+
+1. تحتاج Identity على Kubernetes فقط:
+   → Dex + OIDC provider خفيف الوزن
+
+2. تطبيق B2C بسيط جداً:
+   → Auth0 أو Firebase Auth (أبسط بكثير)
+
+3. تحتاج LDAP خالص لخوادم Linux:
+   → FreeIPA أو OpenLDAP
+
+4. ميزانيتك لا تتحمل Azure AD Premium P2:
+   → استخدم P1 على الأقل — Conditional Access أساسي
+   → P2 يضيف: Identity Protection، PIM، Access Reviews
+```
+
+### Future: Passwordless + Passkeys
+
+```
+2024: بداية Passwordless في CloudNova
+2025: 70% من المستخدمين بدون كلمة سر
+2026: 100% Passwordless — صفر كلمات سر في المؤسسة
+
+التقنيات:
+├── Windows Hello for Business
+├── FIDO2 Security Keys (YubiKey)
+├── Microsoft Authenticator (phone sign-in)
+└── Passkeys (synced via iCloud/Google)
+
+النتيجة:
+├── صفر phishing ناجح (لا كلمة سر لتُسرق)
+├── 70% أسرع في تسجيل الدخول
+└── 90% أقل في طلبات إعادة تعيين كلمة السر
+```
+
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: اكتشف الثغرة
+
+```bash
+# لديك هذا الـ role assignment. ما الخطأ؟
+az role assignment list \
+  --assignee intern@cloudnova.com \
+  --output table
+
+# النتيجة:
+# Role: Contributor
+# Scope: /subscriptions/prod-subscription-id
+
+# المشكلة:
+# ١. Contributor على الاشتراك كله!
+# ٢. Intern لا يحتاج كتابة في الإنتاج
+# ٣. لا PIM — صلاحية دائمة
+
+# الإصلاح:
+az role assignment delete \
+  --assignee intern@cloudnova.com \
+  --scope /subscriptions/prod-subscription-id
+
+az role assignment create \
+  --assignee intern@cloudnova.com \
+  --role "Reader" \
+  --scope /subscriptions/dev-subscription-id
+```
+
+### تمرين ٢: كتابة Azure Policy
+
+```json
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Storage/storageAccounts"
+        },
+        {
+          "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+          "equals": "false"
+        }
+      ]
+    },
+    "then": {
+      "effect": "deny"
+    }
+  }
+}
+```
+
+### تحدي: محاكاة تحقيق أمني
+
+```
+السيناريو:
+- الساعة 2 AM: تنبيه Sentinel
+- User: ali@cloudnova.com سجل دخول من Beijing
+- ثم: قرأ 500 سجل من قاعدة بيانات العملاء
+- ثم: حمّل ملف CSV بحجم 45MB
+
+مهمتك:
+1. هل هذا هجوم حقيقي أم إنذار كاذب؟
+2. اكتب خطة التحقيق
+3. ما الإجراءات الفورية؟
+
+الحل:
+1. حقيقي: Ali في إجازة في دبي، وليس Beijing
+2. التحقيق: مراجعة sign-in logs، device info، MFA status
+3. فوراً: disable account + revoke sessions + begin forensic investigation
+```
+
+### CloudNova Project Task
+
+```
+مهمتك: بناء نظام أمان متكامل لـ CloudNova
+
+المطلوب:
+1. ✓ تصميم RBAC: 5 أدوار مخصصة (Jr, DevOps, DBA, Security, Admin)
+2. ✓ PIM: كل الأدوار الحساسة Eligible (وليس Active)
+3. ✓ Conditional Access policies:
+   - MFA للجميع
+   - منع الدول عالية المخاطر
+   - منع الأجهزة غير المسجلة
+4. ✓ Azure Policies:
+   - منع storage accounts بدون HTTPS
+   - فرض tags إجبارية
+   - منع public IPs على قواعد البيانات
+5. ✓ Monitoring:
+   - Sentinel + 3 analytics rules
+   - Logic App للاستجابة التلقائية
+```
+
+---
+
+## 📝 تقييم
+
+### Knowledge Check
+
+1. **ما الفرق بين RBAC و Azure Policy؟**
+   <details><summary>الإجابة</summary>RBAC: من يستطيع فعل ماذا (Authorization). Policy: ما هو مسموح أساساً (Governance).</details>
+
+2. **لماذا Managed Identity أكثر أماناً من Service Principal secrets؟**
+   <details><summary>الإجابة</summary>لا secrets لتُسرق. Azure يدير التدوير تلقائياً. الهوية مرتبطة بالمورد نفسه.</details>
+
+3. **ما هو PIM ولماذا هو ضروري؟**
+   <details><summary>الإجابة</summary>Privileged Identity Management: صلاحيات مؤقتة بدلاً من دائمة. يمنع misuse ويراقب كل activation.</details>
+
+4. **كيف يعمل Conditional Access؟**
+   <details><summary>الإجابة</summary>إذا تحقق شرط (موقع، جهاز، خطر) → نفّذ إجراء (MFA، منع، جلسة محدودة).</details>
+
+5. **ما هي مبادئ Zero Trust الثلاثة؟**
+   <details><summary>الإجابة</summary>1. تحقق صريح. 2. أقل صلاحية. 3. افترض الاختراق.</details>
+
+### Quiz
+
+1. **أي خدمة Azure لاستضافة مفاتيح التشفير؟**
+   a) Azure Sentinel
+   b) Azure Key Vault
+   c) Azure Policy
+   <details><summary>الإجابة</summary>b) Key Vault. يدير secrets, keys, certificates مع HSM.</details>
+
+2. **ما هو JIT VM Access؟**
+   a) Just-in-Time — وصول SSH/RDP مؤقت
+   b) Java Integration Toolkit
+   c) نوع من VMs السريعة
+   <details><summary>الإجابة</summary>a) يفتح NSG rule مؤقتاً (حسب الوقت المطلوب) ثم يغلقها تلقائياً.</details>
+
+3. **أي أداة لتحليل security logs في Azure؟**
+   a) Azure Monitor
+   b) Azure Sentinel
+   c) Azure Advisor
+   <details><summary>الإجابة</summary>b) Sentinel = SIEM + SOAR. يجمع logs ويحللها ويكتشف threats.</details>
+
+### 5 أسئلة للتذكّر النشط
+
+1. ارسم نموذج الدفاع متعدد الطبقات من ذاكرتك — اذكر أداة Azure لكل طبقة
+2. كيف تصمم RBAC لمؤسسة فيها 50 مهندساً و10 تطبيقات؟
+3. اشرح كيف تمنع حادثة "تسرب مفتاح من GitHub" باستخدام الأدوات المتاحة
+4. ما الفرق بين NSG و Azure Firewall و WAF؟
+5. كيف تبني خطة Incident Response متكاملة؟
+
+### ✍️ تمرين Feynman
+
+اشرح لمدير مالي: "لماذا نحتاج P2 license ب $9/شهر لكل مستخدم؟ ما الذي سيمنعه وكيف يوفر علينا المال؟"
+
+### 🎴 بطاقات تعليمية
+
+| 🃏 السؤال | 🃏 الإجابة |
+|----------|----------|
+| أداة إدارة الهوية في Azure | Azure Active Directory (Entra ID) |
+| الفرق بين Authentication و Authorization | AuthN = من أنت؟ AuthZ = ماذا تستطيع؟ |
+| كم مرة تتجدد Managed Identity cert؟ | كل 46 ساعة |
+| أداة SIEM في Azure | Microsoft Sentinel |
+| ما هو JIT؟ | Just-in-Time VM Access — وصول مؤقت |
+
+---
+
+## 🎤 أسئلة مقابلة إضافية
+
+### س ١: System Design
+
+> **السؤال:** "صمم نظام أمان لمؤسسة لديها 1000 موظف و50 تطبيقاً في Azure."
+
+```
+الإجابة:
+
+Identity:
+- Azure AD Connect (sync on-prem AD)
+- Conditional Access: MFA، compliant device، trusted location
+- PIM: كل الـ privileged roles
+- Access Reviews: كل 90 يوماً
+
+Network:
+- Hub-Spoke with Azure Firewall
+- Private Endpoints: no public PaaS
+- DDoS Protection Standard
+- WAF on Application Gateway
+
+Data:
+- Key Vault: كل secrets + certificates
+- Encryption at rest: Azure Disk Encryption + Storage Service Encryption
+- Encryption in transit: TLS 1.2+ only
+- Backup: Azure Backup + Geo-redundant storage
+
+Monitoring:
+- Sentinel + all data connectors
+- 10 Analytics Rules (custom)
+- Logic Apps for auto-remediation
+- Monthly penetration tests
+
+التكلفة: ~$8,000/شهر (P2 licenses + Sentinel + Firewall + WAF)
+```
+
+### س ٢: Technical
+
+> **السؤال:** "كيف تكتشف أن موظفاً سابقاً ما زال لديه وصول؟"
+
+```
+١. Access Reviews ربع سنوية — تراجع كل الصلاحيات
+٢. Sentinel rule: Sign-in from disabled account
+٣. Automated: Logic App يفحص كل المستخدمين بدون department
+٤. Integration: HR system → Azure AD: تعطيل تلقائي عند الخروج
+٥. Monthly audit: كل الـ guest users والصلاحيات الدائمة
+```
+
+### س ٣: Behavioral
+
+> **السؤال:** "كيف تقنع فريق التطوير بتبني ممارسات أمان أفضل؟"
+
+```
+S: في CloudNova، المطورون كانوا يرفضون MFA: "بطيء ويعطلنا".
+T: إقناعهم بدون فرض من الأعلى.
+A:
+  1. عرضت إحصائيات: 99.9% من الاختراقات تبدأ بدون MFA
+  2. أظهرت لهم: phone sign-in أسرع من كتابة كلمة السر!
+  3. جربت FIDO2 keys مع فريق صغير — أحبوها
+  4. جعلتهم champions للأمان — ينشرونها لزملائهم
+R: 95% adoption خلال شهرين. صفر شكوى بعد أول أسبوع.
+```
+
+---
+
+## 📚 مراجع
+
+### دروس ذات صلة
+
+- [Identity Mastery](/docs/lessons/23-identity/01-identity-mastery) — PIM، Passwordless، Workload Identity
+- [DevSecOps Security Pipeline](/docs/lessons/17-devsecops/01-security-pipeline)
+- [Networking Fundamentals](/docs/lessons/03-networking/01-networking-fundamentals)
+
+### شهادات
+
+| الشهادة | الأهداف |
+|--------|--------|
+| **AZ-500** | Azure Security Engineer |
+| **SC-300** | Identity and Access Administrator |
+| **CISSP** | Certified Information Systems Security Professional |
+
+### مصادر خارجية
+
+- [Azure Security Benchmark](https://learn.microsoft.com/azure/security/benchmarks/)
+- [MITRE ATT&CK Cloud Matrix](https://attack.mitre.org/matrices/enterprise/cloud/)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+
+### مصطلحات
+
+| المصطلح | التعريف |
+|--------|---------|
+| **Zero Trust** | نموذج أمان: لا تثق بأحد، تحقق من كل شيء |
+| **PIM** | صلاحيات مؤقتة — Just-in-Time access |
+| **SIEM** | Security Information and Event Management |
+| **SOAR** | Security Orchestration, Automation and Response |
+| **DLP** | Data Loss Prevention |
+
+---
+
 [← العودة للوحدة](01-iam-fundamentals) | [🏠 الرئيسية](/)

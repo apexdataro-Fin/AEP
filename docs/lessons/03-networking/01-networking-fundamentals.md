@@ -353,4 +353,468 @@ curl -I https://api.cloudnova.com
 
 ---
 
+---
+
+## 🏛️ الطبقة الإنتاجية: شبكات الإنتاج
+
+### High Availability للشبكة
+
+```mermaid
+graph TD
+    A[Azure Front Door] --> B[East US Region]
+    A --> C[West Europe Region]
+    B --> D[App Gateway - East]
+    C --> E[App Gateway - West]
+    D --> F[VM Scale Set - East]
+    E --> G[VM Scale Set - West]
+    
+    H[Traffic Manager] --> A
+```
+
+```bash
+# Azure Cross-Region Load Balancer
+az network cross-region-lb create \
+  --name cloudnova-global-lb \
+  --resource-group prod-rg \
+  --frontend-ip-name global-frontend \
+  --backend-pool-name global-backend
+
+# إضافة مناطق للـ backend pool
+az network cross-region-lb address-pool address add \
+  --lb-name cloudnova-global-lb \
+  --address-pool global-backend \
+  --name east-us \
+  --frontend-ip-address 20.50.2.10
+
+az network cross-region-lb address-pool address add \
+  --lb-name cloudnova-global-lb \
+  --address-pool global-backend \
+  --name west-europe \
+  --frontend-ip-address 51.103.1.10
+```
+
+### Network Performance Tuning
+
+```bash
+# TCP Tuning للإنتاج
+cat >> /etc/sysctl.conf <<EOF
+# زيادة حجم buffer للشبكة
+net.core.rmem_max = 134217728
+net.core.wmem_max = 134217728
+net.ipv4.tcp_rmem = 4096 87380 134217728
+net.ipv4.tcp_wmem = 4096 65536 134217728
+
+# تمكين TCP Fast Open
+net.ipv4.tcp_fastopen = 3
+
+# زيادة backlog
+net.core.somaxconn = 65535
+net.ipv4.tcp_max_syn_backlog = 65535
+
+# تمكين BBR congestion control
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
+EOF
+
+sysctl -p
+```
+
+### Network Monitoring
+
+```yaml
+# Prometheus Blackbox Exporter — مراقبة من الخارج
+modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_status_codes: [200, 301, 302]
+      method: GET
+      no_follow_redirects: false
+      fail_if_ssl: false
+      fail_if_not_ssl: false
+      tls_config:
+        insecure_skip_verify: false
+
+  tcp_connect:
+    prober: tcp
+    timeout: 5s
+    tcp:
+      ip_protocol_fallback: true
+
+  dns_lookup:
+    prober: dns
+    dns:
+      query_name: "api.cloudnova.com"
+      query_type: "A"
+      validate_answer_rrs:
+        fail_if_matches_regexp:
+          - ".*"
+```
+
+### Disaster Recovery للشبكة
+
+```
+سيناريو: منطقة Azure East US تتعطل بالكامل
+
+استراتيجية CloudNova:
+
+1. DNS Failover (Traffic Manager):
+   - Priority: East US (0)، West Europe (1)
+   - TTL: 60 seconds
+   - Failover تلقائي < 2 دقيقة
+
+2. Azure Front Door:
+   - Global anycast — يقود لأقرب منطقة
+   - Health probes كل 15 ثانية
+   - Automatic failover < 30 ثانية
+
+3. Costs:
+   ├── Active-Passive: أرخص — West Europe idle حتى الحاجة
+   ├── Active-Active: أغلى — المنطقتان تخدمّان
+   └── CloudNova اختارت: Active-Passive للـ DR
+
+4. RTO: 5 دقائق (DNS propagation + app startup)
+5. RPO: 0 (database geo-replicated)
+```
+
+---
+
+## 🎨 الطبقة المعمارية: قرارات الشبكة الكبرى
+
+### Hub-Spoke vs Mesh Topology
+
+```
+Hub-Spoke (توصي Azure به):
+├── Hub VNet: Azure Firewall، VPN Gateway، Bastion
+│   ├── Spoke 1: Production
+│   ├── Spoke 2: Staging
+│   └── Spoke 3: Development
+├── الميزة: تحكم مركزي، تكلفة أقل
+└── العيب: Hub = single point of failure (استخدم AZs)
+
+Mesh (كل VNet متصل بالكل):
+├── VNet 1 ↔ VNet 2 ↔ VNet 3
+├── الميزة: لا single point of failure
+└── العيب: تعقيد N×(N-1)/2 اتصالات، تكلفة أعلى
+
+CloudNova: Hub-Spoke مع Azure Firewall في Hub
+```
+
+### متى تستخدم VPN ومتى ExpressRoute؟
+
+```
+VPN (Site-to-Site):
+├── مناسب: مكاتب صغيرة، بيئات dev/test
+├── السرعة: حتى 1.25 Gbps
+├── التكلفة: $130/شهر + data transfer
+├── SLA: 99.9%
+└── الإعداد: ساعات
+
+ExpressRoute:
+├── مناسب: مكاتب كبيرة، مراكز بيانات، حركة كثيفة
+├── السرعة: حتى 100 Gbps
+├── التكلفة: $600-5000/شهر + data transfer
+├── SLA: 99.95%
+└── الإعداد: أسابيع (عقد مع مزود اتصال)
+
+في CloudNova:
+├── Headquarters: ExpressRoute (حركة كبيرة)
+├── Regional offices: VPN
+└── Remote workers: Azure Bastion أو VPN client
+```
+
+### متى لا تستخدم Load Balancer؟
+
+```
+❌ لا تستخدم Load Balancer (واستخدم بديلاً):
+
+1. تطبيق stateful بسيط على خادم واحد:
+   → لا حاجة — DNS مباشر يكفي
+
+2. Static website:
+   → CDN (Azure Front Door, Cloudflare)
+
+3. WebSockets مع sticky sessions معقدة:
+   → قد يسبب مشاكل إذا لم يُضبط session affinity
+
+4. حركة قليلة جداً (< 100 req/s):
+   → overhead الـ LB لا يستحق. خادم واحد + DNS
+```
+
+### Future Trends
+
+```
+1. eBPF-based Networking (Cilium):
+   - Network Policies في Kubernetes بدون sidecar proxy
+   - أداء أفضل 3-5x من iptables
+
+2. Service Mesh (Istio, Linkerd):
+   - mTLS تلقائي بين الخدمات
+   - Traffic splitting للـ canary deployments
+
+3. HTTP/3 + QUIC:
+   - مبني على UDP بدلاً من TCP
+   - أسرع في الظروف السيئة (packet loss)
+
+4. Software-Defined WAN (SD-WAN):
+   - توجيه ذكي بين MPLS, VPN, Internet
+   - Azure Virtual WAN يدمج مع SD-WAN
+```
+
+---
+
+## 🛠️ تدريبات عملية
+
+### تمرين ١: تشخيص "الموقع لا يفتح"
+
+```bash
+# شخص المشكلة في هذا السيناريو:
+curl -I https://app.cloudnova.com
+# curl: (7) Failed to connect to app.cloudnova.com port 443
+
+# ١. هل DNS يعمل؟
+nslookup app.cloudnova.com
+# Server: 8.8.8.8
+# Name: app.cloudnova.com
+# Address: 20.50.2.10  ← DNS يعمل
+
+# ٢. هل الخادم يرد؟
+ping 20.50.2.10
+# 64 bytes from 20.50.2.10 ← الخادم موجود
+
+# ٣. هل المنفذ مفتوح؟
+nc -zv 20.50.2.10 443
+# Connection refused ← المشكلة هنا!
+
+# ٤. تحقق من NSG rules
+az network nsg rule list \
+  --nsg-name app-nsg \
+  --resource-group prod-rg \
+  -o table
+# لا توجد قاعدة للمنفذ 443!
+
+# ٥. أضف القاعدة
+az network nsg rule create \
+  --nsg-name app-nsg \
+  --name AllowHttps \
+  --priority 110 \
+  --direction Inbound \
+  --source-address-prefixes "*" \
+  --destination-port-ranges 443 \
+  --access Allow
+
+curl -I https://app.cloudnova.com
+# HTTP/2 200 ✅
+```
+
+### تمرين ٢: تصميم VNet
+
+```
+المهمة: صمم VNet لشركة مالية لديها:
+- 3 بيئات (dev, staging, prod)
+- 5 تطبيقات مختلفة
+- متطلبات PCI-DSS compliance
+- مساحة عناوين: 10.50.0.0/16
+
+ارسم التصميم وحدد:
+- عدد الـ Subnets ومساحاتها
+- NSG rules الأساسية
+- كيف تعزل الـ production عن غيره
+```
+
+### تحدي: تشخيص مشكلة DNS معقدة
+
+```
+الموقف:
+- app.cloudnova.com يعمل من أوروبا ومنزلك
+- لكنه لا يعمل من شبكة العميل في السعودية
+- العميل يستخدم DNS محلي (وليست 8.8.8.8)
+
+ماذا تفعل؟ اكتب خطة التشخيص.
+
+تلميحات:
+1. dig @dns-server.local app.cloudnova.com
+2. تحقق من DNS propagation (whatsmydns.net)
+3. هل هناك CDN؟ هل الـ edge قريب من السعودية؟
+4. هل الـ ISP يحجب حركة معينة؟
+```
+
+### CloudNova Project Task
+
+```
+مهمتك: تأمين شبكة CloudNova
+
+المتطلبات:
+1. ✓ VNet Hub-Spoke topology
+2. ✓ Azure Firewall في Hub مع policies:
+   - السماح: HTTPS (443) من الإنترنت للتطبيقات
+   - السماح: SSH (22) فقط من Bastion subnet
+   - منع: كل شيء آخر من الإنترنت
+3. ✓ NSG على كل Subnet:
+   - App subnet: 443 من Application Gateway
+   - DB subnet: 5432 من App subnet فقط
+4. ✓ Private Endpoints لـ Key Vault و Storage
+5. ✓ DDoS Protection Standard
+6. ✓ WAF على Application Gateway
+```
+
+---
+
+## 📝 تقييم
+
+### Knowledge Check
+
+1. **كم عنواناً في /28؟**
+   <details><summary>الإجابة</summary>16 عنواناً (14 usable). Azure Gateway Subnet يحتاج /27 أو أكبر.</details>
+
+2. **ما الفرق بين NSG و Azure Firewall؟**
+   <details><summary>الإجابة</summary>NSG: Layer 4 filtering، مجاني، لكل subnet/NIC. Firewall: Layer 7 filtering، مدفوع، مركزي مع FQDN و threat intelligence.</details>
+
+3. **كيف تفحص شهادة SSL من الـ CLI؟**
+   <details><summary>الإجابة</summary>`openssl s_client -connect host:443 -servername host | openssl x509 -noout -text`</details>
+
+4. **ما هو TTL في DNS ولماذا يهم؟**
+   <details><summary>الإجابة</summary>Time To Live: كم ثانية يُخزّن الـ resolver السجل. منخفض = تحديث أسرع لكن DNS queries أكثر.</details>
+
+5. **كيف يعمل Three-Way Handshake؟**
+   <details><summary>الإجابة</summary>Client → SYN → Server. Server → SYN-ACK → Client. Client → ACK → Server. اتصال مفتوح!</details>
+
+### Quiz
+
+1. **أي Load Balancer يعمل على Layer 7؟**
+   a) Azure Load Balancer
+   b) Application Gateway
+   c) Traffic Manager
+   <details><summary>الإجابة</summary>b) Application Gateway — يفهم HTTP/HTTPS ويوجه حسب المسار أو الـ hostname</details>
+
+2. **أي عنوان IP للشبكات الخاصة؟**
+   a) 172.32.0.1
+   b) 192.168.1.1
+   c) 11.0.0.1
+   <details><summary>الإجابة</summary>b) 192.168.x.x. النطاقات الخاصة: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16</details>
+
+3. **ماذا يعني HTTP 502؟**
+   a) Not Found
+   b) Bad Gateway
+   c) Internal Server Error
+   <details><summary>الإجابة</summary>b) Bad Gateway — الـ proxy تلقى رداً غير صالح من الـ upstream server</details>
+
+### 5 أسئلة للتذكّر النشط
+
+1. ارسم هيكل OSI Model من ذاكرتك — مع مثال بروتوكول لكل طبقة
+2. كيف تصمم VNet لـ Kubernetes مع 50 pod متوقعة؟
+3. اشرح سيناريو DNS failure كاملاً — الأعراض، التشخيص، الإصلاح
+4. ما الفرق بين Active-Passive و Active-Active DR للشبكة؟
+5. كيف تختار بين VPN و ExpressRoute؟
+
+### ✍️ تمرين Feynman
+
+اشرح DNS لشخص غير تقني: "لماذا لا تكتب 20.50.2.10 في المتصفح بدلاً من google.com؟"
+
+### 🎴 بطاقات تعليمية
+
+| 🃏 السؤال | 🃏 الإجابة |
+|----------|----------|
+| كم عنواناً في /24؟ | 256 (254 usable) |
+| أمر فحص منفذ مفتوح | `nc -zv host port` |
+| أداة تتبع مسار الحزمة | `traceroute host` |
+| فحص شهادة SSL | `openssl s_client -connect host:443` |
+| بروتوكول البريد الإلكتروني | SMTP (25/587), IMAP (143/993), POP3 (110/995) |
+
+---
+
+## 🎤 أسئلة مقابلة إضافية
+
+### س ١: System Design
+
+> **السؤال:** "صمم نظام توزيع محتوى عالمي (CDN-like) لخدمة فيديو."
+
+```
+١. DNS: Traffic Manager أو Route 53 مع Geo-routing
+   - مستخدم في آسيا → أقرب edge في Singapore
+   - مستخدم في أوروبا → أقرب edge في Amsterdam
+
+٢. CDN: Azure Front Door / CloudFront
+   - Cache الفيديوهات القريبة من المستخدم
+   - Origin: Blob Storage أو S3
+
+٣. Load Balancer: Layer 7
+   - توجيه /api/* لخوادم الـ backend
+   - توجيه /videos/* للـ CDN origin
+
+٤. Network: 
+   - Anycast IPs للـ edges
+   - BGP للإعلان عن المسارات
+
+٥. Optimization:
+   - HTTP/2 أو HTTP/3 لاتصالات أسرع
+   - TCP BBR congestion control
+```
+
+### س ٢: Troubleshooting
+
+> **السؤال:** "تطبيقك يرى latency عالي فجأة. ماذا تفعل؟"
+
+```
+١. حدد النطاق: هل لكل المستخدمين أم لمنطقة معينة؟
+٢. traceroute: أين يحدث التأخير؟
+٣. mtr: إحصائيات packet loss + latency لكل hop
+٤. تحقق من الـ CDN/edge: هل المشكلة في الـ origin أم الـ edge؟
+٥. تحقق من الـ backend: هل قاعدة البيانات بطيئة؟
+٦. القرار: expand edge capacity أو optimize backend
+```
+
+### س ٣: Behavioral
+
+> **السؤال:** "حدثني عن وقت سببت فيه مشكلة في الشبكة وكيف أصلحتها."
+
+```
+S: في CloudNova، أضفت NSG rule بالخطأ منعت كل حركة HTTPS.
+T: استعادة الخدمة قبل أن يلاحظ العملاء.
+A:
+  1. لاحظت alert: "HTTP 5xx rate > 50%" خلال 30 ثانية
+  2. راجعت آخر تغييرات: NSG rule برقم priority خطأ
+  3. حذفت القاعدة فوراً — عادت الخدمة
+  4. أضفت Azure Policy: "لا يمكن إنشاء NSG rule برقم priority < 200"
+  5. أضفت Change Lock على NSG production
+R: تعطل 90 ثانية فقط. تعلمت: اختبر تغييرات الشبكة في staging أولاً.
+```
+
+---
+
+## 📚 مراجع
+
+### دروس ذات صلة
+
+- [Azure Core - Azure Networking](/docs/lessons/07-azure-core/01-azure-fundamentals)
+- [Kubernetes Networking](/docs/lessons/10-kubernetes/02-kubernetes-networking)
+- [Observability Essentials](/docs/lessons/21-observability/01-observability-essentials)
+
+### شهادات
+
+| الشهادة | الأهداف |
+|--------|--------|
+| **AZ-104** | Configure VNet، DNS، Load Balancers |
+| **AZ-700** | Azure Network Engineer Associate |
+| **CCNA** | Cisco Certified Network Associate |
+
+### مصادر خارجية
+
+- [Azure Networking Documentation](https://learn.microsoft.com/azure/networking/)
+- [Cloudflare Learning Center](https://www.cloudflare.com/learning/)
+- [High Performance Browser Networking](https://hpbn.co) — كتاب مجاني
+
+### مصطلحات
+
+| المصطلح | التعريف |
+|--------|---------|
+| **CIDR** | Classless Inter-Domain Routing |
+| **TTL** | Time To Live — مدة تخزين سجل DNS |
+| **BGP** | Border Gateway Protocol — توجيه بين الشبكات |
+| **Anycast** | عنوان IP يخدم من عدة مواقع |
+| **mTLS** | Mutual TLS — تحقق ثنائي الاتجاه |
+
+---
+
 [← العودة للوحدة](01-networking-fundamentals) | [🏠 الرئيسية](/)
