@@ -22,20 +22,19 @@ description: "Azure Key Vault، HashiCorp Vault — إدارة الأسرار و
 ## 🏗️ Azure Key Vault
 
 ```bash
-# تخزين secret
 az keyvault secret set \
   --vault-name cloudnova-kv \
   --name "DB-PASSWORD" \
   --value "SuperSecret123!"
 
-# استخدام secret في Terraform (لا secrets في الكود!)
+# استخدام secret في Terraform
 data "azurerm_key_vault_secret" "db_password" {
   name         = "DB-PASSWORD"
   key_vault_id = data.azurerm_key_vault.main.id
 }
 ```
 
-### External Secrets Operator لـ Kubernetes
+### External Secrets Operator
 
 ```yaml
 apiVersion: external-secrets.io/v1beta1
@@ -55,12 +54,9 @@ spec:
       key: DB-PASSWORD
 ```
 
-الآن Kubernetes Secret يُزامن تلقائياً من Key Vault!
-
 ### تدوير الأسرار
 
 ```bash
-# Key Vault يدعم auto-rotation للشهادات
 az keyvault certificate policy create \
   --vault-name cloudnova-kv \
   --name api-cert \
@@ -71,14 +67,49 @@ az keyvault certificate policy create \
 
 ---
 
-## 🏛️ CloudNova Incident
+## 🏛️ طبقة الإنتاج: CloudNova Incident
 
-نسي أحد المطورين Connection String في `appsettings.json` ودفعه إلى GitHub public repo. في غضون 3 دقائق، bots اكتشفوه واستخدموه لاستخراج بيانات.
+نسي أحد المطورين Connection String في `appsettings.json` ودفعه إلى GitHub public repo. في 3 دقائق، bots اكتشفوه واستخدموه.
 
-**بعد الحادثة**:
-- Azure Key Vault لكل الأسرار
-- GitHub Secret Scanning مفعّل
-- No secrets ever in code
+**بعد الحادثة**: Key Vault لكل الأسرار + GitHub Secret Scanning + No secrets ever in code.
+
+### HashiCorp Vault vs Key Vault
+
+| | Azure Key Vault | HashiCorp Vault |
+|---|----------------|-----------------|
+| **النشر** | مُدار | Self-hosted |
+| **التكلفة** | لكل عملية | مجاني + infra |
+| **Dynamic Secrets** | محدود | ✅ متقدم |
+| **الأفضل لـ** | Azure فقط | Multi-cloud |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: خزّن secret في Key Vault واستخدمه في Terraform
+### تحدي: ثبت External Secrets Operator واربطه بـ Key Vault
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. لماذا لا نضع secrets في الكود؟
+2. ما فائدة External Secrets Operator؟
+3. كيف تدير شهادات TLS تلقائياً؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Key Vault | خدمة إدارة الأسرار في Azure |
+| ESO | External Secrets Operator — مزامنة secrets لـ K8s |
+| Auto-Renew | تجديد تلقائي للشهادات قبل انتهائها |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تدير secrets في Kubernetes؟"** → External Secrets Operator + Key Vault
+2. **"ماذا تفعل إذا تسرب secret؟"** → تدويره فوراً + التحقيق + منع التكرار
 
 ---
 

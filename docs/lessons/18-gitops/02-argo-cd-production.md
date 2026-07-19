@@ -28,7 +28,6 @@ metadata:
   name: root-app
   namespace: argocd
 spec:
-  project: default
   source:
     repoURL: https://github.com/cloudnova/infra
     path: argocd/apps
@@ -41,7 +40,7 @@ spec:
 ```
 
 ```yaml
-# argocd/apps/api-app.yaml
+# Application فردية
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -66,19 +65,73 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "1"  # ينشر أولاً
 ---
-# Wave 2: ينشر بعد wave 1
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "2"  # بعد wave 1
 ```
 
 ---
 
-## 🛠️ تدريب
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
-1. ثبّت Argo CD على AKS
-2. أنشئ App of Apps لـ 3 تطبيقات
-3. جرب auto-healing بحذف deployment يدوياً
+حذف أحدهم Deployment بالخطأ. Argo CD اكتشف الـ drift وأعاد إنشائه تلقائياً خلال 3 دقائق (selfHeal).
+
+```bash
+argocd app diff cloudnova-api   # معاينة الاختلافات
+argocd app sync cloudnova-api    # مزامنة يدوية
+argocd app history cloudnova-api # سجل النشر
+```
+
+### Health Checks
+
+```yaml
+spec:
+  syncPolicy:
+    automated:
+      selfHeal: true
+    syncOptions:
+    - PruneLast=true          # لا تحذف الموارد القديمة حتى ينتهي النشر
+    - CreateNamespace=true
+```
+
+---
+
+## 🎨 Argo CD vs Flux
+
+| | Argo CD | Flux |
+|---|---------|------|
+| **UI** | ✅ ممتاز | ❌ CLI فقط |
+| **Image Automation** | ❌ | ✅ مدمج |
+| **Multi-tenancy** | ✅ | متوسط |
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: ثبّت Argo CD على AKS
+### تحدي: أنشئ App of Apps لـ 3 تطبيقات وجرب auto-healing
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما هو App of Apps pattern؟
+2. كيف يعمل selfHeal؟
+3. متى تستخدم sync waves؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Argo CD | GitOps operator لـ Kubernetes |
+| selfHeal | إصلاح تلقائي للـ drift |
+| Sync Wave | ترتيب نشر التطبيقات |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تنشر 30 خدمة مع Argo CD؟"** → App of Apps + sync waves
+2. **"ماذا يحدث إذا حذف Deployment يدوياً؟"** → Argo CD يعيد إنشائه (selfHeal)
 
 ---
 

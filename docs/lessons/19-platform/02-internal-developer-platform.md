@@ -41,27 +41,51 @@ graph TB
 | **Developer NPS** | 12 | 65 |
 | **MTTR** | 4 ساعات | 15 دقيقة |
 
-### CloudNova IDP Journey
+---
 
-قبل IDP: كل مطور يحتاج معرفة Terraform + Kubernetes + Helm + Prometheus. التوظيف صعب، والـ onboarding شهر كامل.
+## 🏛️ CloudNova IDP Journey
 
-بعد IDP: المطور يختار `Node.js API` template من الـ portal. يحصل على:
-- Repository على GitHub
-- CI/CD Pipeline
-- Kubernetes namespace
-- Monitoring dashboard
-- Log aggregation
+**قبل IDP**: كل مطور يحتاج Terraform + Kubernetes + Helm + Prometheus. Onboarding: شهر كامل.
 
-كل هذا في 5 دقائق.
+**بعد IDP**: يختار `Node.js API` template. يحصل على: Repository + CI/CD + Namespace + Dashboard + Logs. في 5 دقائق.
 
 ---
 
-## 🛠️ تدريب
+## 🎨 مبادئ IDP الناجح
 
-صمم IDP لـ CloudNova:
-1. Service Catalog (5 templates)
-2. Developer Portal
-3. Self-service scaffolding
+1. **Self-Service**: المطور لا ينتظر DevOps
+2. **Golden Paths**: مسارات موصى بها (وليس إجبارية)
+3. **Abstraction**: إخفاء تعقيد Kubernetes
+4. **Observability**: مراقبة مدمجة لكل خدمة
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: صمم Service Catalog لـ CloudNova (5 templates)
+### تحدي: احسب Time to 10th PR لفريقك حالياً
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. ما هو IDP؟
+2. لماذا المطورون يحتاجون IDP؟
+3. ما هي Golden Paths؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| IDP | Internal Developer Platform |
+| Golden Path | مسار موصى به للتطوير |
+| Time to 10th PR | مقياس سرعة onboarding |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تقنع الإدارة ببناء IDP؟"** → أظهر metrics: Time to 10th PR, Developer NPS, Deployment frequency
+2. **"ما الفرق بين IDP و PaaS؟"** → IDP يُبنى داخلياً، PaaS خدمة خارجية
 
 ---
 

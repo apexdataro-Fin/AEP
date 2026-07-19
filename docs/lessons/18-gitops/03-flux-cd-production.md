@@ -26,8 +26,7 @@ flux bootstrap github \
   --owner=cloudnova \
   --repository=infra \
   --branch=main \
-  --path=./clusters/production \
-  --personal
+  --path=./clusters/production
 ```
 
 ### HelmRelease
@@ -47,8 +46,6 @@ spec:
         name: infra
   values:
     replicas: 3
-    image:
-      tag: "1.5.2"
 ```
 
 ### Image Automation
@@ -66,16 +63,54 @@ spec:
       range: 1.5.x
 ```
 
-يقوم Flux بتحديث الصورة تلقائياً عندما تظهر نسخة جديدة!
+Flux يحدث الصورة تلقائياً عند ظهور نسخة جديدة — ويدفع commit إلى Git!
 
-### Argo CD vs Flux
+---
+
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
+
+دفع أحدهم Docker image جديدة إلى ACR. Flux اكتشفها، حدث الـ deployment تلقائياً، ودفع commit لتحديث الـ manifest في Git.
+
+**الدرس**: Git هو المصدر الوحيد للحقيقة.
+
+### Flux vs Argo CD
 
 | | Argo CD | Flux |
 |---|---------|------|
 | **UI** | ✅ ممتاز | ❌ CLI فقط |
 | **Image Automation** | ❌ | ✅ مدمج |
-| **Multi-tenancy** | ✅ | متوسط |
-| **التثبيت** | سهل | سهل |
+| **Push to Git** | ❌ | ✅ |
+
+**التوصية**: Argo CD للـ UI + Flux لـ image automation.
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: ثبّت Flux على cluster
+### تحدي: فعّل image automation لتحديث الصور تلقائياً
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. كيف يختلف Flux عن Argo CD؟
+2. ما فائدة Image Automation؟
+3. لماذا Git هو "المصدر الوحيد للحقيقة"؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Flux | GitOps operator مع image automation |
+| HelmRelease | إدارة Helm عبر Flux |
+| ImagePolicy | سياسة تحديث الصور تلقائياً |
+
+---
+
+## 🎤 مقابلة
+1. **"Argo CD أم Flux؟"** → كلاهما! Argo CD للـ UI، Flux للـ automation
+2. **"كيف تحدث images تلقائياً؟"** → Flux ImagePolicy + ImageRepository
 
 ---
 
