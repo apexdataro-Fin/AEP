@@ -42,8 +42,6 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - run: |
-          echo "Deploying to ${{ inputs.environment }}"
 ```
 
 ```yaml
@@ -55,12 +53,6 @@ jobs:
       environment: development
     secrets:
       AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
-  deploy-prod:
-    uses: ./.github/workflows/deploy-template.yml
-    with:
-      environment: production
-    secrets:
-      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS_PROD }}
 ```
 
 ### Matrix Strategy
@@ -91,10 +83,61 @@ deploy-production:
     url: https://cloudnova.com
 ```
 
-في GitHub Settings → Environments → production:
-- ✅ Required reviewers: 2 people
-- ✅ Wait timer: 5 minutes
-- ✅ Deployment branches: main only
+في GitHub Settings → Environments → production: Required reviewers: 2, Wait timer: 5 min, Deployment branches: main only.
+
+---
+
+## 🏛️ طبقة الإنتاج: سيناريو CloudNova
+
+قبل reusable workflows: 15 ملف workflow مكرر بـ 3000 سطر. بعدها: ملف template واحد + 15 invocation.
+
+### Composite Actions
+
+```yaml
+# .github/actions/terraform-plan/action.yml
+name: Terraform Plan
+inputs:
+  working_directory:
+    required: true
+runs:
+  using: composite
+  steps:
+    - uses: hashicorp/setup-terraform@v2
+    - run: |
+        cd ${{ inputs.working_directory }}
+        terraform init
+        terraform plan
+      shell: bash
+```
+
+---
+
+## 🛠️ تدريبات
+
+### تمرين: أنشئ reusable workflow للنشر
+### تحدي: ابنِ composite action لـ Terraform
+
+---
+
+## 📝 تقييم
+
+### ✅ فحص المعرفة
+1. لماذا reusable workflows أفضل من النسخ؟
+2. ما فائدة Matrix Strategy؟
+3. كيف تمنع النشر للإنتاج بدون مراجعة؟
+
+### 🃏 بطاقات
+| السؤال | الإجابة |
+|--------|---------|
+| Reusable Workflow | workflow يُستدعى من workflows أخرى |
+| Matrix | تشغيل نفس الـ job على إصدارات/أنظمة متعددة |
+| Environment | بيئة معزولة مع approval gates |
+
+---
+
+## 🎤 مقابلة
+1. **"كيف تنظم CI/CD لـ 20 خدمة؟"** → Reusable workflows + Matrix + Environments
+2. **"كيف تمنع نشر كود غير مراجع للإنتاج؟"** → Environment protection rules + required reviewers
 
 ---
 
