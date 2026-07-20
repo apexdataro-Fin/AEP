@@ -73,20 +73,38 @@ function HeroSection() {
   return (
     <section className={styles.hero}>
       <div className={styles.heroContent}>
-        <span className={styles.heroBadge}>ALP-001 • Cloud Engineering Academy</span>
+        <span className={styles.heroBadge}>🚀 ALP-001 • أكاديمية هندسة السحابة</span>
         <Heading as="h1" className={styles.heroTitle}>
-          The Complete Cloud Engineering Learning OS
+          منصة <span className={styles.heroHighlight}>آريس</span> التعليمية
         </Heading>
         <p className={styles.heroSubtitle}>
-          33 modules, 121 lessons, real projects, interactive labs — everything you need to become a
-          production-ready cloud engineer. Start today, learn by building.
+          أول أكاديمية عربية متكاملة لهندسة السحابة — ٣٣ وحدة، ١١٩ درساً، مشاريع حقيقية،
+          ومختبرات تفاعلية. كل ما تحتاجه لتصبح مهندس سحابة محترفاً.
         </p>
+        <div className={styles.heroStats}>
+          <div className={styles.heroStat}>
+            <span className={styles.heroStatNum}>٣٣</span>
+            <span className={styles.heroStatLabel}>وحدة تعليمية</span>
+          </div>
+          <div className={styles.heroStat}>
+            <span className={styles.heroStatNum}>١١٩</span>
+            <span className={styles.heroStatLabel}>درساً تفاعلياً</span>
+          </div>
+          <div className={styles.heroStat}>
+            <span className={styles.heroStatNum}>١٠</span>
+            <span className={styles.heroStatLabel}>مشاريع حقيقية</span>
+          </div>
+          <div className={styles.heroStat}>
+            <span className={styles.heroStatNum}>٤</span>
+            <span className={styles.heroStatLabel}>شهادات معتمدة</span>
+          </div>
+        </div>
         <div className={styles.heroActions}>
           <Link className={styles.heroPrimary} to="/docs/lessons">
-            Start Learning →
+            ابدأ التعلم الآن ←
           </Link>
-          <Link className={styles.heroSecondary} to="/docs/lessons/foundations">
-            Browse Curriculum
+          <Link className={styles.heroSecondary} to="/courses">
+            تصفح المنهج الكامل
           </Link>
         </div>
       </div>
@@ -98,9 +116,9 @@ function ModuleGrid() {
   return (
     <section className={styles.modulesSection}>
       <div className={styles.sectionHeader}>
-        <Heading as="h2">📚 Complete Course Curriculum</Heading>
+        <Heading as="h2">📚 المنهج التعليمي الكامل</Heading>
         <p>
-          33 modules from foundations to production cloud engineering. Click any module to explore.
+          ٣٣ وحدة من الأساسيات إلى هندسة السحابة الإنتاجية. كل درس يحتوي على شرح، تمارين، سيناريوهات عملية، وتقييم.
         </p>
       </div>
       <div className={styles.moduleGrid}>
@@ -116,8 +134,8 @@ function SimulatorSection() {
   return (
     <section className={styles.simSection}>
       <div className={styles.sectionHeader}>
-        <Heading as="h2">🧪 Interactive Simulators</Heading>
-        <p>Practice in safe, sandboxed environments before touching real infrastructure.</p>
+        <Heading as="h2">🧪 المحاكيات التفاعلية</Heading>
+        <p>تدرب في بيئات آمنة ومعزولة قبل لمس البنية التحتية الحقيقية.</p>
       </div>
       <div className={styles.simGrid}>
         {simulators.map((s) => (
@@ -135,9 +153,9 @@ function CertSection() {
   return (
     <section className={styles.certSection}>
       <div className={styles.sectionHeader}>
-        <Heading as="h2">🏆 Certification Roadmap</Heading>
+        <Heading as="h2">🏆 خارطة الشهادات</Heading>
         <p>
-          Every lesson maps to Microsoft Azure certification objectives. Track your exam readiness.
+          كل درس مرتبط بأهداف شهادات Microsoft Azure. تابع جاهزيتك للامتحان.
         </p>
       </div>
       <div className={styles.certGrid}>
@@ -157,38 +175,39 @@ function QuickLinks() {
   return (
     <section className={styles.quickSection}>
       <div className={styles.sectionHeader}>
-        <Heading as="h2">🚀 Quick Access</Heading>
+        <Heading as="h2">🚀 وصول سريع</Heading>
+        <p>كل ما تحتاجه للبدء في رحلة هندسة السحابة</p>
       </div>
       <div className={styles.quickGrid}>
         <Link className={styles.quickCard} to="/docs/lessons">
           <span className={styles.quickIcon}>📖</span>
-          <strong>Browse All Lessons</strong>
-          <span>121 lessons across 33 modules</span>
+          <strong>تصفح جميع الدروس</strong>
+          <span>١١٩ درساً عبر ٣٣ وحدة</span>
         </Link>
         <Link className={styles.quickCard} to="/projects">
           <span className={styles.quickIcon}>🏗️</span>
-          <strong>Real Projects</strong>
-          <span>Build a production cloud environment</span>
+          <strong>مشاريع حقيقية</strong>
+          <span>ابنِ بيئة سحابية إنتاجية</span>
         </Link>
         <Link className={styles.quickCard} to="/labs">
           <span className={styles.quickIcon}>🧪</span>
-          <strong>Hands-on Labs</strong>
-          <span>Guided, challenge & production labs</span>
+          <strong>مختبرات عملية</strong>
+          <span>مختبرات موجهة وتحديات</span>
         </Link>
         <Link className={styles.quickCard} to="/career">
           <span className={styles.quickIcon}>💼</span>
-          <strong>Career Mode</strong>
-          <span>CloudNova — your virtual company</span>
+          <strong>المسار المهني</strong>
+          <span>كلاود نوفا — شركتك الافتراضية</span>
         </Link>
         <Link className={styles.quickCard} to="/certifications">
           <span className={styles.quickIcon}>🎯</span>
-          <strong>Certifications</strong>
+          <strong>الشهادات</strong>
           <span>AZ-900, AZ-104, AZ-400, AI-102</span>
         </Link>
         <Link className={styles.quickCard} to="/simulators">
           <span className={styles.quickIcon}>💻</span>
-          <strong>Simulators</strong>
-          <span>Linux, Terraform, Docker & more</span>
+          <strong>المحاكيات</strong>
+          <span>لينكس، تيرافورم، دوكر والمزيد</span>
         </Link>
       </div>
     </section>
