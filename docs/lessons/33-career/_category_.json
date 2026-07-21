@@ -1,4 +1,10 @@
 {
+  "label": "المسار المهني",
+  "position": 33,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-cloud-career-paths"
+  }
 }

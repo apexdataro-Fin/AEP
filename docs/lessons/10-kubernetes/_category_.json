@@ -1,4 +1,10 @@
 {
+  "label": "Kubernetes",
+  "position": 10,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-kubernetes-architecture"
+  }
 }

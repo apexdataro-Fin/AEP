@@ -1,4 +1,10 @@
 {
+  "label": "الأسس الهندسية",
+  "position": 1,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-engineering-mindset"
+  }
 }

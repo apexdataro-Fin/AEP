@@ -1,4 +1,10 @@
 {
+  "label": "Platform Engineering",
+  "position": 19,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-platform-engineering"
+  }
 }

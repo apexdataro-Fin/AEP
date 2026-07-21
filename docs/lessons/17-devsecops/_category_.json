@@ -1,4 +1,10 @@
 {
+  "label": "DevSecOps",
+  "position": 17,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-security-pipeline"
+  }
 }

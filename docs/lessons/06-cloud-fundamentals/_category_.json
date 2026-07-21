@@ -1,4 +1,10 @@
 {
+  "label": "أساسيات السحابة",
+  "position": 6,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-cloud-concepts"
+  }
 }

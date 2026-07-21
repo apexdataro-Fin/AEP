@@ -1,4 +1,10 @@
 {
+  "label": "Git",
+  "position": 13,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-git-fundamentals"
+  }
 }

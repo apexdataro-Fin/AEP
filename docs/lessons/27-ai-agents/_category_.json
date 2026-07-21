@@ -1,4 +1,10 @@
 {
+  "label": "وكلاء AI",
+  "position": 27,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-ai-agents"
+  }
 }

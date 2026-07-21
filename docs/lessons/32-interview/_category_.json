@@ -1,4 +1,10 @@
 {
+  "label": "المقابلات",
+  "position": 32,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-interview-preparation"
+  }
 }

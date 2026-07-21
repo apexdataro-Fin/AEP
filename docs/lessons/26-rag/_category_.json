@@ -1,4 +1,10 @@
 {
+  "label": "RAG",
+  "position": 26,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-rag-architecture"
+  }
 }

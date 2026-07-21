@@ -1,4 +1,10 @@
 {
+  "label": "LLMOps",
+  "position": 29,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-llmops-fundamentals"
+  }
 }

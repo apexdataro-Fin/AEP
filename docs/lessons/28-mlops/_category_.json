@@ -1,4 +1,10 @@
 {
+  "label": "MLOps",
+  "position": 28,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-mlops-fundamentals"
+  }
 }

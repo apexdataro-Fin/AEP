@@ -1,4 +1,10 @@
 {
+  "label": "Terraform",
+  "position": 12,
   "collapsible": true,
-  "collapsed": true
+  "collapsed": false,
+  "link": {
+    "type": "doc",
+    "id": "01-terraform-fundamentals"
+  }
 }
