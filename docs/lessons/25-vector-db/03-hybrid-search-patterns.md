@@ -49,18 +49,19 @@ def reciprocal_rank_fusion(results_list, k=60):
 
 ### alpha tuning
 
-| alpha | النتيجة |
-|-------|---------|
-| 0.0 | نتائج keyword فقط |
-| 0.3 | تركيز على keyword مع semantic bonus |
-| 0.7 | تركيز على semantic |
-| 1.0 | نتائج semantic فقط |
+| alpha | النتيجة                             |
+| ----- | ----------------------------------- |
+| 0.0   | نتائج keyword فقط                   |
+| 0.3   | تركيز على keyword مع semantic bonus |
+| 0.7   | تركيز على semantic                  |
+| 1.0   | نتائج semantic فقط                  |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: جرب hybrid search مع alpha مختلفة
+
 ### تحدي: طبّق RRF على نتائج من محركين بحث مختلفين
 
 ---
@@ -68,20 +69,23 @@ def reciprocal_rank_fusion(results_list, k=60):
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا hybrid search أفضل من vector فقط؟
 2. كيف يعمل RRF؟
 3. كيف تختار قيمة alpha؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Hybrid Search | دمج keyword + vector search |
-| RRF | Reciprocal Rank Fusion — دمج ترتيب النتائج |
-| alpha | وزن التوازن بين keyword و vector |
+
+| السؤال        | الإجابة                                    |
+| ------------- | ------------------------------------------ |
+| Hybrid Search | دمج keyword + vector search                |
+| RRF           | Reciprocal Rank Fusion — دمج ترتيب النتائج |
+| alpha         | وزن التوازن بين keyword و vector           |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تحسن نتائج البحث في تطبيق RAG؟"** → Hybrid Search + RRF + alpha tuning
 2. **"متى يكون vector search وحده غير كافٍ؟"** → عندما يبحث المستخدم عن مصطلح دقيق (keyword)
 
@@ -93,12 +97,12 @@ def reciprocal_rank_fusion(results_list, k=60):
 
 **اختبار المستخدمين:**
 
-| استعلام المستخدم | نتيجة Vector Search | نتيجة BM25 Keyword | النتيجة المتوقعة |
-|-----------------|-------------------|-------------------|----------------|
-| "ازاي اعمل deployment" | مقال عن "deployment strategies" (ممتاز) | مقال عن "deployment" (ممتاز) | ✅ متطابقة |
-| "Kubernetes ingress setup" | مقال عن "container networking" (؟) | مقال عن "Kubernetes Ingress" (✅) | BM25 أفضل! |
-| "ليه الـ pod مش شغال" | مقال عن "pod lifecycle" (جيد) | مقال عن "troubleshooting" (جيد) | ⚠️ مختلفة لكن مفيدة |
-| "AZ-104 exam tips" | مقال عن "云计算认证" (بالصيني؟!) | مقال عن "Azure Administrator certification" (✅) | Vector فشل! |
+| استعلام المستخدم           | نتيجة Vector Search                     | نتيجة BM25 Keyword                               | النتيجة المتوقعة    |
+| -------------------------- | --------------------------------------- | ------------------------------------------------ | ------------------- |
+| "ازاي اعمل deployment"     | مقال عن "deployment strategies" (ممتاز) | مقال عن "deployment" (ممتاز)                     | ✅ متطابقة          |
+| "Kubernetes ingress setup" | مقال عن "container networking" (؟)      | مقال عن "Kubernetes Ingress" (✅)                | BM25 أفضل!          |
+| "ليه الـ pod مش شغال"      | مقال عن "pod lifecycle" (جيد)           | مقال عن "troubleshooting" (جيد)                  | ⚠️ مختلفة لكن مفيدة |
+| "AZ-104 exam tips"         | مقال عن "云计算认证" (بالصيني؟!)        | مقال عن "Azure Administrator certification" (✅) | Vector فشل!         |
 
 **التحليل:**
 
@@ -113,7 +117,7 @@ def analyze_search_failures(queries):
         vector_results = vector_search(query)
         bm25_results = bm25_search(query)
         hybrid_results = hybrid_search(query, alpha=0.5)
-        
+
         print(f"Query: {query}")
         print(f"  Vector top result: {vector_results[0].title}")
         print(f"  BM25 top result:   {bm25_results[0].title}")
@@ -153,15 +157,15 @@ graph TD
     Q["Query: 'Kubernetes pod troubleshooting'"]
     Q --> VS["Vector Search"]
     Q --> KW["BM25 Keyword"]
-    
+
     VS --> VR["Results:<br/>1. Container Orchestration (0.92)<br/>2. Pod Lifecycle (0.87)<br/>3. K8s Debugging (0.81)"]
     KW --> KR["Results:<br/>1. Pod Troubleshooting (BM25: 24.5)<br/>2. K8s Debugging (BM25: 18.2)<br/>3. Common Errors (BM25: 15.1)"]
-    
+
     VR --> RRF["RRF Algorithm"]
     KR --> RRF
-    
+
     RRF --> FINAL["Final Ranking:<br/>1. K8s Debugging (RRF: 0.0541)<br/>2. Pod Troubleshooting (RRF: 0.0385)<br/>3. Pod Lifecycle (RRF: 0.0328)<br/>4. Container Orchestration (RRF: 0.0323)<br/>5. Common Errors (RRF: 0.0244)"]
-    
+
     style RRF fill:#f9a825,stroke:#f57f17,color:#000
     style FINAL fill:#2e7d32,stroke:#1b5e20,color:#fff
 ```
@@ -179,7 +183,7 @@ def rrf(results_lists, k=60):
     for results in results_lists:
         for rank, (doc_id, _) in enumerate(results, start=1):
             scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + rank)
-    
+
     return sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
 # مثال
@@ -203,23 +207,23 @@ final = rrf([vector_results, bm25_results])
 
 ### Alpha Tuning — دليل عملي
 
-| alpha | السلوك | مثال استخدام |
-|-------|--------|-------------|
-| 0.0 | BM25 keyword فقط | بحث عن error code دقيق: "ERR_CONNECTION_REFUSED" |
-| 0.2 | تركيز keyword مع semantic bonus | مصطلحات تقنية: "Kubernetes Ingress" |
-| 0.4 | متوازن مع ميل لـ keyword | استفسارات المستخدمين العاديين |
-| 0.5 | متوازن تماماً | default |
-| 0.7 | تركيز semantic | أسئلة مفتوحة: "كيف أحسن أداء التطبيق؟" |
-| 1.0 | Vector semantic فقط | تلخيص، إعادة صياغة، ترجمة |
+| alpha | السلوك                          | مثال استخدام                                     |
+| ----- | ------------------------------- | ------------------------------------------------ |
+| 0.0   | BM25 keyword فقط                | بحث عن error code دقيق: "ERR_CONNECTION_REFUSED" |
+| 0.2   | تركيز keyword مع semantic bonus | مصطلحات تقنية: "Kubernetes Ingress"              |
+| 0.4   | متوازن مع ميل لـ keyword        | استفسارات المستخدمين العاديين                    |
+| 0.5   | متوازن تماماً                   | default                                          |
+| 0.7   | تركيز semantic                  | أسئلة مفتوحة: "كيف أحسن أداء التطبيق؟"           |
+| 1.0   | Vector semantic فقط             | تلخيص، إعادة صياغة، ترجمة                        |
 
 ### Anti-Patterns في Hybrid Search
 
-| الخطأ | المشكلة | التصحيح |
-|-------|---------|---------|
-| alpha = 0.5 دائماً | ليست كل الاستفسارات متساوية | alpha ديناميكي حسب query type |
-| تجاهل RRF | vector scores و BM25 scores بمقاييس مختلفة | استخدم RRF دائماً |
-| عدم تقييم النتائج | "تبدو جيدة" ليس قياساً | NDCG, MAP, Recall@K |
-| embedding model غير مناسب | مصطلحات تقنية لا تمثل جيداً | جرب models مختلفة وقارن |
+| الخطأ                     | المشكلة                                    | التصحيح                       |
+| ------------------------- | ------------------------------------------ | ----------------------------- |
+| alpha = 0.5 دائماً        | ليست كل الاستفسارات متساوية                | alpha ديناميكي حسب query type |
+| تجاهل RRF                 | vector scores و BM25 scores بمقاييس مختلفة | استخدم RRF دائماً             |
+| عدم تقييم النتائج         | "تبدو جيدة" ليس قياساً                     | NDCG, MAP, Recall@K           |
+| embedding model غير مناسب | مصطلحات تقنية لا تمثل جيداً                | جرب models مختلفة وقارن       |
 
 ---
 
@@ -263,17 +267,17 @@ for i, obj in enumerate(response.objects):
 ```python
 def dynamic_alpha(query):
     """يختار alpha المناسب بناءً على خصائص الاستعلام"""
-    
+
     # هل الاستعلام يحتوي مصطلحات تقنية دقيقة؟
     technical_terms = ['error', 'code', 'http', 'api', 'cli', 'cmd', 'kubectl', 'az ']
     has_technical = any(term in query.lower() for term in technical_terms)
-    
+
     # هل الاستعلام طويل (سؤال مفتوح)؟
     is_open_ended = len(query.split()) > 6
-    
+
     # هل يحتوي أرقام أو رموز (error codes)؟
     has_codes = any(c.isdigit() for c in query) or '#' in query
-    
+
     if has_codes:
         return 0.1  # keyword جداً
     elif has_technical:
@@ -295,25 +299,25 @@ print(dynamic_alpha("كيف أبني نظام موثوق على السحابة؟
 class SearchABTest:
     def __init__(self):
         self.results = []
-    
+
     def run_test(self, query, ground_truth_relevant_docs):
         # Strategy A: Vector فقط
         vector_results = vector_search(query, limit=10)
         ndcg_vector = calculate_ndcg(vector_results, ground_truth_relevant_docs)
-        
+
         # Strategy B: Hybrid (alpha=0.4)
         hybrid_results = hybrid_search(query, alpha=0.4, limit=10)
         ndcg_hybrid = calculate_ndcg(hybrid_results, ground_truth_relevant_docs)
-        
+
         self.results.append({
             'query': query,
             'ndcg_vector': ndcg_vector,
             'ndcg_hybrid': ndcg_hybrid,
             'winner': 'Hybrid' if ndcg_hybrid > ndcg_vector else 'Vector'
         })
-        
+
         return self.results[-1]
-    
+
     def summary(self):
         hybrid_wins = sum(1 for r in self.results if r['winner'] == 'Hybrid')
         avg_improvement = sum(r['ndcg_hybrid'] - r['ndcg_vector'] for r in self.results) / len(self.results)
@@ -326,6 +330,7 @@ class SearchABTest:
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. لماذا Hybrid Search أفضل من Vector Search وحده؟
 2. كيف يعمل Reciprocal Rank Fusion (RRF)؟
 3. كيف تختار alpha المناسب لاستعلام معين؟
@@ -333,6 +338,7 @@ class SearchABTest:
 5. كيف تقيم نتائج Hybrid Search؟
 
 ### 📝 اختبار (3)
+
 1. **Hybrid Search يرجع وثائق غير ذات صلة لاستعلام "AKS cluster size". لماذا؟**
    <details><summary>الإجابة</summary>alpha قريب من 1 (vector heavy). "size" في vector space يرتبط بـ "scaling" و "performance" وليس "node count". خفض alpha لـ 0.3 لزيادة تأثير keyword.</details>
 
@@ -343,6 +349,7 @@ class SearchABTest:
    <details><summary>الإجابة</summary>Elasticsearch مع dense_vector field + BM25. أو PostgreSQL pgvector + full-text search مع RRF يدوي. أو OpenSearch 2.9+ مع neural search.</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم RRF algorithm من الذاكرة
 - اشرح متى يكون alpha = 1 أفضل من alpha = 0.5
 - كيف تتعامل مع languages متعددة في hybrid search؟
@@ -350,25 +357,28 @@ class SearchABTest:
 - صف تجربة حسنت فيها search relevance
 
 ### 🎓 Feynman: Hybrid Search لغير التقني
+
 "تخيل أنك تبحث عن كتاب في مكتبة. Vector Search = أمين المكتبة يفهم 'ماذا تقصد' (حتى لو استخدمت كلمات مختلفة). BM25 = تبحث في الفهرس الحرفي. Hybrid Search = الاثنان معاً. أمين المكتبة الذكي + الفهرس الدقيق."
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| Hybrid Search | دمج vector search + keyword search |
-| RRF | Reciprocal Rank Fusion — دمج ترتيب النتائج |
-| alpha | وزن التوازن (0 = keyword, 1 = vector) |
-| NDCG | مقياس جودة ترتيب نتائج البحث |
-| Recall@K | نسبة الوثائق الصحيحة في أول K نتيجة |
-| BM25 | خوارزمية بحث نصي (keyword) |
-| Dense Vector | تمثيل semantic في 768-1536 بعداً |
-| Sparse Vector | تمثيل keyword (مثل BM25) |
+
+| السؤال        | الإجابة                                    |
+| ------------- | ------------------------------------------ |
+| Hybrid Search | دمج vector search + keyword search         |
+| RRF           | Reciprocal Rank Fusion — دمج ترتيب النتائج |
+| alpha         | وزن التوازن (0 = keyword, 1 = vector)      |
+| NDCG          | مقياس جودة ترتيب نتائج البحث               |
+| Recall@K      | نسبة الوثائق الصحيحة في أول K نتيجة        |
+| BM25          | خوارزمية بحث نصي (keyword)                 |
+| Dense Vector  | تمثيل semantic في 768-1536 بعداً           |
+| Sparse Vector | تمثيل keyword (مثل BM25)                   |
 
 ---
 
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"صمم نظام بحث لـ 10M وثيقة مع latency < 100ms."**
    - Hybrid: Weaviate (native hybrid) أو Elasticsearch + dense vectors
    - Indexing: batch processing, async updates
@@ -382,7 +392,9 @@ class SearchABTest:
    - Hybrid مع alpha أعلى للـ vector (للتغلب على حاجز اللغة)
 
 ### System Design
+
 **"صمم E-commerce Search Engine."**
+
 - Hybrid: vector للمعنى + BM25 للأسماء التجارية وأرقام الموديلات
 - Filters: price range, category, brand (pre-filter قبل search)
 - Personalization: user embedding + item embedding
@@ -390,6 +402,7 @@ class SearchABTest:
 - A/B Testing: continuous evaluation
 
 ### Behavioral (STAR)
+
 **"كيف حسنت search relevance بشكل قابل للقياس؟"**
 
 **S:** مستخدمو documentation يشتكون من نتائج غير ذات صلة.

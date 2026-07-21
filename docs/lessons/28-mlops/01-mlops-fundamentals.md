@@ -31,12 +31,12 @@ graph LR
     F -->|Retrain| C
 ```
 
-| DevOps | MLOps |
-|--------|-------|
-| Code → Build → Deploy | Data + Code → Train → Deploy |
-| الاختبار: Unit + Integration | الاختبار: Accuracy + Fairness + Drift |
-| المشكلة: "الـ deployment فشل" | المشكلة: "النموذج accuracy انخفض 5%" |
-| الـ artifact: Docker image | الـ artifact: Model + Code + Data version |
+| DevOps                         | MLOps                                              |
+| ------------------------------ | -------------------------------------------------- |
+| Code → Build → Deploy          | Data + Code → Train → Deploy                       |
+| الاختبار: Unit + Integration   | الاختبار: Accuracy + Fairness + Drift              |
+| المشكلة: "الـ deployment فشل"  | المشكلة: "النموذج accuracy انخفض 5%"               |
+| الـ artifact: Docker image     | الـ artifact: Model + Code + Data version          |
 | المراقبة: CPU, Memory, Latency | المراقبة: Accuracy, Prediction Distribution, Drift |
 
 ### لماذا يفشل 87% من مشاريع ML؟
@@ -167,7 +167,7 @@ def fraud_training_pipeline(
     test_data: Input,
     learning_rate: float = 0.01
 ):
-    
+
     # ١. خطوة التدريب
     train_step = command(
         name="train",
@@ -183,7 +183,7 @@ def fraud_training_pipeline(
         compute="gpu-cluster",
         instance_count=1
     )
-    
+
     # ٢. خطوة التقييم
     evaluate_step = command(
         name="evaluate",
@@ -198,7 +198,7 @@ def fraud_training_pipeline(
         outputs={"metrics": Output(type="uri_folder")},
         compute="cpu-cluster"
     )
-    
+
     return {
         "model": train_step.outputs.model,
         "metrics": evaluate_step.outputs.metrics
@@ -315,33 +315,33 @@ def check_model_performance(model_id: str, inference_data: pd.DataFrame):
     مقارنة predictions مع actual outcomes
     """
     model = ml_client.models.get(model_id)
-    
+
     # آخر 7 أيام من predictions
     recent_predictions = get_inference_logs(days=7)
-    
+
     # إذا توفرت ground truth (مثلاً: هل كانت المعاملة fraud حقاً؟)
     ground_truth = get_ground_truth(days=7)
-    
+
     metrics = {
         "accuracy": accuracy_score(ground_truth, recent_predictions),
         "precision": precision_score(ground_truth, recent_predictions),
         "recall": recall_score(ground_truth, recent_predictions),
         "f1": f1_score(ground_truth, recent_predictions)
     }
-    
+
     # Alert if accuracy dropped > 5%
     baseline_accuracy = model.tags.get("production_accuracy", 0.95)
     if metrics["accuracy"] < baseline_accuracy - 0.05:
         send_alert(f"⚠️ Model accuracy dropped: {metrics['accuracy']:.2%}")
         trigger_retraining()
-    
+
     return metrics
 ```
 
 ### Population Stability Index (PSI)
 
 ```python
-def calculate_psi(expected: np.ndarray, actual: np.ndarray, 
+def calculate_psi(expected: np.ndarray, actual: np.ndarray,
                   bins: int = 10) -> float:
     """
     PSI = Population Stability Index
@@ -351,18 +351,18 @@ def calculate_psi(expected: np.ndarray, actual: np.ndarray,
     """
     # تقسيم البيانات إلى bins
     breakpoints = np.percentile(expected, np.linspace(0, 100, bins + 1))
-    
+
     expected_percents = np.histogram(expected, breakpoints)[0] / len(expected)
     actual_percents = np.histogram(actual, breakpoints)[0] / len(actual)
-    
+
     # تجنب log(0)
     expected_percents = np.clip(expected_percents, 0.0001, None)
     actual_percents = np.clip(actual_percents, 0.0001, None)
-    
+
     psi_values = (actual_percents - expected_percents) * np.log(
         actual_percents / expected_percents
     )
-    
+
     return float(np.sum(psi_values))
 
 # استخدام PSI
@@ -469,14 +469,17 @@ model_card:
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين:** Azure ML pipeline. **تحدي:** PSI drift detection.
 
 ### 📝 تقييم
+
 **س١:** DevOps vs MLOps؟ → Data + Code + Model vs Code only.
 **س٢:** Feature Store؟ → مصدر واحد للـ features للـ training + serving.
 **س٣:** PSI > 0.2؟ → Retrain فوري!
 
 ### 🎤 مقابلة
+
 **"كيف تكتشف نموذجاً فاشلاً؟"** → Data drift + Model metrics + Business impact.
 
 ---

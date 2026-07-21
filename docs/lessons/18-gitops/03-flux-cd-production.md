@@ -75,11 +75,11 @@ Flux يحدث الصورة تلقائياً عند ظهور نسخة جديدة 
 
 ### Flux vs Argo CD
 
-| | Argo CD | Flux |
-|---|---------|------|
-| **UI** | ✅ ممتاز | ❌ CLI فقط |
-| **Image Automation** | ❌ | ✅ مدمج |
-| **Push to Git** | ❌ | ✅ |
+|                      | Argo CD  | Flux       |
+| -------------------- | -------- | ---------- |
+| **UI**               | ✅ ممتاز | ❌ CLI فقط |
+| **Image Automation** | ❌       | ✅ مدمج    |
+| **Push to Git**      | ❌       | ✅         |
 
 **التوصية**: Argo CD للـ UI + Flux لـ image automation.
 
@@ -88,6 +88,7 @@ Flux يحدث الصورة تلقائياً عند ظهور نسخة جديدة 
 ## 🛠️ تدريبات
 
 ### تمرين: ثبّت Flux على cluster
+
 ### تحدي: فعّل image automation لتحديث الصور تلقائياً
 
 ---
@@ -95,20 +96,23 @@ Flux يحدث الصورة تلقائياً عند ظهور نسخة جديدة 
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. كيف يختلف Flux عن Argo CD؟
 2. ما فائدة Image Automation؟
 3. لماذا Git هو "المصدر الوحيد للحقيقة"؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Flux | GitOps operator مع image automation |
-| HelmRelease | إدارة Helm عبر Flux |
-| ImagePolicy | سياسة تحديث الصور تلقائياً |
+
+| السؤال      | الإجابة                             |
+| ----------- | ----------------------------------- |
+| Flux        | GitOps operator مع image automation |
+| HelmRelease | إدارة Helm عبر Flux                 |
+| ImagePolicy | سياسة تحديث الصور تلقائياً          |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"Argo CD أم Flux؟"** → كلاهما! Argo CD للـ UI، Flux للـ automation
 2. **"كيف تحدث images تلقائياً؟"** → Flux ImagePolicy + ImageRepository
 
@@ -194,13 +198,13 @@ graph TD
         NC["Notification Controller<br/>Alert, Provider"]
         IC["Image Controller<br/>ImageRepository, ImagePolicy"]
     end
-    
+
     subgraph "External"
         GIT["Git Repository<br/>github.com/cloudnova/infra"]
         ACR["Azure Container Registry<br/>cloudnova.azurecr.io"]
         SLACK["Slack<br/>#platform-alerts"]
     end
-    
+
     GIT -->|"Poll every 1m"| SC
     SC -->|"Reconcile"| KC
     SC -->|"Reconcile"| HC
@@ -210,25 +214,26 @@ graph TD
     KC -->|"Apply to cluster"| K8S["Kubernetes API"]
     HC -->|"Apply to cluster"| K8S
     NC -->|"Send alerts"| SLACK
-    
+
     style SC fill:#0078D4,stroke:#005A9E,color:#fff
     style IC fill:#f9a825,stroke:#f57f17
 ```
 
 ### Flux vs Argo CD: مصفوفة قرار تفصيلية
 
-| المعيار | Flux CD | Argo CD | الفائز |
-|---------|---------|---------|--------|
-| **التركيب** | CLI + Git (bootstrapped) | Helm + YAML | تعادل |
-| **الـ UI** | ❌ (Weave GitOps إضافي) | ⭐⭐⭐⭐⭐ | Argo CD |
-| **Image Automation** | ⭐⭐⭐⭐⭐ (مدمج) | ❌ (يحتاج Argo CD Image Updater) | Flux |
-| **Push to Git** | ✅ تلقائي (image updates) | ❌ | Flux |
-| **Multi-tenancy** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Argo CD |
-| **Helm Support** | ⭐⭐⭐⭐⭐ (natively) | ⭐⭐⭐⭐ | Flux |
-| **Resource Health** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | Argo CD |
-| **SSO/OIDC** | ❌ (يحتاج Weave GitOps) | ⭐⭐⭐⭐⭐ | Argo CD |
+| المعيار              | Flux CD                   | Argo CD                          | الفائز  |
+| -------------------- | ------------------------- | -------------------------------- | ------- |
+| **التركيب**          | CLI + Git (bootstrapped)  | Helm + YAML                      | تعادل   |
+| **الـ UI**           | ❌ (Weave GitOps إضافي)   | ⭐⭐⭐⭐⭐                       | Argo CD |
+| **Image Automation** | ⭐⭐⭐⭐⭐ (مدمج)         | ❌ (يحتاج Argo CD Image Updater) | Flux    |
+| **Push to Git**      | ✅ تلقائي (image updates) | ❌                               | Flux    |
+| **Multi-tenancy**    | ⭐⭐⭐⭐                  | ⭐⭐⭐⭐⭐                       | Argo CD |
+| **Helm Support**     | ⭐⭐⭐⭐⭐ (natively)     | ⭐⭐⭐⭐                         | Flux    |
+| **Resource Health**  | ⭐⭐⭐⭐                  | ⭐⭐⭐⭐⭐                       | Argo CD |
+| **SSO/OIDC**         | ❌ (يحتاج Weave GitOps)   | ⭐⭐⭐⭐⭐                       | Argo CD |
 
 **التوصية النهائية:**
+
 - **Flux** إذا كنت تريد image automation + Git push + Helm natively
 - **Argo CD** إذا كنت تريد UI ممتاز + SSO + Multi-tenancy
 - **Flux + Argo CD معاً** هو الحل الأمثل في المؤسسات الكبيرة
@@ -381,6 +386,7 @@ spec:
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. كيف يختلف Flux عن Argo CD في الـ reconciliation loop؟
 2. ما فائدة Image Automation في Flux؟
 3. كيف تحمي من نشر `:latest` tags عبر Flux؟
@@ -388,6 +394,7 @@ spec:
 5. كيف تفعّل SOPS decryption في Flux؟
 
 ### 📝 اختبار (3)
+
 1. **HelmRelease فشل. كيف تشخص المشكلة مع Flux؟**
    <details><summary>الإجابة</summary>`flux get helmreleases`, `kubectl describe helmrelease <name>`, `flux events --for HelmRelease/<name>`, فحص logs: `kubectl logs -n flux-system helm-controller-xxx`</details>
 
@@ -398,6 +405,7 @@ spec:
    <details><summary>الإجابة</summary>1. Bootstrap Flux على نفس cluster. 2. نقل HelmReleases/Kustomizations تدريجياً. 3. استخدام `dependsOn` للحفاظ على الترتيب. 4. تعطيل Argo CD بعد التحقق.</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم Flux architecture مع كل controllers
 - اشرح reconciliation loop في Flux
 - كيف يختلف GitOps عن CI/CD التقليدي؟
@@ -405,25 +413,28 @@ spec:
 - صف سيناريو فشل فيه Flux وأصلحته
 
 ### 🎓 Feynman: Flux لغير التقني
+
 "تخيل أن لديك روبوت (Flux) يراقب دفتر تعليمات (Git repo). عندما تغير التعليمات في الدفتر، الروبوت يطبقها فوراً على المصنع (cluster). إذا أحدهم عبث بالمصنع مباشرة، الروبوت يعيده للحالة الصحيحة تلقائياً."
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| Flux | GitOps operator — يطبق Git state على cluster |
-| Source Controller | يجلب الـ manifests من Git/Helm repos |
-| Kustomization | يطبق kustomize على cluster |
-| HelmRelease | يثبت/يدير Helm charts |
-| ImagePolicy | يحدد أي image tags مسموحة |
-| Reconciliation | عملية مطابقة cluster state مع Git state |
-| SOPS | Secrets OPerationS — تشفير الأسرار في Git |
-| Drift Detection | اكتشاف الفروقات بين Git و cluster |
+
+| السؤال            | الإجابة                                      |
+| ----------------- | -------------------------------------------- |
+| Flux              | GitOps operator — يطبق Git state على cluster |
+| Source Controller | يجلب الـ manifests من Git/Helm repos         |
+| Kustomization     | يطبق kustomize على cluster                   |
+| HelmRelease       | يثبت/يدير Helm charts                        |
+| ImagePolicy       | يحدد أي image tags مسموحة                    |
+| Reconciliation    | عملية مطابقة cluster state مع Git state      |
+| SOPS              | Secrets OPerationS — تشفير الأسرار في Git    |
+| Drift Detection   | اكتشاف الفروقات بين Git و cluster            |
 
 ---
 
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"فريقك يريد Flux + Argo CD معاً. كيف تصمم هذا؟"**
    - Flux: Image Automation (تحديث الصور + push to Git)
    - Argo CD: UI + SSO + multi-tenancy
@@ -438,7 +449,9 @@ spec:
    - زيادة timeout في الـ Kustomization
 
 ### System Design
+
 **"صمم GitOps pipeline لـ 50 cluster عبر 5 regions."**
+
 - Monorepo: `clusters/<region>/<env>/`
 - Flux Bootstrap لكل cluster
 - Kustomization overlays للقيم الخاصة بكل region
@@ -447,6 +460,7 @@ spec:
 - SOPS + Azure Key Vault للأسرار
 
 ### Behavioral (STAR)
+
 **"كيف أقنعت فريقاً بالانتقال إلى GitOps؟"**
 
 **S:** فريق يستخدم `kubectl apply` و Helm CLI يدوياً. 3 incidents بسبب أخطاء بشرية.

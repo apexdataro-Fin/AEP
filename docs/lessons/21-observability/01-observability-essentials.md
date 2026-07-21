@@ -90,7 +90,7 @@ spec:
   window: 28d
   alerting:
     - name: burn-rate-1h
-      threshold: 14.4  # يستهلك error budget خلال ساعة
+      threshold: 14.4 # يستهلك error budget خلال ساعة
     - name: burn-rate-6h
       threshold: 6
 ```
@@ -274,7 +274,7 @@ groups:
 
 ١. Grafana Dashboard:
    ├── Error rate: 2% (SLO = 0.1%) ← SLO محروق!
-   
+
 ٢. Tempo Traces:
    ├── 80% من الطلبات البطيئة تمر عبر inventory-service
    └── Span: "check_inventory" = 3.2s!
@@ -327,23 +327,28 @@ groups:
 ## 🏛️ طبقة الإنتاج: LGTM Stack
 
 ### Loki + Grafana + Tempo + Mimir = Observability Stack
+
 - Metrics (Mimir) + Logs (Loki) + Traces (Tempo) في UI واحد
 - من Trace → اقفز لـ Logs المرتبطة
 
 ### 🚨 CloudNova: تشخيص 4 دقائق
+
 > قبل LGTM: 3 ساعات لتشخيص error. بعد: 4 دقائق.
 
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين ١:** Structured logging. **تمرين ٢:** SLO dashboard.
 
 ### 📝 تقييم
+
 **س١:** SLI vs SLO vs SLA؟ → SLI: ماذا نقيس. SLO: الهدف. SLA: الوعد للعميل.
 **س٢:** Burn rate = ؟ → سرعة استهلاك error budget.
 **س٣:** Observability vs Monitoring؟ → Monitoring: known. Observability: unknown unknowns.
 
 ### 🎤 مقابلة
+
 **"كيف تصمم observability stack؟"** → LGTM + OpenTelemetry + SLO-based alerting.
 
 ---

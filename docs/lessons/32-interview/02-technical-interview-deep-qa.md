@@ -22,6 +22,7 @@ description: "Technical Interview Deep Q&A — أسئلة وأجوبة Azure, Ku
 ## 🏗️ Azure Questions
 
 **س: كيف تصمم High Availability في Azure؟**
+
 - Availability Zones (3 zones)
 - Load Balancer + VM Scale Sets
 - Azure SQL Geo-Replication
@@ -29,6 +30,7 @@ description: "Technical Interview Deep Q&A — أسئلة وأجوبة Azure, Ku
 - RTO: < 5 دقائق، RPO: < دقيقة
 
 **س: كيف تؤمن Azure Subscription؟**
+
 - Azure AD + MFA
 - Management Groups + Policies
 - Network Segmentation + NSG
@@ -38,6 +40,7 @@ description: "Technical Interview Deep Q&A — أسئلة وأجوبة Azure, Ku
 ### Kubernetes Questions
 
 **س: كيف تتعامل مع CrashLoopBackOff؟**
+
 1. `kubectl logs <pod> --previous`
 2. `kubectl describe pod` وفحص Events
 3. تحقق من ConfigMaps و Secrets
@@ -46,6 +49,7 @@ description: "Technical Interview Deep Q&A — أسئلة وأجوبة Azure, Ku
 ### Terraform Questions
 
 **س: ماذا تفعل لو فسد ملف state؟**
+
 1. استرجع من backup (storage account versioning)
 2. `terraform state pull` من backend صحيحة
 3. `terraform import` للموارد المفقودة
@@ -60,14 +64,17 @@ description: "Technical Interview Deep Q&A — أسئلة وأجوبة Azure, Ku
 ### الجولة 1: الأساسيات (30 دقيقة)
 
 **س: صف Azure Virtual Network من الداخل.**
+
 > System routes table. Service endpoints vs Private Endpoints. NSG rules evaluation order. VNet peering مع transitive routing limitation. Custom route tables لـ NVA. BGP مع ExpressRoute.
 
 **س: كيف تعمل Kubernetes Service؟**
+
 > kube-proxy يشاهد API server. عند إنشاء Service: يخصص ClusterIP (iptables/IPVS rules). endpoint controller يملأ Endpoints. kube-proxy يكتب iptables rules: `KUBE-SERVICES → KUBE-SVC-XXXX → KUBE-SEP-YYYY (DNAT to Pod IP)`.
 
 ### الجولة 2: سيناريو عملي (45 دقيقة)
 
 **السيناريو:** "لديك AKS cluster فجأة لا يستجيب. debugging steps؟"
+
 > 1. `kubectl get nodes` — هل الـ control plane يعمل؟
 > 2. `kubectl describe node` — أي taints, conditions, resource pressure؟
 > 3. `kubectl top nodes` — استهلاك الموارد
@@ -90,16 +97,19 @@ description: "Technical Interview Deep Q&A — أسئلة وأجوبة Azure, Ku
 ### Azure
 
 **1. Availability Set vs Availability Zone — أيهما تختار؟**
+
 - Availability Set: حماية داخل datacenter واحد (fault + update domains)
 - Availability Zone: حماية عبر datacenters (مباني منفصلة). SLA 99.99% vs 99.95%
 - القاعدة: Zone > Set إذا متوفر في regionك
 
 **2. متى تستخدم Application Gateway بدل Front Door؟**
+
 - App Gateway: إقليمي (regional)، WAF، SSL termination، cookie-based affinity
 - Front Door: عالمي (global)، CDN، anycast، URL-based routing
 - استخدمهما معاً: Front Door عالمي → App Gateway إقليمي
 
 **3. كيف تنقل 10TB إلى Azure بأسرع وقت؟**
+
 - < 1TB: AzCopy عبر الشبكة
 - 1-10TB: Azure Data Box (قرص صلب يُشحن)
 - > 10TB: Azure Data Box Heavy أو ExpressRoute
@@ -107,15 +117,18 @@ description: "Technical Interview Deep Q&A — أسئلة وأجوبة Azure, Ku
 ### Kubernetes
 
 **4. CrashLoopBackOff — debugging كامل:**
+
 ```bash
 kubectl logs <pod> --previous    # سجلات المحاولة السابقة
 kubectl describe pod <pod>       # Events, exit code
 kubectl exec -it <pod> -- sh     # تفقد داخلي (إذا شغّال)
 kubectl get events --sort-by=.metadata.creationTimestamp
 ```
+
 الأسباب: OOMKilled (ذاكرة)، ImagePullBackOff، ConfigMap ناقص، command/args خطأ
 
 **5. PVC stuck in Pending:**
+
 - StorageClass موجود؟ `kubectl get sc`
 - Provisioner يدعم الـ cloud؟ (azure-disk, azure-file)
 - AccessMode متوافق مع الـ PV؟
@@ -124,6 +137,7 @@ kubectl get events --sort-by=.metadata.creationTimestamp
 ### Terraform
 
 **6. State file تالف — حل عملي:**
+
 ```bash
 # 1. استرجع من backup
 az storage blob download \
@@ -144,21 +158,25 @@ terraform import azurerm_resource_group.rg /subscriptions/.../resourceGroups/rg-
 ## 🛠️ محاكاة مقابلة (30 دقيقة)
 
 ### الجولة التقنية — Azure
+
 1. صمم شبكة Azure لـ 3 بيئات (dev, staging, prod)
 2. كيف تؤمن AKS cluster؟
 3. قارن بين Azure SQL و Cosmos DB
 
 ### الجولة التقنية — DevOps
+
 4. صمم CI/CD pipeline مع zero-downtime deployment
 5. كيف تدير secrets في Kubernetes؟
 6. ما DORA metrics ولماذا تهم؟
 
 ### الجولة العملية — Live Coding
+
 7. اكتب Terraform module لـ AKS
 8. اكتب Dockerfile آمناً
 9. اكتب GitHub Actions workflow
 
 ### الجولة السلوكية
+
 10. STAR: مشروع معقد قُدته
 11. صراع مع زميل — كيف حللته
 12. قرار تقني ندمت عليه
@@ -168,6 +186,7 @@ terraform import azurerm_resource_group.rg /subscriptions/.../resourceGroups/rg-
 ## 📝 تقييم
 
 ### ✅ Knowledge Checks
+
 1. ما الفرق بين Azure Front Door و Application Gateway؟
 2. كيف تصلح CrashLoopBackOff؟
 3. ماذا تفعل إذا فسد ملف Terraform state؟
@@ -175,41 +194,48 @@ terraform import azurerm_resource_group.rg /subscriptions/.../resourceGroups/rg-
 5. ما الـ 4 metrics في DORA؟
 
 ### 🧠 Quiz
+
 **س1:** أفضل approach لنقل 50TB إلى Azure:
+
 - أ) AzCopy
 - ب) Data Box Heavy ✅
 - ج) USB
 - د) FTP
 
 **س2:** PVC stuck في Pending — أول فحص:
+
 - أ) StorageClass موجود؟ ✅
 - ب) إعادة تشغيل الـ pod
 - ج) حذف الـ PVC
 - د) لا شيء
 
 **س3:** Private Endpoint في Azure:
+
 - أ) endpoint عام
 - ب) IP خاص في VNet للوصول لخدمات Azure ✅
 - ج) VPN
 - د) CDN
 
 ### 🗣️ Active Recall
+
 1. أجب عن 5 أسئلة Kubernetes بصوت عالٍ
 2. ارسم معماري شبكة Azure لـ enterprise
 3. اشرح Terraform state locking
 4. مارس whiteboard design لمدة 10 دقائق
 
 ### 🎓 Feynman Exercise
+
 > اشرح Kubernetes Service لغير تقني: "مثل receptionist فندق. الزائر لا يعرف رقم الغرفة، بل يسأل receptionist باسم النزيل. receptionist يحول الزائر للغرفة الصحيحة حتى لو تغيرت."
 
 ### 🃏 بطاقات تعلم
-| السؤال | الإجابة |
-|--------|---------|
-| CrashLoopBackOff debugging؟ | logs + describe + events + ssh |
-| Terraform state تالف؟ | backup restore أو import |
-| Availability Set vs Zone؟ | Zone = مباني منفصلة، SLA أعلى |
-| AKS security؟ | Private cluster + RBAC + Network Policy + Azure AD |
-| أفضل Data Transfer كبير؟ | Data Box للكميات الضخمة |
+
+| السؤال                      | الإجابة                                            |
+| --------------------------- | -------------------------------------------------- |
+| CrashLoopBackOff debugging؟ | logs + describe + events + ssh                     |
+| Terraform state تالف؟       | backup restore أو import                           |
+| Availability Set vs Zone؟   | Zone = مباني منفصلة، SLA أعلى                      |
+| AKS security؟               | Private cluster + RBAC + Network Policy + Azure AD |
+| أفضل Data Transfer كبير؟    | Data Box للكميات الضخمة                            |
 
 ---
 
@@ -228,12 +254,13 @@ terraform import azurerm_resource_group.rg /subscriptions/.../resourceGroups/rg-
 ---
 
 ## 📚 المراجع
-| النوع | الرابط |
-|--------|--------|
-| **درس ذو صلة** | [Interview Preparation](./01-interview-preparation) |
-| **درس ذو صلة** | [System Design](./03-system-design-masterclass) |
-| **مرجع** | [Azure Architecture Center](https://learn.microsoft.com/azure/architecture/) |
-| **مرجع** | [Kubernetes Troubleshooting](https://kubernetes.io/docs/tasks/debug/) |
+
+| النوع          | الرابط                                                                       |
+| -------------- | ---------------------------------------------------------------------------- |
+| **درس ذو صلة** | [Interview Preparation](./01-interview-preparation)                          |
+| **درس ذو صلة** | [System Design](./03-system-design-masterclass)                              |
+| **مرجع**       | [Azure Architecture Center](https://learn.microsoft.com/azure/architecture/) |
+| **مرجع**       | [Kubernetes Troubleshooting](https://kubernetes.io/docs/tasks/debug/)        |
 
 ---
 

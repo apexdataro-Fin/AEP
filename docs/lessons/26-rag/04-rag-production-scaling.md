@@ -30,12 +30,12 @@ redis_client = Redis(host='cache.redis', port=6379)
 
 def cached_rag(question):
     q_embedding = model.encode(question)
-    
+
     # البحث في cache
     cached = redis_client.get(f"rag:{hash(q_embedding.tobytes())}")
     if cached:
         return json.loads(cached)
-    
+
     # RAG عادي
     answer = rag_pipeline(question)
     redis_client.setex(f"rag:{hash(q_embedding.tobytes())}", 3600, json.dumps(answer))
@@ -57,11 +57,11 @@ def monitored_rag(question):
     start = time.time()
     docs = retrieve(question)
     metrics["retrieval_latency_ms"].append((time.time() - start) * 1000)
-    
+
     start = time.time()
     answer = generate(question, docs)
     metrics["generation_latency_ms"].append((time.time() - start) * 1000)
-    
+
     prometheus.push(metrics)
     return answer
 ```
@@ -73,6 +73,7 @@ def monitored_rag(question):
 **نورة** مهندسة المنصة في CloudNova. نظام RAG الداخلي بدأ بـ 50 مستخدماً، والآن يخدم 10,000 مهندس.
 
 **المشكلة:** Monday 9AM — جميع المهندسين يبدأون العمل:
+
 - 500 استعلام/ثانية على RAG
 - Latency: 12 ثانية (غير مقبول)
 - 30% من الاستعلامات متشابهة (نفس الأسئلة عن سياسات AKS)
@@ -125,6 +126,7 @@ def model_router(query: str):
 ```
 
 **النتائج النهائية:**
+
 - Latency: 12s → 2s ✅
 - Cache hit rate: 35% ✅
 - فاتورة Azure: $15,000 → $6,000/شهر ✅
@@ -134,13 +136,13 @@ def model_router(query: str):
 
 ## 🎨 طبقة المعماري: استراتيجيات التوسع
 
-| الاستراتيجية | التكلفة | التأثير | التعقيد | متى؟ |
-|-------------|--------|---------|---------|------|
-| **Semantic Cache** | $ (Redis) | ⭐⭐⭐⭐⭐ | متوسط | دائماً — أفضل ROI |
-| **Model Tiering** | توفير 60% | ⭐⭐⭐⭐ | منخفض | عندما 80% أسئلة بسيطة |
-| **Load Shedding** | توفير غير مباشر | ⭐⭐⭐ | متوسط | أوقات الذروة |
-| **Async Processing** | $ (Queue) | ⭐⭐⭐ | عالي | أسئلة غير عاجلة |
-| **Multi-region** | $$$$ | ⭐⭐⭐⭐⭐ | عالي جداً | 100K+ مستخدم |
+| الاستراتيجية         | التكلفة         | التأثير    | التعقيد   | متى؟                  |
+| -------------------- | --------------- | ---------- | --------- | --------------------- |
+| **Semantic Cache**   | $ (Redis)       | ⭐⭐⭐⭐⭐ | متوسط     | دائماً — أفضل ROI     |
+| **Model Tiering**    | توفير 60%       | ⭐⭐⭐⭐   | منخفض     | عندما 80% أسئلة بسيطة |
+| **Load Shedding**    | توفير غير مباشر | ⭐⭐⭐     | متوسط     | أوقات الذروة          |
+| **Async Processing** | $ (Queue)       | ⭐⭐⭐     | عالي      | أسئلة غير عاجلة       |
+| **Multi-region**     | $$$$            | ⭐⭐⭐⭐⭐ | عالي جداً | 100K+ مستخدم          |
 
 ### متى تنتقل من RAG بسيط إلى RAG موزع؟
 
@@ -157,6 +159,7 @@ graph TD
 ## 🛠️ تدريبات عملية
 
 ### تمرين 1: Semantic Cache من الصفر
+
 ```python
 # ابنِ semantic cache باستخدام FAISS
 import faiss
@@ -167,11 +170,11 @@ class SemanticCache:
         self.index = faiss.IndexFlatIP(dim)
         self.embeddings = []
         self.answers = []
-    
+
     def add(self, embedding, answer):
         self.index.add(np.array([embedding]))
         self.answers.append(answer)
-    
+
     def search(self, embedding, threshold=0.95):
         if len(self.answers) == 0:
             return None
@@ -182,28 +185,30 @@ class SemanticCache:
 ```
 
 ### تمرين 2: A/B Testing للـ Prompts
+
 ```python
 # قارن بين prompt A و prompt B
 import random
 
 def ab_test_rag(query):
     variant = "A" if random.random() < 0.5 else "B"
-    
+
     prompts = {
         "A": "أنت مساعد تقني. أجب بناءً على السياق فقط.",
         "B": "أنت خبير Azure. أجب بدقة واذكر المصدر."
     }
-    
+
     start = time.time()
     answer = rag_pipeline(query, system_prompt=prompts[variant])
     latency = time.time() - start
-    
+
     # سجل النتائج
     log_ab_test(variant, query, answer, latency)
     return answer
 ```
 
 ### تحدي: نظام RAG كامل مع monitoring
+
 ```python
 # التحدي: ابنِ نظام RAG كامل مع:
 # 1. Semantic cache (Redis)
@@ -217,6 +222,7 @@ def ab_test_rag(query):
 ## 📝 تقييم
 
 ### ✅ Knowledge Checks
+
 1. ما فائدة Semantic Cache في RAG؟
 2. كيف تتعامل مع 500 طلب/ثانية في RAG؟
 3. ما Model Tiering وما توفيره المالي؟
@@ -224,65 +230,76 @@ def ab_test_rag(query):
 5. ما المقاييس الأساسية لـ RAG في الإنتاج؟
 
 ### 🧠 Quiz
+
 **س1:** أفضل طريقة لتقليل تكلفة RAG 50% هي:
+
 - أ) تقليل عدد المستندات
 - ب) Semantic Cache + Model Tiering ✅
 - ج) إغلاق النظام ليلاً
 - د) استخدام نموذج واحد فقط
 
 **س2:** Cache hit rate = 35%. ماذا يعني هذا؟
+
 - أ) فشل النظام
 - ب) 35% من الأسئلة لم تحتج LLM ✅
 - ج) بيانات تالفة
 - د) لا شيء
 
 **س3:** Load Shedding يستخدم لمنع:
+
 - أ) الهجمات الإلكترونية
 - ب) انهيار النظام من كثرة الطلبات ✅
 - ج) فقدان البيانات
 - د) كل ما سبق
 
 ### 🗣️ Active Recall
+
 1. اشرح استراتيجيات تحسين RAG في الإنتاج بدون كود
 2. ارسم Architecture diagram لنظام RAG عالي التوفر
 3. كيف تقيس نجاح RAG في الإنتاج؟
 4. قارن بين cache strategies المختلفة
 
 ### 🎓 Feynman Exercise
+
 > اشرح Semantic Cache لمدير غير تقني: "مثل مساعد يسجل الأسئلة الشائعة. عندما يسأل موظف سؤالاً، المساعد يتذكر الجواب بدل ما يرجع للخبير كل مرة."
 
 ### 🃏 بطاقات تعلم
-| السؤال | الإجابة |
-|--------|---------|
-| ما Semantic Cache؟ | تخزين إجابات لأسئلة متشابهة Semanticياً |
-| ما Model Tiering؟ | استخدام نموذج رخيص للأسئلة البسيطة وغالٍ للمعقدة |
-| ما Load Shedding؟ | رفض الطلبات الزائدة لحماية النظام |
-| كم توفر الـ caching؟ | 30-50% من تكلفة الـ LLM |
-| أهم metric في الإنتاج؟ | Latency P99 تحت 3 ثوانٍ |
+
+| السؤال                 | الإجابة                                          |
+| ---------------------- | ------------------------------------------------ |
+| ما Semantic Cache؟     | تخزين إجابات لأسئلة متشابهة Semanticياً          |
+| ما Model Tiering؟      | استخدام نموذج رخيص للأسئلة البسيطة وغالٍ للمعقدة |
+| ما Load Shedding؟      | رفض الطلبات الزائدة لحماية النظام                |
+| كم توفر الـ caching؟   | 30-50% من تكلفة الـ LLM                          |
+| أهم metric في الإنتاج؟ | Latency P99 تحت 3 ثوانٍ                          |
 
 ---
 
 ## 🎤 أسئلة المقابلة
 
 **س1 (System Design):** "صمم RAG لـ 1M مستخدم."
+
 > Multi-region deployment (3 regions). Global Load Balancer. Semantic Cache في كل region. Queue للـ async processing. Model tiering. Auto-scaling بناءً على queue depth. Monitoring بـ RAGAS + Grafana. تكلفة شهرية: ~$50K.
 
 **س2 (تقني):** "كيف تضمن عدم تكرار نفس الخطأ في الـ cache؟"
+
 > Semantic similarity threshold عالٍ (0.95). TTL قصير (1 ساعة). Invalidation عند تحديث المستندات. Monitoring لنسبة false positives. Manual review عشوائي أسبوعي.
 
 **س3 (سلوكي):** "كيف تتعامل مع outage مفاجئ لنظام RAG؟"
+
 > عندي runbook جاهز: 1) تحويل إلى static FAQ. 2) تشغيل replica في region آخر. 3) تقليل الـ traffic بـ load shedding. 4) التواصل مع stakeholders. حدث هذا في CloudNova — وقت التعافي: 8 دقائق.
 
 ---
 
 ## 📚 المراجع
-| النوع | الرابط |
-|--------|--------|
-| **درس ذو صلة** | [RAG Evaluation](./03-rag-evaluation-ragas) |
-| **درس ذو صلة** | [Vector Databases](../../25-vector-db/01-vector-databases) |
-| **أداة** | [Redis](https://redis.io/) — Semantic Cache |
-| **شهادة** | AZ-400 — Design scaling strategies |
-| **مرجع** | [Azure OpenAI Service - Quotas & Limits](https://learn.microsoft.com/azure/ai-services/openai/quotas-limits) |
+
+| النوع          | الرابط                                                                                                       |
+| -------------- | ------------------------------------------------------------------------------------------------------------ |
+| **درس ذو صلة** | [RAG Evaluation](./03-rag-evaluation-ragas)                                                                  |
+| **درس ذو صلة** | [Vector Databases](../../25-vector-db/01-vector-databases)                                                   |
+| **أداة**       | [Redis](https://redis.io/) — Semantic Cache                                                                  |
+| **شهادة**      | AZ-400 — Design scaling strategies                                                                           |
+| **مرجع**       | [Azure OpenAI Service - Quotas & Limits](https://learn.microsoft.com/azure/ai-services/openai/quotas-limits) |
 
 ---
 

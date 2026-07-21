@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: [getting-started]
   tags: [structure, organization, directories]
 ---
+
 displayed_sidebar: devSidebar
 
 # Project Structure

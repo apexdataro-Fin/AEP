@@ -290,6 +290,7 @@ jobs:
 ```
 
 ماذا يفعل؟ عند كل push لـ main:
+
 - يحلل commit messages (يحتاج Conventional Commits)
 - يفتح Release PR مع changelog تلقائي
 - عند دمج Release PR: يصدر tag + GitHub Release
@@ -424,18 +425,18 @@ updates:
 
 ## 📋 أفضل ممارسات GitHub
 
-| الممارسة                 | التنفيذ                                    |
-| ------------------------ | ------------------------------------------ |
-| **Conventional Commits** | `feat:`, `fix:`, `docs:`, `chore:`         |
-| **PR Templates**         | `.github/PULL_REQUEST_TEMPLATE.md`         |
-| **Issue Templates**      | `.github/ISSUE_TEMPLATE/bug_report.yml`    |
-| **Protected Branches**   | main + release branches                    |
-| **CODEOWNERS**           | مراجعة إلزامية من الفريق المناسب           |
+| الممارسة                    | التنفيذ                                 |
+| --------------------------- | --------------------------------------- |
+| **Conventional Commits**    | `feat:`, `fix:`, `docs:`, `chore:`      |
+| **PR Templates**            | `.github/PULL_REQUEST_TEMPLATE.md`      |
+| **Issue Templates**         | `.github/ISSUE_TEMPLATE/bug_report.yml` |
+| **Protected Branches**      | main + release branches                 |
+| **CODEOWNERS**              | مراجعة إلزامية من الفريق المناسب        |
 | **Deployment Environments** | موافقة إلزامية قبل نشر الإنتاج          |
-| **OIDC**                 | مصادقة Azure/AWS بدون secrets دائمة        |
-| **Release Please**       | Changelog + Releases تلقائية               |
-| **Secret Scanning**      | امنع push إذا فيه secret                   |
-| **Actions Permissions**  | قيد الأذونات (ليس `write-all`)             |
+| **OIDC**                    | مصادقة Azure/AWS بدون secrets دائمة     |
+| **Release Please**          | Changelog + Releases تلقائية            |
+| **Secret Scanning**         | امنع push إذا فيه secret                |
+| **Actions Permissions**     | قيد الأذونات (ليس `write-all`)          |
 
 ---
 
@@ -517,15 +518,16 @@ docker push ghcr.io/cloudnova/api:v1.0.0
 
 ### GitHub Actions vs Azure DevOps vs Jenkins
 
-| المعيار | GitHub Actions | Azure DevOps | Jenkins |
-|---------|---------------|-------------|---------|
-| **التكلفة** | 2000 min/month free | 1800 min/month | مجاني (self-hosted) |
-| **التعقيد** | بسيط | متوسط | عالي |
-| **Ecosystem** | 20,000+ actions | محدود | 2,000+ plugins |
-| **OIDC** | ✅ مدمج | ✅ | ❌ |
-| **YAML** | ✅ | ✅ | ❌ (Groovy) |
+| المعيار       | GitHub Actions      | Azure DevOps   | Jenkins             |
+| ------------- | ------------------- | -------------- | ------------------- |
+| **التكلفة**   | 2000 min/month free | 1800 min/month | مجاني (self-hosted) |
+| **التعقيد**   | بسيط                | متوسط          | عالي                |
+| **Ecosystem** | 20,000+ actions     | محدود          | 2,000+ plugins      |
+| **OIDC**      | ✅ مدمج             | ✅             | ❌                  |
+| **YAML**      | ✅                  | ✅             | ❌ (Groovy)         |
 
 ### متى تختار ماذا؟
+
 - **GitHub Actions**: الكود على GitHub = الخيار الطبيعي
 - **Azure DevOps**: Microsoft ecosystem، boards + repos + pipelines متكاملة
 - **Jenkins**: تحتاج تحكماً كاملاً + self-hosted
@@ -535,12 +537,15 @@ docker push ghcr.io/cloudnova/api:v1.0.0
 ## 🛠️ تدريبات عملية
 
 ### تمرين ١: CI Pipeline (سهل)
+
 > ابنِ workflow: lint + test + build. علّق النتائج على PR.
 
 ### تمرين ٢: Deployment Environment (متوسط)
+
 > أنشئ `staging` و `production` environments. production يتطلب موافقة senior engineer.
 
 ### تحدي: Release Please (متقدم)
+
 > فعّل Release Please مع semantic versioning و changelog تلقائي.
 
 ### 📝 تقييم
@@ -555,6 +560,7 @@ docker push ghcr.io/cloudnova/api:v1.0.0
 <details><summary>الإجابة</summary>يحدد من يجب أن يراجع ملفات معينة. مثال: `*.tf @platform-team` = أي تغيير في Terraform يحتاج مراجعة فريق المنصة.</details>
 
 ### 🧠 استدعاء نشط
+
 1. ارسم CI/CD pipeline: push → build → test → deploy → monitor.
 2. كيف تؤمّن workflow من fork PRs الخبيثة؟
 3. اذكر 5 أفضل ممارسات لـ GitHub Actions.

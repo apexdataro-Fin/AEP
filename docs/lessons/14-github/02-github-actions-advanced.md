@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ['3.10', '3.11', '3.12']
+        python-version: ["3.10", "3.11", "3.12"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/setup-python@v4
@@ -115,6 +115,7 @@ runs:
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ reusable workflow للنشر
+
 ### تحدي: ابنِ composite action لـ Terraform
 
 ---
@@ -122,20 +123,23 @@ runs:
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا reusable workflows أفضل من النسخ؟
 2. ما فائدة Matrix Strategy؟
 3. كيف تمنع النشر للإنتاج بدون مراجعة؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Reusable Workflow | workflow يُستدعى من workflows أخرى |
-| Matrix | تشغيل نفس الـ job على إصدارات/أنظمة متعددة |
-| Environment | بيئة معزولة مع approval gates |
+
+| السؤال            | الإجابة                                    |
+| ----------------- | ------------------------------------------ |
+| Reusable Workflow | workflow يُستدعى من workflows أخرى         |
+| Matrix            | تشغيل نفس الـ job على إصدارات/أنظمة متعددة |
+| Environment       | بيئة معزولة مع approval gates              |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تنظم CI/CD لـ 20 خدمة؟"** → Reusable workflows + Matrix + Environments
 2. **"كيف تمنع نشر كود غير مراجع للإنتاج؟"** → Environment protection rules + required reviewers
 

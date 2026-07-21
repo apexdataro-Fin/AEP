@@ -104,7 +104,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: npm ci && npm test
-  
+
   build-scan:
     needs: test
     runs-on: ubuntu-latest
@@ -117,9 +117,9 @@ jobs:
       - uses: aquasecurity/trivy-action@master
         with:
           image-ref: cloudnova-api:${{ github.sha }}
-          exit-code: '1'
+          exit-code: "1"
           severity: CRITICAL,HIGH
-  
+
   push:
     needs: build-scan
     runs-on: ubuntu-latest
@@ -128,7 +128,7 @@ jobs:
         with:
           push: true
           tags: cloudnova.azurecr.io/api:${{ github.sha }}
-  
+
   deploy:
     needs: push
     runs-on: ubuntu-latest
@@ -158,13 +158,16 @@ RUN npm run build                      # Layer 7: يتغير مع الكود
 ## 🛠️ تدريبات
 
 ### تمرين: Pipeline كامل
+
 ابنِ GitHub Actions workflow:
+
 1. يبني صورة Docker
 2. يفحصها بـ Trivy
 3. يدفعها إلى ACR
 4. ينشرها إلى App Service
 
 ### تحدي: Multi-Architecture Build
+
 ابنِ صور Docker لـ amd64 و arm64 معاً باستخدام `docker buildx`.
 
 ---
@@ -172,6 +175,7 @@ RUN npm run build                      # Layer 7: يتغير مع الكود
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا Multi-Stage Build مهم؟
 2. كيف يعمل Layer Caching؟
 3. ما فائدة `COPY package.json` قبل `COPY . .`؟
@@ -179,12 +183,12 @@ RUN npm run build                      # Layer 7: يتغير مع الكود
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| Multi-Stage Build | فصل build عن runtime لصورة أصغر |
-| Layer Cache | إعادة استخدام layers غير المتغيرة |
-| GitHub Container Registry | `ghcr.io` — سجل صور GitHub |
-| ACR | Azure Container Registry |
+| السؤال                    | الإجابة                           |
+| ------------------------- | --------------------------------- |
+| Multi-Stage Build         | فصل build عن runtime لصورة أصغر   |
+| Layer Cache               | إعادة استخدام layers غير المتغيرة |
+| GitHub Container Registry | `ghcr.io` — سجل صور GitHub        |
+| ACR                       | Azure Container Registry          |
 
 ---
 
@@ -200,11 +204,11 @@ RUN npm run build                      # Layer 7: يتغير مع الكود
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                                 |
+| --------- | ------------------------------------------------------ |
 | درس مرتبط | [Docker Security](./03-docker-security-best-practices) |
-| درس مرتبط | [CI/CD Pipelines](../../15-cicd/01-cicd-pipelines) |
-| أداة | [Docker Buildx](https://docs.docker.com/buildx/) |
+| درس مرتبط | [CI/CD Pipelines](../../15-cicd/01-cicd-pipelines)     |
+| أداة      | [Docker Buildx](https://docs.docker.com/buildx/)       |
 
 ---
 

@@ -496,7 +496,9 @@ az vm auto-shutdown \
   },
   "policyAssignments": [
     { "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/enforce-tls12" },
-    { "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/enforce-managed-identity" }
+    {
+      "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/enforce-managed-identity"
+    }
   ],
   "roleAssignments": [
     { "principalId": "<dba-group>", "roleDefinitionId": "Contributor", "scope": "data-rg" }
@@ -545,6 +547,7 @@ az policy definition create --name "protect-prod-rg" \
 **الاستجابة:**
 
 1. **حظر فوري**:
+
 ```bash
 az network nsg rule create --name "BlockThreatIP" \
   --nsg-name web-nsg --priority 50 \
@@ -553,6 +556,7 @@ az network nsg rule create --name "BlockThreatIP" \
 ```
 
 2. **تحقيق**:
+
 ```kusto
 // هل وصلوا لأي شيء؟
 SigninLogs | where IPAddress startswith "45.33.32"
@@ -580,12 +584,12 @@ graph TD
 
 ### متى لا تستخدم Azure؟
 
-| السيناريو | لماذا لا Azure؟ | البديل |
-|-----------|----------------|--------|
-| **حمل ثابت 24/7 بدون تقلبات** | Reserved VMs أغلى من شراء خوادم | On-Premises أو colocation |
-| **تطبيق أحادي مستخدم واحد** | Azure overkill | DigitalOcean، VPS |
-| **بيانات شديدة الحساسية (حكومة/عسكرية)** | مخاوف سيادية | On-Premises مع اعتماد حكومي |
-| **Edge computing في مناطق نائية** | Azure Regions بعيدة جداً | Azure Stack Edge أو AWS Outposts |
+| السيناريو                                | لماذا لا Azure؟                 | البديل                           |
+| ---------------------------------------- | ------------------------------- | -------------------------------- |
+| **حمل ثابت 24/7 بدون تقلبات**            | Reserved VMs أغلى من شراء خوادم | On-Premises أو colocation        |
+| **تطبيق أحادي مستخدم واحد**              | Azure overkill                  | DigitalOcean، VPS                |
+| **بيانات شديدة الحساسية (حكومة/عسكرية)** | مخاوف سيادية                    | On-Premises مع اعتماد حكومي      |
+| **Edge computing في مناطق نائية**        | Azure Regions بعيدة جداً        | Azure Stack Edge أو AWS Outposts |
 
 ### المقارنة الخفية: التكلفة الحقيقية
 
@@ -610,6 +614,7 @@ graph TD
 ### تمرين ١: ابنِ بيئة كاملة (سهل)
 
 > باستخدام Azure CLI، ابنِ:
+>
 > 1. Resource Group
 > 2. VNet مع 3 Subnets
 > 3. VM في web-subnet مع NSG يسمح فقط بـ HTTPS
@@ -618,6 +623,7 @@ graph TD
 ### تمرين ٢: مراقب التكاليف (متوسط)
 
 > اكتب KQL query في Log Analytics يكتشف:
+>
 > - VMs تعمل 24/7 لكن average CPU < 5%
 > - Disks غير مرتبطة بأي VM (orphaned)
 > - Public IPs غير مستخدمة
@@ -625,6 +631,7 @@ graph TD
 ### تحدي: Autoscaling ذكي (متقدم)
 
 > صمم نظام autoscaling لـ App Service:
+>
 > - Scale out عندما CPU > 70% لمدة 5 دقائق
 > - Scale in عندما CPU < 30% لمدة 30 دقيقة
 > - لا تتجاوز 10 instances (تكلفة)
@@ -688,22 +695,23 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 ### ✍️ تمرين Feynman
 
 اشرح Azure لـ ٣ شخصيات:
+
 - **مدير مالي**: ركز على OpEx vs CapEx، Reserved Instances.
 - **مطور مبتدئ**: ركز على App Service، deployment slots.
 - **CEO**: ركز على SLA، scale، global reach.
 
 ### 🎴 بطاقات تعليمية (8)
 
-| السؤال | الإجابة |
-|--------|---------|
-| مكونات Azure التنظيمية | Tenant → MG → Subscription → RG → Resource |
-| أنواع الـ Storage Account | Blob, File, Table, Queue |
-| App Service Plan = ؟ | مجموعة VMs تديرها Azure تشغّل تطبيقاتك |
-| Private Endpoint = ؟ | واجهة شبكة في VNet خاص تربط خدمة Azure بدون إنترنت |
-| Azure Policy = ؟ | قواعد تفرض معايير على الموارد (تمنع/تسمح) |
-| Deployment Slots = ؟ | بيئات موازية لنفس الـ App Service — تنشر بدون downtime |
-| RBAC roles الأساسية | Owner > Contributor > Reader |
-| B-series VMs = ؟ | Burstable — أداء منخفض مع credits للانفجار المؤقت |
+| السؤال                    | الإجابة                                                |
+| ------------------------- | ------------------------------------------------------ |
+| مكونات Azure التنظيمية    | Tenant → MG → Subscription → RG → Resource             |
+| أنواع الـ Storage Account | Blob, File, Table, Queue                               |
+| App Service Plan = ؟      | مجموعة VMs تديرها Azure تشغّل تطبيقاتك                 |
+| Private Endpoint = ؟      | واجهة شبكة في VNet خاص تربط خدمة Azure بدون إنترنت     |
+| Azure Policy = ؟          | قواعد تفرض معايير على الموارد (تمنع/تسمح)              |
+| Deployment Slots = ؟      | بيئات موازية لنفس الـ App Service — تنشر بدون downtime |
+| RBAC roles الأساسية       | Owner > Contributor > Reader                           |
+| B-series VMs = ؟          | Burstable — أداء منخفض مع credits للانفجار المؤقت      |
 
 ---
 
@@ -743,6 +751,7 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 التكلفة التقديرية: ~$4,200/شهر
 قابلية النمو: تلقائية مع auto-scaling
 ```
+
 </details>
 
 ### سؤال تقني
@@ -753,19 +762,23 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 <summary>👀 الإجابة</summary>
 
 المرحلة ١: Rehost (Lift & Shift)
+
 - انقل VMs الحالية إلى Azure VMs (D-series)
 - Azure Migrate لتقييم التوافق
 - VPN بين on-prem و Azure للانتقال التدريجي
 
 المرحلة ٢: Replatform
+
 - انقل SQL Server → Azure SQL Managed Instance
 - استخدم Azure App Service مع Windows containers
 - File Server → Azure Files
 
 المرحلة ٣: Modernize (مستقبلي)
+
 - أعد كتابة الأجزاء الحرجة بـ NET 8
 - Function apps للأجزاء المستقلة
 - CI/CD مع GitHub Actions + deployment slots
+
 </details>
 
 ### سؤال سلوكي (STAR)
@@ -782,30 +795,34 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 ## 📚 المراجع والروابط
 
 ### دروس مرتبطة
+
 - [Azure Architecture](../07-azure-core/02-azure-architecture) — تصميم متقدم
 - [FinOps Fundamentals](../22-finops/01-finops-fundamentals) — تحسين التكلفة
 - [Identity Mastery](../23-identity/01-identity-mastery) — Azure AD
 - [Terraform Fundamentals](../12-terraform/01-terraform-fundamentals) — البنية ككود
 
 ### شهادات ذات صلة
+
 - **AZ-900**: Azure Fundamentals
 - **AZ-104**: Azure Administrator
 - **AZ-305**: Azure Solutions Architect Expert
 
 ### مصادر خارجية
+
 - 📖 [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/)
 - 📖 [Azure CLI Documentation](https://learn.microsoft.com/en-us/cli/azure/)
 - 📺 "Azure Master Class" — John Savill
 - 📺 "Microsoft Azure Fundamentals (AZ-900)" — freeCodeCamp
 
 ### مصطلحات التقنية
-| المصطلح | التعريف |
-|---------|---------|
-| **Tenant** | تمثيل المؤسسة في Azure AD |
-| **Subscription** | حدود فواتير + صلاحيات لمجموعة موارد |
-| **Resource Group** | حاوية منطقية تجمع الموارد المرتبطة |
-| **Managed Identity** | هوية في Azure AD للخدمات بدون كلمات سر |
-| **Private Endpoint** | واجهة شبكة خاصة لخدمة Azure |
+
+| المصطلح               | التعريف                                   |
+| --------------------- | ----------------------------------------- |
+| **Tenant**            | تمثيل المؤسسة في Azure AD                 |
+| **Subscription**      | حدود فواتير + صلاحيات لمجموعة موارد       |
+| **Resource Group**    | حاوية منطقية تجمع الموارد المرتبطة        |
+| **Managed Identity**  | هوية في Azure AD للخدمات بدون كلمات سر    |
+| **Private Endpoint**  | واجهة شبكة خاصة لخدمة Azure               |
 | **Reserved Instance** | حجز VM/خدمة لمدة 1-3 سنوات مقابل خصم كبير |
 
 ---

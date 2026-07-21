@@ -109,8 +109,8 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      maxSurge: 1        # أقصى عدد Pods إضافية أثناء التحديث
-      maxUnavailable: 0  # لا تفقد أي Pod أثناء التحديث
+      maxSurge: 1 # أقصى عدد Pods إضافية أثناء التحديث
+      maxUnavailable: 0 # لا تفقد أي Pod أثناء التحديث
   template:
     metadata:
       labels:
@@ -460,9 +460,9 @@ spec:
           averageUtilization: 80
   behavior:
     scaleDown:
-      stabilizationWindowSeconds: 300  # انتظر 5 دقائق قبل التخفيض
+      stabilizationWindowSeconds: 300 # انتظر 5 دقائق قبل التخفيض
     scaleUp:
-      stabilizationWindowSeconds: 0    # زِد فوراً
+      stabilizationWindowSeconds: 0 # زِد فوراً
 ```
 
 ---
@@ -597,7 +597,7 @@ kind: PodDisruptionBudget
 metadata:
   name: api-pdb
 spec:
-  minAvailable: 2  # لا تنزل أبداً عن 2 pods
+  minAvailable: 2 # لا تنزل أبداً عن 2 pods
   selector:
     matchLabels:
       app: api
@@ -624,15 +624,16 @@ etcdctl snapshot restore /backup/etcd-20260716-0200.db
 
 ### K8s vs Docker Compose vs Nomad
 
-| المعيار | K8s | Docker Compose | Nomad |
-|---------|-----|---------------|-------|
-| **النطاق** | أي حجم | جهاز واحد | أي حجم |
-| **التعقيد** | عالي | منخفض | متوسط |
-| **Ecosystem** | ضخم (Helm, Istio, Argo) | محدود | جيد (Consul, Vault) |
-| **منحنى التعلم** | steep | سهل | معتدل |
-| **المؤسسات** | ✅ المعيار | ❌ | ✅ (HashiCorp stack) |
+| المعيار          | K8s                     | Docker Compose | Nomad                |
+| ---------------- | ----------------------- | -------------- | -------------------- |
+| **النطاق**       | أي حجم                  | جهاز واحد      | أي حجم               |
+| **التعقيد**      | عالي                    | منخفض          | متوسط                |
+| **Ecosystem**    | ضخم (Helm, Istio, Argo) | محدود          | جيد (Consul, Vault)  |
+| **منحنى التعلم** | steep                   | سهل            | معتدل                |
+| **المؤسسات**     | ✅ المعيار              | ❌             | ✅ (HashiCorp stack) |
 
 ### متى لا تستخدم Kubernetes؟
+
 - فريق أصغر من 3 مهندسين
 - أقل من 5 خدمات
 - لا تحتاج scaling تلقائي
@@ -643,12 +644,15 @@ etcdctl snapshot restore /backup/etcd-20260716-0200.db
 ## 🛠️ تدريبات
 
 ### تمرين ١: نشر تطبيق (سهل)
+
 > انشر تطبيق web مع Deployment (3 replicas) + Service + Ingress.
 
 ### تمرين ٢: تحقيق حادثة (متوسط)
+
 > Pod في CrashLoopBackOff. لا سجلات. `exit code 137`. شخّص.
 
 ### تحدي: HPA + VPA (متقدم)
+
 > صمم autoscaling: HPA للـ CPU + VPA للـ memory. اختبر بزيادة حمل اصطناعي وراقب السلوك.
 
 ### 📝 تقييم
@@ -663,6 +667,7 @@ etcdctl snapshot restore /backup/etcd-20260716-0200.db
 <details><summary>الإجابة</summary>Namespaces للفرق. ResourceQuota لكل ns. NetworkPolicies (deny-all). Istio للمراقبة والـ mTLS. Argo CD للنشر. Cluster Autoscaler. Backup etcd كل 6 ساعات.</details>
 
 ### 🧠 استدعاء نشط
+
 1. ارسم معمارية K8s من الذاكرة (Control Plane + Worker).
 2. ما مسار طلب HTTP من Ingress → Service → Pod؟
 3. كيف تكتشف Pod يستهلك ذاكرة زائدة قبل OOMKill؟
@@ -680,6 +685,7 @@ etcdctl snapshot restore /backup/etcd-20260716-0200.db
 ---
 
 ## 📚 مراجع
+
 - [Kubernetes Networking](./02-kubernetes-networking) — CNI, Ingress, Service Mesh
 - [Helm Fundamentals](../11-helm/01-helm-fundamentals) — مدير الحزم
 - [GitOps Fundamentals](../18-gitops/01-gitops-fundamentals) — Argo CD

@@ -39,14 +39,14 @@ trivy conf --compliance cis-ubuntu-22.04 /
 
 ### أهم قواعد CIS
 
-| # | القاعدة | لماذا؟ |
-|---|---------|--------|
-| 1 | تعطيل root login | يمنع brute force على root |
-| 2 | تغيير default SSH port | يقلل automated scans |
-| 3 | تفعيل firewall (ufw/iptables) | يغلق ports غير المستخدمة |
-| 4 | تفعيل automatic updates | يسد الثغرات فوراً |
-| 5 | تعطيل unused services | يقلل surface area |
-| 6 | تفعيل auditd | يسجل كل شيء للتحقيق |
+| #   | القاعدة                       | لماذا؟                    |
+| --- | ----------------------------- | ------------------------- |
+| 1   | تعطيل root login              | يمنع brute force على root |
+| 2   | تغيير default SSH port        | يقلل automated scans      |
+| 3   | تفعيل firewall (ufw/iptables) | يغلق ports غير المستخدمة  |
+| 4   | تفعيل automatic updates       | يسد الثغرات فوراً         |
+| 5   | تعطيل unused services         | يقلل surface area         |
+| 6   | تفعيل auditd                  | يسجل كل شيء للتحقيق       |
 
 ---
 
@@ -199,40 +199,45 @@ graph TB
 
 ### متى تستخدم ماذا؟
 
-| التهديد | الأداة |
-|---------|--------|
-| Brute force SSH | fail2ban |
-| Zero-day exploit | Unattended upgrades |
-| Insider threat | auditd |
-| Web app attack | WAF (Cloudflare/Azure) |
-| Malware | ClamAV |
+| التهديد          | الأداة                 |
+| ---------------- | ---------------------- |
+| Brute force SSH  | fail2ban               |
+| Zero-day exploit | Unattended upgrades    |
+| Insider threat   | auditd                 |
+| Web app attack   | WAF (Cloudflare/Azure) |
+| Malware          | ClamAV                 |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين 1: شغّل Trivy واصلح HIGH findings
+
 ```bash
 trivy fs --severity HIGH /
 # أصلح كل finding واحداً تلو الآخر
 ```
 
 ### تمرين 2: أنشئ fail2ban jail لتطبيقك
+
 أنشئ jail مخصص يحظر IPs بعد 5 محاولات فاشلة على `/login`.
 
 ### تحدي: سكريبت تدقيق أمني آلي
+
 اكتب سكريبت Bash يفحص:
+
 1. CIS compliance عبر Trivy
 2. open ports عبر `ss -tlnp`
 3. failed SSH attempts
 4. modified system files
-ويصدر تقريراً واحداً.
+   ويصدر تقريراً واحداً.
 
 ---
 
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة (5)
+
 1. ما هو CIS Benchmark؟
 2. الفرق بين AppArmor و SELinux؟
 3. كيف يحمي fail2ban الخادم؟
@@ -240,44 +245,48 @@ trivy fs --severity HIGH /
 5. اذكر 3 إعدادات لتأمين SSH.
 
 ### 📝 اختبار (3)
+
 1. **متى تستخدم AppArmor بدلاً من SELinux؟** — Ubuntu/Debian
 2. **هل تغيير SSH port أمان حقيقي؟** — لا، لكنه يقلل noise
 3. **كيف تكتشف أن خادمك مخترق؟** — auditd + auth.log + عمليات غريبة
 
 ### 🃏 بطاقات (6)
 
-| السؤال | الإجابة |
-|--------|---------|
-| CIS | Center for Internet Security — معايير تأمين |
-| fail2ban | يحظر IPs بعد محاولات فاشلة |
-| auditd | يسجل أحداث النظام للتحقيق |
-| AppArmor | Mandatory Access Control لـ Ubuntu |
-| SELinux | Mandatory Access Control لـ RHEL |
-| `PermitRootLogin no` | يمنع login كـ root عبر SSH |
+| السؤال               | الإجابة                                     |
+| -------------------- | ------------------------------------------- |
+| CIS                  | Center for Internet Security — معايير تأمين |
+| fail2ban             | يحظر IPs بعد محاولات فاشلة                  |
+| auditd               | يسجل أحداث النظام للتحقيق                   |
+| AppArmor             | Mandatory Access Control لـ Ubuntu          |
+| SELinux              | Mandatory Access Control لـ RHEL            |
+| `PermitRootLogin no` | يمنع login كـ root عبر SSH                  |
 
 ---
 
 ## 🎤 مقابلة
 
 ### 1. "كيف تؤمن خادم Linux من اليوم الأول؟"
+
 → ufw default deny + SSH key only + fail2ban + unattended upgrades + auditd
 
 ### 2. "ما هو Defense in Depth؟"
+
 → طبقات أمان متعددة. إذا فشلت طبقة، الطبقة التالية تلتقط التهديد.
 
 ### 3. "اكتشفت أن خادمك مخترق. ماذا تفعل؟"
+
 → عزل الخادم (قطع الشبكة) → التقاط صورة للتحقيق → auditd analysis → تدوير كل المفاتيح → إعادة بناء الخادم من الصفر (لا تصلحه!)
 
 ---
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Linux Troubleshooting](./05-linux-troubleshooting-production) |
-| درس مرتبط | [Security Operations](../../04-security/04-security-operations-soc) |
-| معيار | [CIS Ubuntu Benchmark](https://www.cisecurity.org/benchmark/ubuntu_linux) |
-| أداة | [Lynis](https://cisofy.com/lynis/) — تدقيق أمني شامل |
+| النوع     | الرابط                                                                    |
+| --------- | ------------------------------------------------------------------------- |
+| درس مرتبط | [Linux Troubleshooting](./05-linux-troubleshooting-production)            |
+| درس مرتبط | [Security Operations](../../04-security/04-security-operations-soc)       |
+| معيار     | [CIS Ubuntu Benchmark](https://www.cisecurity.org/benchmark/ubuntu_linux) |
+| أداة      | [Lynis](https://cisofy.com/lynis/) — تدقيق أمني شامل                      |
 
 ---
 

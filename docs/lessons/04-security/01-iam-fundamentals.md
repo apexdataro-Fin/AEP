@@ -11,6 +11,7 @@ description: "IAM، RBAC، Least Privilege، Managed Identity، PIM، Conditiona
 ## 🎯 أهداف التعلم
 
 بعد إكمال هذا الدرس، ستكون قادراً على:
+
 - تصميم نموذج أمان متعدد الطبقات لمؤسسة حقيقية
 - تطبيق RBAC بمستوى دقيق مع أدوار مخصصة
 - استخدام Managed Identity بدلاً من كلمات المرور
@@ -40,12 +41,12 @@ graph TD
 
 في CloudNova، كل طبقة لها أدواتها وسياساتها:
 
-| الطبقة | الأداة | السؤال الذي تجيب عليه |
-|--------|--------|----------------------|
-| **الهوية** | Azure AD + MFA + PIM | "من أنت؟ وهل أنت مخول الآن؟" |
-| **الشبكة** | NSG + Azure Firewall + WAF | "من أي عنوان IP؟ وأي منفذ؟" |
-| **الحوسبة** | VM Hardening + Antimalware | "هل النظام محدث؟ هل عليه برامج ضارة؟" |
-| **التطبيق** | SAST + DAST + Dependency Scan | "هل الكود آمن؟ هل المكتبات محدثة؟" |
+| الطبقة       | الأداة                          | السؤال الذي تجيب عليه                 |
+| ------------ | ------------------------------- | ------------------------------------- |
+| **الهوية**   | Azure AD + MFA + PIM            | "من أنت؟ وهل أنت مخول الآن؟"          |
+| **الشبكة**   | NSG + Azure Firewall + WAF      | "من أي عنوان IP؟ وأي منفذ؟"           |
+| **الحوسبة**  | VM Hardening + Antimalware      | "هل النظام محدث؟ هل عليه برامج ضارة؟" |
+| **التطبيق**  | SAST + DAST + Dependency Scan   | "هل الكود آمن؟ هل المكتبات محدثة؟"    |
 | **البيانات** | Encryption at Rest + in Transit | "لو سُرّق القرص، هل البيانات مقروءة؟" |
 
 ### 🏛️ مستوى المعماري — Zero Trust
@@ -62,11 +63,11 @@ Zero Trust Principles:
     - المصادقة دائماً (ليس فقط عند الدخول)
     - التفويض لكل طلب (وليس للجلسة بأكملها)
     - التحقق من صحة الجهاز (هل هو مسجل في Intune؟)
-  
+
   أقل صلاحية:
     - Just-in-Time (صلاحية مؤقتة فقط)
     - Just-Enough-Access (ما يحتاجه فقط، لا أكثر)
-  
+
   افترض الاختراق:
     - راقب كل شيء
     - قسم الشبكة (حتى لو اخترق جزءاً، لا يصل للباقي)
@@ -77,11 +78,11 @@ Zero Trust Principles:
 
 ## ٢. Authentication vs Authorization — ليسا شيئاً واحداً
 
-| المفهوم | السؤال | مثال | أداة Azure |
-|---------|--------|------|------------|
-| **Authentication** | من أنت؟ | تسجيل دخول، MFA، بصمة | Azure AD |
-| **Authorization** | ماذا تستطيع؟ | الأدوار، الصلاحيات | RBAC |
-| **Auditing** | ماذا فعلت؟ | سجل النشاطات | Azure Monitor |
+| المفهوم            | السؤال       | مثال                  | أداة Azure    |
+| ------------------ | ------------ | --------------------- | ------------- |
+| **Authentication** | من أنت؟      | تسجيل دخول، MFA، بصمة | Azure AD      |
+| **Authorization**  | ماذا تستطيع؟ | الأدوار، الصلاحيات    | RBAC          |
+| **Auditing**       | ماذا فعلت؟   | سجل النشاطات          | Azure Monitor |
 
 ### 🚨 ماذا يحدث عندما تخلط بينهما؟
 
@@ -137,12 +138,12 @@ az role definition create --role-definition '{
 
 ### 📊 مصفوفة الصلاحيات في CloudNova
 
-| الدور | يستطيع | لا يستطيع | مدة الصلاحية |
-|-------|--------|-----------|-------------|
-| Jr Engineer | قراءة كل شيء، كتابة في dev فقط | تعديل الإنتاج | دائمة |
-| DevOps Engineer | إدارة VMs + AKS + قراءة السجلات | لمس قواعد البيانات | PIM: تفعيل ٤ ساعات |
-| DBA | إدارة SQL + PostgreSQL | لمس الشبكة أو VMs | PIM: تفعيل ٨ ساعات |
-| Security Admin | قراءة كل السجلات + إدارة السياسات | تعديل الموارد | PIM: تفعيل ٢ ساعة |
+| الدور           | يستطيع                            | لا يستطيع          | مدة الصلاحية       |
+| --------------- | --------------------------------- | ------------------ | ------------------ |
+| Jr Engineer     | قراءة كل شيء، كتابة في dev فقط    | تعديل الإنتاج      | دائمة              |
+| DevOps Engineer | إدارة VMs + AKS + قراءة السجلات   | لمس قواعد البيانات | PIM: تفعيل ٤ ساعات |
+| DBA             | إدارة SQL + PostgreSQL            | لمس الشبكة أو VMs  | PIM: تفعيل ٨ ساعات |
+| Security Admin  | قراءة كل السجلات + إدارة السياسات | تعديل الموارد      | PIM: تفعيل ٢ ساعة  |
 
 ---
 
@@ -178,17 +179,17 @@ graph LR
     B -->|يسترجع السر| C[قاعدة البيانات]
     A -->|Managed Identity| D[Service Bus]
     A -->|Managed Identity| E[Storage Account]
-    
+
     F[GitHub Actions] -->|Workload Identity Federation| G[Azure]
     G -->|OIDC Token| H[نشر بدون Secrets]
 ```
 
-| بدون Managed Identity | مع Managed Identity |
-|----------------------|---------------------|
-| كلمة مرور في الكود ← مسربة في git | لا كلمة مرور |
+| بدون Managed Identity              | مع Managed Identity            |
+| ---------------------------------- | ------------------------------ |
+| كلمة مرور في الكود ← مسربة في git  | لا كلمة مرور                   |
 | تجديد الكلمة يدوياً ← يُنسى غالباً | Azure يجدد تلقائياً كل ٤٦ ساعة |
-| مشاركة المفاتيح بين الفريق ← خطيرة | كل مورد له هويته الخاصة |
-| تدوير المفاتيح = تعطل مؤقت | لا تعطّل — الهوية ثابتة |
+| مشاركة المفاتيح بين الفريق ← خطيرة | كل مورد له هويته الخاصة        |
+| تدوير المفاتيح = تعطل مؤقت         | لا تعطّل — الهوية ثابتة        |
 
 ### 🚨 حادثة CloudNova: كلمة مرور مسربة
 
@@ -196,16 +197,17 @@ graph LR
 
 **الجدول الزمني للكارثة:**
 
-| الوقت | الحدث |
-|-------|-------|
-| 14:03 | Push إلى GitHub (نسي .env في commit) |
-| 14:07 | بوت GitHub يمسح commits جديدة — يلتقط المفتاح |
-| 14:10 | أول access غير مصرح به على Storage Account |
-| 14:15 | بدأ تحميل ٥٠٠٠٠ سجل عميل |
+| الوقت | الحدث                                            |
+| ----- | ------------------------------------------------ |
+| 14:03 | Push إلى GitHub (نسي .env في commit)             |
+| 14:07 | بوت GitHub يمسح commits جديدة — يلتقط المفتاح    |
+| 14:10 | أول access غير مصرح به على Storage Account       |
+| 14:15 | بدأ تحميل ٥٠٠٠٠ سجل عميل                         |
 | 14:22 | الفريق لاحظ تنبيهاً (Alert على anonymous access) |
-| 14:23 | تدوير المفتاح فوراً — توقف التسريب |
+| 14:23 | تدوير المفتاح فوراً — توقف التسريب               |
 
 **الدروس المستفادة:**
+
 1. **Managed Identity** كانت ستمنع الكارثة — لا يوجد مفتاح ليُسرق
 2. **git-secrets scanner** على CI/CD كان سيكتشف المفتاح قبل push
 3. **Alert rules** يجب أن تكون على كل حاوية تخزين
@@ -246,7 +248,6 @@ az role assignment create \
 
 ```yaml
 سياسات الوصول المشروط في CloudNova:
-  
   Base Protection (كل المستخدمين):
     - الشرط: تسجيل دخول من موقع غير معتاد
       الإجراء: طلب MFA إجباري
@@ -254,13 +255,13 @@ az role assignment create \
       الإجراء: منع الوصول تماماً
     - الشرط: خطر مرتفع من Azure Identity Protection
       الإجراء: منع + تنبيه فريق SOC
-  
+
   Privileged Accounts (المسؤولين):
     - الشرط: أي وصول لدور Global Admin
       الإجراء: MFA + جهاز مسجل + موقع معروف + موافقة ثانية
     - الشرط: خارج ساعات العمل
       الإجراء: اشتراط تبرير + مدير موافق
-  
+
   Guest Users:
     - الشرط: أي وصول
       الإجراء: MFA + مراجعة شهرية للصلاحية
@@ -344,13 +345,13 @@ az policy definition create \
 
 ### 📊 تكلفة الحادثة vs تكلفة الوقاية
 
-| البند | بدون حماية | مع حماية |
-|-------|-----------|---------|
-| وقت التعطل | ساعتين | ١٥ دقيقة |
-| تكلفة التعطل | $15,000 | $1,875 |
-| بيانات مفقودة | ٤ ساعات | ٥ دقائق |
-| سمعة | تضررت | لم تتأثر |
-| تكلفة الحماية | $0 | ~$500/شهر |
+| البند         | بدون حماية | مع حماية  |
+| ------------- | ---------- | --------- |
+| وقت التعطل    | ساعتين     | ١٥ دقيقة  |
+| تكلفة التعطل  | $15,000    | $1,875    |
+| بيانات مفقودة | ٤ ساعات    | ٥ دقائق   |
+| سمعة          | تضررت      | لم تتأثر  |
+| تكلفة الحماية | $0         | ~$500/شهر |
 
 ---
 
@@ -368,12 +369,12 @@ az policy definition create \
 
 ## 🎴 بطاقات مراجعة
 
-| السؤال | الإجابة |
-|--------|---------|
-| أداة Azure لإدارة الهوية | Azure Active Directory (Azure AD) |
-| الفرق بين RBAC و PIM | RBAC: ماذا تستطيع. PIM: متى تستطيع |
-| ما هو Managed Identity؟ | هوية Azure تلقائية للموارد — بلا كلمات مرور |
-| كم مرة تتجدد شهادة Managed Identity؟ | كل ٤٦ ساعة تلقائياً |
+| السؤال                               | الإجابة                                     |
+| ------------------------------------ | ------------------------------------------- |
+| أداة Azure لإدارة الهوية             | Azure Active Directory (Azure AD)           |
+| الفرق بين RBAC و PIM                 | RBAC: ماذا تستطيع. PIM: متى تستطيع          |
+| ما هو Managed Identity؟              | هوية Azure تلقائية للموارد — بلا كلمات مرور |
+| كم مرة تتجدد شهادة Managed Identity؟ | كل ٤٦ ساعة تلقائياً                         |
 
 ## 🎤 أسئلة مقابلة العمل
 
@@ -428,7 +429,7 @@ actions:
   - send_teams_message:
       channel: "Security-Alerts"
       message: "🚨 New Sentinel Incident: @{triggerBody()?['title']}"
-  
+
   # ٢. تعطيل المستخدم تلقائياً إذا كان High severity
   - condition:
       if: "@equals(triggerBody()?['severity'], 'High')"
@@ -438,7 +439,7 @@ actions:
             reason: "Automated response to High severity incident"
         - revoke_sessions:
             user_id: "@triggerBody()?['entities'][0]?['userId']"
-  
+
   # ٣. إنشاء ticket في نظام التذاكر
   - create_jira_ticket:
       project: "SEC"
@@ -723,13 +724,13 @@ az role assignment create \
 
 ### 🎴 بطاقات تعليمية
 
-| 🃏 السؤال | 🃏 الإجابة |
-|----------|----------|
-| أداة إدارة الهوية في Azure | Azure Active Directory (Entra ID) |
+| 🃏 السؤال                                | 🃏 الإجابة                           |
+| ---------------------------------------- | ------------------------------------ |
+| أداة إدارة الهوية في Azure               | Azure Active Directory (Entra ID)    |
 | الفرق بين Authentication و Authorization | AuthN = من أنت؟ AuthZ = ماذا تستطيع؟ |
-| كم مرة تتجدد Managed Identity cert؟ | كل 46 ساعة |
-| أداة SIEM في Azure | Microsoft Sentinel |
-| ما هو JIT؟ | Just-in-Time VM Access — وصول مؤقت |
+| كم مرة تتجدد Managed Identity cert؟      | كل 46 ساعة                           |
+| أداة SIEM في Azure                       | Microsoft Sentinel                   |
+| ما هو JIT؟                               | Just-in-Time VM Access — وصول مؤقت   |
 
 ---
 
@@ -808,11 +809,11 @@ R: 95% adoption خلال شهرين. صفر شكوى بعد أول أسبوع.
 
 ### شهادات
 
-| الشهادة | الأهداف |
-|--------|--------|
-| **AZ-500** | Azure Security Engineer |
-| **SC-300** | Identity and Access Administrator |
-| **CISSP** | Certified Information Systems Security Professional |
+| الشهادة    | الأهداف                                             |
+| ---------- | --------------------------------------------------- |
+| **AZ-500** | Azure Security Engineer                             |
+| **SC-300** | Identity and Access Administrator                   |
+| **CISSP**  | Certified Information Systems Security Professional |
 
 ### مصادر خارجية
 
@@ -822,13 +823,13 @@ R: 95% adoption خلال شهرين. صفر شكوى بعد أول أسبوع.
 
 ### مصطلحات
 
-| المصطلح | التعريف |
-|--------|---------|
-| **Zero Trust** | نموذج أمان: لا تثق بأحد، تحقق من كل شيء |
-| **PIM** | صلاحيات مؤقتة — Just-in-Time access |
-| **SIEM** | Security Information and Event Management |
-| **SOAR** | Security Orchestration, Automation and Response |
-| **DLP** | Data Loss Prevention |
+| المصطلح        | التعريف                                         |
+| -------------- | ----------------------------------------------- |
+| **Zero Trust** | نموذج أمان: لا تثق بأحد، تحقق من كل شيء         |
+| **PIM**        | صلاحيات مؤقتة — Just-in-Time access             |
+| **SIEM**       | Security Information and Event Management       |
+| **SOAR**       | Security Orchestration, Automation and Response |
+| **DLP**        | Data Loss Prevention                            |
 
 ---
 

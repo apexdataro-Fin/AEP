@@ -537,7 +537,7 @@ incident_types:
         command: "az network front-door backend-pool backend update --address cloudnova-dr.azurewebsites.net"
       - step: "إبلاغ stakeholders"
         action: "إرسال رسالة في Slack #incidents مع ticket number"
-    
+
   - name: "SQL Database High CPU"
     severity: P2
     response:
@@ -587,14 +587,14 @@ az monitor metrics list \
 
 ### Azure vs AWS vs GCP — متى تختار ماذا؟
 
-| المعيار | Azure | AWS | GCP |
-|---------|-------|-----|-----|
-| **Microsoft ecosystem** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
-| **Kubernetes** | ⭐⭐⭐⭐⭐ (AKS رائد) | ⭐⭐⭐⭐ (EKS) | ⭐⭐⭐⭐⭐ (GKE) |
-| **AI/ML** | ⭐⭐⭐⭐ (OpenAI) | ⭐⭐⭐⭐ (SageMaker) | ⭐⭐⭐⭐⭐ (Vertex AI) |
-| **Serverless** | ⭐⭐⭐⭐ (Functions) | ⭐⭐⭐⭐⭐ (Lambda) | ⭐⭐⭐ (Cloud Functions) |
-| **Hybrid** | ⭐⭐⭐⭐⭐ (Arc, Stack) | ⭐⭐⭐ (Outposts) | ⭐⭐⭐ (Anthos) |
-| **Enterprise** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+| المعيار                 | Azure                   | AWS                  | GCP                      |
+| ----------------------- | ----------------------- | -------------------- | ------------------------ |
+| **Microsoft ecosystem** | ⭐⭐⭐⭐⭐              | ⭐⭐⭐               | ⭐⭐                     |
+| **Kubernetes**          | ⭐⭐⭐⭐⭐ (AKS رائد)   | ⭐⭐⭐⭐ (EKS)       | ⭐⭐⭐⭐⭐ (GKE)         |
+| **AI/ML**               | ⭐⭐⭐⭐ (OpenAI)       | ⭐⭐⭐⭐ (SageMaker) | ⭐⭐⭐⭐⭐ (Vertex AI)   |
+| **Serverless**          | ⭐⭐⭐⭐ (Functions)    | ⭐⭐⭐⭐⭐ (Lambda)  | ⭐⭐⭐ (Cloud Functions) |
+| **Hybrid**              | ⭐⭐⭐⭐⭐ (Arc, Stack) | ⭐⭐⭐ (Outposts)    | ⭐⭐⭐ (Anthos)          |
+| **Enterprise**          | ⭐⭐⭐⭐⭐              | ⭐⭐⭐⭐             | ⭐⭐⭐                   |
 
 ### Multi-Cloud — هل هو ضرورة أم وهم؟
 
@@ -618,7 +618,7 @@ graph LR
     B --> C[Migrate]
     C --> D[Optimize]
     D --> E[Modernize]
-    
+
     A -->|Azure Migrate| A1[اكتشاف التطبيقات والاعتماديات]
     C -->|Azure Site Recovery| C1[نقل VMs و قواعد البيانات]
     D -->|Azure Advisor| D1[Right-sizing + Reserved]
@@ -632,6 +632,7 @@ graph LR
 ### تمرين ١: صمم Hub-Spoke (سهل)
 
 > صمم Hub-Spoke architecture لـ CloudNova:
+>
 > - Hub: Azure Firewall + Bastion + VPN Gateway
 > - Spoke A: Development (10.1.0.0/16)
 > - Spoke B: Production (10.3.0.0/16) مع 3 Subnets (web, app, db)
@@ -641,6 +642,7 @@ graph LR
 ### تمرين ٢: حادثة — تعطل Zone (متوسط)
 
 > Zone 1 في West Europe تعطل. أنت مهندس on-call. اكتب الـ runbook خطوة بخطوة:
+>
 > 1. كيف تكتشف التعطل؟ (Alert configuration)
 > 2. كيف تؤكد أنه Zone-wide؟
 > 3. ماذا تفعل لاستعادة الخدمة؟
@@ -649,6 +651,7 @@ graph LR
 ### تحدي: خطة DR كاملة (متقدم)
 
 > صمم خطة Disaster Recovery كاملة:
+>
 > - RTO: 10 دقائق
 > - RPO: دقيقة واحدة
 > - يجب أن تشمل: Front Door failover، SQL geo-restore، AKS recovery، DNS update
@@ -702,6 +705,7 @@ DR (Pilot Light):
 الإجمالي: ~$2,734/شهر
 (Active-Passive يوفر 60% مقابل Active-Active)
 ```
+
 </details>
 
 **س٣:** أيهما أفضل: Azure Firewall أم NSG؟
@@ -730,16 +734,16 @@ DR (Pilot Light):
 
 ### 🎴 بطاقات تعليمية (8)
 
-| السؤال | الإجابة |
-|--------|---------|
-| Hub-Spoke = ؟ | نموذج شبكات: Hub للموارد المشتركة، Spoke للبيئات |
-| Private Endpoint = ؟ | نقطة اتصال خاصة بخدمة Azure داخل VNet |
-| WAF = ؟ | Web Application Firewall — يحمي من OWASP Top 10 |
-| Front Door = ؟ | Global load balancer + CDN + WAF |
-| RTO = ؟ | Recovery Time Objective — أقصى وقت تعطل |
-| RPO = ؟ | Recovery Point Objective — أقصى فقدان بيانات |
-| Well-Architected = ؟ | إطار عمل من 5 ركائز لتصميم سحابي مثالي |
-| Azure Policy = ؟ | قواعد تمنع/تسمح بإنشاء موارد وفق معايير |
+| السؤال               | الإجابة                                          |
+| -------------------- | ------------------------------------------------ |
+| Hub-Spoke = ؟        | نموذج شبكات: Hub للموارد المشتركة، Spoke للبيئات |
+| Private Endpoint = ؟ | نقطة اتصال خاصة بخدمة Azure داخل VNet            |
+| WAF = ؟              | Web Application Firewall — يحمي من OWASP Top 10  |
+| Front Door = ؟       | Global load balancer + CDN + WAF                 |
+| RTO = ؟              | Recovery Time Objective — أقصى وقت تعطل          |
+| RPO = ؟              | Recovery Point Objective — أقصى فقدان بيانات     |
+| Well-Architected = ؟ | إطار عمل من 5 ركائز لتصميم سحابي مثالي           |
+| Azure Policy = ؟     | قواعد تمنع/تسمح بإنشاء موارد وفق معايير          |
 
 ---
 
@@ -780,6 +784,7 @@ DR (Pilot Light):
 ├── Dev/Test: ~$3,000/شهر
 └── Reserved 3 سنوات: وفر 40%
 ```
+
 </details>
 
 ### سؤال تقني
@@ -817,6 +822,7 @@ VNet Peering:
 
 التكلفة: ~$1,500/شهر للـ networking
 ```
+
 </details>
 
 ### سؤال سلوكي (STAR)
@@ -833,30 +839,34 @@ VNet Peering:
 ## 📚 المراجع والروابط
 
 ### دروس مرتبطة
+
 - [Azure Fundamentals](./01-azure-fundamentals) — الأساسيات
 - [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) — AKS
 - [Observability Essentials](../21-observability/01-observability-essentials) — مراقبة المعمارية
 - [Identity Mastery](../23-identity/01-identity-mastery)
 
 ### شهادات ذات صلة
+
 - **AZ-104**: Azure Administrator
 - **AZ-305**: Azure Solutions Architect Expert
 - **AZ-700**: Azure Networking Engineer
 
 ### مصادر خارجية
+
 - 📖 [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/)
 - 📖 [Cloud Adoption Framework](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/)
 - 📖 [Azure Networking Best Practices](https://learn.microsoft.com/en-us/azure/security/fundamentals/network-best-practices)
 
 ### مصطلحات التقنية
-| المصطلح | التعريف |
-|---------|---------|
-| **Hub-Spoke** | نموذج شبكات: Hub مركزي + Spokes بيئات |
-| **VNet Peering** | ربط شبكتين افتراضيتين مباشر |
-| **WAF** | Web Application Firewall — جدار حماية تطبيقات |
-| **Front Door** | موزع أحمال عالمي مع CDN و WAF |
-| **Private Link** | خدمة توصل Azure PaaS لـ VNet بدون إنترنت |
-| **DR Drill** | اختبار خطة التعافي من الكوارث |
+
+| المصطلح          | التعريف                                       |
+| ---------------- | --------------------------------------------- |
+| **Hub-Spoke**    | نموذج شبكات: Hub مركزي + Spokes بيئات         |
+| **VNet Peering** | ربط شبكتين افتراضيتين مباشر                   |
+| **WAF**          | Web Application Firewall — جدار حماية تطبيقات |
+| **Front Door**   | موزع أحمال عالمي مع CDN و WAF                 |
+| **Private Link** | خدمة توصل Azure PaaS لـ VNet بدون إنترنت      |
+| **DR Drill**     | اختبار خطة التعافي من الكوارث                 |
 
 ---
 

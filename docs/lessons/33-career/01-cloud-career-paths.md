@@ -331,11 +331,13 @@ graph TD
 ## 🎤 أسئلة المقابلة — مع إجابات نموذجية
 
 1. **"أين ترى نفسك بعد 3 سنوات؟"**
+
    > "أرى نفسي Senior Cloud Engineer أقود مشاريع هجرة معقدة وأوجه Junior Engineers.
    > أخطط للحصول على AZ-305 وقيادة تصميم منصة multi-cloud.
    > أريد بناء خبرة في System Design و Enterprise Architecture."
 
 2. **"ما أكبر خطأ تقني ارتكبته؟"**
+
    > "حذفت production database بالخطأ أثناء صيانة ليلية.
    > لحسن الحظ كان معنا backups وreplication — استعدنا الخدمة في 20 دقيقة.
    > تعلمت: (١) double-check كل أمر قبل تنفيذه، (٢) أنشأت safeguards تلقائية،

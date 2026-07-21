@@ -21,12 +21,12 @@ description: "SRE vs DevOps — Service Level Objectives، Error Budgets، Toil 
 
 ## 🏗️ SRE vs DevOps
 
-| | DevOps | SRE |
-|---|--------|-----|
-| **التركيز** | ثقافة + أتمتة | موثوقية + مقاييس |
-| **يقيس** | DORA Metrics | SLOs, Error Budgets |
-| **يقول** | "افعلها أسرع" | "اجعلها موثوقة" |
-| **الأصل** | حركة ثقافية | Google Engineering |
+|             | DevOps        | SRE                 |
+| ----------- | ------------- | ------------------- |
+| **التركيز** | ثقافة + أتمتة | موثوقية + مقاييس    |
+| **يقيس**    | DORA Metrics  | SLOs, Error Budgets |
+| **يقول**    | "افعلها أسرع" | "اجعلها موثوقة"     |
+| **الأصل**   | حركة ثقافية   | Google Engineering  |
 
 ### SLO و Error Budget
 
@@ -54,17 +54,18 @@ description: "SRE vs DevOps — Service Level Objectives، Error Budgets، Toil 
 
 ### SLO Design
 
-| الخدمة | SLO | Error Budget/شهر |
-|--------|-----|-----------------|
-| API | 99.95% | 22 دقيقة |
-| Database | 99.99% | 4.3 دقيقة |
-| Frontend | 99.9% | 43 دقيقة |
+| الخدمة   | SLO    | Error Budget/شهر |
+| -------- | ------ | ---------------- |
+| API      | 99.95% | 22 دقيقة         |
+| Database | 99.99% | 4.3 دقيقة        |
+| Frontend | 99.9%  | 43 دقيقة         |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: حدد SLO لخدمتك
+
 ### تحدي: احسب error budget الشهري
 
 ---
@@ -72,20 +73,23 @@ description: "SRE vs DevOps — Service Level Objectives، Error Budgets، Toil 
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين SLA و SLO؟
 2. كيف تحسب error budget؟
 3. متى توقف deployments؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| SLO | Service Level Objective — هدف الموثوقية |
-| Error Budget | الوقت المسموح للـ downtime |
-| Toil | عمل يدوي متكرر |
+
+| السؤال       | الإجابة                                 |
+| ------------ | --------------------------------------- |
+| SLO          | Service Level Objective — هدف الموثوقية |
+| Error Budget | الوقت المسموح للـ downtime              |
+| Toil         | عمل يدوي متكرر                          |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"ما الفرق بين SRE و DevOps؟"** → DevOps: فلسفة. SRE: تطبيق مع مقاييس
 2. **"اشرح Error Budget لمدير غير تقني"** → "مثل ميزانية. إذا صرفت كل الميزانية (downtime)، توقف عن الصرف (deployments)"
 
@@ -140,11 +144,11 @@ kubectl logs -l app=api --tail=100 | grep "connection pool"
 graph TD
     SLI["SLI<br/>Service Level Indicator<br/>ماذا نقيس؟"] --> SLO["SLO<br/>Service Level Objective<br/>ما الهدف؟"]
     SLO --> SLA["SLA<br/>Service Level Agreement<br/>ماذا نعد العملاء؟"]
-    
+
     SLI -.->|مثال| E1["Latency p99 < 200ms"]
     SLO -.->|مثال| E2["99.9% من الطلبات < 200ms"]
     SLA -.->|مثال| E3["99.5% — وإلا تعويض مالي"]
-    
+
     style SLO fill:#f9a825,stroke:#f57f17
     style SLA fill:#c62828,stroke:#b71c1c,color:#fff
 ```
@@ -153,28 +157,29 @@ graph TD
 
 ### مصفوفة قرار SLO
 
-| الخدمة | SLO مقترح | Error Budget/شهر | السبب |
-|--------|-----------|-----------------|-------|
-| Payment API | 99.99% | 4.3 دقيقة | فلوس حرفياً |
-| User Profile | 99.9% | 43 دقيقة | tolerable delay |
-| Search Service | 99.5% | 3.6 ساعة | non-critical |
-| Admin Dashboard | 99% | 7.2 ساعة | داخلي فقط |
-| Reporting | 95% | 36 ساعة | batch processing |
+| الخدمة          | SLO مقترح | Error Budget/شهر | السبب            |
+| --------------- | --------- | ---------------- | ---------------- |
+| Payment API     | 99.99%    | 4.3 دقيقة        | فلوس حرفياً      |
+| User Profile    | 99.9%     | 43 دقيقة         | tolerable delay  |
+| Search Service  | 99.5%     | 3.6 ساعة         | non-critical     |
+| Admin Dashboard | 99%       | 7.2 ساعة         | داخلي فقط        |
+| Reporting       | 95%       | 36 ساعة          | batch processing |
 
 ### Anti-Patterns في SRE
 
-| الخطأ | المشكلة | التصحيح |
-|-------|---------|---------|
-| SLO = 100% | مستحيل، يكلف ثروة | 99.9% - 99.99% حسب الخدمة |
-| SLO واحد لكل الخدمات | بعضها أكثر أهمية | SLO متدرج حسب criticality |
-| تجاهل error budget | deployments غير مسؤولة | اربط CI/CD بـ error budget |
-| عدم مراجعة SLO | احتياجات العمل تتغير | مراجعة ربع سنوية |
+| الخطأ                | المشكلة                | التصحيح                    |
+| -------------------- | ---------------------- | -------------------------- |
+| SLO = 100%           | مستحيل، يكلف ثروة      | 99.9% - 99.99% حسب الخدمة  |
+| SLO واحد لكل الخدمات | بعضها أكثر أهمية       | SLO متدرج حسب criticality  |
+| تجاهل error budget   | deployments غير مسؤولة | اربط CI/CD بـ error budget |
+| عدم مراجعة SLO       | احتياجات العمل تتغير   | مراجعة ربع سنوية           |
 
 ---
 
 ## 🛠️ تدريبات موسعة
 
 ### تمرين 1: صمم SLO لخدمتك
+
 ```yaml
 # املأ هذا القالب
 service: payment-api
@@ -186,13 +191,14 @@ alerting_threshold: 50% of error budget consumed
 ```
 
 ### تمرين 2: احسب تكلفة downtime
+
 ```python
 def cost_of_downtime(revenue_per_hour, downtime_hours, reputation_factor=2.5):
     """
     Revenue: $10,000/hour
     Downtime: 2 hours
     Reputation factor: 2.5x (lost future business)
-    
+
     True cost = 10,000 * 2 * 2.5 = $50,000
     """
     return revenue_per_hour * downtime_hours * reputation_factor
@@ -206,15 +212,15 @@ print(f"True cost: ${cost_of_downtime(10000, 2):,}")
 ```python
 class ErrorBudgetGate:
     """يمنع deployments عندما يكون error budget مستهلكاً"""
-    
+
     def __init__(self, monthly_budget_minutes):
         self.monthly_budget = monthly_budget_minutes
         self.consumed = 0
-    
+
     def record_incident(self, duration_minutes):
         self.consumed += duration_minutes
         remaining = self.monthly_budget - self.consumed
-        
+
         if self.consumed > self.monthly_budget:
             raise Exception(f"⚠️ Error budget exhausted! Stop deployments.")
         elif self.consumed > self.monthly_budget * 0.75:
@@ -232,6 +238,7 @@ gate.record_incident(5)   # ⚠️ Exception!
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5 أسئلة)
+
 1. ما الفرق بين SLI و SLO و SLA؟
 2. كيف تحسب error budget الشهري؟
 3. متى يجب إيقاف deployments؟
@@ -239,6 +246,7 @@ gate.record_incident(5)   # ⚠️ Exception!
 5. كيف تختار SLO المناسب لخدمة جديدة؟
 
 ### 📝 اختبار (3 أسئلة)
+
 1. **خدمة API بمتوسط 3 ملايين طلب/شهر. كم طلباً يمكن أن يفشل إذا كان SLO = 99.95%؟**
    <details><summary>الإجابة</summary>0.05% × 3,000,000 = 1,500 طلب فاشل مسموح شهرياً</details>
 
@@ -249,6 +257,7 @@ gate.record_incident(5)   # ⚠️ Exception!
    <details><summary>الإجابة</summary>CI/CD يجب أن يتحقق من error budget قبل السماح بـ deployment جديد</details>
 
 ### 🧠 Active Recall (5)
+
 - اشرح SLO لشخص غير تقني
 - متى يكون الـ error budget مفيداً؟
 - كيف تقنع مديرك بالاستثمار في SRE؟
@@ -256,25 +265,28 @@ gate.record_incident(5)   # ⚠️ Exception!
 - صف حادثة حقيقية استفدت فيها من error budget
 
 ### 🎓 Feynman: اشرح Error Budget لطفل في الـ 10 من عمره
+
 "تخيل أن والدتك تعطيك 22 قطعة حلوى كل شهر. كلما أخطأت، تأخذ قطعة واحدة. إذا أكلت كل القطع قبل نهاية الشهر، لا تلعب بلايستيشن حتى الشهر القادم. Error budget هو قطع الحلوى — تصرفها بحكمة!"
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| SLI | Service Level Indicator — المقياس الفعلي (مثل latency p99) |
-| SLO | Service Level Objective — الهدف من الـ SLI (مثل 99.9%) |
-| SLA | Service Level Agreement — العقد مع العميل (يشمل تعويضات) |
-| Error Budget | 100% - SLO% = الوقت المسموح للفشل |
-| Toil | عمل يدوي متكرر يمكن أتمتته |
-| MTTR | Mean Time to Recovery — متوسط وقت الإصلاح |
-| MTTD | Mean Time to Detect — متوسط وقت الاكتشاف |
-| CRE | Customer Reliability Engineer (مثل SRE لكن للعملاء) |
+
+| السؤال       | الإجابة                                                    |
+| ------------ | ---------------------------------------------------------- |
+| SLI          | Service Level Indicator — المقياس الفعلي (مثل latency p99) |
+| SLO          | Service Level Objective — الهدف من الـ SLI (مثل 99.9%)     |
+| SLA          | Service Level Agreement — العقد مع العميل (يشمل تعويضات)   |
+| Error Budget | 100% - SLO% = الوقت المسموح للفشل                          |
+| Toil         | عمل يدوي متكرر يمكن أتمتته                                 |
+| MTTR         | Mean Time to Recovery — متوسط وقت الإصلاح                  |
+| MTTD         | Mean Time to Detect — متوسط وقت الاكتشاف                   |
+| CRE          | Customer Reliability Engineer (مثل SRE لكن للعملاء)        |
 
 ---
 
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"صمم SLO framework لشركة عندها 50 microservice."**
    - صنف الخدمات: Tier 0 (critical, 99.99%), Tier 1 (important, 99.9%), Tier 2 (nice-to-have, 99.5%)
    - لكل tier: SLI, SLO, alert threshold, error budget policy
@@ -288,6 +300,7 @@ gate.record_incident(5)   # ⚠️ Exception!
    - اتفق على SLO مبني على البيانات، ليس التخمين
 
 ### System Design
+
 **"صمم نظام Auto-Remediation يكتشف المشاكل ويصلحها تلقائياً."**
 
 ```mermaid
@@ -300,11 +313,12 @@ graph TD
     E --> G["Scale up replicas"]
     E --> H["Restart pod"]
     E --> I["Failover to DR"]
-    
+
     style E fill:#f9a825,stroke:#f57f17
 ```
 
 ### Behavioral (STAR)
+
 **"احكِ لي عن مرة استخدمت فيها data لاتخاذ قرار صعب."**
 
 **S** (Situation): فريق التطوير يضغط لنشر feature كبير قبل Black Friday.

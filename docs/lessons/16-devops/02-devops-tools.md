@@ -482,6 +482,7 @@ vault operator unseal  # 3 مفاتيح من 5
 → بناء صور VMs جاهزة مرة واحدة.
 
 ### 🎤 مقابلة
+
 **"كيف تختار بين Ansible و Terraform؟"**
 → Terraform يبني البيت. Ansible يفرشه.
 

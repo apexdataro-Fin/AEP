@@ -11,6 +11,7 @@ description: "IaaS, PaaS, SaaS، Regions، Availability Zones، Shared Responsib
 ## 🎯 أهداف التعلم
 
 بعد إكمال هذا الدرس، ستكون قادراً على:
+
 - شرح نماذج الخدمة السحابية (IaaS, PaaS, SaaS) واختيار الأنسب
 - تصميم بنية عالية التوفر باستخدام Regions و Availability Zones
 - فهم نموذج المسؤولية المشتركة وتطبيقه
@@ -21,13 +22,13 @@ description: "IaaS, PaaS, SaaS، Regions، Availability Zones، Shared Responsib
 
 ## ١. لماذا السحابة؟ — الثورة الحقيقية
 
-| قبل السحابة | بعد السحابة | التأثير على CloudNova |
-|-------------|-------------|----------------------|
-| شراء خوادم — يصلون بعد ٤ أسابيع | `az vm create` — ٩٠ ثانية | أطلقنا منتجنا في شهر بدل ٤ أشهر |
-| توقع الحمل المستقبلي (دائماً خطأ) | Auto-scaling — تابع للحظة | لا خوادم معطلة في منتصف الليل |
-| دفع ثمن الخوادم حتى لو معطلة | Pay-per-use — ادفع فقط لما تستخدم | وفرنا ٦٠٪ من تكلفة بيئة التطوير |
-| ٣ مهندسين لإدارة العتاد | ٠ مهندسين لإدارة العتاد | ركزنا على المنتج لا على الأسلاك |
-| مركز بيانات واحد = نقطة فشل | عشرات المراكز حول العالم | وصلنا لعملاء في ٣ قارات |
+| قبل السحابة                       | بعد السحابة                       | التأثير على CloudNova           |
+| --------------------------------- | --------------------------------- | ------------------------------- |
+| شراء خوادم — يصلون بعد ٤ أسابيع   | `az vm create` — ٩٠ ثانية         | أطلقنا منتجنا في شهر بدل ٤ أشهر |
+| توقع الحمل المستقبلي (دائماً خطأ) | Auto-scaling — تابع للحظة         | لا خوادم معطلة في منتصف الليل   |
+| دفع ثمن الخوادم حتى لو معطلة      | Pay-per-use — ادفع فقط لما تستخدم | وفرنا ٦٠٪ من تكلفة بيئة التطوير |
+| ٣ مهندسين لإدارة العتاد           | ٠ مهندسين لإدارة العتاد           | ركزنا على المنتج لا على الأسلاك |
+| مركز بيانات واحد = نقطة فشل       | عشرات المراكز حول العالم          | وصلنا لعملاء في ٣ قارات         |
 
 ### 🚨 قصة CloudNova: قبل السحابة
 
@@ -39,12 +40,12 @@ description: "IaaS, PaaS, SaaS، Regions، Availability Zones، Shared Responsib
 
 ## ٢. نماذج الخدمة — IaaS vs PaaS vs SaaS
 
-| النموذج | أنت تدير | السحابة تدير | مثال | تكلفة الجهد |
-|---------|---------|-------------|------|------------|
-| **On-Premises** | كل شيء | لا شيء | خوادمك في مكتبك | $$$$ |
-| **IaaS** | OS، middleware، apps، data | Hardware، virtualization، network | Azure VM | $$$ |
-| **PaaS** | Apps، data | OS، runtime، middleware | Azure App Service | $$ |
-| **SaaS** | لا شيء | كل شيء | Microsoft 365 | $ |
+| النموذج         | أنت تدير                   | السحابة تدير                      | مثال              | تكلفة الجهد |
+| --------------- | -------------------------- | --------------------------------- | ----------------- | ----------- |
+| **On-Premises** | كل شيء                     | لا شيء                            | خوادمك في مكتبك   | $$$$        |
+| **IaaS**        | OS، middleware، apps، data | Hardware، virtualization، network | Azure VM          | $$$         |
+| **PaaS**        | Apps، data                 | OS، runtime، middleware           | Azure App Service | $$          |
+| **SaaS**        | لا شيء                     | كل شيء                            | Microsoft 365     | $           |
 
 ### 🍕 تشبيه البيتزا (نعم، البيتزا تشرح كل شيء)
 
@@ -64,12 +65,12 @@ graph TD
     B -->|فريق صغير| F[App Service - PaaS]
 ```
 
-| السيناريو | التوصية | لماذا؟ |
-|-----------|---------|--------|
-| Startup بـ ٢ مطورين | PaaS (App Service) | لا وقت لإدارة الخوادم |
-| تطبيق بـ ٥٠ Microservice | AKS (Kubernetes) | تحتاج تنسيق معقد |
-| موقع WordPress | PaaS (App Service) | لا داعي للتعقيد |
-| معالجة بيانات ضخمة | IaaS (VMs كبيرة) | تحتاج تحكم كامل بالموارد |
+| السيناريو                | التوصية            | لماذا؟                   |
+| ------------------------ | ------------------ | ------------------------ |
+| Startup بـ ٢ مطورين      | PaaS (App Service) | لا وقت لإدارة الخوادم    |
+| تطبيق بـ ٥٠ Microservice | AKS (Kubernetes)   | تحتاج تنسيق معقد         |
+| موقع WordPress           | PaaS (App Service) | لا داعي للتعقيد          |
+| معالجة بيانات ضخمة       | IaaS (VMs كبيرة)   | تحتاج تحكم كامل بالموارد |
 
 ---
 
@@ -104,22 +105,22 @@ Azure Region: West Europe
 └── AZ3: مركز بيانات لاهاي — طاقة مستقلة، تبريد مستقل، شبكة مستقلة
 ```
 
-| المفهوم | ماذا يعني | مثال |
-|---------|----------|------|
-| **Region** | منطقة جغرافية | West Europe، East US |
-| **Availability Zone** | مراكز بيانات مستقلة داخل Region | 3 AZ في West Europe |
-| **Fault Domain** | رف Rack يشارك مصدر طاقة | Rack #7 في AZ1 |
-| **Update Domain** | مجموعة تُحدّث معاً | Update Domain 0 |
-| **Region Pair** | منطقتان مرتبطتان للتعافي | West Europe ↔ North Europe |
+| المفهوم               | ماذا يعني                       | مثال                       |
+| --------------------- | ------------------------------- | -------------------------- |
+| **Region**            | منطقة جغرافية                   | West Europe، East US       |
+| **Availability Zone** | مراكز بيانات مستقلة داخل Region | 3 AZ في West Europe        |
+| **Fault Domain**      | رف Rack يشارك مصدر طاقة         | Rack #7 في AZ1             |
+| **Update Domain**     | مجموعة تُحدّث معاً              | Update Domain 0            |
+| **Region Pair**       | منطقتان مرتبطتان للتعافي        | West Europe ↔ North Europe |
 
 ### كم AZ تحتاج؟ — المصفوفة الكاملة
 
-| الحالة | عدد AZ | التوفر التقريبي | التكلفة الإضافية | مثال |
-|--------|--------|----------------|-----------------|------|
-| تطوير واختبار | ١ | ~99.9% | الأساس | بيئة dev |
-| إنتاج عادي | ٢ | ~99.95% | +50% | تطبيق SaaS |
-| إنتاج حرج | ٣ | ~99.99% | +100% | بوابة دفع |
-| شديد الحرج | ٣ + Region Pair | ~99.999% | +300% | نظام مستشفى |
+| الحالة        | عدد AZ          | التوفر التقريبي | التكلفة الإضافية | مثال        |
+| ------------- | --------------- | --------------- | ---------------- | ----------- |
+| تطوير واختبار | ١               | ~99.9%          | الأساس           | بيئة dev    |
+| إنتاج عادي    | ٢               | ~99.95%         | +50%             | تطبيق SaaS  |
+| إنتاج حرج     | ٣               | ~99.99%         | +100%            | بوابة دفع   |
+| شديد الحرج    | ٣ + Region Pair | ~99.999%        | +300%            | نظام مستشفى |
 
 ### 🏛️ مستوى المعماري — تصميم للفشل
 
@@ -134,7 +135,7 @@ graph TD
     B --> F[AZ3: Web Server]
     C --> G[AZ1: Web Server]
     C --> H[AZ2: Web Server]
-    
+
     D --> I[(SQL Database - Geo-Replicated)]
     G --> I
 ```
@@ -145,15 +146,15 @@ graph TD
 
 ### مثال: تطبيق CloudNova — التكلفة الشهرية
 
-| المورد | المستوى | شهرياً | % من الإجمالي |
-|--------|---------|--------|--------------|
-| App Service Plan | P1v2 (٢ نسخ) | $292 | 37% |
-| Azure SQL | GP ٢ vCores | $375 | 48% |
-| Storage | Hot ١٠٠GB | $5 | &lt;1% |
-| Bandwidth | ١TB outbound | $87 | 11% |
-| Key Vault | Standard | $0.30 | &lt;1% |
-| Monitor | ٥GB logs | $15 | 2% |
-| **الإجمالي** | | **~$774** | 100% |
+| المورد           | المستوى      | شهرياً    | % من الإجمالي |
+| ---------------- | ------------ | --------- | ------------- |
+| App Service Plan | P1v2 (٢ نسخ) | $292      | 37%           |
+| Azure SQL        | GP ٢ vCores  | $375      | 48%           |
+| Storage          | Hot ١٠٠GB    | $5        | &lt;1%        |
+| Bandwidth        | ١TB outbound | $87       | 11%           |
+| Key Vault        | Standard     | $0.30     | &lt;1%        |
+| Monitor          | ٥GB logs     | $15       | 2%            |
+| **الإجمالي**     |              | **~$774** | 100%          |
 
 ### 🟣 استراتيجيات التوفير — وفر حتى ٧٠٪
 
@@ -189,11 +190,11 @@ class FinOpsDashboard:
     def orphaned_disks_cost(self):
         """أقراص بلا خادم — مال مهدر"""
         return len(self.find_orphaned_disks()) * 15  # ~$15/شهر لكل قرص
-    
+
     def unused_ips_cost(self):
         """IPs غير مستخدمة"""
         return len(self.find_unused_ips()) * 3.6     # ~$3.6/شهر لكل IP
-    
+
     def oversized_vms_savings(self):
         """خوادم أكبر من الحاجة — كم نوفر بتصغيرها"""
         oversized = [vm for vm in self.vms if vm.avg_cpu < 15]
@@ -211,11 +212,11 @@ print(f"💰 توفير شهري ممكن: ${finops.total_savings():,.2f}")
 
 ### مصفوفة القرار:
 
-| الخيار | الإيجابيات | السلبيات | التكلفة | الجهد |
-|--------|-----------|---------|--------|------|
-| **IaaS (VMs)** | تحكم كامل | إدارة OS، تحديثات، نسخ احتياطي | $300 + وقت كثير | عالي |
-| **PaaS (App Service)** | لا إدارة OS، تحديثات تلقائية | أقل مرونة في التكوين | $292 | منخفض |
-| **AKS (K8s)** | مرونة عالية، مستقبلي | يحتاج خبرة K8s، overhead عالي | $400+ | عالي جداً |
+| الخيار                 | الإيجابيات                   | السلبيات                       | التكلفة         | الجهد     |
+| ---------------------- | ---------------------------- | ------------------------------ | --------------- | --------- |
+| **IaaS (VMs)**         | تحكم كامل                    | إدارة OS، تحديثات، نسخ احتياطي | $300 + وقت كثير | عالي      |
+| **PaaS (App Service)** | لا إدارة OS، تحديثات تلقائية | أقل مرونة في التكوين           | $292            | منخفض     |
+| **AKS (K8s)**          | مرونة عالية، مستقبلي         | يحتاج خبرة K8s، overhead عالي  | $400+           | عالي جداً |
 
 **التوصية:** App Service (PaaS)
 
@@ -237,12 +238,12 @@ print(f"💰 توفير شهري ممكن: ${finops.total_savings():,.2f}")
 
 ## 🎴 بطاقات مراجعة
 
-| السؤال | الإجابة |
-|--------|---------|
+| السؤال                         | الإجابة                                     |
+| ------------------------------ | ------------------------------------------- |
 | طبقات الخدمة السحابية بالترتيب | IaaS → PaaS → SaaS (من الأعلى تحكماً للأقل) |
-| كم AZ لـ 99.99% توفر؟ | ٣ Availability Zones |
-| ما هو Region Pair؟ | منطقتان مرتبطتان للتعافي من الكوارث |
-| أداة Azure لحساب التكلفة | Azure Pricing Calculator |
+| كم AZ لـ 99.99% توفر؟          | ٣ Availability Zones                        |
+| ما هو Region Pair؟             | منطقتان مرتبطتان للتعافي من الكوارث         |
+| أداة Azure لحساب التكلفة       | Azure Pricing Calculator                    |
 
 ## 🎤 أسئلة مقابلة العمل
 
@@ -297,22 +298,22 @@ print(f"💰 توفير شهري ممكن: ${finops.total_savings():,.2f}")
 
 ### Compliance Frameworks في السحابة
 
-| الإطار | ماذا يغطي | مثال في Azure |
-|--------|----------|--------------|
-| **ISO 27001** | إدارة أمن المعلومات | Azure Policy + Defender for Cloud |
-| **SOC 2** | أمن وتوفر وسرية بيانات العملاء | Audit logs في Log Analytics |
-| **HIPAA** | حماية البيانات الصحية | Encryption at rest + in transit |
-| **PCI DSS** | أمن بيانات الدفع | Network segmentation + WAF |
-| **GDPR** | خصوصية البيانات الأوروبية | Data residency في EU Regions |
+| الإطار        | ماذا يغطي                      | مثال في Azure                     |
+| ------------- | ------------------------------ | --------------------------------- |
+| **ISO 27001** | إدارة أمن المعلومات            | Azure Policy + Defender for Cloud |
+| **SOC 2**     | أمن وتوفر وسرية بيانات العملاء | Audit logs في Log Analytics       |
+| **HIPAA**     | حماية البيانات الصحية          | Encryption at rest + in transit   |
+| **PCI DSS**   | أمن بيانات الدفع               | Network segmentation + WAF        |
+| **GDPR**      | خصوصية البيانات الأوروبية      | Data residency في EU Regions      |
 
 ### Disaster Recovery — أنماط الإنتاج
 
-| النمط | Recovery Time Objective (RTO) | Recovery Point Objective (RPO) | التكلفة |
-|-------|------------------------------|-------------------------------|---------|
-| **Backup & Restore** | ساعات | ٢٤ ساعة | $ |
-| **Pilot Light** | دقائق | ٥ دقائق | $$ |
-| **Warm Standby** | دقائق | ثوانٍ | $$$ |
-| **Active-Active** | ثوانٍ | صفر | $$$$ |
+| النمط                | Recovery Time Objective (RTO) | Recovery Point Objective (RPO) | التكلفة |
+| -------------------- | ----------------------------- | ------------------------------ | ------- |
+| **Backup & Restore** | ساعات                         | ٢٤ ساعة                        | $       |
+| **Pilot Light**      | دقائق                         | ٥ دقائق                        | $$      |
+| **Warm Standby**     | دقائق                         | ثوانٍ                          | $$$     |
+| **Active-Active**    | ثوانٍ                         | صفر                            | $$$$    |
 
 ### 🚨 سيناريو CloudNova: اختبار التعافي
 
@@ -362,26 +363,26 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 ### استراتيجيات الهجرة إلى السحابة (6 R's)
 
-| الاستراتيجية | ماذا تعني | مثال CloudNova |
-|-------------|----------|---------------|
-| **Rehost** (Lift & Shift) | انقل كما هو | VM من on-prem → Azure VM |
-| **Replatform** | عدّل قليلاً | SQL Server → Azure SQL Managed Instance |
-| **Refactor** | أعد البناء للسحابة | Monolith → Microservices على AKS |
-| **Repurchase** | استبدل بـ SaaS | Jira Server → Jira Cloud |
-| **Retire** | ألغِ ما لا تحتاجه | تطبيق قديم لم يعد يستخدم |
-| **Retain** | أبقِ on-premises | أنظمة قديمة لا يمكن ترحيلها |
+| الاستراتيجية              | ماذا تعني          | مثال CloudNova                          |
+| ------------------------- | ------------------ | --------------------------------------- |
+| **Rehost** (Lift & Shift) | انقل كما هو        | VM من on-prem → Azure VM                |
+| **Replatform**            | عدّل قليلاً        | SQL Server → Azure SQL Managed Instance |
+| **Refactor**              | أعد البناء للسحابة | Monolith → Microservices على AKS        |
+| **Repurchase**            | استبدل بـ SaaS     | Jira Server → Jira Cloud                |
+| **Retire**                | ألغِ ما لا تحتاجه  | تطبيق قديم لم يعد يستخدم                |
+| **Retain**                | أبقِ on-premises   | أنظمة قديمة لا يمكن ترحيلها             |
 
 ### 🏛️ قرار معماري: متى تبقى on-premises؟
 
 > **ليس كل شيء يجب أن ينتقل للسحابة.**
 
-| ابقَ on-premises إذا... | مثال |
-|------------------------|------|
-| **Latency أقل من 1ms مطلوب** | نظام تداول مالي |
-| **بيانات شديدة الحساسية قانونياً** | بيانات مخابرات |
-| **عتاد متخصص غير متوفر في السحابة** | FPGA مخصص |
-| **استثمار كبير حديث في on-prem** | اشتروا خوادم قبل ٦ أشهر بـ $2M |
-| **تكلفة السحابة أعلى بشكل واضح** | حمل ثابت ٢٤/٧ بدون تقلبات |
+| ابقَ on-premises إذا...             | مثال                           |
+| ----------------------------------- | ------------------------------ |
+| **Latency أقل من 1ms مطلوب**        | نظام تداول مالي                |
+| **بيانات شديدة الحساسية قانونياً**  | بيانات مخابرات                 |
+| **عتاد متخصص غير متوفر في السحابة** | FPGA مخصص                      |
+| **استثمار كبير حديث في on-prem**    | اشتروا خوادم قبل ٦ أشهر بـ $2M |
+| **تكلفة السحابة أعلى بشكل واضح**    | حمل ثابت ٢٤/٧ بدون تقلبات      |
 
 ---
 
@@ -390,6 +391,7 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 ### تمرين ١: احسب التكلفة (سهل)
 
 > استخدم [Azure Pricing Calculator](https://azure.microsoft.com/en-us/pricing/calculator/) لتصميم بيئة CloudNova:
+>
 > - ٢ App Service (P1v2) في West Europe
 > - Azure SQL (GP, 4 vCores) مع replica في North Europe
 > - ١TB Storage (Hot)
@@ -400,6 +402,7 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 ### تمرين ٢: صمم خطة تعافي (متوسط)
 
 > صمم خطة Disaster Recovery لتطبيق CloudNova:
+>
 > - RTO: ١٥ دقيقة
 > - RPO: ٥ دقائق
 > - الميزانية: $500/شهر إضافية
@@ -409,6 +412,7 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 ### تحدي: تدقيق أمني (متقدم)
 
 > قُدم لك اشتراك Azure به ١٠٠+ موارد. اكتب خطة تدقيق لتكتشف:
+>
 > - الموارد المكشوفة على الإنترنت
 > - التكاليف المهدرة
 > - الثغرات الأمنية
@@ -459,13 +463,13 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 <details><summary>الإجابة</summary>
 
-| | CapEx (On-Premises) | OpEx (Cloud) |
-|--|--------------------|-------------|
-| **الدفع** | مقدماً — مبلغ كبير | شهرياً — حسب الاستخدام |
-| **مثال** | شراء خادم بـ $50,000 | VM بـ $500/شهر |
-| **المرونة** | تدفع حتى لو لم تستخدم | تدفع فقط لما تستخدم |
-| **الضرائب** | إهلاك على ٣-٥ سنوات | مصروف تشغيلي في نفس السنة |
-| **التنبؤ** | صعب — ماذا لو احتجت أكثر؟ | سهل — scale مع الطلب |
+|             | CapEx (On-Premises)       | OpEx (Cloud)              |
+| ----------- | ------------------------- | ------------------------- |
+| **الدفع**   | مقدماً — مبلغ كبير        | شهرياً — حسب الاستخدام    |
+| **مثال**    | شراء خادم بـ $50,000      | VM بـ $500/شهر            |
+| **المرونة** | تدفع حتى لو لم تستخدم     | تدفع فقط لما تستخدم       |
+| **الضرائب** | إهلاك على ٣-٥ سنوات       | مصروف تشغيلي في نفس السنة |
+| **التنبؤ**  | صعب — ماذا لو احتجت أكثر؟ | سهل — scale مع الطلب      |
 
 التحول من CapEx → OpEx هو أحد أكبر دوافع الهجرة للسحابة.
 </details>
@@ -481,22 +485,23 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 ### ✍️ تمرين Feynman (موسع)
 
 اشرح لكل من:
+
 - **صاحب مطعم**: لماذا السحابة أفضل من شراء خادم للموقع الإلكتروني
 - **طفل ١٠ سنوات**: كيف تعمل "السحابة" (من أين تأتي البيانات؟)
 - **جدّك**: لماذا شركة مثل Netflix تستخدم آلاف الخوادم بدلاً من واحد كبير
 
 ### 🎴 بطاقات تعليمية (8)
 
-| السؤال | الإجابة |
-|--------|---------|
-| طبقات الخدمة السحابية | IaaS → PaaS → SaaS (من تحكم كامل → صفر تحكم) |
-| كم AZ لـ 99.99%؟ | ٣ Availability Zones |
-| ما هو RTO؟ | Recovery Time Objective — أقصى وقت تعطل مسموح |
-| ما هو RPO؟ | Recovery Point Objective — أقصى فقدان بيانات مسموح |
-| 6 R's للهجرة | Rehost, Replatform, Refactor, Repurchase, Retire, Retain |
-| ما هو Azure Policy؟ | قواعد تحكم ما يمكن وما لا يمكن إنشاؤه في الاشتراك |
-| ما هو Region Pair؟ | منطقتان مرتبطتان للتعافي — ٣٠٠+ ميل بينهما |
-| الفرق بين CapEx و OpEx | CapEx = تدفع مقدماً. OpEx = تدفع شهرياً حسب الاستخدام |
+| السؤال                 | الإجابة                                                  |
+| ---------------------- | -------------------------------------------------------- |
+| طبقات الخدمة السحابية  | IaaS → PaaS → SaaS (من تحكم كامل → صفر تحكم)             |
+| كم AZ لـ 99.99%؟       | ٣ Availability Zones                                     |
+| ما هو RTO؟             | Recovery Time Objective — أقصى وقت تعطل مسموح            |
+| ما هو RPO؟             | Recovery Point Objective — أقصى فقدان بيانات مسموح       |
+| 6 R's للهجرة           | Rehost, Replatform, Refactor, Repurchase, Retire, Retain |
+| ما هو Azure Policy؟    | قواعد تحكم ما يمكن وما لا يمكن إنشاؤه في الاشتراك        |
+| ما هو Region Pair؟     | منطقتان مرتبطتان للتعافي — ٣٠٠+ ميل بينهما               |
+| الفرق بين CapEx و OpEx | CapEx = تدفع مقدماً. OpEx = تدفع شهرياً حسب الاستخدام    |
 
 ---
 
@@ -551,6 +556,7 @@ North Europe (DR):
 ├── DR (scaled down): $600
 └── الإجمالي: ~$5,500/شهر ✅ (داخل الميزانية)
 ```
+
 </details>
 
 ### سؤال تقني
@@ -569,6 +575,7 @@ North Europe (DR):
    - انتقلنا لـ Reserved Instances — سيوفر $2,000 ابتداءً من الشهر القادم
    - أضفنا auto-shutdown لبيئة dev — وفر $800
 4. **التوصية**: صافي الزيادة الدائمة ~$2,700/شهر مقابل نمو 40% في الإيرادات.
+
 </details>
 
 ### سؤال سلوكي (STAR)
@@ -582,6 +589,7 @@ North Europe (DR):
 > **T**: خفض التكلفة ٣٠٪ خلال ٣ أشهر.  
 > **A**: نفذت تدقيق FinOps: وجدت ٢٠ VM idle بعد 8pm، ١٥ قرص غير مرتبط، و٣ قواعد بيانات test بحجم production. أضفت auto-shutdown، right-sizing، و cleanup سكريبت.  
 > **R**: وفرنا ٢٨٪ ($4,200/شهر = $50,400/سنة). أعدنا استثمار التوفير في ميزات جديدة.
+
 </details>
 
 ---
@@ -589,33 +597,37 @@ North Europe (DR):
 ## 📚 المراجع والروابط
 
 ### دروس مرتبطة
+
 - [Azure Fundamentals](../07-azure-core/01-azure-fundamentals) — تطبيق عملي على Azure
 - [FinOps Fundamentals](../22-finops/01-finops-fundamentals) — تعمق في إدارة التكلفة
 - [Identity Mastery](../23-identity/01-identity-mastery) — الأمان والمسؤولية المشتركة
 - [Observability Essentials](../21-observability/01-observability-essentials) — مراقبة ما بنيته
 
 ### شهادات ذات صلة
+
 - **AZ-900**: Azure Fundamentals — يغطي كل هذا الدرس
 - **AZ-104**: Azure Administrator — تطبيق عملي للـ governance
 - **AZ-305**: Azure Solutions Architect — تصميم البنى المعقدة
 
 ### مصادر خارجية
+
 - 📖 [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/)
 - 📖 [Azure Well-Architected Framework](https://learn.microsoft.com/en-us/azure/well-architected/)
 - 📖 [Cloud Adoption Framework](https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/)
 - 📺 "Azure Fundamentals Certification (AZ-900)" — John Savill
 
 ### مصطلحات التقنية في هذا الدرس
-| المصطلح | التعريف |
-|---------|---------|
-| **IaaS** | Infrastructure as a Service — بنية تحتية كخدمة (تحكم كامل) |
-| **PaaS** | Platform as a Service — منصة كخدمة (لا إدارة OS) |
-| **SaaS** | Software as a Service — برمجيات كخدمة (جاهز للاستخدام) |
-| **RTO** | Recovery Time Objective — أقصى وقت تعطل مقبول |
-| **RPO** | Recovery Point Objective — أقصى فقدان بيانات مقبول |
-| **AZ** | Availability Zone — مركز بيانات مستقل داخل Region |
-| **CapEx** | Capital Expenditure — إنفاق رأسمالي (شراء أصول) |
-| **OpEx** | Operational Expenditure — إنفاق تشغيلي (دفع شهري) |
+
+| المصطلح   | التعريف                                                    |
+| --------- | ---------------------------------------------------------- |
+| **IaaS**  | Infrastructure as a Service — بنية تحتية كخدمة (تحكم كامل) |
+| **PaaS**  | Platform as a Service — منصة كخدمة (لا إدارة OS)           |
+| **SaaS**  | Software as a Service — برمجيات كخدمة (جاهز للاستخدام)     |
+| **RTO**   | Recovery Time Objective — أقصى وقت تعطل مقبول              |
+| **RPO**   | Recovery Point Objective — أقصى فقدان بيانات مقبول         |
+| **AZ**    | Availability Zone — مركز بيانات مستقل داخل Region          |
+| **CapEx** | Capital Expenditure — إنفاق رأسمالي (شراء أصول)            |
+| **OpEx**  | Operational Expenditure — إنفاق تشغيلي (دفع شهري)          |
 
 ---
 

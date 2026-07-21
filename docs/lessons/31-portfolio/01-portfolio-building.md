@@ -171,15 +171,15 @@ terraform init && terraform apply
 
 ## 🛠️ Tech Stack
 
-| Category       | Technology                      |
-| -------------- | ------------------------------- |
-| Cloud          | Azure (AKS, App Service, SQL)   |
-| Infrastructure | Terraform, Terragrunt           |
-| Container      | Docker, Kubernetes              |
-| CI/CD          | GitHub Actions, Argo CD         |
-| Monitoring     | Prometheus, Grafana, Loki       |
-| Security       | Trivy, OPA, Azure Key Vault     |
-| Cost           | Azure Cost Management, FinOps   |
+| Category       | Technology                    |
+| -------------- | ----------------------------- |
+| Cloud          | Azure (AKS, App Service, SQL) |
+| Infrastructure | Terraform, Terragrunt         |
+| Container      | Docker, Kubernetes            |
+| CI/CD          | GitHub Actions, Argo CD       |
+| Monitoring     | Prometheus, Grafana, Loki     |
+| Security       | Trivy, OPA, Azure Key Vault   |
+| Cost           | Azure Cost Management, FinOps |
 
 ## 📈 Key Achievements
 
@@ -214,7 +214,7 @@ Made with ❤️ by [Your Name]
 
 ### GitHub Profile README
 
-```markdown
+````markdown
 # Hi, I'm Ahmed — Cloud Engineer ☁️
 
 [![Azure](https://img.shields.io/badge/Azure-0078D4?logo=microsoftazure)](https://azure.com)
@@ -224,11 +224,11 @@ Made with ❤️ by [Your Name]
 
 ## 📌 Featured Projects
 
-| Project | Description | Key Tech |
-|---------|-------------|----------|
+| Project                 | Description             | Key Tech             |
+| ----------------------- | ----------------------- | -------------------- |
 | [CloudNova Platform](#) | Production K8s platform | K8s, Terraform, Argo |
-| [CloudNova Monitor](#) | Observability stack | Prometheus, Grafana |
-| [CloudNova CLI](#) | Automation tool | Python, Click, Rich |
+| [CloudNova Monitor](#)  | Observability stack     | Prometheus, Grafana  |
+| [CloudNova CLI](#)      | Automation tool         | Python, Click, Rich  |
 
 ## 📊 This Week I Spent Time On
 
@@ -237,6 +237,7 @@ Terraform     ██████████████░░░░░  65%
 Kubernetes    ██████░░░░░░░░░░░░░  25%
 Python        ████░░░░░░░░░░░░░░░  10%
 ```
+````
 
 ## 🎓 Certifications
 
@@ -248,6 +249,7 @@ Python        ████░░░░░░░░░░░░░░░  10%
 
 - [GitOps at CloudNova: What We Learned](#)
 - [Why Every Cloud Engineer Should Know FinOps](#)
+
 ```
 
 ---
@@ -255,6 +257,7 @@ Python        ████░░░░░░░░░░░░░░░  10%
 ## 🏥 سيناريو CloudNova: Building Portfolio Sprint
 
 ```
+
 📋 الخطة: Portfolio Development Sprint (4 أسابيع)
 
 الأسبوع 1: تنظيف وتنظيم GitHub
@@ -286,6 +289,7 @@ Python        ████░░░░░░░░░░░░░░░  10%
 ✅ 4 مشاريع منظمة واحترافية
 ✅ أدلة على المهارات — ليس مجرد كلام
 ✅ جاهز للمقابلات
+
 ```
 
 ---
@@ -293,6 +297,7 @@ Python        ████░░░░░░░░░░░░░░░  10%
 ## 🔬 Open Source Contributions
 
 ```
+
 كيف تبدأ في المساهمة في Open Source:
 
 1. ابحث عن مشاريع تستخدمها فعلاً
@@ -313,6 +318,7 @@ Python        ████░░░░░░░░░░░░░░░  10%
 أثر الـ Open Source في المقابلة:
 "ساهمت في Terraform Azure provider.
 أضفت support لـ resource جديد يستخدمه آلاف المهندسين."
+
 ```
 
 ---
@@ -320,22 +326,24 @@ Python        ████░░░░░░░░░░░░░░░  10%
 ## ⚡ الإنتاج وما بعده: قائمة تدقيق الـ Portfolio
 
 ```
+
 □ هل أفضل 4 مشاريع Pinned في GitHub؟
 □ هل Profile README مكتمل وجذاب؟
 □ هل كل مشروع له README واضح يحتوي:
-  □ وصف (ماذا يفعل؟)
-  □ Architecture Diagram (Mermaid!)
-  □ Quick Start (كيف تشغله في 3 أوامر؟)
-  □ Tech Stack
-  □ CI/CD badges خضراء
-  □ Screenshots/Demos
-  □ Key Achievements (أرقام!)
-  □ What I Learned
+□ وصف (ماذا يفعل؟)
+□ Architecture Diagram (Mermaid!)
+□ Quick Start (كيف تشغله في 3 أوامر؟)
+□ Tech Stack
+□ CI/CD badges خضراء
+□ Screenshots/Demos
+□ Key Achievements (أرقام!)
+□ What I Learned
 □ هل الكود نظيف ومنظم؟
 □ هل هناك Tests؟
 □ هل GitHub Profile مكتمل (صورة، bio، links)؟
 □ هل هناك Blog post واحد على الأقل؟
 □ هل LinkedIn محدث ويعكس نفس المشاريع؟
+
 ```
 
 ---
@@ -381,3 +389,4 @@ Python        ████░░░░░░░░░░░░░░░  10%
 ---
 
 [← العودة للموديول](./01-portfolio-building) | [🏠 الرئيسية](/)
+```

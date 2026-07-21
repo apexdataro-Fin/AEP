@@ -84,15 +84,15 @@ metadata:
   name: postgres-pod
 spec:
   containers:
-  - name: postgres
-    image: postgres:16
-    volumeMounts:
-    - mountPath: /var/lib/postgresql/data
-      name: pgdata
+    - name: postgres
+      image: postgres:16
+      volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: pgdata
   volumes:
-  - name: pgdata
-    persistentVolumeClaim:
-      claimName: postgres-pvc
+    - name: pgdata
+      persistentVolumeClaim:
+        claimName: postgres-pvc
 ```
 
 ---
@@ -104,6 +104,7 @@ spec:
 حذف أحدهم PVC بالخطأ مع `reclaimPolicy: Delete`. اختفت 500GB من بيانات الإنتاج!
 
 **الحل الدائم**:
+
 1. `reclaimPolicy: Retain` في الإنتاج
 2. Snapshots دورية
 3. Backup إلى Azure Blob
@@ -121,11 +122,11 @@ spec:
 
 ### Access Modes
 
-| Mode | الوصف | مثال |
-|------|-------|------|
-| **ReadWriteOnce** | Pod واحد يقرأ ويكتب | PostgreSQL |
-| **ReadOnlyMany** | عدة pods تقرأ فقط | static assets |
-| **ReadWriteMany** | عدة pods تقرأ وتكتب | Azure Files |
+| Mode              | الوصف               | مثال          |
+| ----------------- | ------------------- | ------------- |
+| **ReadWriteOnce** | Pod واحد يقرأ ويكتب | PostgreSQL    |
+| **ReadOnlyMany**  | عدة pods تقرأ فقط   | static assets |
+| **ReadWriteMany** | عدة pods تقرأ وتكتب | Azure Files   |
 
 ---
 
@@ -133,18 +134,19 @@ spec:
 
 ### Azure Disk vs Azure Files
 
-| | Azure Disk | Azure Files |
-|---|-----------|------------|
-| **Access Mode** | RWO | RWX |
-| **Performance** | عالي (SSD) | متوسط |
-| **الاستخدام** | قواعد البيانات | ملفات مشتركة |
-| **Max Size** | 32TB | 100TB |
+|                 | Azure Disk     | Azure Files  |
+| --------------- | -------------- | ------------ |
+| **Access Mode** | RWO            | RWX          |
+| **Performance** | عالي (SSD)     | متوسط        |
+| **الاستخدام**   | قواعد البيانات | ملفات مشتركة |
+| **Max Size**    | 32TB           | 100TB        |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: انشر PostgreSQL مع PVC
+
 ### تحدي: اختبر الحذف والاسترجاع
 
 احذف pod وتحقق من بقاء البيانات. ثم احذف PVC مع `reclaimPolicy: Retain` ولاحظ أن القرص يبقى.
@@ -154,18 +156,19 @@ spec:
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين PV و PVC؟
 2. متى تستخدم ReadWriteMany؟
 3. كيف تحمي البيانات من الحذف غير المقصود؟
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| PV | Persistent Volume — التخزين الفعلي |
-| PVC | طلب تخزين من pod |
-| StorageClass | إنشاء تلقائي لـ PV |
-| VolumeSnapshot | نسخة لحظية من volume |
+| السؤال         | الإجابة                            |
+| -------------- | ---------------------------------- |
+| PV             | Persistent Volume — التخزين الفعلي |
+| PVC            | طلب تخزين من pod                   |
+| StorageClass   | إنشاء تلقائي لـ PV                 |
+| VolumeSnapshot | نسخة لحظية من volume               |
 
 ---
 
@@ -178,11 +181,11 @@ spec:
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                                     |
+| --------- | ---------------------------------------------------------- |
 | درس مرتبط | [K8s Security](./03-kubernetes-security-rbac-pod-security) |
-| درس مرتبط | [Operators & CRDs](./05-kubernetes-operators-crds) |
-| شهادة | CKA |
+| درس مرتبط | [Operators & CRDs](./05-kubernetes-operators-crds)         |
+| شهادة     | CKA                                                        |
 
 ---
 

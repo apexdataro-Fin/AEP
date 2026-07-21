@@ -79,13 +79,13 @@ Service Tags الشائعة: `Internet`, `AzureCloud`, `AzureLoadBalancer`, `Azu
 
 ## 🏗️ Azure Firewall — Enterprise Grade
 
-| الميزة | NSG | Azure Firewall |
-|--------|-----|---------------|
-| **النطاق** | Subnet/NIC | VNet بالكامل |
-| **FQDN Filtering** | ❌ | ✅ |
-| **Threat Intelligence** | ❌ | ✅ |
-| **TLS Inspection** | ❌ | Premium tier |
-| **التكلفة** | مجاني | ~$900/شهر |
+| الميزة                  | NSG        | Azure Firewall |
+| ----------------------- | ---------- | -------------- |
+| **النطاق**              | Subnet/NIC | VNet بالكامل   |
+| **FQDN Filtering**      | ❌         | ✅             |
+| **Threat Intelligence** | ❌         | ✅             |
+| **TLS Inspection**      | ❌         | Premium tier   |
+| **التكلفة**             | مجاني      | ~$900/شهر      |
 
 ```bash
 # إنشاء Azure Firewall في Hub VNet
@@ -121,6 +121,7 @@ az network firewall application-rule create \
 ### سيناريو CloudNova: ثغرة RDP
 
 أثناء penetration test ربع سنوي، اكتشف الفريق:
+
 1. **الثغرة**: port 3389 (RDP) مفتوح من الإنترنت
 2. **السبب**: أحد المطورين فتحه للتجربة ونسي إغلاقه
 3. **الإصلاح**: Azure Policy يمنع فتح RDP من الإنترنت + Just-in-Time VM Access
@@ -134,8 +135,14 @@ az network firewall application-rule create \
     "if": {
       "allOf": [
         { "field": "type", "equals": "Microsoft.Network/networkSecurityGroups/securityRules" },
-        { "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange", "equals": "3389" },
-        { "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix", "equals": "Internet" }
+        {
+          "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
+          "equals": "3389"
+        },
+        {
+          "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+          "equals": "Internet"
+        }
       ]
     },
     "then": { "effect": "Deny" }
@@ -154,7 +161,7 @@ graph TB
     FW --> S1[Spoke 1: Web]
     FW --> S2[Spoke 2: App]
     FW --> S3[Spoke 3: Data]
-    
+
     S1 --> NSG1[NSG: 443 from Internet]
     S2 --> NSG2[NSG: 8080 from Web only]
     S3 --> NSG3[NSG: 5432 from App only]
@@ -198,6 +205,7 @@ python3 audit_nsg.py
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين NSG و ASG؟
 2. لماذا نستخدم Service Tags؟
 3. متى نختار Azure Firewall بدلاً من NSG؟
@@ -206,12 +214,12 @@ python3 audit_nsg.py
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| ASG | Application Security Group — تجميع NICs منطقياً |
-| Service Tag | اسم يمثل مجموعة IPs لخدمة Azure |
-| Azure Firewall | جدار ناري مُدار على مستوى VNet |
-| JIT | Just-in-Time VM Access — فتح ports مؤقتاً |
+| السؤال         | الإجابة                                         |
+| -------------- | ----------------------------------------------- |
+| ASG            | Application Security Group — تجميع NICs منطقياً |
+| Service Tag    | اسم يمثل مجموعة IPs لخدمة Azure                 |
+| Azure Firewall | جدار ناري مُدار على مستوى VNet                  |
+| JIT            | Just-in-Time VM Access — فتح ports مؤقتاً       |
 
 ---
 
@@ -230,12 +238,12 @@ python3 audit_nsg.py
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Encryption & TLS](../03-encryption-tls-pki) |
-| درس مرتبط | [Security Operations](../04-security-operations-soc) |
-| شهادة | AZ-500 (Azure Security) |
-| دليل | [Azure NSG Docs](https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview) |
+| النوع     | الرابط                                                                                               |
+| --------- | ---------------------------------------------------------------------------------------------------- |
+| درس مرتبط | [Encryption & TLS](../03-encryption-tls-pki)                                                         |
+| درس مرتبط | [Security Operations](../04-security-operations-soc)                                                 |
+| شهادة     | AZ-500 (Azure Security)                                                                              |
+| دليل      | [Azure NSG Docs](https://learn.microsoft.com/azure/virtual-network/network-security-groups-overview) |
 
 ---
 

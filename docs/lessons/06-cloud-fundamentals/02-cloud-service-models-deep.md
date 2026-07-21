@@ -22,6 +22,7 @@ description: "IaaS vs PaaS vs SaaS vs FaaS — متى تختار كل نموذج
 ## 🧠 الطبقة البسيطة
 
 تخيل أنك تريد تناول البيتزا. لديك 4 خيارات:
+
 - **IaaS**: تشتري المكونات وتخبزها بنفسك في بيتك (VM)
 - **PaaS**: تذهب لمطعم "اخبز بنفسك" (App Service)
 - **SaaS**: تطلب توصيل (M365)
@@ -54,16 +55,16 @@ graph TB
 
 ## 🏗️ متى تختار ماذا؟
 
-| السيناريو | أفضل نموذج | الخدمة في Azure |
-|-----------|-----------|----------------|
-| رفع تطبيق قديم | IaaS | Virtual Machines |
-| تطبيق ويب جديد | PaaS | App Service |
-| معالجة صور (event-driven) | FaaS | Functions |
-| بريد إلكتروني للشركة | SaaS | Exchange Online |
-| تدريب AI Model | IaaS | VM with GPU |
-| API بسيط | FaaS | Functions |
-| قاعدة بيانات | PaaS | Azure SQL |
-| تحكم كامل في OS | IaaS | VM |
+| السيناريو                 | أفضل نموذج | الخدمة في Azure  |
+| ------------------------- | ---------- | ---------------- |
+| رفع تطبيق قديم            | IaaS       | Virtual Machines |
+| تطبيق ويب جديد            | PaaS       | App Service      |
+| معالجة صور (event-driven) | FaaS       | Functions        |
+| بريد إلكتروني للشركة      | SaaS       | Exchange Online  |
+| تدريب AI Model            | IaaS       | VM with GPU      |
+| API بسيط                  | FaaS       | Functions        |
+| قاعدة بيانات              | PaaS       | Azure SQL        |
+| تحكم كامل في OS           | IaaS       | VM               |
 
 ### شجرة القرار
 
@@ -81,11 +82,11 @@ graph TD
 
 ## 🏛️ تحليل التكلفة
 
-| النموذج | تكلفة ثابتة | تكلفة تشغيلية | إجمالي/شهر |
-|---------|-----------|-------------|----------|
-| IaaS (B2s VM) | $30 | $10 (إدارة) | ~$40 |
-| PaaS (App Service B1) | $55 | $0 | ~$55 |
-| FaaS (1M requests) | $0.20 | $0 | ~$0.20 |
+| النموذج               | تكلفة ثابتة | تكلفة تشغيلية | إجمالي/شهر |
+| --------------------- | ----------- | ------------- | ---------- |
+| IaaS (B2s VM)         | $30         | $10 (إدارة)   | ~$40       |
+| PaaS (App Service B1) | $55         | $0            | ~$55       |
+| FaaS (1M requests)    | $0.20       | $0            | ~$0.20     |
 
 **لكن**: التناسب معقد. VM بـ $40 قد تشغّل 10 تطبيقات، بينما 10 App Services = $550!
 
@@ -96,6 +97,7 @@ graph TD
 عندما بدأت CloudNova، استخدمنا VMs لكل شيء. لماذا؟ لأن هذا ما كنا نعرفه.
 
 بعد 6 أشهر:
+
 - 3 VMs أسبوعياً تحتاج تحديثات أمنية (3 ساعات مهدرة)
 - patching فاتنا → ثغرة في الإنتاج
 - **القرار**: الانتقال إلى PaaS
@@ -117,13 +119,13 @@ az webapp up --name cloudnova-api --runtime "NODE:20-lts" --sku B1
 
 ### Trade-off Matrix
 
-| | IaaS | PaaS | FaaS | SaaS |
-|---|------|------|------|------|
-| **التحكم** | كامل | محدود | ضئيل | لا شيء |
-| **المسؤولية** | عالية | متوسطة | منخفضة | منخفضة جداً |
-| **المرونة** | عالية | متوسطة | محدودة | محدودة |
-| **سرعة النشر** | أيام | ساعات | دقائق | دقائق |
-| **Vendor Lock-in** | منخفض | متوسط | عالي | عالي جداً |
+|                    | IaaS  | PaaS   | FaaS   | SaaS        |
+| ------------------ | ----- | ------ | ------ | ----------- |
+| **التحكم**         | كامل  | محدود  | ضئيل   | لا شيء      |
+| **المسؤولية**      | عالية | متوسطة | منخفضة | منخفضة جداً |
+| **المرونة**        | عالية | متوسطة | محدودة | محدودة      |
+| **سرعة النشر**     | أيام  | ساعات  | دقائق  | دقائق       |
+| **Vendor Lock-in** | منخفض | متوسط  | عالي   | عالي جداً   |
 
 ### متى تبقى على IaaS؟
 
@@ -144,6 +146,7 @@ az webapp up --name cloudnova-api --runtime "NODE:20-lts" --sku B1
 ### تمرين 1: تصنيف السيناريوهات
 
 صنف هذه السيناريوهات (IaaS/PaaS/SaaS/FaaS):
+
 1. موقع WordPress لشركة صغيرة → PaaS (App Service)
 2. تدريب نموذج AI على 10,000 صورة → IaaS (VM with GPU)
 3. معالجة ملفات PDF تلقائياً عند الرفع → FaaS
@@ -152,6 +155,7 @@ az webapp up --name cloudnova-api --runtime "NODE:20-lts" --sku B1
 ### تمرين 2: احسب TCO
 
 احسب التكلفة الشهرية لـ:
+
 - تشغيل 5 تطبيقات ويب صغيرة على 5 App Services vs VM واحدة كبيرة
 
 ### تحدي: صمم استراتيجية ترحيل
@@ -163,6 +167,7 @@ az webapp up --name cloudnova-api --runtime "NODE:20-lts" --sku B1
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين IaaS و PaaS في Shared Responsibility؟
 2. متى تختار FaaS بدلاً من PaaS؟
 3. لماذا قد يكون IaaS أرخص من PaaS لتطبيقات متعددة؟
@@ -170,19 +175,20 @@ az webapp up --name cloudnova-api --runtime "NODE:20-lts" --sku B1
 5. أعط مثالاً حقيقياً لكل نموذج خدمة.
 
 ### 📝 اختبار
+
 1. **تطبيق .NET Framework 4.8 القديم:** IaaS (لا يدعم PaaS)
 2. **API بسيط لـ chatbot:** FaaS (Functions)
 3. **تطبيق ويب حديث مع CI/CD:** PaaS (App Service)
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| IaaS | Infrastructure as a Service (VMs) |
-| PaaS | Platform as a Service (App Service) |
-| SaaS | Software as a Service (M365) |
-| FaaS | Functions as a Service (Azure Functions) |
-| Shared Responsibility | من مسؤول عن ماذا بينك وبين Azure |
+| السؤال                | الإجابة                                  |
+| --------------------- | ---------------------------------------- |
+| IaaS                  | Infrastructure as a Service (VMs)        |
+| PaaS                  | Platform as a Service (App Service)      |
+| SaaS                  | Software as a Service (M365)             |
+| FaaS                  | Functions as a Service (Azure Functions) |
+| Shared Responsibility | من مسؤول عن ماذا بينك وبين Azure         |
 
 ---
 
@@ -201,11 +207,11 @@ az webapp up --name cloudnova-api --runtime "NODE:20-lts" --sku B1
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Cloud Concepts](./01-cloud-concepts) |
+| النوع     | الرابط                                                          |
+| --------- | --------------------------------------------------------------- |
+| درس مرتبط | [Cloud Concepts](./01-cloud-concepts)                           |
 | درس مرتبط | [Azure Fundamentals](../../07-azure-core/01-azure-fundamentals) |
-| شهادة | AZ-900 (Azure Fundamentals) |
+| شهادة     | AZ-900 (Azure Fundamentals)                                     |
 
 ---
 

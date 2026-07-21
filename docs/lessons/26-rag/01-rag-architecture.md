@@ -90,7 +90,7 @@ class ProductionRAGPipeline:
             context_parts.append(
                 f"[{i+1}] {doc['title']} ({doc.get('section', '')})\n{doc['content']}"
             )
-        
+
         prompt = f"""أجب بناءً على المصادر فقط. استشهد بـ [1]، [2]...
 إذا لم تجد الإجابة، قل: "لا توجد معلومات كافية."
 
@@ -159,12 +159,12 @@ result = chain.run(
 
 ### مقارنة استراتيجيات التقسيم
 
-| الاستراتيجية | الميزة | العيب | متى تستخدم |
-|-------------|--------|-------|-----------|
-| **Fixed-size** | بسيط وسريع | يقطع الجمل | نماذج أولية |
-| **Recursive** | يحترم حدود الجمل | غير متجانس | ✅ إنتاج (الأفضل) |
-| **Semantic** | مجموعات مترابطة | معقد وبطيء | محتوى تقني |
-| **Hierarchical** | هيكل الوثيقة محفوظ | overhead كبير | وثائق طويلة |
+| الاستراتيجية     | الميزة             | العيب         | متى تستخدم        |
+| ---------------- | ------------------ | ------------- | ----------------- |
+| **Fixed-size**   | بسيط وسريع         | يقطع الجمل    | نماذج أولية       |
+| **Recursive**    | يحترم حدود الجمل   | غير متجانس    | ✅ إنتاج (الأفضل) |
+| **Semantic**     | مجموعات مترابطة    | معقد وبطيء    | محتوى تقني        |
+| **Hierarchical** | هيكل الوثيقة محفوظ | overhead كبير | وثائق طويلة       |
 
 ```python
 # Semantic Chunking — الأفضل للإنتاج
@@ -187,7 +187,7 @@ chunks = splitter.split_text(document)
 ```python
 from ragas import evaluate
 from ragas.metrics import (
-    faithfulness, answer_relevancy, 
+    faithfulness, answer_relevancy,
     context_precision, context_recall
 )
 
@@ -201,7 +201,7 @@ def evaluate_pipeline(test_questions, ground_truth):
             "ground_truth": truth,
             "contexts": [s["title"] for s in r["sources"]]
         })
-    
+
     return evaluate(results, metrics=[
         faithfulness,       # > 0.90
         answer_relevancy,   # > 0.85
@@ -220,15 +220,15 @@ class RAGCostTracker:
     def __init__(self):
         self.daily_cost = 0
         self.daily_limit = 50  # سقف يومي
-    
+
     def track_query(self, tokens_used: int, model: str):
         pricing = {"gpt-4": 0.03, "gpt-3.5-turbo": 0.002}  # per 1K tokens
         cost = (tokens_used / 1000) * pricing[model]
         self.daily_cost += cost
-        
+
         if self.daily_cost > self.daily_limit:
             raise BudgetExceededError()
-        
+
         return cost
 
 # استراتيجيات توفير التكاليف:

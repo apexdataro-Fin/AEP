@@ -98,7 +98,12 @@ export default function NavigationBar({
         {/* Main Nav Items */}
         <div className="aep-nav-items" role="menubar">
           {/* Home Link */}
-          <Link to="/" className="aep-nav-link aep-nav-home" aria-label="الرئيسية" style={{ fontWeight: 700, fontSize: "0.9rem" }}>
+          <Link
+            to="/"
+            className="aep-nav-link aep-nav-home"
+            aria-label="الرئيسية"
+            style={{ fontWeight: 700, fontSize: "0.9rem" }}
+          >
             <span className="aep-nav-icon">🏠</span>
             <span>الرئيسية</span>
           </Link>

@@ -39,45 +39,45 @@ predict_linear(node_filesystem_free_bytes[1h], 4 * 3600) < 0
 
 ```yaml
 groups:
-- name: api_rules
-  interval: 30s
-  rules:
-  - record: job:http_requests_total:rate5m
-    expr: rate(http_requests_total[5m])
-  - record: job:http_errors:rate5m
-    expr: rate(http_requests_total{status=~"5.."}[5m])
+  - name: api_rules
+    interval: 30s
+    rules:
+      - record: job:http_requests_total:rate5m
+        expr: rate(http_requests_total[5m])
+      - record: job:http_errors:rate5m
+        expr: rate(http_requests_total{status=~"5.."}[5m])
 ```
 
 ### AlertManager
 
 ```yaml
 groups:
-- name: api_alerts
-  rules:
-  - alert: HighErrorRate
-    expr: job:http_errors:rate5m / job:http_requests_total:rate5m > 0.05
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      summary: "API error rate > 5%"
-      runbook: "https://wiki.cloudnova.com/runbooks/high-error-rate"
+  - name: api_alerts
+    rules:
+      - alert: HighErrorRate
+        expr: job:http_errors:rate5m / job:http_requests_total:rate5m > 0.05
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "API error rate > 5%"
+          runbook: "https://wiki.cloudnova.com/runbooks/high-error-rate"
 ```
 
 ### Federation
 
 ```yaml
 scrape_configs:
-- job_name: 'federate'
-  honor_labels: true
-  metrics_path: '/federate'
-  params:
-    match[]:
-      - '{job="api"}'
-  static_configs:
-    - targets:
-      - 'prometheus-us.azure.cloudnova.com:9090'
-      - 'prometheus-eu.azure.cloudnova.com:9090'
+  - job_name: "federate"
+    honor_labels: true
+    metrics_path: "/federate"
+    params:
+      match[]:
+        - '{job="api"}'
+    static_configs:
+      - targets:
+          - "prometheus-us.azure.cloudnova.com:9090"
+          - "prometheus-eu.azure.cloudnova.com:9090"
 ```
 
 ---
@@ -110,17 +110,18 @@ changes(kube_deployment_status_observed_generation[30m])
 
 ## 🎨 Recording Rules vs Ad-hoc Queries
 
-| | Recording Rules | Ad-hoc Queries |
-|---|---------------|---------------|
-| **السرعة** | فورية (pre-computed) | تحسب عند الطلب |
-| **الاستخدام** | Dashboards, alerts | استكشاف الأخطاء |
-| **التكلفة** | RAM/CPU إضافي | لا شيء |
+|               | Recording Rules      | Ad-hoc Queries  |
+| ------------- | -------------------- | --------------- |
+| **السرعة**    | فورية (pre-computed) | تحسب عند الطلب  |
+| **الاستخدام** | Dashboards, alerts   | استكشاف الأخطاء |
+| **التكلفة**   | RAM/CPU إضافي        | لا شيء          |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: اكتب PromQL query يحسب P99 latency لكل endpoint
+
 ### تحدي: صمم alert rule مع runbook
 
 ---
@@ -128,20 +129,23 @@ changes(kube_deployment_status_observed_generation[30m])
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما فائدة Recording Rules؟
 2. كيف تصمم alert جيد؟
 3. متى تستخدم Federation؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| PromQL | لغة استعلام Prometheus |
+
+| السؤال         | الإجابة                                   |
+| -------------- | ----------------------------------------- |
+| PromQL         | لغة استعلام Prometheus                    |
 | Recording Rule | Pre-computed metric لتسريع الـ dashboards |
-| AlertManager | إدارة وتوجيه التنبيهات |
+| AlertManager   | إدارة وتوجيه التنبيهات                    |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تراقب 1000 خدمة؟"** → Federation + Recording Rules + Thanos/Cortex
 2. **"كيف تصمم alert لا يسبب fatigue؟"** → threshold مناسب + runbook + pages فقط للحالات الحرجة
 

@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: [architecture-overview]
   tags: [system-design, architecture, components]
 ---
+
 displayed_sidebar: devSidebar
 
 # System Design

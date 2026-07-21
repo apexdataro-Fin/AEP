@@ -23,6 +23,7 @@ description: "Network Security، Firewalls، NSG، Azure Firewall، WAF — حم
 ## 🧠 الطبقة البسيطة: تشبيه
 
 تخيل مبنى حكومياً. هناك:
+
 - **بوابة خارجية** (Firewall): تفحص كل من يدخل
 - **حارس أمن** (NSG): يتحقق من هوية كل شخص عند كل باب
 - **كاميرات مراقبة** (Network Watcher): تسجل كل الحركة
@@ -78,12 +79,12 @@ az network nsg rule create \
 
 ### WAF — Web Application Firewall
 
-| الهجوم | كيف يحمي WAF |
-|--------|-------------|
-| **SQL Injection** | يفحص الـ payloads عن أنماط SQL |
-| **XSS** | يمنع `<script>` tags في الـ inputs |
-| **DDoS** | Rate limiting لكل IP |
-| **Bot attacks** | Bot detection rules |
+| الهجوم            | كيف يحمي WAF                       |
+| ----------------- | ---------------------------------- |
+| **SQL Injection** | يفحص الـ payloads عن أنماط SQL     |
+| **XSS**           | يمنع `<script>` tags في الـ inputs |
+| **DDoS**          | Rate limiting لكل IP               |
+| **Bot attacks**   | Bot detection rules                |
 
 ```bash
 # Azure WAF Policy — منع SQL Injection
@@ -105,6 +106,7 @@ az network application-gateway waf-policy managed-rule set add \
 ### هجوم DDoS
 
 الجمعة 11 مساءً:
+
 1. **التنبيه**: 500,000 request/sec على الـ API (الطبيعي: 2,000/sec)
 2. **الاستجابة**: Azure DDoS Protection Standard تفعّل تلقائياً
 3. **التحقيق**: الـ traffic من 50,000 IP موزع عالمياً — Botnet
@@ -125,13 +127,13 @@ az network application-gateway waf-policy managed-rule set add \
 
 ### متى تستخدم ماذا؟
 
-| السيناريو | الحل |
-|-----------|------|
-| حماية بين الـ subnets | NSG |
-| حماية محيط الشبكة | Azure Firewall |
-| حماية تطبيقات الويب | WAF (App Gateway / Front Door) |
-| حماية من DDoS | Azure DDoS Protection Standard |
-| فحص SSL/TLS العميق | Azure Firewall Premium (TLS Inspection) |
+| السيناريو             | الحل                                    |
+| --------------------- | --------------------------------------- |
+| حماية بين الـ subnets | NSG                                     |
+| حماية محيط الشبكة     | Azure Firewall                          |
+| حماية تطبيقات الويب   | WAF (App Gateway / Front Door)          |
+| حماية من DDoS         | Azure DDoS Protection Standard          |
+| فحص SSL/TLS العميق    | Azure Firewall Premium (TLS Inspection) |
 
 ### تصميم DMZ
 
@@ -171,6 +173,7 @@ az network nsg rule list --nsg-name web-tier-nsg -g cloudnova -o json |
 ### تحدي: صمم DMZ لـ CloudNova
 
 صمم network architecture مع:
+
 - DMZ للأجهزة المواجهة للإنترنت
 - Web Tier (NSG: 443 فقط)
 - App Tier (NSG: من Web Tier فقط)
@@ -182,6 +185,7 @@ az network nsg rule list --nsg-name web-tier-nsg -g cloudnova -o json |
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين NSG و Azure Firewall؟
 2. لماذا Network Segmentation مهم؟
 3. متى تستخدم WAF؟
@@ -190,13 +194,13 @@ az network nsg rule list --nsg-name web-tier-nsg -g cloudnova -o json |
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| NSG | جدار ناري على مستوى subnet/NIC |
-| Azure Firewall | جدار ناري على مستوى VNet كامل |
-| WAF | Web Application Firewall (طبقة 7) |
-| DMZ | منطقة منزوعة السلاح بين الإنترنت والشبكة الداخلية |
-| JIT Access | فتح البورتات فقط عند الطلب ولفترة محدودة |
+| السؤال         | الإجابة                                           |
+| -------------- | ------------------------------------------------- |
+| NSG            | جدار ناري على مستوى subnet/NIC                    |
+| Azure Firewall | جدار ناري على مستوى VNet كامل                     |
+| WAF            | Web Application Firewall (طبقة 7)                 |
+| DMZ            | منطقة منزوعة السلاح بين الإنترنت والشبكة الداخلية |
+| JIT Access     | فتح البورتات فقط عند الطلب ولفترة محدودة          |
 
 ---
 
@@ -210,11 +214,11 @@ az network nsg rule list --nsg-name web-tier-nsg -g cloudnova -o json |
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع           | الرابط                                                      |
+| --------------- | ----------------------------------------------------------- |
 | NSG & Firewalls | [→](../../04-security/02-network-security-groups-firewalls) |
-| IAM | [→](../../04-security/01-iam-fundamentals) |
-| شهادة | AZ-500 (Security) |
+| IAM             | [→](../../04-security/01-iam-fundamentals)                  |
+| شهادة           | AZ-500 (Security)                                           |
 
 ---
 

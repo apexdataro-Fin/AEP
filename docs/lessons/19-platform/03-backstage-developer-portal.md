@@ -73,18 +73,19 @@ spec:
 
 ### Backstage Plugins
 
-| Plugin | الفائدة |
-|--------|---------|
-| **GitHub** | ربط الـ repos بـ catalog |
-| **Kubernetes** | عرض pods, deployments |
-| **PagerDuty** | عرض on-call schedule |
-| **TechDocs** | وثائق لكل خدمة |
+| Plugin         | الفائدة                  |
+| -------------- | ------------------------ |
+| **GitHub**     | ربط الـ repos بـ catalog |
+| **Kubernetes** | عرض pods, deployments    |
+| **PagerDuty**  | عرض on-call schedule     |
+| **TechDocs**   | وثائق لكل خدمة           |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ catalog-info.yaml لخدمتك
+
 ### تحدي: ابنِ Software Template لـ Node.js service
 
 ---
@@ -92,20 +93,23 @@ spec:
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما فائدة Service Catalog؟
 2. كيف يختصر Software Template وقت الـ onboarding؟
 3. ما هو TechDocs؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Backstage | Developer Portal من Spotify |
-| Service Catalog | سجل مركزي لكل الخدمات |
+
+| السؤال            | الإجابة                          |
+| ----------------- | -------------------------------- |
+| Backstage         | Developer Portal من Spotify      |
+| Service Catalog   | سجل مركزي لكل الخدمات            |
 | Software Template | قالب لإنشاء خدمات جديدة تلقائياً |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"لماذا Backstage وليس confluence pages؟"** → Backstage متصل بالـ code حي ومحدث تلقائياً
 2. **"كيف تقيس نجاح Backstage؟"** → Time to 10th PR, Developer NPS, onboarding time
 
@@ -147,13 +151,13 @@ gantt
 
 **النتائج بعد 3 أشهر:**
 
-| المقياس | قبل Backstage | بعد Backstage |
-|---------|-------------|-------------|
-| Time to onboard new developer | 5 أيام | 2 ساعة |
-| Time to create new service | 3 أيام | 3 دقائق |
-| "من يملك هذه الخدمة؟" (أسئلة/أسبوع) | 150 | 3 |
-| Incidents بسبب outdated docs | 12/شهر | 1/شهر |
-| Developer NPS | 32 | 78 |
+| المقياس                             | قبل Backstage | بعد Backstage |
+| ----------------------------------- | ------------- | ------------- |
+| Time to onboard new developer       | 5 أيام        | 2 ساعة        |
+| Time to create new service          | 3 أيام        | 3 دقائق       |
+| "من يملك هذه الخدمة؟" (أسئلة/أسبوع) | 150           | 3             |
+| Incidents بسبب outdated docs        | 12/شهر        | 1/شهر         |
+| Developer NPS                       | 32            | 78            |
 
 ---
 
@@ -171,7 +175,7 @@ graph TD
         SEARCH["Search<br/>Full-text"]
         TECHDOCS["TechDocs<br/>MkDocs Generator"]
     end
-    
+
     subgraph "External Integrations"
         GITHUB["GitHub<br/>Repos + Actions"]
         K8S["Kubernetes<br/>Clusters"]
@@ -179,19 +183,19 @@ graph TD
         AZURE["Azure AD<br/>SSO"]
         SONAR["SonarQube<br/>Code Quality"]
     end
-    
+
     FRONT --> BACK
     BACK --> CATALOG
     BACK --> SCAFFOLDER
     BACK --> SEARCH
     BACK --> TECHDOCS
-    
+
     CATALOG --> GITHUB
     CATALOG --> K8S
     CATALOG --> PAGER
     FRONT --> AZURE
     CATALOG --> SONAR
-    
+
     style FRONT fill:#0078D4,stroke:#005A9E,color:#fff
     style BACK fill:#2e7d32,stroke:#1b5e20,color:#fff
 ```
@@ -209,7 +213,7 @@ metadata:
 spec:
   owner: platform-team
   type: service
-  
+
   parameters:
     - title: Service Information
       required: [name, description, owner]
@@ -217,7 +221,7 @@ spec:
         name:
           title: Name
           type: string
-          pattern: '^[a-z0-9-]+$'
+          pattern: "^[a-z0-9-]+$"
           ui:autofocus: true
         description:
           title: Description
@@ -229,9 +233,9 @@ spec:
         language:
           title: Language
           type: string
-          enum: ['typescript', 'javascript']
-          default: 'typescript'
-        
+          enum: ["typescript", "javascript"]
+          default: "typescript"
+
     - title: Infrastructure
       properties:
         port:
@@ -247,9 +251,9 @@ spec:
         resources:
           title: Resources
           type: string
-          enum: ['small', 'medium', 'large']
-          default: 'medium'
-  
+          enum: ["small", "medium", "large"]
+          default: "medium"
+
   steps:
     - id: template
       name: Generate Service
@@ -261,7 +265,7 @@ spec:
           description: ${{ parameters.description }}
           owner: ${{ parameters.owner }}
           port: ${{ parameters.port }}
-          
+
     - id: publish
       name: Publish to GitHub
       action: publish:github
@@ -269,14 +273,14 @@ spec:
         repoUrl: github.com?owner=cloudnova&repo=${{ parameters.name }}
         description: ${{ parameters.description }}
         defaultBranch: main
-        
+
     - id: register
       name: Register in Catalog
       action: catalog:register
       input:
         repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
         catalogInfoPath: /catalog-info.yaml
-        
+
     - id: ci-cd
       name: Create CI/CD Pipeline
       action: github:actions:dispatch
@@ -312,7 +316,7 @@ export const CloudnovaScorecardPage = cloudnovaScorecardPlugin.provide(
 // plugins/cloudnova-scorecard/src/components/ScorecardPage.tsx
 export const ScorecardPage = () => {
   const { entities } = useEntityList();
-  
+
   return (
     <Page themeId="tool">
       <Header title="CloudNova Scorecard" subtitle="Production Readiness">
@@ -331,7 +335,7 @@ export const ScorecardPage = () => {
 
 const ScoreCard = ({ entity }) => {
   const score = calculateProductionReadiness(entity);
-  
+
   return (
     <Card>
       <CardHeader title={entity.metadata.name} />
@@ -353,15 +357,15 @@ const ScoreCard = ({ entity }) => {
 
 ### مصفوفة قرار: Backstage vs Alternatives
 
-| المعيار | Backstage | Port (getport.io) | Cortex | OpsLevel |
-|---------|-----------|------------------|--------|----------|
-| **Open Source** | ✅ | ❌ | ❌ | ❌ |
-| **Custom Plugins** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⭐⭐ |
-| **Software Templates** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐ |
-| **TechDocs** | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐ | ⭐ |
-| **Setup Complexity** | عالي | منخفض | منخفض | منخفض |
-| **Hosting** | Self-hosted (K8s) | SaaS | SaaS | SaaS |
-| **Cost (200 devs)** | ~$2K/شهر (infra) | ~$6K/شهر | ~$8K/شهر | ~$10K/شهر |
+| المعيار                | Backstage         | Port (getport.io) | Cortex   | OpsLevel  |
+| ---------------------- | ----------------- | ----------------- | -------- | --------- |
+| **Open Source**        | ✅                | ❌                | ❌       | ❌        |
+| **Custom Plugins**     | ⭐⭐⭐⭐⭐        | ⭐⭐⭐            | ⭐⭐     | ⭐⭐      |
+| **Software Templates** | ⭐⭐⭐⭐⭐        | ⭐⭐⭐⭐          | ⭐⭐⭐   | ⭐⭐⭐    |
+| **TechDocs**           | ⭐⭐⭐⭐⭐        | ⭐⭐              | ⭐       | ⭐        |
+| **Setup Complexity**   | عالي              | منخفض             | منخفض    | منخفض     |
+| **Hosting**            | Self-hosted (K8s) | SaaS              | SaaS     | SaaS      |
+| **Cost (200 devs)**    | ~$2K/شهر (infra)  | ~$6K/شهر          | ~$8K/شهر | ~$10K/شهر |
 
 ---
 
@@ -460,7 +464,7 @@ spec:
         path: README.md
         content: |
           # terraform-${{ parameters.provider }}-${{ parameters.resource }}
-          
+
           Generated by Backstage. See [CloudNova Terraform Registry](https://developer.cloudnova.com/terraform).
     - id: register
       action: catalog:register
@@ -471,6 +475,7 @@ spec:
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. ما فائدة Developer Portal مثل Backstage؟
 2. كيف يختلف Service Catalog عن Software Template؟
 3. ما فائدة TechDocs المرتبطة بالـ catalog؟
@@ -478,6 +483,7 @@ spec:
 5. Backstage vs Port vs Cortex — متى تختار Backstage؟
 
 ### 📝 اختبار (3)
+
 1. **لديك 500 خدمة و 20 فريقاً. كيف تنظم Backstage catalog؟**
    <details><summary>الإجابة</summary>Systems (business capabilities) > Domains > Components. كل فريق owns components. استخدم Groups لتنظيم الفرق. استخدم ownership tags.</details>
 
@@ -488,6 +494,7 @@ spec:
    <details><summary>الإجابة</summary>Number of catalog entities, Software Template executions/week, Developer NPS survey, Time-to-10th-PR, "Where do I find X?" questions in Slack (should decrease).</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم Backstage architecture من الذاكرة
 - اشرح الفرق بين System, Domain, Component في Backstage
 - كيف تبني Software Template فعال؟
@@ -495,25 +502,28 @@ spec:
 - صف تجربة تبني Backstage في مؤسسة
 
 ### 🎓 Feynman: Backstage لغير التقني
+
 "تخيل أنك تدير مدينة (الشركة). Backstage هو 'تطبيق المدينة' — يعرض لك كل المباني (الخدمات)، من يملك كل مبنى، وكيف يعمل. Software Template هو 'نموذج بناء' — املأ الاستمارة واضغط 'إنشاء'، ويُبنى المبنى تلقائياً."
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| Backstage | Developer Portal مفتوح المصدر من Spotify |
-| Service Catalog | سجل مركزي لكل الخدمات والأنظمة |
-| Software Template | قالب لإنشاء خدمات جديدة تلقائياً (Scaffolding) |
-| TechDocs | وثائق تقنية مولدة تلقائياً من الـ repos |
-| Entity | أي شيء في الـ catalog (Component, API, System, User) |
-| Scaffolder | المحرك الذي ينفذ Software Templates |
-| Plugin | إضافة لميزات جديدة (K8s, PagerDuty, GitHub) |
-| InnerSource | تطبيق مبادئ Open Source داخل المؤسسة |
+
+| السؤال            | الإجابة                                              |
+| ----------------- | ---------------------------------------------------- |
+| Backstage         | Developer Portal مفتوح المصدر من Spotify             |
+| Service Catalog   | سجل مركزي لكل الخدمات والأنظمة                       |
+| Software Template | قالب لإنشاء خدمات جديدة تلقائياً (Scaffolding)       |
+| TechDocs          | وثائق تقنية مولدة تلقائياً من الـ repos              |
+| Entity            | أي شيء في الـ catalog (Component, API, System, User) |
+| Scaffolder        | المحرك الذي ينفذ Software Templates                  |
+| Plugin            | إضافة لميزات جديدة (K8s, PagerDuty, GitHub)          |
+| InnerSource       | تطبيق مبادئ Open Source داخل المؤسسة                 |
 
 ---
 
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"متى لا يكون Backstage الخيار الصحيح؟"**
    - فريق صغير (< 20 مهندساً): overhead غير مبرر
    - لا يوجد Kubernetes: Backstage يلمع مع K8s plugin
@@ -527,7 +537,9 @@ spec:
    - استخدم Backstage search لاستبدال wiki search تدريجياً
 
 ### System Design
+
 **"صمم Developer Portal لـ 1000 مهندس في 10 دول."**
+
 - Multi-region K8s clusters (EU, US, Asia)
 - Global PostgreSQL (Citus) أو CockroachDB
 - CDN (Azure Front Door) للـ static assets
@@ -537,6 +549,7 @@ spec:
 - Onboarding: كل repo لديه catalog-info.yaml تلقائياً (GitHub Action)
 
 ### Behavioral (STAR)
+
 **"كيف أقنعت leadership بالاستثمار في Developer Portal؟"**
 
 **S:** 200 مهندس، 300 خدمة، zero discoverability.

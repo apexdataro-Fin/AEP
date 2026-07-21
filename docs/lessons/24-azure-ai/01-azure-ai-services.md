@@ -369,6 +369,7 @@ GPT-4 (8K context):
 ## 🏛️ طبقة الإنتاج: AI في المؤسسة
 
 ### Azure AI Content Safety
+
 ```python
 from azure.ai.contentsafety import ContentSafetyClient
 client = ContentSafetyClient(endpoint, credential)
@@ -378,19 +379,23 @@ if any(c.severity > 2 for c in result.categories_analysis):
 ```
 
 ### 🚨 CloudNova: RAG assistant
+
 > 200+ تذاكر/يوم. 60% متكررة. RAG قلل وقت الاستجابة 4 ساعات → 15 دقيقة.
 
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين:** Function calling. **تحدي:** RAG pipeline مع Azure AI Search.
 
 ### 📝 تقييم
+
 **س١:** GPT-4 vs 3.5؟ → GPT-4 للتفكير المعقد. 3.5 للمحادثات البسيطة (أرخص 10x).
 **س٢:** RAG؟ → Retrieval من vector DB ثم Generation.
 **س٣:** Prompt injection؟ → Content Safety + system prompt قوي.
 
 ### 🎤 مقابلة
+
 **"كيف تخفض تكاليف AI؟"** → Semantic Cache + GPT-3.5 routing + Prompt optimization.
 
 ---

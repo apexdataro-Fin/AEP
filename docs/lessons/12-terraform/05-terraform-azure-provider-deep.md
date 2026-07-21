@@ -104,6 +104,7 @@ resource "azurerm_kubernetes_cluster" "main" {
 ### سيناريو CloudNova: ترقية Provider
 
 ترقية `azurerm` من 3.x إلى 4.x تطلبت:
+
 1. قراءة changelog
 2. `terraform plan` في بيئة staging
 3. إصلاح deprecated resources
@@ -127,6 +128,7 @@ provider "azurerm" {
 ## 🛠️ تدريبات
 
 ### تمرين: حول `count` إلى `for_each`
+
 ### تحدي: أضف `lifecycle` blocks لمنع destructive changes
 
 ---
@@ -134,30 +136,34 @@ provider "azurerm" {
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا `for_each` أفضل من `count`؟
 2. متى تستخدم `prevent_destroy`؟
 3. كيف تصادق Terraform مع Azure؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| `for_each` | تكرار آمن — لا يتغير ترتيب العناصر |
-| `prevent_destroy` | يمنع حذف المورد |
-| Managed Identity | أفضل طريقة للمصادقة على Azure |
+
+| السؤال            | الإجابة                            |
+| ----------------- | ---------------------------------- |
+| `for_each`        | تكرار آمن — لا يتغير ترتيب العناصر |
+| `prevent_destroy` | يمنع حذف المورد                    |
+| Managed Identity  | أفضل طريقة للمصادقة على Azure      |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تنظم Terraform code لمؤسسة؟"** → Modules + for_each + lifecycle + CI/CD
 2. **"كيف تدير 50 Azure subscription بـ Terraform؟"** → `provider` aliases + separate state files
 
 ---
 
 ## 📚 مراجع
-| النوع | الرابط |
-|-------|--------|
+
+| النوع     | الرابط                                          |
+| --------- | ----------------------------------------------- |
 | درس مرتبط | [Terraform CI/CD](./04-terraform-cicd-atlantis) |
-| شهادة | Terraform Associate |
+| شهادة     | Terraform Associate                             |
 
 ---
 

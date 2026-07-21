@@ -42,13 +42,13 @@ log "Starting backup..."
 
 ### شرح الأوامر الأساسية
 
-| الأمر | الوظيفة |
-|--------|---------|
-| `set -e` | توقف عند أول خطأ |
-| `set -u` | خطأ عند استخدام متغير غير معرف |
+| الأمر             | الوظيفة                             |
+| ----------------- | ----------------------------------- |
+| `set -e`          | توقف عند أول خطأ                    |
+| `set -u`          | خطأ عند استخدام متغير غير معرف      |
 | `set -o pipefail` | فشل الـ pipeline إذا فشل أي جزء منه |
-| `trap` | ينفذ أمراً عند exit/error/SIGTERM |
-| `flock` | يمنع تشغيل نسختين من نفس السكريبت |
+| `trap`            | ينفذ أمراً عند exit/error/SIGTERM   |
+| `flock`           | يمنع تشغيل نسختين من نفس السكريبت   |
 
 ---
 
@@ -142,7 +142,7 @@ retry() {
     local delay=$2
     shift 2
     local attempt=1
-    
+
     until "$@"; do
         if (( attempt >= max_attempts )); then
             echo "Failed after $max_attempts attempts"
@@ -182,14 +182,14 @@ exit "$FAILED"  # 0 = كل شيء تمام
 
 ## 🎨 طبقة المعماري: Bash vs Python
 
-| المعيار | Bash | Python |
-|---------|------|--------|
-| **أفضل لـ** | < 100 سطر، عمليات shell | منطق معقد، APIs |
-| **السرعة** | فوري (لا interpreter overhead) | أبطأ قليلاً |
-| **التبعيات** | لا شيء (POSIX) | pip packages |
-| **Error Handling** | بدائي | try/except متقدم |
-| **الاختبار** | صعب | pytest + mocking |
-| **قابلية القراءة** | تنخفض بعد 100 سطر | ممتازة دائماً |
+| المعيار            | Bash                           | Python           |
+| ------------------ | ------------------------------ | ---------------- |
+| **أفضل لـ**        | < 100 سطر، عمليات shell        | منطق معقد، APIs  |
+| **السرعة**         | فوري (لا interpreter overhead) | أبطأ قليلاً      |
+| **التبعيات**       | لا شيء (POSIX)                 | pip packages     |
+| **Error Handling** | بدائي                          | try/except متقدم |
+| **الاختبار**       | صعب                            | pytest + mocking |
+| **قابلية القراءة** | تنخفض بعد 100 سطر              | ممتازة دائماً    |
 
 ### شجرة القرار
 
@@ -247,14 +247,14 @@ graph TD
 
 ### 🃏 بطاقات (6)
 
-| السؤال | الإجابة |
-|--------|---------|
-| `set -e` | توقف عند أول خطأ |
-| `set -u` | خطأ عند متغير غير معرف |
-| `set -o pipefail` | فشل pipeline عند فشل أي جزء |
-| `trap` | ينفذ أمر عند signal |
-| `jq` | معالج JSON لسطر الأوامر |
-| `flock` | يمنع تشغيل نسختين من نفس السكريبت |
+| السؤال            | الإجابة                           |
+| ----------------- | --------------------------------- |
+| `set -e`          | توقف عند أول خطأ                  |
+| `set -u`          | خطأ عند متغير غير معرف            |
+| `set -o pipefail` | فشل pipeline عند فشل أي جزء       |
+| `trap`            | ينفذ أمر عند signal               |
+| `jq`              | معالج JSON لسطر الأوامر           |
+| `flock`           | يمنع تشغيل نسختين من نفس السكريبت |
 
 ---
 
@@ -278,12 +278,12 @@ find /var/log -type f -exec du -h {} + | sort -rh | head -5
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Linux Advanced](./02-linux-advanced) |
-| درس مرتبط | [Linux Troubleshooting](./05-linux-troubleshooting-production) |
-| أداة | [shellcheck](https://shellcheck.net) — فحص سكريبتات Bash |
-| دليل | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
+| النوع     | الرابط                                                                          |
+| --------- | ------------------------------------------------------------------------------- |
+| درس مرتبط | [Linux Advanced](./02-linux-advanced)                                           |
+| درس مرتبط | [Linux Troubleshooting](./05-linux-troubleshooting-production)                  |
+| أداة      | [shellcheck](https://shellcheck.net) — فحص سكريبتات Bash                        |
+| دليل      | [Google Shell Style Guide](https://google.github.io/styleguide/shellguide.html) |
 
 ---
 

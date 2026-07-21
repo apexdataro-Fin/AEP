@@ -11,6 +11,7 @@ description: "OSI Model، TCP vs UDP، CIDR، DNS، VNet، Subnets، Load Balanc
 ## 🎯 أهداف التعلم
 
 بعد إكمال هذا الدرس، ستكون قادراً على:
+
 - شرح نموذج OSI وربطه بمشاكل حقيقية
 - تصميم VNet احترافي مع Subnets و NSGs
 - تشخيص مشاكل الاتصال في السحابة
@@ -21,13 +22,13 @@ description: "OSI Model، TCP vs UDP، CIDR، DNS، VNet، Subnets، Load Balanc
 
 ## ١. لماذا الشبكات مهمة لمهندس السحابة؟
 
-| إذا كنت لا تفهم... | سيحدث هذا... | قصة حقيقية من CloudNova |
-|--------------------|-------------|------------------------|
-| TCP vs UDP | تختار البروتوكول الخطأ | استخدمنا TCP لـ video streaming — تأخير ٣ ثوان |
-| DNS | لا تشخص مشاكل الاتصال | "التطبيق معطل" — المشكلة: TTL منتهي |
-| CIDR | تصمم VNet لا يتسع | أضفنا ٣ Subnets — نفدت العناوين |
-| Load Balancers | نقطة فشل واحدة | خادم واحد استقبل ٩٠٪ من الحركة |
-| Network Security | مواردك مكشوفة | قاعدة بيانات على الإنترنت ٤ أيام |
+| إذا كنت لا تفهم... | سيحدث هذا...           | قصة حقيقية من CloudNova                        |
+| ------------------ | ---------------------- | ---------------------------------------------- |
+| TCP vs UDP         | تختار البروتوكول الخطأ | استخدمنا TCP لـ video streaming — تأخير ٣ ثوان |
+| DNS                | لا تشخص مشاكل الاتصال  | "التطبيق معطل" — المشكلة: TTL منتهي            |
+| CIDR               | تصمم VNet لا يتسع      | أضفنا ٣ Subnets — نفدت العناوين                |
+| Load Balancers     | نقطة فشل واحدة         | خادم واحد استقبل ٩٠٪ من الحركة                 |
+| Network Security   | مواردك مكشوفة          | قاعدة بيانات على الإنترنت ٤ أيام               |
 
 ---
 
@@ -43,13 +44,13 @@ graph TD
 
 ### كل طبقة — بمشاكلها الحقيقية
 
-| الطبقة | البروتوكولات | المشكلة الشائعة | أداة التشخيص |
-|--------|-------------|----------------|-------------|
-| ٧ - Application | HTTP, DNS, TLS | 404, 502, شهادة منتهية | `curl`, `openssl` |
-| ٤ - Transport | TCP, UDP | منفذ مغلق، جدار ناري | `nc -zv`, `ss -tlnp` |
-| ٣ - Network | IP, ICMP | routing خاطئ، IP متعارض | `ping`, `traceroute` |
-| ٢ - Data Link | Ethernet, ARP, MAC | كابل معطوب، VLAN mismatch | `ip link`, `ethtool` |
-| ١ - Physical | Cables, Fiber | كابل مفصول، عطل عتاد | فحص بصري، `dmesg` |
+| الطبقة          | البروتوكولات       | المشكلة الشائعة           | أداة التشخيص         |
+| --------------- | ------------------ | ------------------------- | -------------------- |
+| ٧ - Application | HTTP, DNS, TLS     | 404, 502, شهادة منتهية    | `curl`, `openssl`    |
+| ٤ - Transport   | TCP, UDP           | منفذ مغلق، جدار ناري      | `nc -zv`, `ss -tlnp` |
+| ٣ - Network     | IP, ICMP           | routing خاطئ، IP متعارض   | `ping`, `traceroute` |
+| ٢ - Data Link   | Ethernet, ARP, MAC | كابل معطوب، VLAN mismatch | `ip link`, `ethtool` |
+| ١ - Physical    | Cables, Fiber      | كابل مفصول، عطل عتاد      | فحص بصري، `dmesg`    |
 
 ### 🟣 المستوى الإنتاجي — تشخيص من الأعلى للأسفل
 
@@ -76,14 +77,14 @@ ping api.cloudnova.com
 
 ## ٣. TCP vs UDP — بعمق
 
-| الميزة | TCP | UDP |
-|--------|-----|-----|
-| **الموثوقية** | ✅ مضمون — يعيد إرسال المفقود | ❌ غير مضمون |
-| **الاتصال** | Connection-oriented | Connectionless |
-| **الترتيب** | يصل بالترتيب | قد يصل معكوساً |
-| **السرعة** | أبطأ (overhead أعلى) | أسرع |
-| **الاستخدام** | HTTP، SSH، Email، FTP | DNS، VoIP، Streaming، Gaming |
-| **تشبيه** | البريد المسجل — توقع بالاستلام | الميكروفون — الصوت يصل فوراً |
+| الميزة        | TCP                            | UDP                          |
+| ------------- | ------------------------------ | ---------------------------- |
+| **الموثوقية** | ✅ مضمون — يعيد إرسال المفقود  | ❌ غير مضمون                 |
+| **الاتصال**   | Connection-oriented            | Connectionless               |
+| **الترتيب**   | يصل بالترتيب                   | قد يصل معكوساً               |
+| **السرعة**    | أبطأ (overhead أعلى)           | أسرع                         |
+| **الاستخدام** | HTTP، SSH، Email، FTP          | DNS، VoIP، Streaming، Gaming |
+| **تشبيه**     | البريد المسجل — توقع بالاستلام | الميكروفون — الصوت يصل فوراً |
 
 ### Three-Way Handshake (TCP)
 
@@ -115,13 +116,13 @@ sequenceDiagram
 10.0.0.0/8     → 16,777,216 عنواناً
 ```
 
-| CIDR | عدد العناوين | الاستخدام |
-|------|-------------|-----------|
-| /32 | ١ | عنوان IP واحد |
-| /28 | ١٤ | Azure Gateway Subnet |
-| /24 | ٢٥٤ | شبكة تطبيق |
-| /16 | ٦٥,٥٣٤ | VNet كامل |
-| /8 | ١٦,٧٧٧,٢١٤ | نطاق خاص كامل |
+| CIDR | عدد العناوين | الاستخدام            |
+| ---- | ------------ | -------------------- |
+| /32  | ١            | عنوان IP واحد        |
+| /28  | ١٤           | Azure Gateway Subnet |
+| /24  | ٢٥٤          | شبكة تطبيق           |
+| /16  | ٦٥,٥٣٤       | VNet كامل            |
+| /8   | ١٦,٧٧٧,٢١٤   | نطاق خاص كامل        |
 
 ### 🟣 تصميم VNet احترافي
 
@@ -130,11 +131,12 @@ sequenceDiagram
 VNet: 10.0.0.0/16 (65,536 عنواناً)
 
 Subnets:
-  app-subnet:     10.0.1.0/24   (254 عنواناً)  # خوادم التطبيق
-  db-subnet:      10.0.2.0/24   (254 عنواناً)  # قواعد البيانات
-  gateway-subnet: 10.0.0.0/28   (14 عنواناً)   # Application Gateway
-  bastion-subnet: 10.0.0.16/28  (14 عنواناً)   # Azure Bastion
-  aks-subnet:     10.0.4.0/22   (1,022 عنواناً) # AKS (يحتاج عناوين كثيرة!)
+  app-subnet: 10.0.1.0/24   (254 عنواناً) # خوادم التطبيق
+  db-subnet: 10.0.2.0/24   (254 عنواناً) # قواعد البيانات
+  gateway-subnet: 10.0.0.0/28   (14 عنواناً) # Application Gateway
+  bastion-subnet: 10.0.0.16/28  (14 عنواناً) # Azure Bastion
+  aks-subnet: 10.0.4.0/22   (1,022 عنواناً) # AKS (يحتاج عناوين كثيرة!)
+
 
 # مساحة متبقية للتوسع: 10.0.5.0 - 10.0.255.0
 ```
@@ -205,11 +207,11 @@ dig api.cloudnova.com @asia-dns.local   # مزود DNS آسيوي
 
 ## ٦. Load Balancers
 
-| النوع | الطبقة | متى تستخدم | مثال Azure | السعر |
-|-------|--------|-----------|------------|-------|
-| **Layer 4** | TCP/UDP | توزيع بسيط، أداء عالي | Azure Load Balancer | $ |
-| **Layer 7** | HTTP/HTTPS | توجيه ذكي، SSL termination | Application Gateway | $$$ |
-| **Global** | DNS | توزيع عبر المناطق | Traffic Manager, Front Door | $$ |
+| النوع       | الطبقة     | متى تستخدم                 | مثال Azure                  | السعر |
+| ----------- | ---------- | -------------------------- | --------------------------- | ----- |
+| **Layer 4** | TCP/UDP    | توزيع بسيط، أداء عالي      | Azure Load Balancer         | $     |
+| **Layer 7** | HTTP/HTTPS | توجيه ذكي، SSL termination | Application Gateway         | $$$   |
+| **Global**  | DNS        | توزيع عبر المناطق          | Traffic Manager, Front Door | $$    |
 
 ### Layer 7 Routing — توجيه ذكي
 
@@ -217,11 +219,11 @@ dig api.cloudnova.com @asia-dns.local   # مزود DNS آسيوي
 # Application Gateway: توجيه حسب المسار
 rules:
   - path: /api/*
-    backend: api-backend-pool        # خوادم API
+    backend: api-backend-pool # خوادم API
   - path: /images/*
-    backend: storage-backend-pool    # خوادم الصور
+    backend: storage-backend-pool # خوادم الصور
   - path: /*
-    backend: web-backend-pool        # خوادم الويب
+    backend: web-backend-pool # خوادم الويب
 
 # Session Affinity — تثبيت الجلسة
 # مستخدم واحد = نفس الخادم دائماً (مهم لـ WebSockets)
@@ -338,12 +340,12 @@ curl -I https://api.cloudnova.com
 
 ## 🎴 بطاقات مراجعة
 
-| السؤال | الإجابة |
-|--------|---------|
-| كم عنواناً في /24؟ | ٢٥٦ (٢٥٤ قابلة للاستخدام) |
-| أمر لفحص هل المنفذ مفتوح | `nc -zv host port` |
-| أداة لتتبع مسار الحزمة | `traceroute` |
-| أمر لفحص شهادة SSL | `openssl s_client -connect host:443` |
+| السؤال                   | الإجابة                              |
+| ------------------------ | ------------------------------------ |
+| كم عنواناً في /24؟       | ٢٥٦ (٢٥٤ قابلة للاستخدام)            |
+| أمر لفحص هل المنفذ مفتوح | `nc -zv host port`                   |
+| أداة لتتبع مسار الحزمة   | `traceroute`                         |
+| أمر لفحص شهادة SSL       | `openssl s_client -connect host:443` |
 
 ## 🎤 أسئلة مقابلة العمل
 
@@ -367,7 +369,7 @@ graph TD
     C --> E[App Gateway - West]
     D --> F[VM Scale Set - East]
     E --> G[VM Scale Set - West]
-    
+
     H[Traffic Manager] --> A
 ```
 
@@ -714,12 +716,12 @@ curl -I https://app.cloudnova.com
 
 ### 🎴 بطاقات تعليمية
 
-| 🃏 السؤال | 🃏 الإجابة |
-|----------|----------|
-| كم عنواناً في /24؟ | 256 (254 usable) |
-| أمر فحص منفذ مفتوح | `nc -zv host port` |
-| أداة تتبع مسار الحزمة | `traceroute host` |
-| فحص شهادة SSL | `openssl s_client -connect host:443` |
+| 🃏 السؤال                  | 🃏 الإجابة                                    |
+| -------------------------- | --------------------------------------------- |
+| كم عنواناً في /24؟         | 256 (254 usable)                              |
+| أمر فحص منفذ مفتوح         | `nc -zv host port`                            |
+| أداة تتبع مسار الحزمة      | `traceroute host`                             |
+| فحص شهادة SSL              | `openssl s_client -connect host:443`          |
 | بروتوكول البريد الإلكتروني | SMTP (25/587), IMAP (143/993), POP3 (110/995) |
 
 ---
@@ -743,7 +745,7 @@ curl -I https://app.cloudnova.com
    - توجيه /api/* لخوادم الـ backend
    - توجيه /videos/* للـ CDN origin
 
-٤. Network: 
+٤. Network:
    - Anycast IPs للـ edges
    - BGP للإعلان عن المسارات
 
@@ -793,11 +795,11 @@ R: تعطل 90 ثانية فقط. تعلمت: اختبر تغييرات الشب
 
 ### شهادات
 
-| الشهادة | الأهداف |
-|--------|--------|
+| الشهادة    | الأهداف                             |
+| ---------- | ----------------------------------- |
 | **AZ-104** | Configure VNet، DNS، Load Balancers |
-| **AZ-700** | Azure Network Engineer Associate |
-| **CCNA** | Cisco Certified Network Associate |
+| **AZ-700** | Azure Network Engineer Associate    |
+| **CCNA**   | Cisco Certified Network Associate   |
 
 ### مصادر خارجية
 
@@ -807,13 +809,13 @@ R: تعطل 90 ثانية فقط. تعلمت: اختبر تغييرات الشب
 
 ### مصطلحات
 
-| المصطلح | التعريف |
-|--------|---------|
-| **CIDR** | Classless Inter-Domain Routing |
-| **TTL** | Time To Live — مدة تخزين سجل DNS |
-| **BGP** | Border Gateway Protocol — توجيه بين الشبكات |
-| **Anycast** | عنوان IP يخدم من عدة مواقع |
-| **mTLS** | Mutual TLS — تحقق ثنائي الاتجاه |
+| المصطلح     | التعريف                                     |
+| ----------- | ------------------------------------------- |
+| **CIDR**    | Classless Inter-Domain Routing              |
+| **TTL**     | Time To Live — مدة تخزين سجل DNS            |
+| **BGP**     | Border Gateway Protocol — توجيه بين الشبكات |
+| **Anycast** | عنوان IP يخدم من عدة مواقع                  |
+| **mTLS**    | Mutual TLS — تحقق ثنائي الاتجاه             |
 
 ---
 

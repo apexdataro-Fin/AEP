@@ -525,7 +525,7 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true  # drift detection
+      selfHeal: true # drift detection
     syncOptions:
       - CreateNamespace=true
 ```
@@ -561,12 +561,15 @@ spec:
 ## 🛠️ تدريبات
 
 ### تمرين ١: Helm Chart من الصفر (سهل)
+
 > `helm create my-app` ثم عدل templates لتناسب تطبيق Python.
 
 ### تمرين ٢: Hook للـ migrations (متوسط)
+
 > أضف Job hook لترحيل قاعدة البيانات قبل upgrade.
 
 ### تحدي: Library Chart (متقدم)
+
 > ابنِ Library Chart يحتوي _helpers.tpl فقط. استخدمه في 3 تطبيقات مختلفة.
 
 ### 📝 تقييم
@@ -581,6 +584,7 @@ spec:
 <details><summary>الإجابة</summary>External Secrets Operator، Sealed Secrets، أو `existingSecret`. ولا تخزّن secrets أبداً في values.yaml.</details>
 
 ### 🧠 استدعاء نشط
+
 1. ارسم دورة حياة Helm release: install → upgrade → rollback → uninstall.
 2. كيف تبني Chart يدعم 3 بيئات (dev/staging/prod)؟
 3. ما فائدة `helm.sh/hook` annotations؟
@@ -596,6 +600,7 @@ spec:
 ---
 
 ## 📚 مراجع
+
 - [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) — الأساس
 - [GitOps Fundamentals](../18-gitops/01-gitops-fundamentals) — Argo CD + Helm
 - 📖 [Helm Documentation](https://helm.sh/docs/)

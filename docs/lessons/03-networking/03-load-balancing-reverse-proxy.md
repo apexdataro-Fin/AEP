@@ -46,20 +46,20 @@ graph LR
     end
 ```
 
-| النوع | الغرض | مثال |
-|-------|--------|------|
-| **Forward Proxy** | إخفاء العميل | شركة تخفي موظفيها عن الإنترنت |
-| **Reverse Proxy** | إخفاء الخوادم | Nginx أمام تطبيق Node.js |
+| النوع             | الغرض         | مثال                          |
+| ----------------- | ------------- | ----------------------------- |
+| **Forward Proxy** | إخفاء العميل  | شركة تخفي موظفيها عن الإنترنت |
+| **Reverse Proxy** | إخفاء الخوادم | Nginx أمام تطبيق Node.js      |
 
 ### Layer 4 vs Layer 7
 
-| | Layer 4 (TCP/UDP) | Layer 7 (HTTP/HTTPS) |
-|---|-------------------|----------------------|
-| **ماذا يرى؟** | IP + Port فقط | URL، Headers، Cookies |
-| **التوجيه** | حسب IP/Port | حسب `/api` أو `/images` |
-| **SSL** | Pass-through | Termination |
-| **Caching** | ❌ | ✅ |
-| **أمثلة** | Azure LB، HAProxy TCP | Nginx، Traefik، Azure App Gateway |
+|               | Layer 4 (TCP/UDP)     | Layer 7 (HTTP/HTTPS)              |
+| ------------- | --------------------- | --------------------------------- |
+| **ماذا يرى؟** | IP + Port فقط         | URL، Headers، Cookies             |
+| **التوجيه**   | حسب IP/Port           | حسب `/api` أو `/images`           |
+| **SSL**       | Pass-through          | Termination                       |
+| **Caching**   | ❌                    | ✅                                |
+| **أمثلة**     | Azure LB، HAProxy TCP | Nginx، Traefik، Azure App Gateway |
 
 ### خوارزميات التوزيع
 
@@ -110,11 +110,11 @@ server {
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto $scheme;
-        
+
         # Timeouts
         proxy_connect_timeout 5s;
         proxy_read_timeout 60s;
-        
+
         # Buffering
         proxy_buffering on;
         proxy_buffer_size 4k;
@@ -141,10 +141,10 @@ graph TB
     ALB --> VMSS1[VM Scale Set - Region 1]
     ALB --> VMSS2[VM Scale Set - Region 2]
     ALB --> HP[Health Probe :80/health]
-    
+
     VMSS1 --> DB[(Azure SQL DB - Primary)]
     VMSS2 --> DB
-    
+
     subgraph "Region 1"
         VMSS1
     end
@@ -164,12 +164,12 @@ graph TB
 
 ### استكشاف الأخطاء
 
-| العَرَض | السبب المحتمل | الحل |
-|---------|--------------|------|
-| 502 Bad Gateway | الخادم الخلفي معطل | تحقق من عمل الخادم على البورت الصحيح |
-| 504 Gateway Timeout | استجابة بطيئة جداً | زد `proxy_read_timeout` أو حسّن الكود |
-| توزيع غير متساوٍ | Sticky sessions أو IP Hash | استخدم `least_conn` |
-| Health probe fail | التطبيق لا يستجيب | أنشئ endpoint صحي حقيقي |
+| العَرَض             | السبب المحتمل              | الحل                                  |
+| ------------------- | -------------------------- | ------------------------------------- |
+| 502 Bad Gateway     | الخادم الخلفي معطل         | تحقق من عمل الخادم على البورت الصحيح  |
+| 504 Gateway Timeout | استجابة بطيئة جداً         | زد `proxy_read_timeout` أو حسّن الكود |
+| توزيع غير متساوٍ    | Sticky sessions أو IP Hash | استخدم `least_conn`                   |
+| Health probe fail   | التطبيق لا يستجيب          | أنشئ endpoint صحي حقيقي               |
 
 ---
 
@@ -177,14 +177,14 @@ graph TB
 
 ### متى تستخدم ماذا؟
 
-| السيناريو | الأداة المناسبة |
-|-----------|----------------|
-| تطبيق ويب بسيط | Nginx Reverse Proxy |
-| Kubernetes Cluster | Traefik / Nginx Ingress |
-| Azure Native | Azure Application Gateway + WAF |
-| تطبيقات TCP (مثل MySQL) | HAProxy Layer 4 |
-| Global Distribution | Azure Front Door / Cloudflare |
-| API Gateway | Azure API Management / Kong |
+| السيناريو               | الأداة المناسبة                 |
+| ----------------------- | ------------------------------- |
+| تطبيق ويب بسيط          | Nginx Reverse Proxy             |
+| Kubernetes Cluster      | Traefik / Nginx Ingress         |
+| Azure Native            | Azure Application Gateway + WAF |
+| تطبيقات TCP (مثل MySQL) | HAProxy Layer 4                 |
+| Global Distribution     | Azure Front Door / Cloudflare   |
+| API Gateway             | Azure API Management / Kong     |
 
 ### متى لا تستخدم Load Balancer؟
 
@@ -219,6 +219,7 @@ curl http://localhost:8080/
 أوقف أحد الخوادم الخلفية ولاحظ كيف يتعامل Nginx.
 
 ### تحدي: تصميم HA
+
 صمم HA Architecture لـ CloudNova API مع: LB أمام 3 خوادم، Health Check كل 5 ثوانٍ، Failover تلقائي إلى Region ثانية.
 
 ---
@@ -226,6 +227,7 @@ curl http://localhost:8080/
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين Layer 4 و Layer 7 Load Balancer؟
 2. متى تستخدم `ip_hash` بدلاً من `least_conn`؟
 3. لماذا Health Check مهم جداً في الإنتاج؟
@@ -234,12 +236,12 @@ curl http://localhost:8080/
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| Reverse Proxy | خادم يقف أمام الخوادم الخلفية ويوزع الطلبات |
+| السؤال             | الإجابة                                       |
+| ------------------ | --------------------------------------------- |
+| Reverse Proxy      | خادم يقف أمام الخوادم الخلفية ويوزع الطلبات   |
 | Layer 4 vs Layer 7 | Layer 4 يرى IP/Port، Layer 7 يرى HTTP headers |
-| Health Check | فحص دوري للتأكد من أن الخادم يعمل |
-| `least_conn` | يرسل الطلب للخادم الأقل اتصالات |
+| Health Check       | فحص دوري للتأكد من أن الخادم يعمل             |
+| `least_conn`       | يرسل الطلب للخادم الأقل اتصالات               |
 
 ---
 
@@ -258,12 +260,12 @@ curl http://localhost:8080/
 
 ## 📚 المراجع
 
-| النوع | الرابط |
-|-------|--------|
-| **Networking Fundamentals** | [→](./01-networking-fundamentals) |
-| **Kubernetes Networking** | [→](../../10-kubernetes/02-kubernetes-networking) |
-| شهادة | AZ-104 (Load Balancing) |
-| شهادة | AZ-700 (Networking) |
+| النوع                       | الرابط                                            |
+| --------------------------- | ------------------------------------------------- |
+| **Networking Fundamentals** | [→](./01-networking-fundamentals)                 |
+| **Kubernetes Networking**   | [→](../../10-kubernetes/02-kubernetes-networking) |
+| شهادة                       | AZ-104 (Load Balancing)                           |
+| شهادة                       | AZ-700 (Networking)                               |
 
 ---
 

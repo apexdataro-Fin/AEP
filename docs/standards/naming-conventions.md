@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: []
   tags: [naming, conventions, files]
 ---
+
 displayed_sidebar: devSidebar
 
 # Naming Conventions

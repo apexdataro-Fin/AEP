@@ -74,6 +74,7 @@ terraform import azurerm_linux_virtual_machine.web_server \
 أحدهم شغّل `terraform apply` من جهازه المحلي بينما CI/CD كان يعمل. النتيجة: state فسدت.
 
 **الإصلاح**:
+
 1. استرجاع state من backup (storage account versioning)
 2. `terraform refresh` لمزامنة state مع الواقع
 3. تفعيل state locking
@@ -95,18 +96,20 @@ az storage account blob-service-properties update \
 
 ### Workspaces vs Separate Backends
 
-| | Workspaces | Separate Backends |
-|---|----------|-----------------|
-| **العزل** | ضعيف (نفس الـ storage) | قوي |
-| **التعقيد** | منخفض | متوسط |
-| **الأفضل لـ** | بيئات متشابهة | بيئات مختلفة جداً |
+|               | Workspaces             | Separate Backends |
+| ------------- | ---------------------- | ----------------- |
+| **العزل**     | ضعيف (نفس الـ storage) | قوي               |
+| **التعقيد**   | منخفض                  | متوسط             |
+| **الأفضل لـ** | بيئات متشابهة          | بيئات مختلفة جداً |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: نقل state محلي إلى Azure backend
+
 ### تمرين: جرب state locking
+
 ### تحدي: استورد VM موجودة يدوياً
 
 ---
@@ -114,20 +117,23 @@ az storage account blob-service-properties update \
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا state locking مهم؟
 2. كيف تسترجع state من backup؟
 3. متى تستخدم `terraform import`؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| tfstate | ملف يحتوي حالة البنية التحتية |
-| Backend | مكان تخزين الـ state (Azure Storage, S3, etc.) |
-| State Lock | منع التزامن على نفس الـ state |
+
+| السؤال     | الإجابة                                        |
+| ---------- | ---------------------------------------------- |
+| tfstate    | ملف يحتوي حالة البنية التحتية                  |
+| Backend    | مكان تخزين الـ state (Azure Storage, S3, etc.) |
+| State Lock | منع التزامن على نفس الـ state                  |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"ماذا تفعل لو فسدت state؟"** → استرجاع من backup + `terraform refresh`
 2. **"كيف تمنع تعارضات state؟"** → Remote backend + locking + CI/CD فقط
 

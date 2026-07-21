@@ -73,14 +73,14 @@ AzureDiagnostics
 
 ### Incident Response Plan
 
-| المرحلة | المدة المستهدفة | الأنشطة |
-|---------|---------------|---------|
-| **Detect** | 5 دقائق | تنبيه Sentinel |
-| **Triage** | 15 دقيقة | هل هو هجوم حقيقي؟ |
-| **Contain** | 30 دقيقة | عزل الموارد المتأثرة |
-| **Eradicate** | ساعتين | إزالة التهديد |
-| **Recover** | 4 ساعات | إعادة الخدمة |
-| **Post-Mortem** | 24 ساعة | ماذا تعلمنا؟ |
+| المرحلة         | المدة المستهدفة | الأنشطة              |
+| --------------- | --------------- | -------------------- |
+| **Detect**      | 5 دقائق         | تنبيه Sentinel       |
+| **Triage**      | 15 دقيقة        | هل هو هجوم حقيقي؟    |
+| **Contain**     | 30 دقيقة        | عزل الموارد المتأثرة |
+| **Eradicate**   | ساعتين          | إزالة التهديد        |
+| **Recover**     | 4 ساعات         | إعادة الخدمة         |
+| **Post-Mortem** | 24 ساعة         | ماذا تعلمنا؟         |
 
 ---
 
@@ -146,13 +146,13 @@ az monitor log-analytics query -w cloudnova-law --analytics-query "
 
 ### Team Structure
 
-| Role | المسؤولية |
-|------|-----------|
-| **Tier 1 Analyst** | فرز التنبيهات الأولية |
-| **Tier 2 Analyst** | تحقيق متقدم |
-| **Incident Responder** | احتواء واستعادة |
-| **Threat Hunter** | بحث استباقي عن التهديدات |
-| **SOC Manager** | مقاييس وتحسين |
+| Role                   | المسؤولية                |
+| ---------------------- | ------------------------ |
+| **Tier 1 Analyst**     | فرز التنبيهات الأولية    |
+| **Tier 2 Analyst**     | تحقيق متقدم              |
+| **Incident Responder** | احتواء واستعادة          |
+| **Threat Hunter**      | بحث استباقي عن التهديدات |
+| **SOC Manager**        | مقاييس وتحسين            |
 
 ### MITRE ATT&CK Mapping
 
@@ -175,6 +175,7 @@ SecurityAlert
 ### تمرين 1: كتابة KQL Detection Rule
 
 اكتب KQL query يكتشف:
+
 - إنشاء أكثر من 3 VMs في أقل من 5 دقائق
 - تغيير NSG rules للسماح بـ 0.0.0.0/0
 - حذف Key Vault secrets بشكل مشبوه
@@ -186,6 +187,7 @@ SecurityAlert
 ### تحدي: ابنِ SOAR Playbook
 
 أنشئ playbook في Azure Logic Apps يقوم بـ:
+
 1. استقبال alert من Sentinel
 2. حظر IP المصدر في NSG
 3. إرسال إشعار Teams
@@ -196,6 +198,7 @@ SecurityAlert
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين SIEM و SOAR؟
 2. لماذا KQL مهم في Azure Sentinel؟
 3. اشرح مراحل Incident Response
@@ -204,12 +207,12 @@ SecurityAlert
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| SIEM | Security Information & Event Management |
-| SOAR | Security Orchestration, Automation & Response |
-| KQL | Kusto Query Language — لغة استعلام Sentinel |
-| MITRE ATT&CK | إطار تصنيف تكتيكات المهاجمين |
+| السؤال       | الإجابة                                       |
+| ------------ | --------------------------------------------- |
+| SIEM         | Security Information & Event Management       |
+| SOAR         | Security Orchestration, Automation & Response |
+| KQL          | Kusto Query Language — لغة استعلام Sentinel   |
+| MITRE ATT&CK | إطار تصنيف تكتيكات المهاجمين                  |
 
 ---
 
@@ -228,12 +231,12 @@ SecurityAlert
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Encryption & TLS](./03-encryption-tls-pki) |
+| النوع     | الرابط                                                    |
+| --------- | --------------------------------------------------------- |
+| درس مرتبط | [Encryption & TLS](./03-encryption-tls-pki)               |
 | درس مرتبط | [Identity Mastery](../../23-identity/01-identity-mastery) |
-| شهادة | SC-200 (Security Operations) |
-| إطار | [MITRE ATT&CK](https://attack.mitre.org) |
+| شهادة     | SC-200 (Security Operations)                              |
+| إطار      | [MITRE ATT&CK](https://attack.mitre.org)                  |
 
 ---
 

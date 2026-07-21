@@ -34,12 +34,12 @@ graph TB
 
 ### مقاييس IDP
 
-| المقياس | قبل IDP | بعد IDP |
-|---------|---------|---------|
-| **Time to 10th PR** | 5 أيام | 30 دقيقة |
-| **Deployments/يوم** | 2 | 50 |
-| **Developer NPS** | 12 | 65 |
-| **MTTR** | 4 ساعات | 15 دقيقة |
+| المقياس             | قبل IDP | بعد IDP  |
+| ------------------- | ------- | -------- |
+| **Time to 10th PR** | 5 أيام  | 30 دقيقة |
+| **Deployments/يوم** | 2       | 50       |
+| **Developer NPS**   | 12      | 65       |
+| **MTTR**            | 4 ساعات | 15 دقيقة |
 
 ---
 
@@ -63,6 +63,7 @@ graph TB
 ## 🛠️ تدريبات
 
 ### تمرين: صمم Service Catalog لـ CloudNova (5 templates)
+
 ### تحدي: احسب Time to 10th PR لفريقك حالياً
 
 ---
@@ -70,20 +71,23 @@ graph TB
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما هو IDP؟
 2. لماذا المطورون يحتاجون IDP؟
 3. ما هي Golden Paths؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| IDP | Internal Developer Platform |
-| Golden Path | مسار موصى به للتطوير |
-| Time to 10th PR | مقياس سرعة onboarding |
+
+| السؤال          | الإجابة                     |
+| --------------- | --------------------------- |
+| IDP             | Internal Developer Platform |
+| Golden Path     | مسار موصى به للتطوير        |
+| Time to 10th PR | مقياس سرعة onboarding       |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تقنع الإدارة ببناء IDP؟"** → أظهر metrics: Time to 10th PR, Developer NPS, Deployment frequency
 2. **"ما الفرق بين IDP و PaaS؟"** → IDP يُبنى داخلياً، PaaS خدمة خارجية
 
@@ -94,6 +98,7 @@ graph TB
 **ليلى** Platform Engineer. المهمة: بناء IDP لـ 200 مطور.
 
 **الوضع قبل IDP:**
+
 - Onboarding مهندس جديد: 3 أسابيع
 - كل مطور يحتاج تعلم: Terraform, Helm, Kubernetes, Prometheus
 - 40% من وقت المطورين في DevOps، ليس في كتابة كود
@@ -102,6 +107,7 @@ graph TB
 **الرحلة — 4 مراحل:**
 
 **المرحلة 1: Golden Paths (شهر 1-2)**
+
 ```bash
 # أنشأت Templates جاهزة في GitHub
 # template-node-api → Repo + Dockerfile + K8s manifests + CI/CD
@@ -111,6 +117,7 @@ graph TB
 ```
 
 **المرحلة 2: Self-Service Portal (شهر 3-4)**
+
 ```typescript
 // Developer Portal: يختار template، يضغط زر
 // يحصل على: Repo + CI/CD + Namespace + Dashboard + Logs + Alerts
@@ -126,12 +133,14 @@ async function scaffoldService(name, template, team) {
 ```
 
 **المرحلة 3: Internal Developer Platform (شهر 5-8)**
+
 - Service Catalog: 150 خدمة مسجلة
 - Dependency Graph: أي خدمة تعتمد على أي خدمة
 - Scorecards: كل خدمة تُقيم (production readiness, security, docs)
 - Backstage plugins: Kubernetes, PagerDuty, Grafana
 
 **المرحلة 4: القياس والتحسين (شهر 9+)**
+
 - Developer NPS: 12 → 72 ✅
 - Time to 10th PR: 5 أيام → 30 دقيقة ✅
 - Deployments/يوم: 3 → 45 ✅
@@ -144,22 +153,22 @@ async function scaffoldService(name, template, team) {
 
 ### مستويات النضج
 
-| المستوى | الوصف | مثال | وقت التنفيذ |
-|--------|-------|------|-----------|
-| **0: يدوي** | كل شيء manual، tickets | "افتح ticket لـ DevOps" | الحالي |
-| **1: Templates** | Golden Paths جاهزة | GitHub template repos | شهر-شهرين |
-| **2: Self-Service** | Portal للـ scaffolding | Backstage/Port | 3-6 أشهر |
-| **3: Full IDP** | كل شيء self-service | Spotify Backstage | 6-12 شهر |
-| **4: Product** | IDP كمنتج داخلي | فريق IDP مخصص | سنة+ |
+| المستوى             | الوصف                  | مثال                    | وقت التنفيذ |
+| ------------------- | ---------------------- | ----------------------- | ----------- |
+| **0: يدوي**         | كل شيء manual، tickets | "افتح ticket لـ DevOps" | الحالي      |
+| **1: Templates**    | Golden Paths جاهزة     | GitHub template repos   | شهر-شهرين   |
+| **2: Self-Service** | Portal للـ scaffolding | Backstage/Port          | 3-6 أشهر    |
+| **3: Full IDP**     | كل شيء self-service    | Spotify Backstage       | 6-12 شهر    |
+| **4: Product**      | IDP كمنتج داخلي        | فريق IDP مخصص           | سنة+        |
 
 ### Build vs Buy — مصفوفة القرار
 
-| الخيار | التكلفة | وقت التنفيذ | التخصيص | متى؟ |
-|--------|---------|------------|---------|------|
-| **Backstage (OSS)** | $ (مهندسين) | 3-6 أشهر | عالي | فريق Platform قوي |
-| **Port (SaaS)** | $$ | أسبوع-شهر | متوسط | سرعة +零ops |
-| **Humanitec** | $$$ | شهر-شهرين | متوسط | Kubernetes-native |
-| **Build from scratch** | $$$$ | سنة+ | كامل | احتياجات فريدة |
+| الخيار                 | التكلفة     | وقت التنفيذ | التخصيص | متى؟              |
+| ---------------------- | ----------- | ----------- | ------- | ----------------- |
+| **Backstage (OSS)**    | $ (مهندسين) | 3-6 أشهر    | عالي    | فريق Platform قوي |
+| **Port (SaaS)**        | $$          | أسبوع-شهر   | متوسط   | سرعة +零ops       |
+| **Humanitec**          | $$$         | شهر-شهرين   | متوسط   | Kubernetes-native |
+| **Build from scratch** | $$$$        | سنة+        | كامل    | احتياجات فريدة    |
 
 ### متى لا تبني IDP؟
 
@@ -172,6 +181,7 @@ async function scaffoldService(name, template, team) {
 ## 🛠️ تدريبات موسعة
 
 ### تمرين 1: احسب ROI للـ IDP
+
 ```python
 def idp_roi(developers, avg_salary, hours_saved_per_week):
     hourly = avg_salary / 2000  # 2000 ساعة/سنة
@@ -186,6 +196,7 @@ print(f"توفير سنوي: ${savings:,.0f}")
 ```
 
 ### تمرين 2: صمم Service Catalog
+
 ```yaml
 # صمم catalog-entry.yaml لخدمة payment-api
 apiVersion: backstage.io/v1alpha1
@@ -207,6 +218,7 @@ spec:
 ```
 
 ### تحدي: ابنِ MVP لـ IDP في أسبوع
+
 ```markdown
 اليوم 1-2: أنشئ 3 GitHub template repos (Node, Python, Go)
 اليوم 3: أضف CI/CD pipeline تلقائي لكل template
@@ -219,6 +231,7 @@ spec:
 ## 📝 تقييم متكامل
 
 ### ✅ فحص المعرفة (5 أسئلة)
+
 1. ما الفرق بين IDP و PaaS؟
 2. متى لا تحتاج IDP؟
 3. كيف تقيس نجاح IDP؟
@@ -226,64 +239,75 @@ spec:
 5. Backstage vs Port — أيهما تختار؟
 
 ### 🧠 Quiz
+
 **س1:** أفضل مقياس لنجاح IDP:
+
 - أ) عدد الـ servers
 - ب) Time to 10th PR ✅
 - ج) عدد الموظفين
 - د) لون الـ UI
 
 **س2:** IDP يختلف عن PaaS في:
+
 - أ) IDP يُبنى داخلياً ليناسب المؤسسة ✅
 - ب) لا فرق
 - ج) PaaS أفضل دائماً
 - د) IDP أرخص
 
 **س3:** متى لا تبني IDP؟
+
 - أ) أقل من 20 مطوراً ✅
 - ب) دائماً
 - ج) أبداً
 - د) في Azure فقط
 
 ### 🗣️ Active Recall
+
 1. اشرح مراحل نضج IDP من الذاكرة
 2. ارسم معماري IDP مع Service Catalog و Templates
 3. كيف تقنع CFO بتمويل IDP؟
 4. صف رحلة CloudNova من Level 0 إلى Level 3
 
 ### 🎓 Feynman Exercise
+
 > اشرح IDP لمدير: "بدل ما كل طباخ يبني مطبخه من الصفر، بنينا مطبخاً مركزياً. أي طباخ جديد يدخل ويبدأ الطبخ فوراً — الموقد جاهز، الأدوات موجودة، الوصفات مجربة."
 
 ### 🃏 بطاقات إضافية
-| السؤال | الإجابة |
-|--------|---------|
-| ما IDP؟ | منصة داخلية تجعل المطورين منتجين من اليوم الأول |
-| ما Golden Path؟ | مسار توصية (وليس إجباري) لبناء ونشر خدمة |
-| ما أهم metric؟ | Time to 10th PR |
-| ما أقل حجم لبناء IDP؟ | +50 مطوراً |
-| تكلفة IDP سنوياً؟ | $50K-200K (حسب الحجم والتعقيد) |
+
+| السؤال                | الإجابة                                         |
+| --------------------- | ----------------------------------------------- |
+| ما IDP؟               | منصة داخلية تجعل المطورين منتجين من اليوم الأول |
+| ما Golden Path؟       | مسار توصية (وليس إجباري) لبناء ونشر خدمة        |
+| ما أهم metric؟        | Time to 10th PR                                 |
+| ما أقل حجم لبناء IDP؟ | +50 مطوراً                                      |
+| تكلفة IDP سنوياً؟     | $50K-200K (حسب الحجم والتعقيد)                  |
 
 ---
 
 ## 🎤 أسئلة مقابلة موسعة
 
 **س1 (System Design):** "صمم IDP لـ 500 مطور."
+
 > Backstage كـ base + 10 plugins مخصصة. 3 مهندسين Platform بدوام كامل. Service Catalog مركزي. 30 Golden Path template. Self-service portal مع approval workflows. تكلفة: $200K/سنة. ROI: $1.5M/سنة.
 
 **س2 (سلوكي):** "كيف تقنع فريقاً متشككاً في IDP؟"
+
 > أبدأ بـ POC: template واحد فقط. أقيس Time to 10th PR قبل وبعد. أشارك النتائج. لا أفرض IDP — أجعله الخيار الأسهل. المطورون سيختارونه طواعية.
 
 **س3 (تقني):** "كيف تتأكد أن IDP لا يصبح bottleneck؟"
+
 > Platform team يعامل IDP كمنتج: SLAs، feedback loops، quarterly surveys. إذا أصبح IDP bottleneck، فشلنا في المهمة. الـ platform team يجب أن يكون < 5% من إجمالي المهندسين.
 
 ---
 
 ## 📚 المراجع
-| النوع | الرابط |
-|--------|--------|
-| **درس ذو صلة** | [Platform Engineering](./01-platform-engineering) |
-| **درس ذو صلة** | [Backstage](./03-backstage-developer-portal) |
-| **مرجع** | [Team Topologies](https://teamtopologies.com/) |
-| **كتاب** | [Platform Engineering Guide](https://platformengineering.org/) |
+
+| النوع          | الرابط                                                         |
+| -------------- | -------------------------------------------------------------- |
+| **درس ذو صلة** | [Platform Engineering](./01-platform-engineering)              |
+| **درس ذو صلة** | [Backstage](./03-backstage-developer-portal)                   |
+| **مرجع**       | [Team Topologies](https://teamtopologies.com/)                 |
+| **كتاب**       | [Platform Engineering Guide](https://platformengineering.org/) |
 
 ---
 

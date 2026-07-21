@@ -78,8 +78,8 @@ function HeroSection() {
           منصة <span className={styles.heroHighlight}>آريس</span> التعليمية
         </Heading>
         <p className={styles.heroSubtitle}>
-          أول أكاديمية عربية متكاملة لهندسة السحابة — ٣٣ وحدة، ١١٩ درساً، مشاريع حقيقية،
-          ومختبرات تفاعلية. كل ما تحتاجه لتصبح مهندس سحابة محترفاً.
+          أول أكاديمية عربية متكاملة لهندسة السحابة — ٣٣ وحدة، ١١٩ درساً، مشاريع حقيقية، ومختبرات
+          تفاعلية. كل ما تحتاجه لتصبح مهندس سحابة محترفاً.
         </p>
         <div className={styles.heroStats}>
           <div className={styles.heroStat}>
@@ -118,7 +118,8 @@ function ModuleGrid() {
       <div className={styles.sectionHeader}>
         <Heading as="h2">📚 المنهج التعليمي الكامل</Heading>
         <p>
-          ٣٣ وحدة من الأساسيات إلى هندسة السحابة الإنتاجية. كل درس يحتوي على شرح، تمارين، سيناريوهات عملية، وتقييم.
+          ٣٣ وحدة من الأساسيات إلى هندسة السحابة الإنتاجية. كل درس يحتوي على شرح، تمارين، سيناريوهات
+          عملية، وتقييم.
         </p>
       </div>
       <div className={styles.moduleGrid}>
@@ -154,9 +155,7 @@ function CertSection() {
     <section className={styles.certSection}>
       <div className={styles.sectionHeader}>
         <Heading as="h2">🏆 خارطة الشهادات</Heading>
-        <p>
-          كل درس مرتبط بأهداف شهادات Microsoft Azure. تابع جاهزيتك للامتحان.
-        </p>
+        <p>كل درس مرتبط بأهداف شهادات Microsoft Azure. تابع جاهزيتك للامتحان.</p>
       </div>
       <div className={styles.certGrid}>
         {certs.map((c) => (

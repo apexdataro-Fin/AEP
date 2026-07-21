@@ -11,6 +11,7 @@ description: "كل ما يحتاجه مهندس السحابة عن Git: branchi
 ## 🎯 أهداف التعلم
 
 بعد إكمال هذا الدرس، ستكون قادراً على:
+
 - إدارة سير العمل اليومي باحترافية
 - الخروج من أي كارثة Git (merge conflicts, detached HEAD, lost commits)
 - كتابة رسائل Commit احترافية ومراجعة Pull Requests بفعالية
@@ -29,13 +30,13 @@ graph LR
     Remote -->|git pull| WD
 ```
 
-| المفهوم | المعنى | تشبيه |
-|---------|--------|-------|
-| **Working Directory** | ملفاتك الحالية | مكتبك |
-| **Staging Area** | ما جهّزته للـ commit | صندوق التجهيز |
-| **Commit** | لقطة محفوظة | صورة فوتوغرافية |
-| **Branch** | خط تطوير منفصل | غرفة جانبية |
-| **Remote** | نسخة على الخادم | نسخة احتياطية سحابية |
+| المفهوم               | المعنى               | تشبيه                |
+| --------------------- | -------------------- | -------------------- |
+| **Working Directory** | ملفاتك الحالية       | مكتبك                |
+| **Staging Area**      | ما جهّزته للـ commit | صندوق التجهيز        |
+| **Commit**            | لقطة محفوظة          | صورة فوتوغرافية      |
+| **Branch**            | خط تطوير منفصل       | غرفة جانبية          |
+| **Remote**            | نسخة على الخادم      | نسخة احتياطية سحابية |
 
 ---
 
@@ -244,12 +245,12 @@ git bisect reset                       # اختم التحقيق
 
 ## ٧. Rebase vs Merge
 
-| | Merge | Rebase |
-|---|-------|--------|
-| **التاريخ** | يحافظ على التاريخ الحقيقي | يعيد كتابة التاريخ (أنظف) |
-| **الرسم** | فروع متشعبة | خط مستقيم |
-| **التعاون** | آمن — لا يغير تاريخ الآخرين | ⚠️ خطر إذا rebase فروع مشتركة |
-| **متى تستخدم** | دمج feature ← main | تحديث feature من main |
+|                | Merge                       | Rebase                        |
+| -------------- | --------------------------- | ----------------------------- |
+| **التاريخ**    | يحافظ على التاريخ الحقيقي   | يعيد كتابة التاريخ (أنظف)     |
+| **الرسم**      | فروع متشعبة                 | خط مستقيم                     |
+| **التعاون**    | آمن — لا يغير تاريخ الآخرين | ⚠️ خطر إذا rebase فروع مشتركة |
+| **متى تستخدم** | دمج feature ← main          | تحديث feature من main         |
 
 ```bash
 # القاعدة الذهبية:
@@ -283,16 +284,20 @@ override.tf               # تجاوزات محلية
 
 ```markdown
 ## 📋 ماذا يتغير؟
+
 - إضافة Auto Scaling لخوادم الويب
 - تغيير VM size من B2s إلى B2ms
 
 ## ❓ لماذا؟
+
 - حمل الذروة (٩-١١ صباحاً) يستهلك ٩٠٪ CPU
 - B2ms يوفر ٢x الذاكرة بنفس السعر التقريبي
 
 ## 📊 خطة Terraform
 ```
+
 Plan: 3 to add, 1 to change, 0 to destroy.
+
 ```
 
 ## ✅ الاختبار
@@ -320,11 +325,11 @@ Plan: 3 to add, 1 to change, 0 to destroy.
 
 ## 🎴 بطاقات مراجعة
 
-| السؤال | الإجابة |
-|--------|---------|
-| أمر لعرض commits حتى المحذوفة | `git reflog` |
-| أمر لاستعادة commit من reflog | `git cherry-pick <hash>` |
-| أمر لاكتشاف أي commit سبب bug | `git bisect` |
+| السؤال                        | الإجابة                       |
+| ----------------------------- | ----------------------------- |
+| أمر لعرض commits حتى المحذوفة | `git reflog`                  |
+| أمر لاستعادة commit من reflog | `git cherry-pick <hash>`      |
+| أمر لاكتشاف أي commit سبب bug | `git bisect`                  |
 | الفرق بين tracked و untracked | tracked = أضفته لـ git سابقاً |
 
 ## 🎤 أسئلة مقابلة العمل
@@ -391,13 +396,14 @@ git push origin recovered-main:main --force
 
 ## 🎨 طبقة المعماري: Git Flow vs Trunk-Based vs GitHub Flow
 
-| الاستراتيجية | الأفضل لـ | الفروع | التعقيد |
-|-------------|----------|--------|---------|
-| **Git Flow** | فرق كبيرة، releases مجدولة | main, develop, feature, release, hotfix | عالي |
-| **Trunk-Based** | CI/CD متقدم، نشر مستمر | main فقط + فروع قصيرة | منخفض |
-| **GitHub Flow** | معظم الفرق الحديثة | main + feature branches | منخفض-متوسط |
+| الاستراتيجية    | الأفضل لـ                  | الفروع                                  | التعقيد     |
+| --------------- | -------------------------- | --------------------------------------- | ----------- |
+| **Git Flow**    | فرق كبيرة، releases مجدولة | main, develop, feature, release, hotfix | عالي        |
+| **Trunk-Based** | CI/CD متقدم، نشر مستمر     | main فقط + فروع قصيرة                   | منخفض       |
+| **GitHub Flow** | معظم الفرق الحديثة         | main + feature branches                 | منخفض-متوسط |
 
 ### متى تختار ماذا؟
+
 - **Git Flow**: منتج بإصدارات (v1.0, v2.0) وفريق > 10
 - **Trunk-Based**: فريق < 10 + CI/CD قوي + feature flags
 - **GitHub Flow**: الحل الوسط — PR على main، نشر بعد الدمج
@@ -407,12 +413,15 @@ git push origin recovered-main:main --force
 ## 🛠️ تدريبات
 
 ### تمرين ١: كارثة محاكاة (سهل)
+
 > `git reset --hard HEAD~3` بالخطأ. استعد الـ commits.
 
 ### تمرين ٢: تفعيل hooks (متوسط)
+
 > فعّل pre-commit hook يمنع secrets + commit-msg يفرض Conventional Commits.
 
 ### تحدي: bisect (متقدم)
+
 > استخدم bisect مع script للعثور على commit سبب فشل test.
 
 ### 📝 تقييم
@@ -427,6 +436,7 @@ git push origin recovered-main:main --force
 <details><summary>الإجابة</summary>merge = دمج PR لـ main (تاريخ حقيقي). rebase = تحديث feature branch من main (تاريخ نظيف).</details>
 
 ### 🧠 استدعاء نشط
+
 1. ارسم مسار commit: Working Directory → Staging → Local → Remote.
 2. كيف تمنع secrets من دخول Git؟ (3 طرق)
 3. ما هي Conventional Commits؟ اذكر 5 أنواع.
@@ -442,6 +452,7 @@ git push origin recovered-main:main --force
 ---
 
 ## 📚 مراجع
+
 - [Git Advanced](./02-git-advanced) — rebase, bisect, reflog
 - [GitHub Workflows](../14-github/01-github-workflows) — CI/CD
 - 📖 [Pro Git Book](https://git-scm.com/book/en/v2)

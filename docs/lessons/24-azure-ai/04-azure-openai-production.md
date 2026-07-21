@@ -72,18 +72,19 @@ system_prompt = """أنت مساعد تقني لـ CloudNova.
 
 ## 🎨 Azure OpenAI vs OpenAI Direct
 
-| | Azure OpenAI | OpenAI Direct |
-|---|-------------|-------------|
-| **البيانات** | تبقى في Azure tenant | تذهب لـ OpenAI |
-| **Content Safety** | ✅ مدمج | محدود |
-| **RBAC** | ✅ Azure AD | API key فقط |
-| **SLA** | 99.9% | لا SLA |
+|                    | Azure OpenAI         | OpenAI Direct  |
+| ------------------ | -------------------- | -------------- |
+| **البيانات**       | تبقى في Azure tenant | تذهب لـ OpenAI |
+| **Content Safety** | ✅ مدمج              | محدود          |
+| **RBAC**           | ✅ Azure AD          | API key فقط    |
+| **SLA**            | 99.9%                | لا SLA         |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ Azure OpenAI deployment
+
 ### تحدي: ابنِ chatbot مع content safety
 
 ---
@@ -91,20 +92,23 @@ system_prompt = """أنت مساعد تقني لـ CloudNova.
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا Azure OpenAI أفضل من OpenAI direct؟
 2. كيف تحمي من prompt injection؟
 3. ما فائدة Content Safety؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Azure OpenAI | GPT-4 مُدار مع أمان Azure |
-| Content Safety | فلترة المحتوى تلقائياً |
-| Prompt Engineering | تصميم تعليمات النموذج |
+
+| السؤال             | الإجابة                   |
+| ------------------ | ------------------------- |
+| Azure OpenAI       | GPT-4 مُدار مع أمان Azure |
+| Content Safety     | فلترة المحتوى تلقائياً    |
+| Prompt Engineering | تصميم تعليمات النموذج     |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"Azure OpenAI vs OpenAI direct؟"** → Azure: أمان، خصوصية، SLA
 2. **"كيف تمنع jailbreak؟"** → Content Safety + system prompt + rate limiting
 
@@ -135,17 +139,17 @@ from azure.ai.contentsafety import ContentSafetyClient
 
 def filter_content(user_input):
     client = ContentSafetyClient(endpoint, credential)
-    
+
     # فحص jailbreak attempts
     response = client.analyze_text(
         text=user_input,
         categories=["Hate", "Violence", "SelfHarm"],
         blocklist_names=["jailbreak-prompts"]  # قائمة سوداء مخصصة
     )
-    
+
     if any(c.severity >= 2 for c in response.categories_analysis):
         return "🔒 عذراً، لا يمكنني معالجة هذا الطلب."
-    
+
     return None  # المرور
 
 # 2. System Prompt محصن
@@ -164,19 +168,19 @@ class ProtectedChatbot:
     def __init__(self, aoai_client):
         self.client = aoai_client
         self.user_requests = defaultdict(list)  # user_id -> [timestamps]
-    
+
     def chat(self, user_id, message):
         # Rate limiting
         now = time.time()
         recent = [t for t in self.user_requests[user_id] if now - t < 60]
         if len(recent) > 10:  # 10 requests/minute max
             return "🔒 معدل الطلبات مرتفع. حاول مرة أخرى بعد دقيقة."
-        
+
         # Content filter
         filter_result = filter_content(message)
         if filter_result:
             return filter_result
-        
+
         # Safe call
         try:
             response = self.client.chat.completions.create(
@@ -188,10 +192,10 @@ class ProtectedChatbot:
                 temperature=0.3,  # أقل = أكثر التزاماً بالتعليمات
                 max_tokens=2000
             )
-            
+
             self.user_requests[user_id].append(now)
             return response.choices[0].message.content
-            
+
         except Exception as e:
             logger.error(f"Azure OpenAI error: {e}")
             return "⚠️ عذراً، حدث خطأ. فريقنا يعمل على إصلاحه."
@@ -211,19 +215,19 @@ graph TD
         CS --> AOAI["Azure OpenAI<br/>GPT-4 Deployment"]
         AOAI --> MON["Azure Monitor<br/>Logging + Metrics"]
     end
-    
+
     subgraph "Data Plane"
         AOAI --> KV["Azure Key Vault<br/>API Keys + Secrets"]
         AOAI --> MI["Managed Identity<br/>No keys in code!"]
         MON --> LAW["Log Analytics Workspace<br/>Prompt + Response Logs"]
         MON --> ALERTS["Alerts<br/>Unusual activity, Rate spikes"]
     end
-    
+
     subgraph "Governance"
         APIM --> BUDGET["Cost Budget Alert<br/>Daily spend cap"]
         LAW --> AUDIT["Audit Logs<br/>Compliance"]
     end
-    
+
     style AOAI fill:#0078D4,stroke:#005A9E,color:#fff
     style CS fill:#f9a825,stroke:#f57f17
 ```
@@ -274,14 +278,15 @@ STRUCTURED_PROMPT = """أجب بصيغة JSON:
 
 ### مصفوفة تكلفة: GPT-4 vs GPT-3.5 vs GPT-4o
 
-| Model | Input (لكل 1K tokens) | Output (لكل 1K tokens) | 10K requests/يوم (تقدير شهري) |
-|-------|----------------------|------------------------|---------------------------|
-| GPT-3.5 Turbo | $0.0005 | $0.0015 | ~$450 |
-| GPT-4 | $0.03 | $0.06 | ~$27,000 |
-| GPT-4o | $0.005 | $0.015 | ~$4,500 |
-| GPT-4o-mini | $0.00015 | $0.0006 | ~$170 |
+| Model         | Input (لكل 1K tokens) | Output (لكل 1K tokens) | 10K requests/يوم (تقدير شهري) |
+| ------------- | --------------------- | ---------------------- | ----------------------------- |
+| GPT-3.5 Turbo | $0.0005               | $0.0015                | ~$450                         |
+| GPT-4         | $0.03                 | $0.06                  | ~$27,000                      |
+| GPT-4o        | $0.005                | $0.015                 | ~$4,500                       |
+| GPT-4o-mini   | $0.00015              | $0.0006                | ~$170                         |
 
 **استراتيجية CloudNova للتوفير:**
+
 - GPT-4o-mini: 70% من الطلبات (الأسئلة الشائعة)
 - GPT-4o: 25% من الطلبات (المشاكل المعقدة)
 - GPT-4: 5% من الطلبات (حالات خاصة، debugging عميق)
@@ -349,7 +354,7 @@ class ProductionAIService:
         with tracer.start_as_current_span("aoai-query") as span:
             span.set_attribute("user.id", user_id)
             span.set_attribute("message.length", len(message))
-            
+
             try:
                 response = client.chat.completions.create(
                     model="gpt-4o",
@@ -365,17 +370,17 @@ class ProductionAIService:
                         "protected_material_text": True
                     }
                 )
-                
+
                 # سجّل usage للـ FinOps
                 span.set_attribute("tokens.prompt", response.usage.prompt_tokens)
                 span.set_attribute("tokens.completion", response.usage.completion_tokens)
-                
+
                 return {
                     "content": response.choices[0].message.content,
                     "tokens_used": response.usage.total_tokens,
                     "model": response.model
                 }
-                
+
             except Exception as e:
                 span.record_exception(e)
                 raise
@@ -389,7 +394,7 @@ class PromptEvaluator:
     def __init__(self, aoai_client):
         self.client = aoai_client
         self.results = []
-    
+
     def evaluate_prompt(self, prompt_name, system_prompt, test_cases):
         """
         test_cases: [(user_input, expected_keywords, forbidden_keywords)]
@@ -404,18 +409,18 @@ class PromptEvaluator:
                 ]
             )
             text = response.choices[0].message.content.lower()
-            
+
             # تحقق من الكلمات المتوقعة
             found_expected = sum(1 for kw in expected if kw.lower() in text)
             expected_score = found_expected / len(expected) if expected else 1.0
-            
+
             # تحقق من الكلمات الممنوعة
             found_forbidden = sum(1 for kw in forbidden if kw.lower() in text)
             forbidden_penalty = found_forbidden / len(forbidden) if forbidden else 0
-            
+
             case_score = expected_score - forbidden_penalty
             score += case_score
-            
+
             self.results.append({
                 'prompt': prompt_name,
                 'user_input': user_input,
@@ -423,7 +428,7 @@ class PromptEvaluator:
                 'forbidden_penalty': forbidden_penalty,
                 'case_score': case_score
             })
-        
+
         return score / len(test_cases)
 
 # مثال استخدام
@@ -443,6 +448,7 @@ print(f"Prompt Score: {score:.2f}/1.0")
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. كيف تحمي من Prompt Injection attacks؟
 2. لماذا Managed Identity بدلاً من API keys؟
 3. ما الفرق بين GPT-4o و GPT-4 من حيث التكلفة؟
@@ -450,6 +456,7 @@ print(f"Prompt Score: {score:.2f}/1.0")
 5. ما فائدة Content Safety filters؟
 
 ### 📝 اختبار (3)
+
 1. **مستخدم يرسل 1000 كلمة كـ prompt. كيف تتعامل من ناحية التكلفة؟**
    <details><summary>الإجابة</summary>اقتطع الـ prompt إذا تجاوز limit معين. استخدم summarization للـ context الطويل. ضع max_tokens للـ completion. تحذير المستخدم عند تجاوز الـ budget.</details>
 
@@ -460,6 +467,7 @@ print(f"Prompt Score: {score:.2f}/1.0")
    <details><summary>الإجابة</summary>temperature عالي جداً (> 0.8). أو system prompt لم يحدد output format. استخدم `response_format: { "type": "json_object" }`.</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم معماري Azure OpenAI production
 - اشرح 3 Prompt Engineering patterns
 - كيف تحسب تكلفة 1M request شهرياً؟
@@ -467,25 +475,28 @@ print(f"Prompt Score: {score:.2f}/1.0")
 - صف incident تعاملت فيه مع LLM misbehavior
 
 ### 🎓 Feynman: Azure OpenAI لغير التقني
+
 "تخيل أنك استأجرت مساعداً ذكياً جداً. Azure OpenAI هو 'عقل' هذا المساعد — تضعه في سحابة Azure الآمنة. Content Safety هو 'المشرف' الذي يتأكد أن المساعد لا يقول شيئاً مسيئاً. Prompt Engineering هو 'التعليمات' التي تعطيها للمساعد صباح كل يوم."
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| Azure OpenAI | GPT-4 مُدار مع أمان وخصوصية Azure |
-| Content Safety | فلترة آلية لـ hate speech, jailbreak, violence |
-| Prompt Engineering | تصميم تعليمات فعّالة للنموذج |
-| Managed Identity | مصادقة بدون API keys في الكود |
-| Rate Limiting | تحديد عدد الطلبات لكل مستخدم/دقيقة |
-| System Prompt | التعليمات الأساسية التي لا يراها المستخدم |
-| Few-Shot | إعطاء أمثلة داخل الـ prompt لتحسين الدقة |
-| TPM | Tokens Per Minute — مقياس الـ quota في Azure |
+
+| السؤال             | الإجابة                                        |
+| ------------------ | ---------------------------------------------- |
+| Azure OpenAI       | GPT-4 مُدار مع أمان وخصوصية Azure              |
+| Content Safety     | فلترة آلية لـ hate speech, jailbreak, violence |
+| Prompt Engineering | تصميم تعليمات فعّالة للنموذج                   |
+| Managed Identity   | مصادقة بدون API keys في الكود                  |
+| Rate Limiting      | تحديد عدد الطلبات لكل مستخدم/دقيقة             |
+| System Prompt      | التعليمات الأساسية التي لا يراها المستخدم      |
+| Few-Shot           | إعطاء أمثلة داخل الـ prompt لتحسين الدقة       |
+| TPM                | Tokens Per Minute — مقياس الـ quota في Azure   |
 
 ---
 
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"كيف تختار بين GPT-4o و GPT-4 و GPT-3.5؟"**
    - GPT-4o-mini: 70% من الحالات (fast + cheap)
    - GPT-4o: 25% (complex reasoning, multilingual)
@@ -499,7 +510,9 @@ print(f"Prompt Score: {score:.2f}/1.0")
    - Private endpoint (لا public internet)
 
 ### System Design
+
 **"صمم AI-powered customer support system."**
+
 - Tier 1: GPT-4o-mini (FAQ, common questions) — 70%
 - Tier 2: GPT-4o (technical troubleshooting) — 25%
 - Tier 3: Human escalation (complex issues) — 5%
@@ -509,6 +522,7 @@ print(f"Prompt Score: {score:.2f}/1.0")
 - Cost optimization: caching common Q&As
 
 ### Behavioral (STAR)
+
 **"كيف تعاملت مع incident ناتج عن LLM؟"**
 
 **S:** Chatbot أعطى معلومات خاطئة عن pricing لعميل كبير.

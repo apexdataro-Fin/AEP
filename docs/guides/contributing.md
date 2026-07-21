@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: [getting-started]
   tags: [contributing, community, open-source]
 ---
+
 displayed_sidebar: devSidebar
 
 # Contributing Guide

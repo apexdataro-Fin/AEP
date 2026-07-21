@@ -29,11 +29,11 @@ graph LR
     C --> A
 ```
 
-| المرحلة | السؤال الأساسي | الأدوات |
-|---------|--------------|--------|
-| **Inform** | من ينفق؟ على ماذا؟ متى؟ | Cost Management + Tags |
-| **Optimize** | كيف نوفر؟ أين الهدر؟ | RI, Spot, Right-size, Lifecycle |
-| **Operate** | كيف نضمن الاستمرار؟ | Budgets, Alerts, Policies, Automation |
+| المرحلة      | السؤال الأساسي          | الأدوات                               |
+| ------------ | ----------------------- | ------------------------------------- |
+| **Inform**   | من ينفق؟ على ماذا؟ متى؟ | Cost Management + Tags                |
+| **Optimize** | كيف نوفر؟ أين الهدر؟    | RI, Spot, Right-size, Lifecycle       |
+| **Operate**  | كيف نضمن الاستمرار؟     | Budgets, Alerts, Policies, Automation |
 
 ---
 
@@ -55,7 +55,7 @@ ResourceCosts
 | summarize DailyCost = sum(Cost) by bin(TimeGenerated, 1d)
 | serialize
 | extend PrevDay = prev(DailyCost, 1)
-| extend IncreasePercent = iff(PrevDay > 0, 
+| extend IncreasePercent = iff(PrevDay > 0,
     round((DailyCost - PrevDay) / PrevDay * 100, 2), 0)
 | where IncreasePercent > 20
 | project TimeGenerated, DailyCost, PrevDay, IncreasePercent
@@ -79,7 +79,7 @@ ResourceCosts
 | where TimeGenerated > ago(30d)
 | summarize Total = sum(Cost) by ServiceName
 | order by Total desc
-| project ServiceName, Total, 
+| project ServiceName, Total,
     PercentOfTotal = round(Total / toscalar(
         ResourceCosts | where TimeGenerated > ago(30d) | summarize sum(Cost)
     ) * 100, 2)
@@ -170,7 +170,7 @@ for rec in advisor.recommendations.list():
     if "cost" in rec.category.lower() or "rightsize" in rec.category.lower():
         savings = rec.extended_properties.get("savingsAmount", "N/A")
         problem = rec.short_description.get("problem", "N/A")
-        
+
         print(f"""
         ⚠️ {rec.impacted_field}: {rec.impacted_value}
         ├── التوفير المقدر: ${savings}/شهر
@@ -183,15 +183,15 @@ for vm in compute.virtual_machines.list_all():
     # تحليل CPU usage لآخر 14 يوماً
     metrics = get_vm_metrics(vm.name, days=14)
     avg_cpu = metrics["average_cpu_percent"]
-    
+
     if avg_cpu < 5:  # أقل من 5% CPU!
         print(f"🟢 {vm.name}: CPU avg {avg_cpu:.2f}% — مرشح للتخفيض")
         # اقترح: الانتقال من D8s_v3 → D4s_v3
         # التوفير: ~$108/شهر
-    
+
     elif avg_cpu < 15:
         print(f"🟡 {vm.name}: CPU avg {avg_cpu:.2f}% — راقب")
-    
+
     elif avg_cpu > 80:
         print(f"🔴 {vm.name}: CPU avg {avg_cpu:.2f}% — يحتاج زيادة!")
 ```
@@ -304,7 +304,7 @@ az consumption budget create \
 # تقرير توفير تلقائي أسبوعي
 def weekly_savings_report():
     """توليد تقرير التوفير الأسبوعي"""
-    
+
     savings = {
         "Reserved Instances": 3450,   # 3-year RI vs PAYG
         "Spot VMs": 2800,             # GPU training on Spot
@@ -313,9 +313,9 @@ def weekly_savings_report():
         "Storage Lifecycle": 450,     # Cool tier for old data
         "Deleted Unused IPs": 35,     # Small but easy win
     }
-    
+
     total_savings = sum(savings.values())
-    
+
     print(f"""
     ╔══════════════════════════════════════╗
     ║   تقرير التوفير الأسبوعي — CloudNova  ║
@@ -324,14 +324,14 @@ def weekly_savings_report():
     for category, amount in savings.items():
         bar = "█" * int(amount / 100)
         print(f"    {category:.<25} ${amount:>6,}/شهر {bar}")
-    
+
     print(f"""
     ╠══════════════════════════════════════╣
     ║   إجمالي التوفير الشهري:  ${total_savings:>8,}/شهر  ║
     ║   التوفير السنوي:        ${total_savings*12:>8,}/سنة  ║
     ╚══════════════════════════════════════╝
     """)
-    
+
     return total_savings
 ```
 
@@ -474,23 +474,28 @@ ResourceCosts
 ## 🏛️ طبقة الإنتاج: ثقافة FinOps
 
 ### FinOps Champions
+
 - كل فريق = FinOps Champion واحد
 - تقرير شهري للتكاليف لكل CostCenter
 
 ### 🚨 CloudNova: أزمة $78,200
+
 > GPU VMs منسية + logs explosion. إصلاح: إيقاف فوري → توفير $32,700/شهر.
 
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين ١:** KQL cost analysis. **تمرين ٢:** Budget alerts.
 
 ### 📝 تقييم
+
 **س١:** FinOps cycle؟ → Inform → Optimize → Operate.
 **س٢:** RI vs Savings Plan؟ → RI: VM محدد. SP: مرونة أكثر.
 **س٣:** Spot VMs متى؟ → Non-critical workloads.
 
 ### 🎤 مقابلة
+
 **"كيف توفر 50% من تكلفة السحابة؟"** → RI + Right-sizing + Auto-shutdown + Spot + Cleanup.
 
 ---

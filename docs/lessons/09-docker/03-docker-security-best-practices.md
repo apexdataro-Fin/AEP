@@ -82,6 +82,7 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
 ### سيناريو CloudNova: حاوية مخترقة
 
 اكتشفنا حاوية API تعمل كـ root. عند اختراقها عبر ثغرة في الـ app، استطاع المخترق:
+
 1. قراءة `/etc/shadow`
 2. تثبيت برامج ضارة
 3. الوصول إلى host network
@@ -92,22 +93,24 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
 
 ## 🎨 طبقة المعماري: Docker Security Checklist
 
-| # | الفحص | الأمر |
-|---|-------|-------|
-| 1 | Non-root user | `docker inspect --format '{{.Config.User}}' container` |
-| 2 | Read-only root | `docker inspect --format '{{.HostConfig.ReadonlyRootfs}}'` |
-| 3 | No privileged mode | `--privileged=false` (الافتراضي) |
-| 4 | Dropped capabilities | `--cap-drop=ALL` |
-| 5 | No host network | لا تستخدم `--network host` |
+| #   | الفحص                | الأمر                                                      |
+| --- | -------------------- | ---------------------------------------------------------- |
+| 1   | Non-root user        | `docker inspect --format '{{.Config.User}}' container`     |
+| 2   | Read-only root       | `docker inspect --format '{{.HostConfig.ReadonlyRootfs}}'` |
+| 3   | No privileged mode   | `--privileged=false` (الافتراضي)                           |
+| 4   | Dropped capabilities | `--cap-drop=ALL`                                           |
+| 5   | No host network      | لا تستخدم `--network host`                                 |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: حسّن Dockerfile
+
 خذ Dockerfile موجوداً وأضف non-root user + read-only.
 
 ### تحدي: تدقيق أمني
+
 شغّل Docker Bench Security على خادم الإنتاج وأصلح كل WARN.
 
 ---
@@ -115,6 +118,7 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا non-root user مهم؟
 2. ماذا يفعل `--read-only`؟
 3. ما الفرق بين `--cap-drop=ALL` و `--privileged`؟
@@ -122,12 +126,12 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| Non-root | تشغيل الحاوية كمستخدم عادي |
-| `--read-only` | جذر read-only للقراءة فقط |
-| `--cap-drop=ALL` | إزالة كل صلاحيات Linux |
-| Docker Scout | أداة فحص صور مدمجة مع Docker |
+| السؤال           | الإجابة                      |
+| ---------------- | ---------------------------- |
+| Non-root         | تشغيل الحاوية كمستخدم عادي   |
+| `--read-only`    | جذر read-only للقراءة فقط    |
+| `--cap-drop=ALL` | إزالة كل صلاحيات Linux       |
+| Docker Scout     | أداة فحص صور مدمجة مع Docker |
 
 ---
 
@@ -142,11 +146,11 @@ docker run --rm --net host --pid host --userns host --cap-add audit_control \
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Docker in CI/CD](./04-docker-in-ci-cd) |
+| النوع     | الرابط                                                                   |
+| --------- | ------------------------------------------------------------------------ |
+| درس مرتبط | [Docker in CI/CD](./04-docker-in-ci-cd)                                  |
 | درس مرتبط | [Container Security](../../08-containers/02-container-security-scanning) |
-| أداة | [Docker Bench Security](https://github.com/docker/docker-bench-security) |
+| أداة      | [Docker Bench Security](https://github.com/docker/docker-bench-security) |
 
 ---
 

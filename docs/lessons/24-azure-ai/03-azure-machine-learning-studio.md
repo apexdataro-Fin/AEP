@@ -79,18 +79,19 @@ def pipeline():
 
 ## 🎨 Azure ML vs Databricks
 
-| | Azure ML | Databricks |
-|---|---------|-----------|
-| **التركيز** | ML lifecycle كاملة | Data engineering + ML |
-| **AutoML** | ✅ مدمج | محدود |
-| **Managed endpoints** | ✅ | ❌ |
-| **Spark** | محدود | ✅ |
+|                       | Azure ML           | Databricks            |
+| --------------------- | ------------------ | --------------------- |
+| **التركيز**           | ML lifecycle كاملة | Data engineering + ML |
+| **AutoML**            | ✅ مدمج            | محدود                 |
+| **Managed endpoints** | ✅                 | ❌                    |
+| **Spark**             | محدود              | ✅                    |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ ML Workspace ودرب نموذجاً مع AutoML
+
 ### تحدي: انشر نموذجاً كـ managed endpoint
 
 ---
@@ -98,20 +99,23 @@ def pipeline():
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما فائدة AutoML؟
 2. كيف تنشر نموذجاً managed endpoint؟
 3. متى تستخدم Azure ML بدلاً من Databricks؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Azure ML | منصة ML مُدارة في Azure |
-| AutoML | تدريب تلقائي — يجرب عدة نماذج |
-| Managed Endpoint | نشر نموذج مع auto-scaling |
+
+| السؤال           | الإجابة                       |
+| ---------------- | ----------------------------- |
+| Azure ML         | منصة ML مُدارة في Azure       |
+| AutoML           | تدريب تلقائي — يجرب عدة نماذج |
+| Managed Endpoint | نشر نموذج مع auto-scaling     |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تدرب نموذجاً بدون كتابة كود؟"** → Azure AutoML
 2. **"كيف تنتقل من notebook إلى production؟"** → ML Pipeline + Managed Endpoint
 

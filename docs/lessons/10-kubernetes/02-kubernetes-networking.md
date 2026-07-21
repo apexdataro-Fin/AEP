@@ -534,6 +534,7 @@ kubectl exec -it debug-pod -- iptables -t nat -L KUBE-SERVICES -n | grep api
 ### Cilium eBPF — مستقبل شبكات K8s
 
 بدلاً من iptables (بطيء مع 1000+ services)، Cilium يستخدم eBPF:
+
 - يبرمج kernel مباشرة — أسرع 10x
 - Hubble UI للتتبع المباشر بين الخدمات
 - L7 Network Policies (HTTP method, path, headers)
@@ -555,13 +556,13 @@ kubectl rollout restart deployment/coredns -n kube-system
 
 ### CNI Selection Matrix
 
-| المعيار | Flannel | Calico | Cilium | Azure CNI |
-|---------|---------|--------|--------|-----------|
-| البساطة | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐⭐ |
-| NetworkPolicy | ❌ | ✅✅ | ✅✅✅ (L7) | ✅ (NSG) |
-| الأداء | ⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| المراقبة | ❌ | محدود | Hubble UI | Azure Monitor |
-| التكلفة | مجاني | مجاني | مجاني | IP exhaustion risk |
+| المعيار       | Flannel    | Calico   | Cilium      | Azure CNI          |
+| ------------- | ---------- | -------- | ----------- | ------------------ |
+| البساطة       | ⭐⭐⭐⭐⭐ | ⭐⭐⭐   | ⭐⭐        | ⭐⭐⭐⭐           |
+| NetworkPolicy | ❌         | ✅✅     | ✅✅✅ (L7) | ✅ (NSG)           |
+| الأداء        | ⭐⭐⭐     | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐  | ⭐⭐⭐⭐           |
+| المراقبة      | ❌         | محدود    | Hubble UI   | Azure Monitor      |
+| التكلفة       | مجاني      | مجاني    | مجاني       | IP exhaustion risk |
 
 ### Service Mesh Decision
 
@@ -574,12 +575,15 @@ kubectl rollout restart deployment/coredns -n kube-system
 ## 🛠️ تدريبات
 
 ### تمرين ١: NetworkPolicy (سهل)
+
 > أنشئ namespace `isolated`. امنع كل الـ ingress/egress. ثم اسمح فقط لـ pod معين بالوصول للإنترنت.
 
 ### تمرين ٢: تشخيص انقطاع (متوسط)
+
 > `api` لا يصل لـ `postgres`. ارجع للخطوات في سيناريو CloudNova ونفذها.
 
 ### تحدي: Service Mesh (متقدم)
+
 > ثبت Istio. انشر تطبيقين. راقب الـ mTLS و distributed tracing.
 
 ### 📝 تقييم
@@ -594,6 +598,7 @@ kubectl rollout restart deployment/coredns -n kube-system
 <details><summary>الإجابة</summary>mTLS تلقائي، distributed tracing، retry/circuit breaking، traffic splitting للـ canary deployments.</details>
 
 ### 🧠 استدعاء نشط
+
 1. ارسم مسار الحزمة من Pod A → Service → Pod B.
 2. متى تختار Calico ومتى Cilium؟
 3. كيف تشخص DNS failure في K8s؟

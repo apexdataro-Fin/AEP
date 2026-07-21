@@ -21,11 +21,11 @@ description: "Terraform CI/CD — GitHub Actions، Atlantis، automated plan/app
 
 ## 🏗️ GitHub Actions + Terraform
 
-```yaml
+````yaml
 name: Terraform
 on:
   pull_request:
-    paths: ['infra/**']
+    paths: ["infra/**"]
 jobs:
   terraform:
     runs-on: ubuntu-latest
@@ -50,7 +50,7 @@ jobs:
               issue_number: context.issue.number,
               body: '## Terraform Plan\n```\n' + plan + '\n```'
             });
-```
+````
 
 ### Atlantis — GitOps for Terraform
 
@@ -88,17 +88,18 @@ atlantis apply
 
 ## 🎨 Atlantis vs GitHub Actions
 
-| | Atlantis | GitHub Actions |
-|---|---------|---------------|
-| **التفاعل** | PR comments | YAML triggers |
-| **State Locking** | ✅ مدمج | يدوي |
-| **Apply** | عبر PR comment | عند merge |
+|                   | Atlantis       | GitHub Actions |
+| ----------------- | -------------- | -------------- |
+| **التفاعل**       | PR comments    | YAML triggers  |
+| **State Locking** | ✅ مدمج        | يدوي           |
+| **Apply**         | عبر PR comment | عند merge      |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: ابنِ GitHub Actions مع Terraform Plan كـ PR comment
+
 ### تحدي: أضف `terraform apply` عند merge إلى main فقط
 
 ---
@@ -106,20 +107,23 @@ atlantis apply
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا Terraform Plan مهم قبل merge؟
 2. كيف تمنع تشغيل apply على PR؟
 3. ما فائدة Atlantis؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| `terraform plan` | معاينة التغييرات قبل التطبيق |
-| Atlantis | GitOps for Terraform — plan/apply من PR comments |
-| PR comment | نشر خطة Terraform في تعليق على PR |
+
+| السؤال           | الإجابة                                          |
+| ---------------- | ------------------------------------------------ |
+| `terraform plan` | معاينة التغييرات قبل التطبيق                     |
+| Atlantis         | GitOps for Terraform — plan/apply من PR comments |
+| PR comment       | نشر خطة Terraform في تعليق على PR                |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"صمم CI/CD pipeline لـ Terraform"** → PR → plan comment → review → merge → apply
 2. **"كيف تمنع تدمير موارد الإنتاج؟"** → `prevent_destroy` lifecycle + PR review + plan inspection
 

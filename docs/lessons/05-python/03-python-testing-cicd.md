@@ -84,7 +84,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ['3.10', '3.11', '3.12']
+        python-version: ["3.10", "3.11", "3.12"]
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -116,7 +116,7 @@ repos:
     hooks:
       - id: check-ast
       - id: check-yaml
-      - id: detect-private-key  # لا تدفع مفاتيح خاصة!
+      - id: detect-private-key # لا تدفع مفاتيح خاصة!
 ```
 
 ---
@@ -147,16 +147,16 @@ def test_create_resource_group():
     import os
     if not os.getenv("AZURE_INTEGRATION_TESTS"):
         pytest.skip("Set AZURE_INTEGRATION_TESTS=1 to run")
-    
+
     from azure.identity import DefaultAzureCredential
     from azure.mgmt.resource import ResourceManagementClient
-    
+
     credential = DefaultAzureCredential()
     client = ResourceManagementClient(credential, os.getenv("AZURE_SUBSCRIPTION_ID"))
-    
+
     rg_name = f"test-rg-{int(time.time())}"
     client.resource_groups.create_or_update(rg_name, {"location": "westeurope"})
-    
+
     # Cleanup
     client.resource_groups.begin_delete(rg_name)
 ```
@@ -172,6 +172,7 @@ def test_create_resource_group():
 ### تمرين 2: CI/CD Pipeline كامل
 
 ابنِ GitHub Actions workflow:
+
 - يشغّل الاختبارات عند كل push
 - يتحقق من %80 coverage minimum
 - يرفض merge إذا فشلت الاختبارات
@@ -185,6 +186,7 @@ def test_create_resource_group():
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين unit test و integration test؟
 2. لماذا نستخدم mocking مع Azure SDK؟
 3. ما فائدة parametrized tests؟
@@ -192,12 +194,12 @@ def test_create_resource_group():
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| pytest | إطار اختبارات Python |
-| Mock | كائن وهمي يحاكي Azure SDK |
-| Coverage | نسبة الكود المغطى بالاختبارات |
-| pre-commit | فحص الكود قبل commit |
+| السؤال     | الإجابة                       |
+| ---------- | ----------------------------- |
+| pytest     | إطار اختبارات Python          |
+| Mock       | كائن وهمي يحاكي Azure SDK     |
+| Coverage   | نسبة الكود المغطى بالاختبارات |
+| pre-commit | فحص الكود قبل commit          |
 
 ---
 
@@ -213,11 +215,11 @@ def test_create_resource_group():
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                             |
+| --------- | -------------------------------------------------- |
 | درس مرتبط | [Azure SDK Mastery](./02-python-azure-sdk-mastery) |
 | درس مرتبط | [CI/CD Pipelines](../../15-cicd/01-cicd-pipelines) |
-| دليل | [pytest Docs](https://docs.pytest.org) |
+| دليل      | [pytest Docs](https://docs.pytest.org)             |
 
 ---
 

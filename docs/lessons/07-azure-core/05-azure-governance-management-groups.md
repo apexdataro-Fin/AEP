@@ -45,7 +45,12 @@ az account management-group subscription add --name Production --subscription "c
       "if": {
         "allOf": [
           { "field": "type", "equals": "Microsoft.Compute/virtualMachines" },
-          { "not": { "field": "Microsoft.Compute/virtualMachines/sku.name", "in": ["Standard_B1s", "Standard_B2s", "Standard_D2s_v3"] } }
+          {
+            "not": {
+              "field": "Microsoft.Compute/virtualMachines/sku.name",
+              "in": ["Standard_B1s", "Standard_B2s", "Standard_D2s_v3"]
+            }
+          }
         ]
       },
       "then": { "effect": "Deny" }
@@ -75,6 +80,7 @@ az lock create --name ReadOnly --lock-type ReadOnly --resource cloudnova-dns-zon
 أحد المطورين أنشأ 5 VMs من SKU `Standard_E64s_v3` "للتجربة". الفاتورة: $12,500.
 
 **بعد الحادثة**:
+
 1. Azure Policy: يمنع أي VM أكبر من `Standard_D4s_v3`
 2. Budget Alert: إشعار عند 50%
 3. Resource Locks: `CanNotDelete` على الإنتاج
@@ -109,23 +115,25 @@ az policy state list --query "[?complianceState=='NonCompliant']" -o table
 
 ### Policy Effects
 
-| Effect | متى تستخدمه |
-|--------|-----------|
-| **Deny** | منع إنشاء موارد غير مسموحة |
-| **Audit** | تسجيل المخالفات بدون منع |
+| Effect                | متى تستخدمه                                  |
+| --------------------- | -------------------------------------------- |
+| **Deny**              | منع إنشاء موارد غير مسموحة                   |
+| **Audit**             | تسجيل المخالفات بدون منع                     |
 | **DeployIfNotExists** | نشر موارد تلقائياً (مثل diagnostic settings) |
-| **Modify** | تعديل خصائص الموارد (مثل إضافة tags) |
+| **Modify**            | تعديل خصائص الموارد (مثل إضافة tags)         |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: اكتب 3 Azure Policies
+
 1. منع إنشاء موارد خارج West Europe
 2. إلزام Storage Accounts بـ TLS 1.2
 3. فرض tags: `Environment` و `CostCenter`
 
 ### تحدي: Cost Alert Automation
+
 أنشئ Azure Function ترسل إشعار Slack عندما تقترب الفاتورة من الـ budget.
 
 ---
@@ -133,6 +141,7 @@ az policy state list --query "[?complianceState=='NonCompliant']" -o table
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين Management Group و Subscription؟
 2. متى تستخدم `Deny` vs `Audit` effect في Policy؟
 3. كيف تمنع حذف موارد الإنتاج؟
@@ -141,12 +150,12 @@ az policy state list --query "[?complianceState=='NonCompliant']" -o table
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| Management Group | حاوية لتنظيم الاشتراكات |
-| Azure Policy | قواعد إلزامية تتحكم في الموارد |
-| Resource Lock | منع حذف أو تعديل الموارد |
-| Budget Alert | إشعار عند تجاوز حد الإنفاق |
+| السؤال           | الإجابة                        |
+| ---------------- | ------------------------------ |
+| Management Group | حاوية لتنظيم الاشتراكات        |
+| Azure Policy     | قواعد إلزامية تتحكم في الموارد |
+| Resource Lock    | منع حذف أو تعديل الموارد       |
+| Budget Alert     | إشعار عند تجاوز حد الإنفاق     |
 
 ---
 
@@ -162,11 +171,11 @@ az policy state list --query "[?complianceState=='NonCompliant']" -o table
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Azure Storage](./04-azure-storage-deep-dive) |
+| النوع     | الرابط                                           |
+| --------- | ------------------------------------------------ |
+| درس مرتبط | [Azure Storage](./04-azure-storage-deep-dive)    |
 | درس مرتبط | [FinOps](../../22-finops/01-finops-fundamentals) |
-| شهادة | AZ-104 (Governance) |
+| شهادة     | AZ-104 (Governance)                              |
 
 ---
 

@@ -20,15 +20,15 @@ description: "Kubernetes vs Docker Swarm vs Nomad vs AWS ECS — مقارنة ش
 
 ## 🏗️ مقارنة شاملة
 
-| الميزة | Kubernetes | Docker Swarm | Nomad | ECS |
-|--------|-----------|-------------|-------|-----|
-| **التعقيد** | عالي جداً | منخفض | متوسط | متوسط |
-| **التوسع** | 5000+ nodes | ~100 nodes | 1000+ nodes | غير محدود (AWS) |
-| **Service Mesh** | Istio, Linkerd | ❌ | Consul Connect | App Mesh |
-| **Auto-scaling** | HPA, VPA, KEDA | ❌ | Nomad Autoscaler | Service Auto Scaling |
-| **Helm Charts** | ✅ | ❌ | ❌ | ❌ |
-| **التعلم** | شهور | أيام | أسابيع | أسابيع |
-| **متى تختاره؟** | مؤسسات كبيرة | فرق صغيرة | Hybrid cloud | AWS فقط |
+| الميزة           | Kubernetes     | Docker Swarm | Nomad            | ECS                  |
+| ---------------- | -------------- | ------------ | ---------------- | -------------------- |
+| **التعقيد**      | عالي جداً      | منخفض        | متوسط            | متوسط                |
+| **التوسع**       | 5000+ nodes    | ~100 nodes   | 1000+ nodes      | غير محدود (AWS)      |
+| **Service Mesh** | Istio, Linkerd | ❌           | Consul Connect   | App Mesh             |
+| **Auto-scaling** | HPA, VPA, KEDA | ❌           | Nomad Autoscaler | Service Auto Scaling |
+| **Helm Charts**  | ✅             | ❌           | ❌               | ❌                   |
+| **التعلم**       | شهور           | أيام         | أسابيع           | أسابيع               |
+| **متى تختاره؟**  | مؤسسات كبيرة   | فرق صغيرة    | Hybrid cloud     | AWS فقط              |
 
 ### شجرة القرار
 
@@ -59,13 +59,13 @@ graph TD
 
 ### التكلفة الحقيقية لـ Kubernetes
 
-| التكلفة | التفاصيل |
-|---------|---------|
+| التكلفة           | التفاصيل                          |
+| ----------------- | --------------------------------- |
 | **Control Plane** | AKS: مجاني. Self-hosted: ~$70/شهر |
-| **Nodes** | 3 nodes minimum لـ HA = ~$150/شهر |
-| **التعليم** | 3-6 أشهر لفريق جديد |
-| **الصيانة** | ترقيات، patches، troubleshooting |
-| **الأدوات** | Monitoring, logging, service mesh |
+| **Nodes**         | 3 nodes minimum لـ HA = ~$150/شهر |
+| **التعليم**       | 3-6 أشهر لفريق جديد               |
+| **الصيانة**       | ترقيات، patches، troubleshooting  |
+| **الأدوات**       | Monitoring, logging, service mesh |
 
 **المجموع التقريبي**: $500-2000/شهر لـ production cluster صغير-متوسط
 
@@ -80,9 +80,11 @@ graph TD
 ## 🛠️ تدريبات
 
 ### تمرين: قيّم منصتك
+
 لديك تطبيق بـ 3 services. أي منصة تختار؟ لماذا؟
 
 ### تحدي: صمم خطة ترحيل
+
 صمم خطة لنقل 20 خدمة من Swarm إلى Kubernetes.
 
 ---
@@ -90,6 +92,7 @@ graph TD
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. متى تختار Swarm بدلاً من Kubernetes؟
 2. ما هي التكلفة الحقيقية لـ Kubernetes؟
 3. لماذا انتقلت CloudNova من Swarm إلى AKS؟
@@ -97,12 +100,12 @@ graph TD
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| Kubernetes | منصة تنسيق حاويات للمؤسسات |
-| Docker Swarm | تنسيق بسيط مدمج مع Docker |
-| AKS | Azure Kubernetes Service (مُدار) |
-| Overkill | استخدام Kubernetes لـ 3 خدمات فقط |
+| السؤال       | الإجابة                           |
+| ------------ | --------------------------------- |
+| Kubernetes   | منصة تنسيق حاويات للمؤسسات        |
+| Docker Swarm | تنسيق بسيط مدمج مع Docker         |
+| AKS          | Azure Kubernetes Service (مُدار)  |
+| Overkill     | استخدام Kubernetes لـ 3 خدمات فقط |
 
 ---
 
@@ -121,11 +124,11 @@ graph TD
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Container Security](./02-container-security-scanning) |
+| النوع     | الرابط                                                                    |
+| --------- | ------------------------------------------------------------------------- |
+| درس مرتبط | [Container Security](./02-container-security-scanning)                    |
 | درس مرتبط | [Kubernetes Architecture](../../10-kubernetes/01-kubernetes-architecture) |
-| شهادة | CKA (Certified Kubernetes Administrator) |
+| شهادة     | CKA (Certified Kubernetes Administrator)                                  |
 
 ---
 

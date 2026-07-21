@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: [metadata-guide, ai-integration]
   tags: [knowledge-graph, concepts, relationships]
 ---
+
 displayed_sidebar: devSidebar
 
 # Knowledge Graph Guide

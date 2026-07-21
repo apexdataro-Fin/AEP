@@ -29,14 +29,14 @@ graph LR
     B --> F[Latency عالٍ]
 ```
 
-| التحدي | MLOps التقليدي | LLMOps |
-|--------|---------------|--------|
-| **التقييم** | Accuracy, Precision, Recall | Faithfulness, Relevance, Toxicity |
-| **الـ latency** | < 10ms (model on GPU) | 500ms - 5s (API call) |
-| **التكلفة** | تدريب مرة واحدة ($100-10K) | كل استدعاء يكلف ($0.01-0.10) |
-| **التحكم** | النموذج كله ملكك | API طرف ثالث (OpenAI, Azure) |
-| **الإصدارات** | Model + Code + Data | Model + Prompt + Temperature |
-| **الـ testing** | Unit tests + Integration | Prompt eval + A/B testing |
+| التحدي          | MLOps التقليدي              | LLMOps                            |
+| --------------- | --------------------------- | --------------------------------- |
+| **التقييم**     | Accuracy, Precision, Recall | Faithfulness, Relevance, Toxicity |
+| **الـ latency** | < 10ms (model on GPU)       | 500ms - 5s (API call)             |
+| **التكلفة**     | تدريب مرة واحدة ($100-10K)  | كل استدعاء يكلف ($0.01-0.10)      |
+| **التحكم**      | النموذج كله ملكك            | API طرف ثالث (OpenAI, Azure)      |
+| **الإصدارات**   | Model + Code + Data         | Model + Prompt + Temperature      |
+| **الـ testing** | Unit tests + Integration    | Prompt eval + A/B testing         |
 
 ### لماذا LLMOps أصعب؟
 
@@ -73,19 +73,19 @@ class SemanticCache:
     """
     Semantic Cache: يخزّن إجابات الأسئلة المتشابهة
     يوفر 50-70% من تكاليف LLM API
-    
+
     كيف يعمل:
     1. يحول السؤال إلى embedding vector
     2. يبحث في Redis عن أقرب سؤال مخزّن
     3. إذا وجد سؤالاً مشابهاً (>92%)، يعيد الإجابة المخزنة
     4. إذا لم يجد، يستدعي LLM ويخزّن النتيجة
     """
-    
+
     def __init__(self, redis_url: str, similarity_threshold: float = 0.92):
         self.redis = Redis.from_url(redis_url)
         self.threshold = similarity_threshold
         self.client = AzureOpenAI(...)
-    
+
     def embed(self, text: str) -> np.ndarray:
         """تحويل النص إلى متجه semantically"""
         response = self.client.embeddings.create(
@@ -93,27 +93,27 @@ class SemanticCache:
             input=text
         )
         return np.array(response.data[0].embedding)
-    
+
     def cosine_similarity(self, a: np.ndarray, b: np.ndarray) -> float:
         return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
-    
+
     def get(self, query: str) -> str | None:
         """ابحث عن إجابة مخزنة لسؤال مشابه"""
         query_vector = self.embed(query)
-        
+
         # جلب جميع المفاتيح المخزنة
         for key in self.redis.scan_iter("cache:*"):
             data = json.loads(self.redis.get(key))
             cached_vector = np.array(data["vector"])
-            
+
             similarity = self.cosine_similarity(query_vector, cached_vector)
             if similarity > self.threshold:
                 print(f"🎯 Cache HIT! Similarity: {similarity:.2%}")
                 return data["answer"]
-        
+
         print("❌ Cache MISS — calling LLM...")
         return None
-    
+
     def set(self, query: str, answer: str):
         """خزّن السؤال وإجابته"""
         key = f"cache:{hashlib.md5(query.encode()).hexdigest()}"
@@ -134,10 +134,10 @@ def answer_question(question: str) -> str:
     cached = cache.get(question)
     if cached:
         return cached  # توفير 100% من تكلفة LLM!
-    
+
     # ٢. إذا لم يوجد، استدعِ LLM
     response = llm.chat(question)
-    
+
     # ٣. خزّن للاستخدام المستقبلي
     cache.set(question, response)
     return response
@@ -163,13 +163,13 @@ temperature: 0.3
 max_tokens: 1000
 system: |
   أنت مساعد Azure تقني لشركة CloudNova.
-  
+
   القواعد:
   - دقيق: لا تخمن. إذا لم تكن متأكداً، قل "لا أعلم"
   - موجز: أجوبة قصيرة ومباشرة
   - عملي: أعطِ أوامر Azure CLI و Terraform قابلة للنسخ
   - آمن: لا تشارك secrets أو connection strings
-  
+
   سياق الشركة:
   - نستخدم Azure (AKS, SQL, Cosmos DB, Functions)
   - الـ production في East US، DR في West Europe
@@ -185,9 +185,9 @@ few_shot:
          `func azure functionapp publish cloudnova-func`
       3. AKS (قوي): للـ microservices
          `kubectl apply -f deployment.yaml`
-      
+
       أيها يناسب تطبيقك؟
-  
+
   - q: "Pod في CrashLoopBackOff، ماذا أفعل؟"
     a: |
       خطوات التشخيص:
@@ -207,22 +207,22 @@ class PromptABTester:
     def __init__(self, prompt_a: dict, prompt_b: dict):
         self.prompt_a = prompt_a  # current
         self.prompt_b = prompt_b  # candidate
-    
-    def run_experiment(self, eval_dataset: list[dict], 
+
+    def run_experiment(self, eval_dataset: list[dict],
                        traffic_split: float = 0.1) -> dict:
         """
         يرسل 10% من الحركة للـ prompt الجديد
         يقارن: الجودة، الـ latency، التكلفة
         """
         results = {"a": [], "b": []}
-        
+
         for i, case in enumerate(eval_dataset):
             # 90% prompt A, 10% prompt B
             prompt = self.prompt_b if i % 10 == 0 else self.prompt_a
             label = "b" if i % 10 == 0 else "a"
-            
+
             response = llm.chat(prompt["system"], case["input"])
-            
+
             results[label].append({
                 "faithfulness": evaluate_faithfulness(response, case["expected"]),
                 "relevance": evaluate_relevance(response, case["input"]),
@@ -230,14 +230,14 @@ class PromptABTester:
                 "cost": response.usage.total_tokens * 0.00003,
                 "user_rating": None  # يُملأ من feedback المستخدم
             })
-        
+
         # تحليل النتائج
         return {
             "prompt_a": self._aggregate(results["a"]),
             "prompt_b": self._aggregate(results["b"]),
             "winner": "b" if self._is_better(results) else "a"
         }
-    
+
     def _aggregate(self, results: list) -> dict:
         return {
             "avg_faithfulness": np.mean([r["faithfulness"] for r in results]),
@@ -274,7 +274,7 @@ system_prompt = "مساعد Azure تقني. دقيق، موجز، لا تخمن.
 ```python
 from guardrails import Guard
 from guardrails.hub import (
-    ToxicLanguage, 
+    ToxicLanguage,
     SecretsPresent,
     CompetitorCheck,
     ValidLength
@@ -338,7 +338,7 @@ def check_content(text: str) -> bool:
         text=text,
         categories=["Hate", "Sexual", "Violence", "SelfHarm"]
     )
-    
+
     for category in response.categories_analysis:
         if category.severity > 2:  # 0-7 scale
             print(f"⚠️ BLOCKED: {category.category} severity {category.severity}")
@@ -428,6 +428,7 @@ def check_content(text: str) -> bool:
 ## 🏛️ طبقة الإنتاج: Cost Control
 
 ### Token Budget
+
 ```python
 class TokenBudget:
     def __init__(self, daily_limit=500000):
@@ -440,14 +441,17 @@ class TokenBudget:
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين:** Semantic Cache. **تحدي:** A/B testing للـ prompts.
 
 ### 📝 تقييم
+
 **س١:** LLMOps vs MLOps؟ → LLMOps: تكلفة/استدعاء + جودة غير حتمية.
 **س٢:** Semantic Cache؟ → يخزن إجابات الأسئلة المتشابهة — يوفر 60%+.
 **س٣:** Guardrails؟ → ToxicLanguage + SecretsPresent + ValidLength.
 
 ### 🎤 مقابلة
+
 **"كيف تخفض تكاليف LLM 70%؟"** → Cache + Smart Router + Prompt optimization.
 
 ---

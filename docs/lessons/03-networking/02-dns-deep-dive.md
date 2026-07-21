@@ -36,15 +36,15 @@ sequenceDiagram
 
 ### سجلات DNS الأساسية
 
-| النوع | الوظيفة | مثال |
-|-------|---------|------|
-| **A** | IPv4 address | `cloudnova.com → 20.76.45.120` |
-| **AAAA** | IPv6 address | `→ 2603:1030:...` |
-| **CNAME** | اسم مستعار | `www → cloudnova.com` |
-| **MX** | خادم البريد | `mail.cloudnova.com` |
-| **TXT** | بيانات نصية | `v=spf1 ...` (SPF) |
-| **NS** | Name Server | `ns1.cloudnova.com` |
-| **SRV** | خدمة محددة | `_sip._tcp.cloudnova.com` |
+| النوع     | الوظيفة      | مثال                           |
+| --------- | ------------ | ------------------------------ |
+| **A**     | IPv4 address | `cloudnova.com → 20.76.45.120` |
+| **AAAA**  | IPv6 address | `→ 2603:1030:...`              |
+| **CNAME** | اسم مستعار   | `www → cloudnova.com`          |
+| **MX**    | خادم البريد  | `mail.cloudnova.com`           |
+| **TXT**   | بيانات نصية  | `v=spf1 ...` (SPF)             |
+| **NS**    | Name Server  | `ns1.cloudnova.com`            |
+| **SRV**   | خدمة محددة   | `_sip._tcp.cloudnova.com`      |
 
 ---
 
@@ -127,6 +127,7 @@ az network dns zone update \
 ## 🛠️ تدريبات
 
 ### تمرين 1: استكشاف DNS
+
 ```bash
 nslookup cloudnova.com          # استعلام أساسي
 dig cloudnova.com ANY           # كل السجلات
@@ -135,9 +136,11 @@ dig cloudnova.com MX            # سجلات البريد فقط
 ```
 
 ### تمرين 2: أنشئ Private DNS Zone
+
 أنشئ Private Zone `internal.cloudnova.com` واربطها بـ VNet.
 
 ### تحدي: DNS Failover
+
 صمم DNS failover: إذا تعطل الموقع الأساسي، يتحول تلقائياً إلى موقع احتياطي (Azure Traffic Manager).
 
 ---
@@ -145,6 +148,7 @@ dig cloudnova.com MX            # سجلات البريد فقط
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين A record و CNAME؟
 2. لماذا Private DNS Zone مهم؟
 3. ما فائدة DNSSEC؟
@@ -153,12 +157,12 @@ dig cloudnova.com MX            # سجلات البريد فقط
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| A Record | يربط اسم النطاق بـ IPv4 |
-| CNAME | اسم مستعار لنطاق آخر |
-| TTL | مدة تخزين السجل في cache |
-| Private DNS Zone | DNS داخلي للـ VNet فقط |
+| السؤال           | الإجابة                  |
+| ---------------- | ------------------------ |
+| A Record         | يربط اسم النطاق بـ IPv4  |
+| CNAME            | اسم مستعار لنطاق آخر     |
+| TTL              | مدة تخزين السجل في cache |
+| Private DNS Zone | DNS داخلي للـ VNet فقط   |
 
 ---
 
@@ -171,11 +175,11 @@ dig cloudnova.com MX            # سجلات البريد فقط
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                                  |
+| --------- | ------------------------------------------------------- |
 | درس مرتبط | [Networking Fundamentals](./01-networking-fundamentals) |
-| درس مرتبط | [Load Balancing](./03-load-balancing-reverse-proxy) |
-| أداة | [dig](https://linux.die.net/man/1/dig) |
+| درس مرتبط | [Load Balancing](./03-load-balancing-reverse-proxy)     |
+| أداة      | [dig](https://linux.die.net/man/1/dig)                  |
 
 ---
 

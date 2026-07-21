@@ -29,13 +29,13 @@ on:
   pull_request:
     branches: [main]
   schedule:
-    - cron: '0 0 * * 0'  # أسبوعياً
+    - cron: "0 0 * * 0" # أسبوعياً
 jobs:
   analyze:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        language: ['python', 'javascript']
+        language: ["python", "javascript"]
     steps:
       - uses: actions/checkout@v3
       - uses: github/codeql-action/init@v2
@@ -86,19 +86,21 @@ remote: - Secret detected: Azure Storage Account Key
 
 ## 🎨 Dependabot vs Renovate
 
-| | Dependabot | Renovate |
-|---|----------|---------|
-| **مدمج مع GitHub** | ✅ | ❌ |
-| **Grouped PRs** | محدود | ✅ |
-| **Custom scheduling** | أساسي | متقدم |
-| **السعر** | مجاني | مجاني |
+|                       | Dependabot | Renovate |
+| --------------------- | ---------- | -------- |
+| **مدمج مع GitHub**    | ✅         | ❌       |
+| **Grouped PRs**       | محدود      | ✅       |
+| **Custom scheduling** | أساسي      | متقدم    |
+| **السعر**             | مجاني      | مجاني    |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: فعّل CodeQL على repo
+
 ### تمرين: أضف Dependabot للتحديثات الأسبوعية
+
 ### تحدي: اكتب Security Policy (SECURITY.md)
 
 ---
@@ -106,20 +108,23 @@ remote: - Secret detected: Azure Storage Account Key
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين CodeQL و Dependabot؟
 2. كيف يمنع GitHub دفع secrets؟
 3. لماذا Push Protection مهم؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| CodeQL | تحليل ثابت للكود (SAST) |
-| Dependabot | تحديث تلقائي للتبعيات |
-| Secret Scanning | فحص commits عن secrets |
+
+| السؤال          | الإجابة                 |
+| --------------- | ----------------------- |
+| CodeQL          | تحليل ثابت للكود (SAST) |
+| Dependabot      | تحديث تلقائي للتبعيات   |
+| Secret Scanning | فحص commits عن secrets  |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تؤمن مستودع GitHub؟"** → CodeQL + Dependabot + Secret Scanning + branch protection
 2. **"ماذا تفعل إذا اكتشفت secret في commit قديم؟"** → تدوير المفتاح فوراً + `git filter-branch` لإزالته
 

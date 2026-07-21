@@ -55,7 +55,7 @@ spec:
   syncPolicy:
     automated:
       prune: true
-      selfHeal: true  # إصلاح تلقائي
+      selfHeal: true # إصلاح تلقائي
 ```
 
 ### Sync Waves
@@ -63,11 +63,11 @@ spec:
 ```yaml
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "1"  # ينشر أولاً
+    argocd.argoproj.io/sync-wave: "1" # ينشر أولاً
 ---
 metadata:
   annotations:
-    argocd.argoproj.io/sync-wave: "2"  # بعد wave 1
+    argocd.argoproj.io/sync-wave: "2" # بعد wave 1
 ```
 
 ---
@@ -90,25 +90,26 @@ spec:
     automated:
       selfHeal: true
     syncOptions:
-    - PruneLast=true          # لا تحذف الموارد القديمة حتى ينتهي النشر
-    - CreateNamespace=true
+      - PruneLast=true # لا تحذف الموارد القديمة حتى ينتهي النشر
+      - CreateNamespace=true
 ```
 
 ---
 
 ## 🎨 Argo CD vs Flux
 
-| | Argo CD | Flux |
-|---|---------|------|
-| **UI** | ✅ ممتاز | ❌ CLI فقط |
-| **Image Automation** | ❌ | ✅ مدمج |
-| **Multi-tenancy** | ✅ | متوسط |
+|                      | Argo CD  | Flux       |
+| -------------------- | -------- | ---------- |
+| **UI**               | ✅ ممتاز | ❌ CLI فقط |
+| **Image Automation** | ❌       | ✅ مدمج    |
+| **Multi-tenancy**    | ✅       | متوسط      |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: ثبّت Argo CD على AKS
+
 ### تحدي: أنشئ App of Apps لـ 3 تطبيقات وجرب auto-healing
 
 ---
@@ -116,20 +117,23 @@ spec:
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما هو App of Apps pattern؟
 2. كيف يعمل selfHeal؟
 3. متى تستخدم sync waves؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Argo CD | GitOps operator لـ Kubernetes |
-| selfHeal | إصلاح تلقائي للـ drift |
-| Sync Wave | ترتيب نشر التطبيقات |
+
+| السؤال    | الإجابة                       |
+| --------- | ----------------------------- |
+| Argo CD   | GitOps operator لـ Kubernetes |
+| selfHeal  | إصلاح تلقائي للـ drift        |
+| Sync Wave | ترتيب نشر التطبيقات           |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تنشر 30 خدمة مع Argo CD؟"** → App of Apps + sync waves
 2. **"ماذا يحدث إذا حذف Deployment يدوياً؟"** → Argo CD يعيد إنشائه (selfHeal)
 
@@ -183,22 +187,22 @@ watch -n 2 'argocd app list | grep production'
 ```mermaid
 graph TD
     ROOT["Root App<br/>argocd/apps"]
-    
+
     ROOT --> INFRA["Infrastructure<br/>cert-manager, ingress, monitoring"]
     ROOT --> PLATFORM["Platform<br/>vault, backstage, policy-controller"]
     ROOT --> APPS["Applications<br/>api, frontend, workers"]
-    
+
     INFRA --> CM["cert-manager<br/>Wave: -1"]
     INFRA --> ING["nginx-ingress<br/>Wave: 0"]
     INFRA --> MON["prometheus-stack<br/>Wave: -1"]
-    
+
     PLATFORM --> VAULT["vault<br/>Wave: 1"]
     PLATFORM --> POL["kyverno<br/>Wave: 1"]
-    
+
     APPS --> API["cloudnova-api<br/>Wave: 2"]
     APPS --> UI["cloudnova-ui<br/>Wave: 2"]
     APPS --> WORKER["background-worker<br/>Wave: 3"]
-    
+
     style ROOT fill:#f9a825,stroke:#f57f17
     style INFRA fill:#e53935,stroke:#c62828,color:#fff
 ```
@@ -237,24 +241,24 @@ metadata:
   name: cloudnova-api-global
 spec:
   generators:
-  - list:
-      elements:
-      - cluster: prod-eu
-        url: https://prod-eu-aks.azure.com
-      - cluster: prod-us
-        url: https://prod-us-aks.azure.com
-      - cluster: prod-asia
-        url: https://prod-asia-aks.azure.com
+    - list:
+        elements:
+          - cluster: prod-eu
+            url: https://prod-eu-aks.azure.com
+          - cluster: prod-us
+            url: https://prod-us-aks.azure.com
+          - cluster: prod-asia
+            url: https://prod-asia-aks.azure.com
   template:
     metadata:
-      name: 'cloudnova-api-{{cluster}}'
+      name: "cloudnova-api-{{cluster}}"
     spec:
       source:
         repoURL: https://github.com/cloudnova/infra
         path: helm/api
         targetRevision: main
       destination:
-        server: '{{url}}'
+        server: "{{url}}"
         namespace: production
       syncPolicy:
         automated:
@@ -264,12 +268,12 @@ spec:
 
 ### Anti-Patterns
 
-| الخطأ | المشكلة | التصحيح |
-|-------|---------|---------|
-| Remote cluster بدون managed identity | Token rotation يدوي = expired tokens | Managed Identity أو workload identity |
-| selfHeal = true على production بلا testing | Auto-fix لكارثة | Testing في staging أولاً |
-| كل التطبيقات في Root App واحدة | Blast radius كبير | فصل Infrastructure عن Applications |
-| Sync waves غير محددة | ترتيب عشوائي = فشل deployment | Waves: -1 (prereqs), 0 (core), 1 (platform), 2+ (apps) |
+| الخطأ                                      | المشكلة                              | التصحيح                                                |
+| ------------------------------------------ | ------------------------------------ | ------------------------------------------------------ |
+| Remote cluster بدون managed identity       | Token rotation يدوي = expired tokens | Managed Identity أو workload identity                  |
+| selfHeal = true على production بلا testing | Auto-fix لكارثة                      | Testing في staging أولاً                               |
+| كل التطبيقات في Root App واحدة             | Blast radius كبير                    | فصل Infrastructure عن Applications                     |
+| Sync waves غير محددة                       | ترتيب عشوائي = فشل deployment        | Waves: -1 (prereqs), 0 (core), 1 (platform), 2+ (apps) |
 
 ---
 
@@ -348,6 +352,7 @@ echo "✅ Recovery time: $(date)"
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. ما هو App of Apps pattern ولماذا هو مفيد؟
 2. كيف يعمل selfHeal في Argo CD؟
 3. متى تستخدم sync waves؟
@@ -355,6 +360,7 @@ echo "✅ Recovery time: $(date)"
 5. ما الفرق بين prune و selfHeal؟
 
 ### 📝 اختبار (3)
+
 1. **Argo CD يظهر OutOfSync لكن الـ app يعمل في الكلاستر. لماذا؟**
    <details><summary>الإجابة</summary>Manual changes في الكلاستر بدون Git. Argo CD يكتشف الـ drift. إذا selfHeal=true، سيعيد الـ Git state. إذا false، سيبقى OutOfSync.</details>
 
@@ -365,6 +371,7 @@ echo "✅ Recovery time: $(date)"
    <details><summary>الإجابة</summary>عدد كبير من applications + clusters. Reduce sync interval. Use sharding: `--application-namespaces`. Check memory leak.</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم App of Apps hierarchy
 - اشرح flow الـ reconciliation في Argo CD
 - كيف تحمي production من sync خاطئ؟
@@ -372,6 +379,7 @@ echo "✅ Recovery time: $(date)"
 - صف incident استخدمت فيه Argo CD للـ recovery
 
 ### 🎓 Feynman: Argo CD لغير التقني
+
 "تخيل أن لديك مهندساً آلياً (Argo CD) يراقب المخططات (Git repo). إذا أحدهم غير شيئاً في المبنى (cluster) بدون تحديث المخططات، المهندس الآلي يعيده كما في المخطط فوراً. هذا هو selfHeal."
 
 ---
@@ -379,6 +387,7 @@ echo "✅ Recovery time: $(date)"
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"Argo CD vs Flux CD — كيف تختار؟"**
    - Argo CD: UI قوي، SSO، multi-tenancy ممتاز
    - Flux: Image automation، Git push، Helm native
@@ -390,7 +399,9 @@ echo "✅ Recovery time: $(date)"
    - Argo CD Vault Plugin: استدعاء secrets عند sync
 
 ### System Design
+
 **"صمم GitOps لـ 50 فريقاً و 500 تطبيق."**
+
 - Mono-repo: `teams/<team>/apps/<app>/`
 - App of Apps: Root → Team Apps → Individual Apps
 - Argo CD Projects: عزل كل فريق (allowed sources, destinations)
@@ -399,6 +410,7 @@ echo "✅ Recovery time: $(date)"
 - Monitoring: Argo CD Notifications + Grafana dashboard
 
 ### Behavioral (STAR)
+
 **"كيف أقنعت فريقاً بتبني GitOps مع Argo CD؟"**
 
 **S:** فريق يستخدم `kubectl apply` + Helm CLI. 3 incidents بسبب manual changes.

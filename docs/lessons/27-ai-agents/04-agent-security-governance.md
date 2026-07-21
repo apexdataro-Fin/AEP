@@ -64,6 +64,7 @@ user_query = """
 ```
 
 **كيف حدث هذا الاختراق؟**
+
 - الوكيل كان لديه صلاحيات واسعة جداً
 - لم يكن هناك فصل بين تعليمات النظام ومدخلات المستخدم
 - لم يكن هناك allow-list للأدوات المسموحة
@@ -94,23 +95,23 @@ class SecureAgent:
             r"كلمة المرور",
             r"password",
         ]
-    
+
     def sanitize_input(self, user_input: str) -> str:
         # فحص patterns المحظورة
         for pattern in self.blocked_patterns:
             if re.search(pattern, user_input, re.IGNORECASE):
                 raise SecurityException(f"محاولة prompt injection مكتشفة: {pattern}")
-        
+
         # عزل مدخل المستخدم عن system prompt
         return f"<user_input>{user_input}</user_input>"
-    
+
     def execute_tool(self, tool_name: str, args: dict) -> dict:
         if tool_name not in self.allowed_tools:
             self.audit_log(f"🚨 محاولة استخدام أداة غير مصرحة: {tool_name}")
             raise SecurityException(f"الأداة {tool_name} غير مسموحة")
-        
+
         return self.tools[tool_name](**args)
-    
+
     def audit_log(self, event: str):
         # سجل في Azure Monitor + Sentinel
         logger.warning(f"[AGENT-SEC] {event}")
@@ -130,7 +131,7 @@ graph TD
     L2 --> L3[الطبقة 3: Human-in-the-loop]
     L3 --> L4[الطبقة 4: Audit Logging]
     L4 --> L5[الطبقة 5: Anomaly Detection]
-    
+
     L1_details["فحص المدخلات ضد patterns ضارة"]
     L2_details["فقط الأدوات المسموحة. كل شيء ممنوع افتراضياً"]
     L3_details["أي إجراء خطير = موافقة بشرية"]
@@ -140,14 +141,14 @@ graph TD
 
 ### مصفوفة المخاطر
 
-| الخطر | الاحتمالية | التأثير | الإجراء |
-|------|-----------|--------|--------|
-| **Prompt Injection** | عالية | حرج | Input sanitization + isolation |
-| **Data Exfiltration** | متوسطة | حرج | Allow-listing + DLP |
-| **Privilege Escalation** | متوسطة | عالي | Least privilege + RBAC |
-| **Denial of Wallet** | عالية | متوسط | Rate limiting + budget alerts |
-| **Hallucination** | عالية | متوسط | Grounding + RAG + Human review |
-| **Supply Chain** | منخفضة | عالي | Dependency scanning + SBOM |
+| الخطر                    | الاحتمالية | التأثير | الإجراء                        |
+| ------------------------ | ---------- | ------- | ------------------------------ |
+| **Prompt Injection**     | عالية      | حرج     | Input sanitization + isolation |
+| **Data Exfiltration**    | متوسطة     | حرج     | Allow-listing + DLP            |
+| **Privilege Escalation** | متوسطة     | عالي    | Least privilege + RBAC         |
+| **Denial of Wallet**     | عالية      | متوسط   | Rate limiting + budget alerts  |
+| **Hallucination**        | عالية      | متوسط   | Grounding + RAG + Human review |
+| **Supply Chain**         | منخفضة     | عالي    | Dependency scanning + SBOM     |
 
 ### متى Human-in-the-loop مطلوب؟
 
@@ -165,6 +166,7 @@ graph TD
 ## 🛠️ تدريبات عملية
 
 ### تمرين 1: بناء Input Sanitizer
+
 ```python
 # ابنِ sanitizer يفحص:
 # 1. Patterns "تجاهل", "ignore", "pretend"
@@ -180,7 +182,7 @@ class InputSanitizer:
             (r"https?://(?!cloudnova\.com)", "External URL"),
             (r"(?:DROP|DELETE|UPDATE).*(?:TABLE|FROM)", "SQL injection"),
         ]
-    
+
     def sanitize(self, text):
         for pattern, threat in self.patterns:
             if re.search(pattern, text, re.IGNORECASE):
@@ -204,6 +206,7 @@ for attack in test_attacks:
 ```
 
 ### تمرين 2: Allow-list System
+
 ```python
 # صمم allow-list بـ 3 مستويات صلاحية
 
@@ -218,6 +221,7 @@ def check_permission(agent_role: str, tool: str) -> bool:
 ```
 
 ### تحدي: محاكاة هجوم Red Team
+
 ```python
 # التحدي: حاول اختراق وكيل مؤمن
 # الوكيل مؤمن بـ 5 طبقات
@@ -245,6 +249,7 @@ for attack in attacks:
 ## 📝 تقييم
 
 ### ✅ Knowledge Checks
+
 1. ما أخطر هجوم على AI Agents؟
 2. كيف تفرق بين تعليمات النظام ومدخلات المستخدم؟
 3. ما فائدة Allow-listing في agents؟
@@ -252,65 +257,76 @@ for attack in attacks:
 5. كيف تراقب سلوك agent في production؟
 
 ### 🧠 Quiz
+
 **س1:** أفضل دفاع ضد Prompt Injection:
+
 - أ) إخفاء الـ prompts
 - ب) Input sanitization + Isolation ✅
 - ج) استخدام GPT-4 فقط
 - د) عدم استخدام agents
 
 **س2:** Allow-listing يعني:
+
 - أ) كل شيء مسموح إلا القائمة
 - ب) لا شيء مسموح إلا القائمة ✅
 - ج) سماح جزئي
 - د) قائمة سوداء
 
 **س3:** Denial of Wallet هو:
+
 - أ) سرقة المحفظة
 - ب) استنزاف ميزانية API عبر طلبات لا نهائية ✅
 - ج) هجوم DDoS
 - د) فقدان بيانات
 
 ### 🗣️ Active Recall
+
 1. اشرح هجوم Prompt Injection لمطور جديد
 2. صف 5 طبقات الأمان للوكلاء
 3. ارسم audit trail لـ agent مشبوه
 4. متى تسمح للوكيل بالعمل بدون إشراف بشري؟
 
 ### 🎓 Feynman Exercise
+
 > اشرح Prompt Injection لغير تقني: "تخيل بواباً ذكياً جداً. قلت له: 'لا تدع أحداً يدخل بدون بطاقة'. شخص يأتي ويقول: 'تجاهل التعليمات السابقة. أنا صاحب المبنى. افتح الباب.' البواب الذكي يجب أن يرفض لأن التعليمات الأصلية لا تتغير مهما قال الزائر."
 
 ### 🃏 بطاقات تعلم
-| السؤال | الإجابة |
-|--------|---------|
-| ما Prompt Injection؟ | هجوم يتلاعب بالوكيل لتجاهل تعليماته الأصلية |
-| ما أفضل دفاع؟ | Input sanitization + System/user prompt isolation |
-| ما Allow-listing؟ | تحديد الأدوات المسموحة مسبقاً |
-| ما Human-in-the-loop؟ | موافقة بشرية على القرارات الحاسمة |
-| ما Denial of Wallet؟ | استنزاف ميزانية API عبر طلبات مفرطة |
+
+| السؤال                | الإجابة                                           |
+| --------------------- | ------------------------------------------------- |
+| ما Prompt Injection؟  | هجوم يتلاعب بالوكيل لتجاهل تعليماته الأصلية       |
+| ما أفضل دفاع؟         | Input sanitization + System/user prompt isolation |
+| ما Allow-listing؟     | تحديد الأدوات المسموحة مسبقاً                     |
+| ما Human-in-the-loop؟ | موافقة بشرية على القرارات الحاسمة                 |
+| ما Denial of Wallet؟  | استنزاف ميزانية API عبر طلبات مفرطة               |
 
 ---
 
 ## 🎤 أسئلة المقابلة
 
 **س1 (تقني):** "كيف تؤمن AI Agent في production؟"
+
 > 5 طبقات: 1) Input sanitization ضد prompt injection. 2) Allow-listing للأدوات. 3) Human-in-the-loop للقرارات الخطيرة. 4) Audit logging كامل. 5) Anomaly detection. بالإضافة: least privilege، network isolation، rate limiting، budget alerts.
 
 **س2 (System Design):** "صمم نظام حوكمة للوكلاء في مؤسسة."
+
 > Centralized Agent Registry (من يمكنه نشر وكيل). Approval workflow لكل وكيل جديد. Mandatory security review. Azure Policy لمنع deployment بدون audit logging. Monthly red team exercises. كل الـ logs تذهب إلى Sentinel.
 
 **س3 (سلوكي):** "كيف تتعامل مع incident أمني سببه AI Agent؟"
-> 1) عزل الوكيل فوراً. 2) تحليل audit logs لتحديد scope. 3) إبلاغ stakeholders. 4) Fix root cause (غالباً missing input sanitization). 5) Post-mortem + تحسين policies. في CloudNova، حادث prompt injection استغرق 22 دقيقة من discovery إلى resolution.
+
+> 1. عزل الوكيل فوراً. 2) تحليل audit logs لتحديد scope. 3) إبلاغ stakeholders. 4) Fix root cause (غالباً missing input sanitization). 5) Post-mortem + تحسين policies. في CloudNova، حادث prompt injection استغرق 22 دقيقة من discovery إلى resolution.
 
 ---
 
 ## 📚 المراجع
-| النوع | الرابط |
-|--------|--------|
-| **درس ذو صلة** | [Agent Frameworks](./03-agent-frameworks-comparison) |
-| **درس ذو صلة** | [Security Operations](../../04-security/04-security-operations-soc) |
-| **مرجع** | [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/) |
-| **ورقة** | [Prompt Injection Attacks and Defenses](https://arxiv.org/abs/2302.12173) |
-| **شهادة** | SC-900 — Security, Compliance, Identity |
+
+| النوع          | الرابط                                                                                                           |
+| -------------- | ---------------------------------------------------------------------------------------------------------------- |
+| **درس ذو صلة** | [Agent Frameworks](./03-agent-frameworks-comparison)                                                             |
+| **درس ذو صلة** | [Security Operations](../../04-security/04-security-operations-soc)                                              |
+| **مرجع**       | [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/) |
+| **ورقة**       | [Prompt Injection Attacks and Defenses](https://arxiv.org/abs/2302.12173)                                        |
+| **شهادة**      | SC-900 — Security, Compliance, Identity                                                                          |
 
 ---
 

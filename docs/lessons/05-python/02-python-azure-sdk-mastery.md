@@ -44,12 +44,12 @@ compute_client = ComputeManagementClient(credential, subscription_id)
 
 ### أفضل ممارسات المصادقة
 
-| البيئة | أفضل طريقة |
-|--------|-----------|
-| **Development** | `az login` + DefaultAzureCredential |
-| **CI/CD** | Service Principal + Environment Variables |
-| **Production (Azure)** | Managed Identity |
-| **Production (خارج Azure)** | Certificate-based auth |
+| البيئة                      | أفضل طريقة                                |
+| --------------------------- | ----------------------------------------- |
+| **Development**             | `az login` + DefaultAzureCredential       |
+| **CI/CD**                   | Service Principal + Environment Variables |
+| **Production (Azure)**      | Managed Identity                          |
+| **Production (خارج Azure)** | Certificate-based auth                    |
 
 ---
 
@@ -151,7 +151,7 @@ client = ResourceManagementClient(credential, "your-sub-id")
 with open("azure_inventory.csv", "w", newline="") as f:
     writer = csv.writer(f)
     writer.writerow(["Name", "Type", "Location", "Resource Group"])
-    
+
     for resource in client.resources.list():
         writer.writerow([
             resource.name,
@@ -181,12 +181,12 @@ for resource in client.resources.list(filter="tagName eq 'expires'"):
 
 ## 🎨 طبقة المعماري: CLI vs SDK vs REST
 
-| | Azure CLI | Python SDK | REST API |
-|---|----------|-----------|---------|
-| **السرعة** | فوري | سريع | الأسرع |
-| **Readability** | ممتاز | جيد | ضعيف |
-| **Error Handling** | Bash محدود | try/except | HTTP codes |
-| **أفضل لـ** | سكريبتات سريعة | أتمتة معقدة | Performance critical |
+|                    | Azure CLI      | Python SDK  | REST API             |
+| ------------------ | -------------- | ----------- | -------------------- |
+| **السرعة**         | فوري           | سريع        | الأسرع               |
+| **Readability**    | ممتاز          | جيد         | ضعيف                 |
+| **Error Handling** | Bash محدود     | try/except  | HTTP codes           |
+| **أفضل لـ**        | سكريبتات سريعة | أتمتة معقدة | Performance critical |
 
 ### قاعدة القرار
 
@@ -215,6 +215,7 @@ for resource in client.resources.list(filter="tagName eq 'expires'"):
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما فائدة DefaultAzureCredential؟
 2. كيف تختلف المصادقة في production عن development؟
 3. متى تستخدم CLI vs SDK؟
@@ -222,10 +223,10 @@ for resource in client.resources.list(filter="tagName eq 'expires'"):
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| DefaultAzureCredential | يحاول عدة طرق مصادقة تلقائياً |
-| Managed Identity | أفضل طريقة لـ production على Azure |
+| السؤال                   | الإجابة                                   |
+| ------------------------ | ----------------------------------------- |
+| DefaultAzureCredential   | يحاول عدة طرق مصادقة تلقائياً             |
+| Managed Identity         | أفضل طريقة لـ production على Azure        |
 | `begin_create_or_update` | عملية async — استخدم `.result()` للانتظار |
 
 ---
@@ -242,11 +243,11 @@ for resource in client.resources.list(filter="tagName eq 'expires'"):
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Python Cloud Automation](./01-python-cloud-automation) |
-| درس مرتبط | [Python Testing & CI/CD](./03-python-testing-cicd) |
-| دليل | [Azure SDK for Python Docs](https://learn.microsoft.com/python/api/overview/azure/) |
+| النوع     | الرابط                                                                              |
+| --------- | ----------------------------------------------------------------------------------- |
+| درس مرتبط | [Python Cloud Automation](./01-python-cloud-automation)                             |
+| درس مرتبط | [Python Testing & CI/CD](./03-python-testing-cicd)                                  |
+| دليل      | [Azure SDK for Python Docs](https://learn.microsoft.com/python/api/overview/azure/) |
 
 ---
 

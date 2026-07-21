@@ -440,27 +440,27 @@ metadata:
     prometheus.io/path: "/metrics"
 spec:
   containers:
-  - name: api
-    image: cloudnova-api:v2.4.1
-    resources:
-      requests:
-        cpu: "500m"
-        memory: "512Mi"
-      limits:
-        cpu: "2"
-        memory: "2Gi"
-    livenessProbe:
-      httpGet:
-        path: /healthz
-        port: 8080
-      initialDelaySeconds: 30
-      periodSeconds: 10
-    readinessProbe:
-      httpGet:
-        path: /ready
-        port: 8080
-      initialDelaySeconds: 5
-      periodSeconds: 5
+    - name: api
+      image: cloudnova-api:v2.4.1
+      resources:
+        requests:
+          cpu: "500m"
+          memory: "512Mi"
+        limits:
+          cpu: "2"
+          memory: "2Gi"
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: 8080
+        initialDelaySeconds: 30
+        periodSeconds: 10
+      readinessProbe:
+        httpGet:
+          path: /ready
+          port: 8080
+        initialDelaySeconds: 5
+        periodSeconds: 5
 ```
 
 ### 🚨 سيناريو CloudNova: حاوية تلتهم الذاكرة
@@ -509,22 +509,22 @@ graph TD
 
 ### Container Runtimes — المشهد المتغير
 
-| Runtime | النوع | متى تستخدم |
-|---------|-------|-----------|
-| **Docker** | High-level (daemon) | تطوير محلي، CI/CD |
-| **containerd** | Mid-level (daemon) | Kubernetes nodes |
-| **CRI-O** | Mid-level (K8s native) | Kubernetes (Red Hat/OpenShift) |
-| **Podman** | Daemonless | بديل Docker الخفيف |
-| **gVisor** | Sandboxed (userspace kernel) | تشغيل كود غير موثوق |
-| **Kata Containers** | Hardware VM per container | أمان عالي جداً |
+| Runtime             | النوع                        | متى تستخدم                     |
+| ------------------- | ---------------------------- | ------------------------------ |
+| **Docker**          | High-level (daemon)          | تطوير محلي، CI/CD              |
+| **containerd**      | Mid-level (daemon)           | Kubernetes nodes               |
+| **CRI-O**           | Mid-level (K8s native)       | Kubernetes (Red Hat/OpenShift) |
+| **Podman**          | Daemonless                   | بديل Docker الخفيف             |
+| **gVisor**          | Sandboxed (userspace kernel) | تشغيل كود غير موثوق            |
+| **Kata Containers** | Hardware VM per container    | أمان عالي جداً                 |
 
 ### استراتيجيات التصميم
 
-| النمط | الوصف | مثال |
-|-------|-------|------|
-| **Sidecar** | حاوية مساعدة بجانب الرئيسية | Envoy proxy لـ service mesh |
-| **Init Container** | تشغيل قبل الحاوية الرئيسية | تشغيل migrations قبل بدء API |
-| **Ambassador** | وسيط للاتصالات الخارجية | Redis proxy للـ sharding |
+| النمط              | الوصف                       | مثال                         |
+| ------------------ | --------------------------- | ---------------------------- |
+| **Sidecar**        | حاوية مساعدة بجانب الرئيسية | Envoy proxy لـ service mesh  |
+| **Init Container** | تشغيل قبل الحاوية الرئيسية  | تشغيل migrations قبل بدء API |
+| **Ambassador**     | وسيط للاتصالات الخارجية     | Redis proxy للـ sharding     |
 
 ---
 
@@ -533,6 +533,7 @@ graph TD
 ### تمرين ١: Dockerfile من الصفر (سهل)
 
 > ابنِ Dockerfile لـ تطبيق Python Flask:
+>
 > - حجم الصورة أقل من 100MB
 > - يستخدم non-root user
 > - HEALTHCHECK كل ٣٠ ثانية
@@ -541,6 +542,7 @@ graph TD
 ### تمرين ٢: تصحيح حاوية مريضة (متوسط)
 
 > حاوية Nginx تعيد 502 Bad Gateway. شخّص:
+>
 > 1. `docker logs` — ماذا يقول؟
 > 2. `docker exec` — هل العملية تعمل؟
 > 3. `docker inspect` — هل الشبكة مضبوطة؟
@@ -549,6 +551,7 @@ graph TD
 ### تحدي: تشغيل آمن (متقدم)
 
 > شغّل حاوية nginx بأقصى إجراءات الأمان:
+>
 > - Read-only root filesystem
 > - No new privileges
 > - Drop ALL capabilities (أضف فقط ما تحتاجه)
@@ -612,22 +615,23 @@ graph TD
 ### ✍️ تمرين Feynman
 
 اشرح الحاويات لـ ٣ شخصيات:
+
 - **طاهٍ**: "الحاوية = صندوق يحتوي الوصفة وكل المكونات. أي مطبخ يستطيع طهيها."
 - **مدير لوجستي**: "الحاوية = حاوية شحن بحري. تغلف المنتج وتنقله لأي مكان."
 - **طالب**: "الحاوية = لعبة جاهزة داخل صندوقها. لا تحتاج تثبيت أي شيء."
 
 ### 🎴 بطاقات تعليمية (8)
 
-| السؤال | الإجابة |
-|--------|---------|
-| الحاوية = ؟ | عملية محاطة بـ namespaces + cgroups |
-| Image = ؟ | قالب للقراءة فقط بطبقات |
-| Namespace = ؟ | آلية Linux Kernel تعزل الموارد (PID, NET, MNT...) |
-| Cgroup = ؟ | آلية تحدد استخدام الموارد (CPU, RAM, I/O) |
-| OCI = ؟ | معيار مفتوح لصور و runtime الحاويات |
-| Multi-stage build = ؟ | بناء بمراحل متعددة — الصورة النهائية تحتوي binary فقط |
-| Liveness vs Readiness = ؟ | Liveness = هل هي حية؟ Readiness = هل تستقبل طلبات؟ |
-| Sidecar = ؟ | حاوية مساعدة تعمل بجانب الحاوية الرئيسية |
+| السؤال                    | الإجابة                                               |
+| ------------------------- | ----------------------------------------------------- |
+| الحاوية = ؟               | عملية محاطة بـ namespaces + cgroups                   |
+| Image = ؟                 | قالب للقراءة فقط بطبقات                               |
+| Namespace = ؟             | آلية Linux Kernel تعزل الموارد (PID, NET, MNT...)     |
+| Cgroup = ؟                | آلية تحدد استخدام الموارد (CPU, RAM, I/O)             |
+| OCI = ؟                   | معيار مفتوح لصور و runtime الحاويات                   |
+| Multi-stage build = ؟     | بناء بمراحل متعددة — الصورة النهائية تحتوي binary فقط |
+| Liveness vs Readiness = ؟ | Liveness = هل هي حية؟ Readiness = هل تستقبل طلبات؟    |
+| Sidecar = ؟               | حاوية مساعدة تعمل بجانب الحاوية الرئيسية              |
 
 ---
 
@@ -669,6 +673,7 @@ graph TD
 ├── Tempo (traces)
 └── AlertManager (تنبيهات)
 ```
+
 </details>
 
 ### سؤال تقني
@@ -704,12 +709,14 @@ CMD ["python3", "app.py"]
 ```
 
 التقنيات:
+
 1. Multi-stage: افصل البناء عن الإنتاج
 2. صورة أساسية خفيفة: `slim` بدل `ubuntu`
 3. `--no-cache-dir`: لا pip cache
 4. تنظيف apt: `rm -rf /var/lib/apt/lists/*`
 5. دمج RUN commands لتقليل الطبقات
 6. `.dockerignore`: استبعد node_modules, .git
+
 </details>
 
 ### سؤال سلوكي (STAR)
@@ -726,30 +733,34 @@ CMD ["python3", "app.py"]
 ## 📚 المراجع والروابط
 
 ### دروس مرتبطة
+
 - [Docker Mastery](../09-docker/01-docker-mastery) — تعمق في Docker
 - [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) — K8s
 - [DevSecOps Security Pipeline](../17-devsecops/01-security-pipeline) — أمان الحاويات
 
 ### شهادات ذات صلة
+
 - **AZ-104**: Azure Administrator (ACR, ACI)
 - **CKA**: Certified Kubernetes Administrator
 - **DCA**: Docker Certified Associate
 
 ### مصادر خارجية
+
 - 📖 [Docker Documentation](https://docs.docker.com/)
 - 📖 [OCI Specifications](https://github.com/opencontainers)
 - 📖 [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 - 📺 "Docker Deep Dive" — Nigel Poulton
 
 ### مصطلحات التقنية
-| المصطلح | التعريف |
-|---------|---------|
-| **Image** | قالب للقراءة فقط بطبقات |
-| **Container** | نسخة مشغّلة من الصورة |
-| **Namespace** | آلية Kernel لعزل الموارد |
-| **Cgroup** | آلية للتحكم في حدود الموارد |
-| **OCI** | معيار مفتوح للصور و runtimes |
-| **Registry** | مستودع لتخزين وتوزيع الصور |
+
+| المصطلح             | التعريف                             |
+| ------------------- | ----------------------------------- |
+| **Image**           | قالب للقراءة فقط بطبقات             |
+| **Container**       | نسخة مشغّلة من الصورة               |
+| **Namespace**       | آلية Kernel لعزل الموارد            |
+| **Cgroup**          | آلية للتحكم في حدود الموارد         |
+| **OCI**             | معيار مفتوح للصور و runtimes        |
+| **Registry**        | مستودع لتخزين وتوزيع الصور          |
 | **Readiness Probe** | فحص جاهزية الحاوية لاستقبال الطلبات |
 
 ---

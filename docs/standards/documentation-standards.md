@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: [style-guide]
   tags: [documentation, writing, structure]
 ---
+
 displayed_sidebar: devSidebar
 
 # Documentation Standards
@@ -24,6 +25,7 @@ Every documentation file should follow this structure:
 displayed_sidebar: devSidebar
 # Required frontmatter (see Metadata Guide)
 ---
+
 displayed_sidebar: devSidebar
 
 # Title (H1 — exactly one per document)

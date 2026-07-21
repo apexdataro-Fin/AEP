@@ -62,28 +62,29 @@ synthesizer.speak_text_async("مرحباً بكم في CloudNova")
 
 ### Cognitive Services vs Custom Models
 
-| | Cognitive Services | Custom Model |
-|---|------------------|-------------|
-| **الوقت** | دقائق | أسابيع |
-| **الدقة** | جيدة (80-95%) | ممتازة (95-99%) |
-| **التكلفة** | لكل استدعاء | تدريب + hosting |
+|             | Cognitive Services | Custom Model    |
+| ----------- | ------------------ | --------------- |
+| **الوقت**   | دقائق              | أسابيع          |
+| **الدقة**   | جيدة (80-95%)      | ممتازة (95-99%) |
+| **التكلفة** | لكل استدعاء        | تدريب + hosting |
 
 ---
 
 ## 🎨 خدمات Azure AI
 
-| الخدمة | الاستخدام |
-|--------|-----------|
-| **Vision** | OCR, object detection, face recognition |
-| **Speech** | STT, TTS, translation |
+| الخدمة       | الاستخدام                                 |
+| ------------ | ----------------------------------------- |
+| **Vision**   | OCR, object detection, face recognition   |
+| **Speech**   | STT, TTS, translation                     |
 | **Language** | Sentiment, entity extraction, translation |
-| **Decision** | Content moderation, anomaly detection |
+| **Decision** | Content moderation, anomaly detection     |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: حلل صورة مع Computer Vision API
+
 ### تحدي: ابنِ تطبيق STT يحول الصوت إلى نص ويترجمه
 
 ---
@@ -91,20 +92,23 @@ synthesizer.speak_text_async("مرحباً بكم في CloudNova")
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. متى تستخدم Cognitive Services بدلاً من تدريب نموذج مخصص؟
 2. ما الفرق بين Vision و Form Recognizer؟
 3. كيف تترجم نصاً إلى العربية؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
+
+| السؤال          | الإجابة                         |
+| --------------- | ------------------------------- |
 | Computer Vision | تحليل الصور: tags, objects, OCR |
-| Speech Services | تحويل الصوت إلى نص والعكس |
-| Form Recognizer | استخراج بيانات من المستندات |
+| Speech Services | تحويل الصوت إلى نص والعكس       |
+| Form Recognizer | استخراج بيانات من المستندات     |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تبني نظام OCR بدون تدريب نموذج؟"** → Azure Form Recognizer
 2. **"متى تنتقل من Cognitive Services إلى نموذج مخصص؟"** → عندما تحتاج دقة أعلى من 95%
 

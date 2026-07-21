@@ -130,7 +130,7 @@ name: Production Deploy
 on:
   push:
     branches: [main]
-    paths: ['src/**', 'infra/**']
+    paths: ["src/**", "infra/**"]
 
 jobs:
   security-scan:

@@ -613,16 +613,16 @@ az backup restore restore-disks \
 # Prometheus Node Exporter — مراقبة على مستوى الخادم
 # /etc/prometheus/prometheus.yml
 scrape_configs:
-  - job_name: 'linux-servers'
+  - job_name: "linux-servers"
     static_configs:
       - targets:
-        - '10.0.1.11:9100'  # cloudnova-api-01
-        - '10.0.1.12:9100'  # cloudnova-api-02
-        - '10.0.2.21:9100'  # cloudnova-db-01
-    
+          - "10.0.1.11:9100" # cloudnova-api-01
+          - "10.0.1.12:9100" # cloudnova-api-02
+          - "10.0.2.21:9100" # cloudnova-db-01
+
     # Alert Rules
     rule_files:
-      - '/etc/prometheus/alerts/linux.yml'
+      - "/etc/prometheus/alerts/linux.yml"
 
 # /etc/prometheus/alerts/linux.yml
 groups:
@@ -635,7 +635,7 @@ groups:
           severity: warning
         annotations:
           summary: "CPU usage > 80% on {{ $labels.instance }}"
-      
+
       - alert: DiskAlmostFull
         expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 15
         for: 5m
@@ -643,7 +643,7 @@ groups:
           severity: critical
         annotations:
           summary: "Disk usage > 85% on {{ $labels.instance }}"
-      
+
       - alert: OutOfMemory
         expr: node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100 < 10
         for: 5m
@@ -688,13 +688,13 @@ auditctl -w /etc/ssh/sshd_config -p wa -k ssh_config
 
 ### Trade-off Analysis — Linux Distro للـ Production
 
-| Distro | الميزة | العيب | متى تختاره |
-|--------|--------|-------|-----------|
-| **Ubuntu LTS** | مجتمع ضخم، دعم طويل | تحديثات كثيرة | تطبيقات عامة، فرق صغيرة |
-| **RHEL/Rocky** | استقرار عالي، دعم مؤسسي | مدفوع (RHEL)، مجتمع أصغر | شركات كبيرة، compliance |
-| **Debian** | استقرار شديد، حر بالكامل | حزم قديمة أحياناً | خوادم حرجة لا تتغير كثيراً |
-| **Alpine** | صغير جداً (5MB!)، آمن | ليس لكل الحزم دعم | Containers، Docker images |
-| **Flatcar** | Immutable، مثالي لـ K8s | تعلم مختلف تماماً | Kubernetes nodes |
+| Distro         | الميزة                   | العيب                    | متى تختاره                 |
+| -------------- | ------------------------ | ------------------------ | -------------------------- |
+| **Ubuntu LTS** | مجتمع ضخم، دعم طويل      | تحديثات كثيرة            | تطبيقات عامة، فرق صغيرة    |
+| **RHEL/Rocky** | استقرار عالي، دعم مؤسسي  | مدفوع (RHEL)، مجتمع أصغر | شركات كبيرة، compliance    |
+| **Debian**     | استقرار شديد، حر بالكامل | حزم قديمة أحياناً        | خوادم حرجة لا تتغير كثيراً |
+| **Alpine**     | صغير جداً (5MB!)، آمن    | ليس لكل الحزم دعم        | Containers، Docker images  |
+| **Flatcar**    | Immutable، مثالي لـ K8s  | تعلم مختلف تماماً        | Kubernetes nodes           |
 
 ### متى لا تستخدم Linux؟
 
@@ -725,7 +725,7 @@ graph TD
     B -->|azure-storage-blob| E[Blob Storage]
     B -->|prometheus_client| F[Prometheus]
     F -->|Remote Write| G[Azure Monitor]
-    
+
     H[Azure Policy] -->|Guest Configuration| A
     I[Azure Backup] -->|VMSnapshotLinux| A
     J[Defender for Cloud] -->|Log Analytics| A
@@ -940,16 +940,16 @@ done
 
 ### 🎴 بطاقات تعليمية (Flashcards)
 
-| 🃏 السؤال | 🃏 الإجابة |
-|----------|----------|
-| أمر عرض الملفات مع التفاصيل | `ls -la` |
-| أمر مراقبة العمليات مباشرة | `top` أو `htop` |
-| مكان سجلات systemd | `journalctl -u service-name` |
+| 🃏 السؤال                      | 🃏 الإجابة                                                 |
+| ------------------------------ | ---------------------------------------------------------- |
+| أمر عرض الملفات مع التفاصيل    | `ls -la`                                                   |
+| أمر مراقبة العمليات مباشرة     | `top` أو `htop`                                            |
+| مكان سجلات systemd             | `journalctl -u service-name`                               |
 | أمر إنشاء systemd service جديد | ملف في `/etc/systemd/system/` ثم `systemctl daemon-reload` |
-| PID 1 في Linux الحديث | systemd |
-| أداة تدوير السجلات | logrotate |
-| أمر فحص المنافذ المفتوحة | `ss -tulpn` |
-| أمر تتبع system calls لعملية | `strace -p PID` |
+| PID 1 في Linux الحديث          | systemd                                                    |
+| أداة تدوير السجلات             | logrotate                                                  |
+| أمر فحص المنافذ المفتوحة       | `ss -tulpn`                                                |
+| أمر تتبع system calls لعملية   | `strace -p PID`                                            |
 
 ---
 
@@ -1050,11 +1050,11 @@ R: latency عاد لـ 200ms. وثّقت العملية كـ runbook.
 
 ### شهادات ذات صلة
 
-| الشهادة | الأهداف المغطاة |
-|--------|---------------|
-| **AZ-104** | إدارة VMs، Networking، Backup |
-| **AZ-400** | Infrastructure as Code، Automation |
-| **LFCS** | Linux Foundation Certified Sysadmin |
+| الشهادة    | الأهداف المغطاة                     |
+| ---------- | ----------------------------------- |
+| **AZ-104** | إدارة VMs، Networking، Backup       |
+| **AZ-400** | Infrastructure as Code، Automation  |
+| **LFCS**   | Linux Foundation Certified Sysadmin |
 
 ### مصادر خارجية
 
@@ -1065,16 +1065,16 @@ R: latency عاد لـ 200ms. وثّقت العملية كـ runbook.
 
 ### مصطلحات تقنية في هذا الدرس
 
-| المصطلح | التعريف |
-|--------|---------|
-| **systemd** | نظام init في Linux الحديث — يدير الخدمات والعمليات |
-| **journalctl** | عارض سجلات systemd المركزي |
-| **cron** | مجدول مهام دورية في Unix/Linux |
-| **logrotate** | أداة تدوير وضغط وحذف السجلات القديمة |
-| **ACL** | قائمة تحكم بالوصول — صلاحيات متقدمة |
-| **strace** | متتبع system calls — نافذة على ما تفعله العملية |
-| **Immutable Infrastructure** | خوادم لا تُعدَّل بعد النشر |
-| **eBPF** | Extended Berkeley Packet Filter — تشغيل برامج آمنة داخل kernel |
+| المصطلح                      | التعريف                                                        |
+| ---------------------------- | -------------------------------------------------------------- |
+| **systemd**                  | نظام init في Linux الحديث — يدير الخدمات والعمليات             |
+| **journalctl**               | عارض سجلات systemd المركزي                                     |
+| **cron**                     | مجدول مهام دورية في Unix/Linux                                 |
+| **logrotate**                | أداة تدوير وضغط وحذف السجلات القديمة                           |
+| **ACL**                      | قائمة تحكم بالوصول — صلاحيات متقدمة                            |
+| **strace**                   | متتبع system calls — نافذة على ما تفعله العملية                |
+| **Immutable Infrastructure** | خوادم لا تُعدَّل بعد النشر                                     |
+| **eBPF**                     | Extended Berkeley Packet Filter — تشغيل برامج آمنة داخل kernel |
 
 ---
 

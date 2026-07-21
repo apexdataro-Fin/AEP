@@ -22,12 +22,12 @@ description: "استكشاف مشاكل Linux: CPU, memory, disk, network — م
 
 ## ١. منهجية التشخيص — USE Method
 
-| المورد | Utilization | Saturation | Errors |
-|--------|------------|------------|--------|
-| **CPU** | `htop`, `mpstat` | run queue length | `dmesg \| grep error` |
-| **Memory** | `free -h` | swap usage | OOM killer logs |
-| **Disk** | `df -h`, `iostat` | I/O wait | `dmesg \| grep I/O` |
-| **Network** | `iftop`, `nload` | dropped packets | `netstat -s \| grep error` |
+| المورد      | Utilization       | Saturation       | Errors                     |
+| ----------- | ----------------- | ---------------- | -------------------------- |
+| **CPU**     | `htop`, `mpstat`  | run queue length | `dmesg \| grep error`      |
+| **Memory**  | `free -h`         | swap usage       | OOM killer logs            |
+| **Disk**    | `df -h`, `iostat` | I/O wait         | `dmesg \| grep I/O`        |
+| **Network** | `iftop`, `nload`  | dropped packets  | `netstat -s \| grep error` |
 
 ---
 
@@ -121,12 +121,15 @@ tcpdump -i eth0 port 443 -c 100  # التقاط 100 packet
 ## 🛠️ تدريبات
 
 ### تمرين 1: تشخيص CPU spike
+
 شغّل `stress --cpu 4` على VM وشخص المشكلة.
 
 ### تمرين 2: محاكاة disk full
+
 `dd if=/dev/zero of=/tmp/bigfile bs=1M count=1000` وشخص.
 
 ### تحدي: سكريبت تشخيص آلي
+
 سكريبت Bash يفحص CPU/Memory/Disk/Network ويطبع تقريراً مختصراً.
 
 ---
@@ -134,6 +137,7 @@ tcpdump -i eth0 port 443 -c 100  # التقاط 100 packet
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما هي USE Method؟
 2. كيف تكتشف memory leak؟
 3. ما الفرق بين `MemFree` و `MemAvailable`؟
@@ -142,12 +146,12 @@ tcpdump -i eth0 port 443 -c 100  # التقاط 100 packet
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| USE | Utilization, Saturation, Errors |
-| iowait | وقت انتظار CPU للـ disk I/O |
-| OOM Killer | يقتل عمليات لتحرير ذاكرة |
-| `lsof +L1` | ملفات محذوفة لا تزال مفتوحة |
+| السؤال     | الإجابة                         |
+| ---------- | ------------------------------- |
+| USE        | Utilization, Saturation, Errors |
+| iowait     | وقت انتظار CPU للـ disk I/O     |
+| OOM Killer | يقتل عمليات لتحرير ذاكرة        |
+| `lsof +L1` | ملفات محذوفة لا تزال مفتوحة     |
 
 ---
 
@@ -160,11 +164,11 @@ tcpdump -i eth0 port 443 -c 100  # التقاط 100 packet
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Linux Security](./04-linux-security-hardening) |
-| كتاب | "Systems Performance" — Brendan Gregg |
-| أداة | [netdata](https://www.netdata.cloud/) — مراقبة شاملة |
+| النوع     | الرابط                                               |
+| --------- | ---------------------------------------------------- |
+| درس مرتبط | [Linux Security](./04-linux-security-hardening)      |
+| كتاب      | "Systems Performance" — Brendan Gregg                |
+| أداة      | [netdata](https://www.netdata.cloud/) — مراقبة شاملة |
 
 ---
 

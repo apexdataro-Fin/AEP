@@ -79,18 +79,19 @@ inspec exec cis_azure.rb -t azure://
 
 ## 🎨 أدوات Compliance as Code
 
-| الأداة | الاستخدام |
-|--------|-----------|
-| **InSpec** | فحص compliance للبنية التحتية |
-| **Azure Policy** | compliance مستمر في Azure |
-| **OPA** | سياسات مخصصة لـ Kubernetes |
-| **Trivy** | فحص compliance + ثغرات للحاويات |
+| الأداة           | الاستخدام                       |
+| ---------------- | ------------------------------- |
+| **InSpec**       | فحص compliance للبنية التحتية   |
+| **Azure Policy** | compliance مستمر في Azure       |
+| **OPA**          | سياسات مخصصة لـ Kubernetes      |
+| **Trivy**        | فحص compliance + ثغرات للحاويات |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: اكتب InSpec test لـ Storage Account
+
 ### تحدي: ابنِ compliance pipeline مع InSpec في CI/CD
 
 ---
@@ -98,20 +99,23 @@ inspec exec cis_azure.rb -t azure://
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا Compliance as Code أفضل من اليدوي؟
 2. ما الفرق بين InSpec و Azure Policy؟
 3. كيف تدمج compliance في CI/CD؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| InSpec | أداة فحص compliance للبنية التحتية |
-| Compliance as Code | كتابة فحوصات compliance ككود |
-| CIS | Center for Internet Security — معايير أمان |
+
+| السؤال             | الإجابة                                    |
+| ------------------ | ------------------------------------------ |
+| InSpec             | أداة فحص compliance للبنية التحتية         |
+| Compliance as Code | كتابة فحوصات compliance ككود               |
+| CIS                | Center for Internet Security — معايير أمان |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تثبت compliance لمدقق خارجي؟"** → InSpec report + Azure Policy compliance dashboard
 2. **"كيف تمنع drift عن compliance؟"** → Azure Policy + CI/CD checks
 
@@ -158,11 +162,11 @@ graph TD
 
 ### Anti-Patterns
 
-| الخطأ | المشكلة | التصحيح |
-|-------|---------|---------|
-| Compliance سنوي فقط | 364 يوماً من عدم الامتثال | Continuous checks |
-| Azure Policy فقط | لا يغطي multi-cloud | InSpec + OPA |
-| Blind auto-remediation | قد يكسر production | Audit أولاً، ثم auto-fix |
+| الخطأ                  | المشكلة                   | التصحيح                  |
+| ---------------------- | ------------------------- | ------------------------ |
+| Compliance سنوي فقط    | 364 يوماً من عدم الامتثال | Continuous checks        |
+| Azure Policy فقط       | لا يغطي multi-cloud       | InSpec + OPA             |
+| Blind auto-remediation | قد يكسر production        | Audit أولاً، ثم auto-fix |
 
 ---
 
@@ -191,17 +195,17 @@ metadata:
 spec:
   validationFailureAction: Enforce
   rules:
-  - name: check-labels
-    match:
-      any:
-      - resources:
-          kinds: [Pod]
-    validate:
-      message: "Pod must have owner label"
-      pattern:
-        metadata:
-          labels:
-            owner: "?*"
+    - name: check-labels
+      match:
+        any:
+          - resources:
+              kinds: [Pod]
+      validate:
+        message: "Pod must have owner label"
+        pattern:
+          metadata:
+            labels:
+              owner: "?*"
 ```
 
 ---
@@ -209,6 +213,7 @@ spec:
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. لماذا Compliance as Code أفضل من اليدوي؟
 2. InSpec vs Azure Policy — متى تستخدم ماذا؟
 3. كيف تدمج compliance في CI/CD؟
@@ -216,6 +221,7 @@ spec:
 5. كيف تقيس compliance score؟
 
 ### 📝 اختبار (3)
+
 1. **InSpec = 85% compliance. كيف ترفع لـ 95%؟**
    <details><summary>الإجابة</summary>ركز على HIGH impact controls، صنف الفشل، ضع Azure Policies لمنع drift، auto-remediation للـ technical debt.</details>
 
@@ -226,6 +232,7 @@ spec:
    <details><summary>الإجابة</summary>Exemption مؤقت مع justification. Fix root cause: policy too broad?</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم compliance pipeline
 - اشرح Audit vs Deny effect
 - كيف تبني compliance culture؟
@@ -233,25 +240,28 @@ spec:
 - صف تجربة Compliance as Code
 
 ### 🎓 Feynman: Compliance لغير التقني
+
 "مفتش بناء (InSpec) يفحص كل مبنى يومياً. Azure Policy = قوانين بناء تمنع المخالفة من البداية."
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| Compliance as Code | أتمتة فحوصات الامتثال عبر كود |
-| InSpec | Chef InSpec — إطار فحص compliance |
-| Azure Policy | compliance مستمر لموارد Azure |
-| OPA/Kyverno | Policy engine لـ K8s |
-| CIS Benchmarks | معايير أمان مجتمعية |
-| PCI-DSS | معيار أمان بيانات الدفع |
-| Evidence | دليل compliance (تقارير، logs) |
-| Drift Detection | اكتشاف التغييرات عن حالة الامتثال |
+
+| السؤال             | الإجابة                           |
+| ------------------ | --------------------------------- |
+| Compliance as Code | أتمتة فحوصات الامتثال عبر كود     |
+| InSpec             | Chef InSpec — إطار فحص compliance |
+| Azure Policy       | compliance مستمر لموارد Azure     |
+| OPA/Kyverno        | Policy engine لـ K8s              |
+| CIS Benchmarks     | معايير أمان مجتمعية               |
+| PCI-DSS            | معيار أمان بيانات الدفع           |
+| Evidence           | دليل compliance (تقارير، logs)    |
+| Drift Detection    | اكتشاف التغييرات عن حالة الامتثال |
 
 ---
 
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"كيف تثبت compliance لـ 3 frameworks معاً؟"**
    - InSpec profiles منفصلة، Azure Policy initiatives، dashboard موحد
 
@@ -259,10 +269,13 @@ spec:
    - Risk acceptance موثق، compensating controls، خطة migration
 
 ### System Design
+
 **"صمم Continuous Compliance لـ 1000 subscription."**
+
 - Collection: Azure Policy + InSpec، Aggregation: Log Analytics، Dashboard: Power BI، Auto-remediation: Azure Functions
 
 ### Behavioral (STAR)
+
 **S:** Developers يرفضون compliance checks في CI/CD. **T:** Compliance بدون قتل velocity. **A:** Audit mode 3 أشهر → gradual enforcement. **R:** Compliance score 60% → 97%.
 
 ---

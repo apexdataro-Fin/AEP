@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: [architecture-overview]
   tags: [technology, stack, dependencies]
 ---
+
 displayed_sidebar: devSidebar
 
 # Technology Stack

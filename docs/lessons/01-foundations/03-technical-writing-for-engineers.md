@@ -40,35 +40,43 @@ description: "كيف تكتب وثائق، Runbooks، Postmortems، و RFCs تغ
 # Runbook: [اسم المشكلة]
 
 ## 🚨 متى تشغّل هذا الـ runbook؟
+
 - Alert: [اسم الـ alert + الحد]
 - Dashboard: [رابط Grafana]
 
 ## 🔍 التشخيص (الخطوات السريعة)
+
 1. [الفحص الأول]
 2. [الفحص الثاني]
 
 ## 🛠️ الإصلاحات حسب السيناريو
+
 ### سيناريو A: [السبب]
+
 kubectl [الأمر]
 
 ### سيناريو B: [السبب]
+
 terraform [الأمر]
 
 ## ⚠️ متى تستدعي المساعدة؟
+
 - [شرط التصعيد]
 - [رقم هاتف on-call]
 ```
 
 ### مثال حقيقي: API Latency Spike
 
-```markdown
+````markdown
 # Runbook: API Latency Spike
 
 ## 🚨 متى تشغّل هذا الـ runbook؟
+
 - Alert: `HighLatency` (p99 > 2s لمدة 5 دقائق)
 - Dashboard: Grafana → API RED → Latency panel
 
 ## 🔍 التشخيص (5 دقائق)
+
 1. `kubectl top pods -n production | grep api` — أي pod يستهلك موارد؟
 2. `kubectl logs -l app=api --tail=100 | grep ERROR`
 3. هل DB connection pool ممتلئ؟
@@ -77,24 +85,33 @@ terraform [الأمر]
    - Grafana → Redis Dashboard → Cache Hit Rate
 
 ## 🛠️ الإصلاحات حسب السيناريو
+
 ### سيناريو A: DB Connection Pool Exhausted
+
 ```bash
 kubectl scale deployment api --replicas=4
 ```
+````
+
 ### سيناريو B: Memory Leak
+
 ```bash
 kubectl rollout undo deployment/api
 ```
+
 ### سيناريو C: زيادة حركة طبيعية
+
 ```bash
 kubectl scale deployment api --replicas=8
 ```
 
 ## ⚠️ متى تستدعي المساعدة؟
+
 - إذا استمر latency > 2s بعد 15 دقيقة
 - إذا failed requests > 1%
 - اتصل بـ SRE on-call: +966-xxx
-```
+
+````
 
 ---
 
@@ -135,7 +152,7 @@ kubectl scale deployment api --replicas=8
 | 1 | تفعيل auto-renewal | DevOps | فوراً |
 | 2 | Alert قبل 30 يوم | SRE | هذا الأسبوع |
 | 3 | مراجعة كل الشهادات | Security | الجمعة |
-```
+````
 
 ### مثال حقيقي: تعطل بوابة الدفع — 15 يوليو
 
@@ -143,22 +160,26 @@ kubectl scale deployment api --replicas=8
 # Postmortem: تعطل بوابة الدفع — 15 يوليو
 
 ## 📊 ملخص
+
 - المدة: 47 دقيقة | التأثير: 234 طلب فشل | السبب: TLS منتهية
 
 ## ⏱️ الجدول الزمني
+
 14:13 — أول 502 error | 14:35 — اكتشاف TLS | 14:50 — عودة الخدمة
 14:15 — بدء التحقيق | 14:40 — تجديد الشهادة | 15:00 — اجتماع الطوارئ
 
 ## 🔍 5 Why's
+
 1. TLS expired → auto-renewal معطل → خطأ تكوين → لا alert → افترضنا Key Vault يديرها
 
 ## ✅ إجراءات
-| # | الإجراء | المسؤول | الموعد |
-|---|---------|---------|--------|
-| 1 | تفعيل auto-renewal | DevOps | فوراً |
-| 2 | Alert قبل 30 يوم | SRE | هذا الأسبوع |
-| 3 | Audit كل الشهادات | Security | الجمعة |
-| 4 | إضافة TLS monitoring لـ Prometheus | Platform | أسبوعين |
+
+| #   | الإجراء                            | المسؤول  | الموعد      |
+| --- | ---------------------------------- | -------- | ----------- |
+| 1   | تفعيل auto-renewal                 | DevOps   | فوراً       |
+| 2   | Alert قبل 30 يوم                   | SRE      | هذا الأسبوع |
+| 3   | Audit كل الشهادات                  | Security | الجمعة      |
+| 4   | إضافة TLS monitoring لـ Prometheus | Platform | أسبوعين     |
 ```
 
 ---
@@ -179,18 +200,23 @@ kubectl scale deployment api --replicas=8
 ## Status: [Draft | Proposed | Accepted | Rejected]
 
 ## Motivation
+
 لماذا هذا التغيير ضروري؟
 
 ## Proposed Solution
+
 ماذا نقترح بالضبط؟
 
 ## Alternatives Considered
+
 ماذا أيضاً فكرنا فيه؟ ولماذا رفضناه؟
 
 ## Migration Plan
+
 كيف ننتقل من الوضع الحالي للمقترح؟
 
 ## Open Questions
+
 ما الذي لم نقرره بعد؟
 ```
 
@@ -200,20 +226,24 @@ kubectl scale deployment api --replicas=8
 # RFC: الانتقال من Jenkins إلى GitHub Actions
 
 ## Motivation
+
 - Jenkins server يكلف $150/شهر
 - الصيانة تستهلك 5 ساعات أسبوعياً
 - GitHub Actions مجاني للـ public repos ومتكامل
 
 ## Proposed Solution
+
 - نقل 20 pipeline إلى GitHub Actions خلال 4 أسابيع
 - إيقاف Jenkins server
 
 ## Migration Plan
+
 Week 1-2: CI pipelines (test, build)
 Week 3: CD pipelines (deploy)
 Week 4: مراجعة وإيقاف Jenkins
 
 ## Open Questions
+
 - ماذا عن self-hosted runners للأحمال الثقيلة؟
 ```
 
@@ -229,7 +259,7 @@ name: Publish Docs
 on:
   push:
     branches: [main]
-    paths: ['docs/**']
+    paths: ["docs/**"]
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -241,12 +271,12 @@ jobs:
 
 ### معايير الجودة
 
-| المعيار | الوصف |
-|---------|-------|
-| **كل PR معه docs** | لا تقبل PR بدون تحديث الوثائق |
-| **Docs Review** | شخص آخر يراجع الوثائق كما يراجع الكود |
-| **Link Checker** | CI يفحص الروابط المكسورة |
-| **Readability Score** | استهدف مستوى قراءة 8th grade |
+| المعيار               | الوصف                                 |
+| --------------------- | ------------------------------------- |
+| **كل PR معه docs**    | لا تقبل PR بدون تحديث الوثائق         |
+| **Docs Review**       | شخص آخر يراجع الوثائق كما يراجع الكود |
+| **Link Checker**      | CI يفحص الروابط المكسورة              |
+| **Readability Score** | استهدف مستوى قراءة 8th grade          |
 
 ---
 
@@ -255,6 +285,7 @@ jobs:
 ### تمرين 1: اكتب Runbook لتطبيقك
 
 خذ تطبيقاً تعمل عليه واكتب Runbook يغطي:
+
 - 3 سيناريوهات فشل محتملة
 - خطوات تشخيص واضحة
 - متى تستدعي المساعدة
@@ -262,6 +293,7 @@ jobs:
 ### تمرين 2: حلل Postmortem حقيقي
 
 ابحث عن Postmortem عام (GitHub, Cloudflare, AWS) وحلل:
+
 - ما الـ 5 Why's؟
 - هل الإجراءات كافية؟
 
@@ -294,13 +326,13 @@ jobs:
 
 ### 🃏 بطاقات (5)
 
-| السؤال | الإجابة |
-|--------|---------|
-| Runbook | دليل خطوة بخطوة للاستجابة لحادثة |
-| Postmortem | تحليل بعد الحادثة للتعلم لا للوم |
-| RFC | Request for Comments — اقتراح تقني للمناقشة |
-| 5 Why's | اسأل "لماذا" 5 مرات للوصول للسبب الجذري |
-| Blameless | لا تبحث عن مذنب. ابحث عن تحسين النظام |
+| السؤال     | الإجابة                                     |
+| ---------- | ------------------------------------------- |
+| Runbook    | دليل خطوة بخطوة للاستجابة لحادثة            |
+| Postmortem | تحليل بعد الحادثة للتعلم لا للوم            |
+| RFC        | Request for Comments — اقتراح تقني للمناقشة |
+| 5 Why's    | اسأل "لماذا" 5 مرات للوصول للسبب الجذري     |
+| Blameless  | لا تبحث عن مذنب. ابحث عن تحسين النظام       |
 
 ---
 
@@ -318,12 +350,12 @@ jobs:
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                          |
+| --------- | ----------------------------------------------- |
 | درس مرتبط | [Engineering Mindset](./01-engineering-mindset) |
-| كتاب | "The Staff Engineer's Path" — Tanya Reilly |
-| أداة | [Mermaid](https://mermaid.js.org) للـ diagrams |
-| أداة | [Vale](https://vale.sh) لفحص أسلوب الكتابة |
+| كتاب      | "The Staff Engineer's Path" — Tanya Reilly      |
+| أداة      | [Mermaid](https://mermaid.js.org) للـ diagrams  |
+| أداة      | [Vale](https://vale.sh) لفحص أسلوب الكتابة      |
 
 ---
 

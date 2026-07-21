@@ -532,15 +532,15 @@ graph TD
     F -->|لا| D
 ```
 
-| المعيار | Python | Go | Bash |
-|---------|--------|-----|------|
-| **سرعة التطوير** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **سرعة التنفيذ** | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐ |
-| **معالجة الأخطاء** | ⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐ |
-| **مكتبات Azure** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
-| **اختبارات** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐ |
-| **توزيع (binary)** | ⭐⭐ | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **منحنى التعلم** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐⭐⭐ |
+| المعيار            | Python     | Go         | Bash     |
+| ------------------ | ---------- | ---------- | -------- |
+| **سرعة التطوير**   | ⭐⭐⭐⭐⭐ | ⭐⭐⭐     | ⭐⭐⭐⭐ |
+| **سرعة التنفيذ**   | ⭐⭐⭐     | ⭐⭐⭐⭐⭐ | ⭐⭐     |
+| **معالجة الأخطاء** | ⭐⭐⭐⭐   | ⭐⭐⭐⭐⭐ | ⭐       |
+| **مكتبات Azure**   | ⭐⭐⭐⭐⭐ | ⭐⭐⭐     | ⭐⭐     |
+| **اختبارات**       | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐   | ⭐       |
+| **توزيع (binary)** | ⭐⭐       | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
+| **منحنى التعلم**   | ⭐⭐⭐⭐⭐ | ⭐⭐⭐     | ⭐⭐⭐⭐ |
 
 ### متى لا تستخدم Python للأتمتة؟
 
@@ -577,6 +577,7 @@ graph TD
 > اكتب سكربت Python يمسح resource groups التي تحمل tag `AutoDelete: true` وانتهى عمرها (أقدم من تاريخ محدد في tag آخر `DeleteAfter: 2024-12-31`).
 
 **متطلبات:**
+
 - استخدم `azure-mgmt-resource`
 - اعرض الموارد التي ستحذف قبل الحذف (`--dry-run`)
 - سجّل كل عملية حذف
@@ -591,7 +592,7 @@ from azure.mgmt.resource import ResourceManagementClient
 def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
     client = ResourceManagementClient(credential, subscription_id)
     today = datetime.now().date()
-    
+
     for rg in client.resource_groups.list():
         tags = rg.tags or {}
         if tags.get('AutoDelete') == 'true':
@@ -603,6 +604,7 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
                 if not dry_run:
                     client.resource_groups.begin_delete(rg.name)
 ```
+
 </details>
 
 ### تمرين ٢: مراقب الشهادات (متوسط)
@@ -612,6 +614,7 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
 ### تحدي (متقدم)
 
 > ابني أداة `cloudnova cost` التي:
+>
 > 1. تستخرج فاتورة الشهر الحالي من Azure Cost Management API
 > 2. تقارنها بالشهر السابق
 > 3. تحدّد أكبر 5 أسباب لارتفاع التكلفة
@@ -638,9 +641,9 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
 
 **س١:** أي مكتبة CLI تختار لبناء أداة بـ ١٠ أوامر فرعية؟
 
-- **أ)**  `argparse`
-- **ب)**  `click`
-- **ج)**  `sys.argv`
+- **أ)** `argparse`
+- **ب)** `click`
+- **ج)** `sys.argv`
 
 <details><summary>الإجابة</summary>
 
@@ -652,6 +655,7 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
 <details><summary>الإجابة</summary>
 
 استخدم `unittest.mock` لمحاكاة Azure clients:
+
 ```python
 from unittest.mock import MagicMock, patch
 
@@ -663,6 +667,7 @@ def test_list_vms(mock_compute):
     result = list_vms()
     assert len(result) == 1
 ```
+
 </details>
 
 **س٣:** ما هو نمط `exponential backoff` ولماذا هو مهم؟
@@ -670,9 +675,11 @@ def test_list_vms(mock_compute):
 <details><summary>الإجابة</summary>
 
 بدلاً من إعادة المحاولة فوراً عند الفشل، تنتظر وقتاً متزايداً بين المحاولات (1s → 2s → 4s → 8s). هذا يمنع:
+
 - إغراق الخدمة بطلبات متكررة (thundering herd)
 - استهلاك rate limits بسرعة
 - تفاقم المشكلة إذا كان السبب overload مؤقت
+
 </details>
 
 ### 🧠 استدعاء نشط (5)
@@ -689,13 +696,13 @@ def test_list_vms(mock_compute):
 
 ### 🎴 بطاقات تعليمية (5)
 
-| السؤال | الإجابة |
-|--------|---------|
-| ما هي DefaultAzureCredential؟ | سلسلة اعتماد تجرب Managed Identity → Environment → CLI → VS Code بالترتيب |
-| كيف تتعامل مع pagination؟ | استخدم `list()` مباشرة — Azure SDK يتعامل معها تلقائياً أو استخدم `by_page()` للتحكم اليدوي |
-| ما فائدة `click` vs `argparse`؟ | Click: nested commands, validation, env vars. Argparse: أدوات بسيطة |
-| لماذا `logging` أفضل من `print`؟ | مستويات (DEBUG/INFO/WARNING/ERROR)، تنسيق، إخراج لملف أو سحابة |
-| كيف تؤمن سكربت Python؟ | Key Vault للأسرار، Managed Identity للمصادقة، لا hardcoded secrets أبداً |
+| السؤال                           | الإجابة                                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------- |
+| ما هي DefaultAzureCredential؟    | سلسلة اعتماد تجرب Managed Identity → Environment → CLI → VS Code بالترتيب                   |
+| كيف تتعامل مع pagination؟        | استخدم `list()` مباشرة — Azure SDK يتعامل معها تلقائياً أو استخدم `by_page()` للتحكم اليدوي |
+| ما فائدة `click` vs `argparse`؟  | Click: nested commands, validation, env vars. Argparse: أدوات بسيطة                         |
+| لماذا `logging` أفضل من `print`؟ | مستويات (DEBUG/INFO/WARNING/ERROR)، تنسيق، إخراج لملف أو سحابة                              |
+| كيف تؤمن سكربت Python؟           | Key Vault للأسرار، Managed Identity للمصادقة، لا hardcoded secrets أبداً                    |
 
 ---
 
@@ -751,6 +758,7 @@ def test_list_vms(mock_compute):
 - Log Analytics: ~$10/شهر
 الإجمالي: ~$15/شهر ✅
 ```
+
 </details>
 
 ### سؤال تقني
@@ -766,16 +774,16 @@ from unittest.mock import MagicMock, patch, call
 from azure.core.exceptions import ResourceNotFoundError
 
 class TestCloudNovaCLI:
-    
+
     @patch('azure.mgmt.compute.ComputeManagementClient')
     def test_list_vms_empty(self, mock_compute):
         """اختبار: لا توجد VMs"""
         mock_compute.return_value = MagicMock()
         mock_compute.return_value.virtual_machines.list.return_value = []
-        
+
         result = list_vms_in_rg('test-rg')
         assert result == []
-    
+
     @patch('azure.mgmt.compute.ComputeManagementClient')
     def test_list_vms_with_data(self, mock_compute):
         """اختبار: توجد VMs"""
@@ -783,11 +791,11 @@ class TestCloudNovaCLI:
         mock_vm.name = 'web-server-01'
         mock_vm.location = 'westeurope'
         mock_compute.return_value.virtual_machines.list.return_value = [mock_vm]
-        
+
         result = list_vms_in_rg('prod-rg')
         assert len(result) == 1
         assert result[0]['name'] == 'web-server-01'
-    
+
     @patch('azure.mgmt.resource.ResourceManagementClient')
     def test_cleanup_dry_run_does_not_delete(self, mock_resource):
         """اختبار: dry-run لا يحذف شيئاً"""
@@ -796,14 +804,14 @@ class TestCloudNovaCLI:
         mock_rg.name = 'old-project-rg'
         mock_rg.tags = {'AutoDelete': 'true'}
         mock_resource.return_value.resource_groups.list.return_value = [mock_rg]
-        
+
         # Act
         result = cleanup_rgs(dry_run=True)
-        
+
         # Assert
         mock_resource.return_value.resource_groups.begin_delete.assert_not_called()
         assert mock_rg.name in str(result)
-    
+
     def test_retry_decorator_retries_on_failure(self):
         """اختبار: retry يعيد المحاولة عند الفشل"""
         mock_func = MagicMock(
@@ -811,13 +819,14 @@ class TestCloudNovaCLI:
                         ServiceRequestError('fail'),
                         'success']
         )
-        
+
         decorated = retry_with_backoff(max_retries=3, base_delay=0)(mock_func)
         result = decorated()
-        
+
         assert result == 'success'
         assert mock_func.call_count == 3
 ```
+
 </details>
 
 ### سؤال سلوكي (STAR)
@@ -834,30 +843,34 @@ class TestCloudNovaCLI:
 ## 📚 المراجع والروابط
 
 ### دروس مرتبطة
+
 - [Terraform Fundamentals](../12-terraform/01-terraform-fundamentals) — البنية ككود
 - [GitHub Workflows](../14-github/01-github-workflows) — تشغيل السكربتات آلياً
 - [FinOps Fundamentals](../22-finops/01-finops-fundamentals) — تحسين التكلفة الذي تؤتمته
 
 ### شهادات ذات صلة
+
 - **AZ-104**: إدارة الموارد مع Azure CLI/SDK
 - **AZ-400**: أتمتة DevOps مع Python
 
 ### مصادر خارجية
+
 - 📖 [Azure SDK for Python Documentation](https://learn.microsoft.com/en-us/azure/developer/python/)
 - 📖 [Click Documentation](https://click.palletsprojects.com/)
 - 📖 [Rich Library](https://rich.readthedocs.io/)
 - 📺 "Python for Cloud Automation" — John Savill's Technical Training
 
 ### مصطلحات التقنية في هذا الدرس
-| المصطلح | التعريف |
-|---------|---------|
-| **SDK** | Software Development Kit — حزمة أدوات برمجية للتعامل مع خدمة |
-| **CLI** | Command Line Interface — واجهة أوامر نصية |
-| **DefaultAzureCredential** | سلسلة مصادقة Azure تجرب عدة طرق تلقائياً |
-| **Exponential Backoff** | استراتيجية retry تزيد وقت الانتظار أضعافاً مضاعفة |
-| **Managed Identity** | هوية Azure AD للخدمات بدون الحاجة لمفاتيح |
-| **Pagination** | تقسيم النتائج الكبيرة لصفحات متعددة |
-| **Idempotency** | تكرار العملية لا يغير النتيجة بعد أول تنفيذ |
+
+| المصطلح                    | التعريف                                                      |
+| -------------------------- | ------------------------------------------------------------ |
+| **SDK**                    | Software Development Kit — حزمة أدوات برمجية للتعامل مع خدمة |
+| **CLI**                    | Command Line Interface — واجهة أوامر نصية                    |
+| **DefaultAzureCredential** | سلسلة مصادقة Azure تجرب عدة طرق تلقائياً                     |
+| **Exponential Backoff**    | استراتيجية retry تزيد وقت الانتظار أضعافاً مضاعفة            |
+| **Managed Identity**       | هوية Azure AD للخدمات بدون الحاجة لمفاتيح                    |
+| **Pagination**             | تقسيم النتائج الكبيرة لصفحات متعددة                          |
+| **Idempotency**            | تكرار العملية لا يغير النتيجة بعد أول تنفيذ                  |
 
 ---
 

@@ -78,9 +78,9 @@ opentelemetry-instrument python app.py
 
 ### OTel vs Vendor Lock-in
 
-| قبل OTel | بعد OTel |
-|---------|----------|
-| Jaeger SDK في الكود | OTel SDK فقط |
+| قبل OTel                       | بعد OTel           |
+| ------------------------------ | ------------------ |
+| Jaeger SDK في الكود            | OTel SDK فقط       |
 | تبديل إلى Zipkin = إعادة كتابة | تغيير exporter فقط |
 
 ---
@@ -88,6 +88,7 @@ opentelemetry-instrument python app.py
 ## 🛠️ تدريبات
 
 ### تمرين: ثبت OTel Collector على Kubernetes
+
 ### تحدي: أضف instrumentation يدوي لـ metric مخصصة
 
 ---
@@ -95,20 +96,23 @@ opentelemetry-instrument python app.py
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا OTel أفضل من SDKs المباشرة؟
 2. ما دور الـ Collector؟
 3. كيف تغير وجهة الـ traces بدون تغيير الكود؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| OTel | OpenTelemetry — معيار مفتوح للمراقبة |
-| Collector | وسيط يستقبل ويعالج ويصدر البيانات |
-| Auto-instrumentation | مراقبة بدون تغيير الكود |
+
+| السؤال               | الإجابة                              |
+| -------------------- | ------------------------------------ |
+| OTel                 | OpenTelemetry — معيار مفتوح للمراقبة |
+| Collector            | وسيط يستقبل ويعالج ويصدر البيانات    |
+| Auto-instrumentation | مراقبة بدون تغيير الكود              |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"لماذا تختار OpenTelemetry؟"** → معيار واحد، لا vendor lock-in، مجتمع ضخم
 2. **"كيف تهاجر من Jaeger SDK إلى OTel؟"** → استبدل SDK + اضبط exporter إلى Jaeger
 
@@ -152,16 +156,16 @@ exporters:
   # قبل: Jaeger
   # jaeger:
   #   endpoint: jaeger-collector:14250
-  
+
   # بعد: Grafana Tempo (سطر واحد يتغير!)
   otlp/tempo:
     endpoint: tempo-distributor:4317
     tls:
       insecure: true
-  
+
   prometheus:
     endpoint: 0.0.0.0:8889
-  
+
   azuremonitor:
     connection_string: "InstrumentationKey=xxx"
 
@@ -170,7 +174,7 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch, memory_limiter, attributes]
-      exporters: [otlp/tempo]  # تغير هذا السطر فقط!
+      exporters: [otlp/tempo] # تغير هذا السطر فقط!
     metrics:
       receivers: [otlp]
       processors: [batch]
@@ -196,23 +200,23 @@ graph TD
         APP2["App Pod B"]
         AGENT1["OTel Agent<br/>(DaemonSet)"]
     end
-    
+
     subgraph "Node 2"
         APP3["App Pod C"]
         APP4["App Pod D"]
         AGENT2["OTel Agent<br/>(DaemonSet)"]
     end
-    
+
     subgraph "Cluster"
         GATEWAY["OTel Gateway<br/>(Deployment)"]
     end
-    
+
     subgraph "Backends"
         JAEGER["Jaeger/Tempo"]
         PROM["Prometheus"]
         AZURE["Azure Monitor"]
     end
-    
+
     APP1 -->|"OTLP/gRPC"| AGENT1
     APP2 --> AGENT1
     APP3 --> AGENT2
@@ -222,7 +226,7 @@ graph TD
     GATEWAY --> JAEGER
     GATEWAY --> PROM
     GATEWAY --> AZURE
-    
+
     style GATEWAY fill:#f9a825,stroke:#f57f17
     style AGENT1 fill:#0078D4,stroke:#005A9E,color:#fff
 ```
@@ -255,28 +259,28 @@ checkout_duration = meter.create_histogram(
 @tracer.start_as_current_span("checkout")
 def checkout(cart):
     start = time.time()
-    
+
     checkout_counter.add(1, {"status": "success"})
-    
+
     result = process_payment(cart)
-    
+
     checkout_duration.record(
         (time.time() - start) * 1000,
         {"payment_method": cart.payment_method}
     )
-    
+
     return result
 ```
 
 ### مصفوفة: OTel vs Traditional SDKs
 
-| البعد | Traditional (Jaeger SDK) | OpenTelemetry |
-|-------|------------------------|--------------|
-| **تبديل الـ backend** | إعادة كتابة الكود | تغيير exporter فقط |
-| **إضافة backend جديد** | SDK جديدة + instrumentation | إضافة exporter في collector |
-| **تعدد الـ signals** | مكتبة لكل signal | SDK واحدة لـ traces+metrics+logs |
-| **Auto-instrumentation** | محدود | ✅ ممتاز (Java, Python, .NET, JS) |
-| **Vendor neutrality** | ❌ | ✅ CNCF incubating |
+| البعد                    | Traditional (Jaeger SDK)    | OpenTelemetry                     |
+| ------------------------ | --------------------------- | --------------------------------- |
+| **تبديل الـ backend**    | إعادة كتابة الكود           | تغيير exporter فقط                |
+| **إضافة backend جديد**   | SDK جديدة + instrumentation | إضافة exporter في collector       |
+| **تعدد الـ signals**     | مكتبة لكل signal            | SDK واحدة لـ traces+metrics+logs  |
+| **Auto-instrumentation** | محدود                       | ✅ ممتاز (Java, Python, .NET, JS) |
+| **Vendor neutrality**    | ❌                          | ✅ CNCF incubating                |
 
 ---
 
@@ -338,6 +342,7 @@ processors:
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. لماذا OTel أفضل من SDKs المباشرة (Jaeger, Prometheus)؟
 2. ما دور OTel Collector في الـ architecture؟
 3. كيف يعمل auto-instrumentation؟
@@ -345,6 +350,7 @@ processors:
 5. كيف تدعم OTel الـ traces, metrics, و logs في SDK واحدة؟
 
 ### 📝 اختبار (3)
+
 1. **لديك 3 exporters في collector. أحدهم يفشل. هل يتوقف الـ pipeline كله؟**
    <details><summary>الإجابة</summary>لا. كل exporter مستقل. لكن إذا فشل receiver واحد، كل الـ pipelines المرتبطة به تتأثر. استخدم queues + retries.</details>
 
@@ -355,6 +361,7 @@ processors:
    <details><summary>الإجابة</summary>Agent (DaemonSet): 128MB memory, 100m CPU. Gateway (Deployment): 512MB-2GB memory, 500m-2 CPU حسب الـ throughput. استخدم memory_limiter processor.</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم OTel architecture مع Collector و pipelines
 - اشرح الفرق بين push و pull exporters
 - كيف تتعامل مع OTel في بيئة multi-language؟
@@ -362,18 +369,20 @@ processors:
 - صف تجربة هاجرت فيها observability stack
 
 ### 🎓 Feynman: OpenTelemetry لغير التقني
+
 "تخيل أنك تتكلم مع أشخاص من 5 دول مختلفة. بدلاً من تعلم 5 لغات، تتعلم لغة واحدة عالمية (OTel). الـ Collector هو 'مترجم فوري' يترجم كلامك للغة كل دولة (Jaeger, Prometheus, Azure)."
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| OpenTelemetry | CNCF standard للـ observability (traces, metrics, logs) |
-| Collector | وسيط يستقبل telemetry data ويعالجها ويصدرها |
-| OTLP | OpenTelemetry Protocol — بروتوكول النقل |
-| Instrumentation | إضافة كود المراقبة للتطبيق |
-| Exporter | مُصدّر البيانات لـ backend معين |
-| Tail Sampling | Sampling بعد اكتمال الـ trace (يحتفظ بـ errors) |
-| Span Processor | يعالج الـ spans قبل التصدير (batch, filter) |
+
+| السؤال              | الإجابة                                                     |
+| ------------------- | ----------------------------------------------------------- |
+| OpenTelemetry       | CNCF standard للـ observability (traces, metrics, logs)     |
+| Collector           | وسيط يستقبل telemetry data ويعالجها ويصدرها                 |
+| OTLP                | OpenTelemetry Protocol — بروتوكول النقل                     |
+| Instrumentation     | إضافة كود المراقبة للتطبيق                                  |
+| Exporter            | مُصدّر البيانات لـ backend معين                             |
+| Tail Sampling       | Sampling بعد اكتمال الـ trace (يحتفظ بـ errors)             |
+| Span Processor      | يعالج الـ spans قبل التصدير (batch, filter)                 |
 | Resource Attributes | معلومات ثابتة عن مصدر الـ telemetry (service name, cluster) |
 
 ---
@@ -381,6 +390,7 @@ processors:
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"كيف تختار بين OTel Agent و Gateway deployment؟"**
    - Agent: لكل node (DaemonSet) — يقلل latency ويجمع قبل الإرسال
    - Gateway: مركزي — processing ثقيل (tail sampling, batching)
@@ -393,7 +403,9 @@ processors:
    - Scale أفقياً: replicas: 3 مع load balancing
 
 ### System Design
+
 **"صمم Observability stack لـ 500 microservice مع OTel."**
+
 - Agent: DaemonSet OTel Collector (lightweight, per node)
 - Gateway: 3 replicas OTel Collector (tail sampling, batching)
 - Buffer: Kafka بين agent و gateway (للـ spikes)
@@ -402,6 +414,7 @@ processors:
 - Alerting: Alertmanager + PagerDuty
 
 ### Behavioral (STAR)
+
 **"كيف أقنعت فريقاً بالاستثمار في OTel؟"**
 
 **S:** فريق يستخدم Jaeger + Prometheus + Azure SDKs منفصلة.

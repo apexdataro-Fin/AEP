@@ -45,11 +45,11 @@ trivy image --exit-code 1 --severity CRITICAL cloudnova-api:${{ github.sha }}
 - name: Scan Docker image
   uses: aquasecurity/trivy-action@master
   with:
-    image-ref: 'ghcr.io/cloudnova/api:${{ github.sha }}'
-    format: 'sarif'
-    output: 'trivy-results.sarif'
-    severity: 'CRITICAL,HIGH'
-    exit-code: '1'
+    image-ref: "ghcr.io/cloudnova/api:${{ github.sha }}"
+    format: "sarif"
+    output: "trivy-results.sarif"
+    severity: "CRITICAL,HIGH"
+    exit-code: "1"
 ```
 
 ### توقيع الصور مع Cosign
@@ -67,6 +67,7 @@ cosign verify --key cosign.pub ghcr.io/cloudnova/api:v1.2.3
 اكتشف Trivy ثغرة CRITICAL في `log4j` داخل صورة Java قديمة.
 
 **الاستجابة**:
+
 1. أوقف نشر الصورة فوراً (exit-code: 1 منع deployment)
 2. حدث الـ base image إلى `eclipse-temurin:21-jre`
 3. أعاد بناء الصورة وفحصها مرة أخرى
@@ -76,11 +77,11 @@ cosign verify --key cosign.pub ghcr.io/cloudnova/api:v1.2.3
 
 ### SLSA Framework
 
-| Level | المتطلبات |
-|-------|-----------|
-| **SLSA 1** | البناء مؤتمت |
-| **SLSA 2** | استخدام أدوات تحكم بالنسخ |
-| **SLSA 3** | توقيع الصور + audit log |
+| Level      | المتطلبات                        |
+| ---------- | -------------------------------- |
+| **SLSA 1** | البناء مؤتمت                     |
+| **SLSA 2** | استخدام أدوات تحكم بالنسخ        |
+| **SLSA 3** | توقيع الصور + audit log          |
 | **SLSA 4** | مراجعة مزدوجة + بيئة بناء معزولة |
 
 ---
@@ -89,28 +90,31 @@ cosign verify --key cosign.pub ghcr.io/cloudnova/api:v1.2.3
 
 ### Trivy vs Snyk vs Aqua
 
-| | Trivy | Snyk | Aqua |
-|---|-------|------|------|
-| **Open Source** | ✅ | ❌ | ❌ |
-| **السعر** | مجاني | $$$ | $$$ |
-| **CI/CD** | GitHub Actions | GitHub Actions | Pipeline |
-| **UI** | CLI | Dashboard | Enterprise |
-| **الأفضل لـ** | فرق صغيرة-متوسطة | Enterprise | Enterprise |
+|                 | Trivy            | Snyk           | Aqua       |
+| --------------- | ---------------- | -------------- | ---------- |
+| **Open Source** | ✅               | ❌             | ❌         |
+| **السعر**       | مجاني            | $$$            | $$$        |
+| **CI/CD**       | GitHub Actions   | GitHub Actions | Pipeline   |
+| **UI**          | CLI              | Dashboard      | Enterprise |
+| **الأفضل لـ**   | فرق صغيرة-متوسطة | Enterprise     | Enterprise |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين 1: فحص صورة
+
 ```bash
 trivy image python:3.9
 # كم ثغرة CRITICAL و HIGH وجدت؟
 ```
 
 ### تمرين 2: CI/CD Pipeline
+
 ابنِ GitHub Actions workflow يرفض أي صورة فيها CRITICAL vulnerabilities.
 
 ### تحدي: توقيع الصور
+
 وقع صورة Docker مع Cosign وتحقق من التوقيع قبل النشر.
 
 ---
@@ -118,6 +122,7 @@ trivy image python:3.9
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما فائدة Trivy في CI/CD؟
 2. كيف تمنع نشر صورة مصابة بثغرات؟
 3. ما هو SLSA Framework؟
@@ -126,12 +131,12 @@ trivy image python:3.9
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| Trivy | أداة مفتوحة المصدر لفحص ثغرات الحاويات |
-| Cosign | توقيع صور الحاويات رقمياً |
-| SLSA | Supply-chain Levels for Software Artifacts |
-| `--exit-code 1` | يفشل البناء عند اكتشاف ثغرات |
+| السؤال          | الإجابة                                    |
+| --------------- | ------------------------------------------ |
+| Trivy           | أداة مفتوحة المصدر لفحص ثغرات الحاويات     |
+| Cosign          | توقيع صور الحاويات رقمياً                  |
+| SLSA            | Supply-chain Levels for Software Artifacts |
+| `--exit-code 1` | يفشل البناء عند اكتشاف ثغرات               |
 
 ---
 
@@ -146,11 +151,11 @@ trivy image python:3.9
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
-| درس مرتبط | [Orchestration Comparison](./03-container-orchestration-comparison) |
+| النوع     | الرابط                                                               |
+| --------- | -------------------------------------------------------------------- |
+| درس مرتبط | [Orchestration Comparison](./03-container-orchestration-comparison)  |
 | درس مرتبط | [Docker Security](../../09-docker/03-docker-security-best-practices) |
-| أداة | [Trivy](https://github.com/aquasecurity/trivy) |
+| أداة      | [Trivy](https://github.com/aquasecurity/trivy)                       |
 
 ---
 

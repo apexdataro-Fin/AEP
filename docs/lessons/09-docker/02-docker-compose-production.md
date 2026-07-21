@@ -584,25 +584,28 @@ docker compose -p cloudnova-blue down
 
 ### Docker Compose vs Swarm vs Kubernetes
 
-| المعيار | Compose | Swarm | Kubernetes |
-|---------|---------|-------|------------|
-| **التعقيد** | منخفض | متوسط | عالي |
-| **النطاق** | جهاز واحد | عدة أجهزة | عدة clusters |
-| **Auto-scaling** | ❌ | يدوي | ✅ مدمج |
-| **Rolling updates** | ❌ | ✅ | ✅ |
-| **الأفضل لـ** | تطوير، إنتاج صغير | إنتاج متوسط | إنتاج كبير |
+| المعيار             | Compose           | Swarm       | Kubernetes   |
+| ------------------- | ----------------- | ----------- | ------------ |
+| **التعقيد**         | منخفض             | متوسط       | عالي         |
+| **النطاق**          | جهاز واحد         | عدة أجهزة   | عدة clusters |
+| **Auto-scaling**    | ❌                | يدوي        | ✅ مدمج      |
+| **Rolling updates** | ❌                | ✅          | ✅           |
+| **الأفضل لـ**       | تطوير، إنتاج صغير | إنتاج متوسط | إنتاج كبير   |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين ١: هجرة compose إلى swarm (سهل)
+
 > حوّل `docker-compose.prod.yml` لـ Docker Swarm stack. أضف `deploy` blocks لـ 3 replicas و rolling updates.
 
 ### تمرين ٢: كارثة (متوسط)
+
 > `docker compose up -d` يفشل: "port 5432 already in use". شخّص وأصلح.
 
 ### تحدي: أتمتة (متقدم)
+
 > اكتب Makefile targets: `make deploy`, `make backup`, `make restore`, `make logs`, `make status`. كل target = compose command(s).
 
 ### 📝 تقييم (5 checks, 3 quiz)
@@ -627,6 +630,7 @@ docker compose -p cloudnova-blue down
 ---
 
 ## 📚 مراجع
+
 - [Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture)
 - [CI/CD Pipelines](../15-cicd/01-cicd-pipelines)
 - 📖 [Docker Compose Specification](https://docs.docker.com/compose/compose-file/)
@@ -634,4 +638,3 @@ docker compose -p cloudnova-blue down
 ---
 
 [← Docker Mastery](./01-docker-mastery) | [→ Kubernetes Architecture](../10-kubernetes/01-kubernetes-architecture) | [🏠 الرئيسية](/)
-

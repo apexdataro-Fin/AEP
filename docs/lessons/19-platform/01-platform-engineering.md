@@ -125,12 +125,12 @@ spec:
 
 ## 🏗️ الطبقة الإنتاجية: Team Topologies
 
-| النوع | الوصف | مثال في CloudNova |
-|-------|------|-------------------|
-| **Stream-aligned** | فريق منتج متكامل | فريق API، فريق Web |
-| **Platform** | يبني المنصة الداخلية | فريق Platform Engineering |
-| **Enabling** | يساعد الفرق الأخرى | فريق SRE، فريق Security |
-| **Complicated Subsystem** | يبني أنظمة معقدة | فريق AI/ML |
+| النوع                     | الوصف                | مثال في CloudNova         |
+| ------------------------- | -------------------- | ------------------------- |
+| **Stream-aligned**        | فريق منتج متكامل     | فريق API، فريق Web        |
+| **Platform**              | يبني المنصة الداخلية | فريق Platform Engineering |
+| **Enabling**              | يساعد الفرق الأخرى   | فريق SRE، فريق Security   |
+| **Complicated Subsystem** | يبني أنظمة معقدة     | فريق AI/ML                |
 
 ```
 Stream-aligned: "نريد نشر خدمة جديدة"
@@ -178,12 +178,12 @@ Level 5: Federated Platform
 
 ### DORA Metrics
 
-| المقياس | Elite | كيف نقيسه |
-|---------|-------|----------|
-| Deployment Frequency | عدة مرات يومياً | Argo CD sync count |
-| Lead Time for Changes | < 1 ساعة | Commit → Production |
-| Change Failure Rate | 0-15% | Deployments مرتجعة |
-| Time to Restore | < 1 ساعة | Incident → Resolution |
+| المقياس               | Elite           | كيف نقيسه             |
+| --------------------- | --------------- | --------------------- |
+| Deployment Frequency  | عدة مرات يومياً | Argo CD sync count    |
+| Lead Time for Changes | < 1 ساعة        | Commit → Production   |
+| Change Failure Rate   | 0-15%           | Deployments مرتجعة    |
+| Time to Restore       | < 1 ساعة        | Incident → Resolution |
 
 ### مقاييس إضافية
 
@@ -302,25 +302,31 @@ Platform Adoption:
 ## 🏛️ طبقة الإنتاج: قياس نجاح المنصة
 
 ### Developer NPS
+
 > "هل توصي زميلك باستخدام منصتنا؟" الهدف > 60.
 
 ### Time to 10th PR
+
 > من onboarding → 10th merged PR. الهدف < أسبوعين.
 
 ### 🚨 CloudNova: من 12 إلى 67 NPS
+
 > بعد 6 أشهر: إنشاء خدمة: 3 أسابيع → 4 ساعات. وقت النشر: ساعتين → 10 دقائق.
 
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين ١:** Software Template. **تمرين ٢:** Backstage catalog. **تحدي:** Scorecards.
 
 ### 📝 تقييم
+
 **س١:** DevOps vs Platform Engineering؟ → PE: منصة داخلية موحدة.
 **س٢:** Team Topologies الأربعة؟ → Stream-aligned, Platform, Enabling, Complicated Subsystem.
 **س٣:** Golden Paths = ؟ → المسار الموصى به للنشر.
 
 ### 🎤 مقابلة
+
 **"متى تحتاج Platform Engineering؟"** → > 5 فرق + طرق نشر متعددة.
 
 ---

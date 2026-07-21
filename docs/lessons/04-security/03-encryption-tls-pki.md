@@ -38,20 +38,20 @@ sequenceDiagram
 
 ## ٢. TLS 1.3 Handshake
 
-| الخطوة | ماذا يحدث |
-|--------|-----------|
-| **ClientHello** | يرسل cipher suites المدعومة |
-| **ServerHello** | يختار cipher + يرسل الشهادة |
-| **Finished** | اتصال آمن (1-RTT فقط في TLS 1.3!) |
+| الخطوة          | ماذا يحدث                         |
+| --------------- | --------------------------------- |
+| **ClientHello** | يرسل cipher suites المدعومة       |
+| **ServerHello** | يختار cipher + يرسل الشهادة       |
+| **Finished**    | اتصال آمن (1-RTT فقط في TLS 1.3!) |
 
 ### TLS 1.2 vs 1.3
 
-| | TLS 1.2 | TLS 1.3 |
-|---|---------|---------|
-| **Handshake** | 2-RTT | 1-RTT |
-| **Cipher Suites** | ~300 | 5 فقط (آمنة كلها) |
-| **Forward Secrecy** | اختياري | إلزامي |
-| **السرعة** | أبطأ | أسرع بـ 30% |
+|                     | TLS 1.2 | TLS 1.3           |
+| ------------------- | ------- | ----------------- |
+| **Handshake**       | 2-RTT   | 1-RTT             |
+| **Cipher Suites**   | ~300    | 5 فقط (آمنة كلها) |
+| **Forward Secrecy** | اختياري | إلزامي            |
+| **السرعة**          | أبطأ    | أسرع بـ 30%       |
 
 ---
 
@@ -96,7 +96,7 @@ server {
     listen 443 ssl;
     ssl_certificate /etc/ssl/server.crt;
     ssl_certificate_key /etc/ssl/server.key;
-    
+
     # طلب شهادة العميل
     ssl_verify_client on;
     ssl_client_certificate /etc/ssl/ca.crt;
@@ -138,12 +138,12 @@ server {
 
 ### Public CA vs Private CA
 
-| | Public CA | Private CA |
-|---|----------|-----------|
-| **التكلفة** | مجاني (Let's Encrypt) | Azure Private CA ~$40/شهر |
-| **الاستخدام** | مواقع الإنترنت العامة | اتصالات داخلية mTLS |
-| **التجديد** | 90 يوماً | حسب التكوين |
-| **Chain of trust** | متصفحات معروفة | تثق بها مؤسستك فقط |
+|                    | Public CA             | Private CA                |
+| ------------------ | --------------------- | ------------------------- |
+| **التكلفة**        | مجاني (Let's Encrypt) | Azure Private CA ~$40/شهر |
+| **الاستخدام**      | مواقع الإنترنت العامة | اتصالات داخلية mTLS       |
+| **التجديد**        | 90 يوماً              | حسب التكوين               |
+| **Chain of trust** | متصفحات معروفة        | تثق بها مؤسستك فقط        |
 
 ### متى تستخدم Private CA؟
 
@@ -176,6 +176,7 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين TLS 1.2 و TLS 1.3؟
 2. لماذا mTLS أفضل للاتصالات الداخلية؟
 3. متى تستخدم Private CA بدلاً من Public CA؟
@@ -192,12 +193,12 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| TLS | Transport Layer Security — تشفير الاتصالات |
-| mTLS | Mutual TLS — الطرفان يتحققان من بعضهما |
-| HSTS | HTTP Strict Transport Security — إجبار HTTPS |
-| Let's Encrypt | CA مجاني بشهادات لمدة 90 يوماً |
+| السؤال        | الإجابة                                      |
+| ------------- | -------------------------------------------- |
+| TLS           | Transport Layer Security — تشفير الاتصالات   |
+| mTLS          | Mutual TLS — الطرفان يتحققان من بعضهما       |
+| HSTS          | HTTP Strict Transport Security — إجبار HTTPS |
+| Let's Encrypt | CA مجاني بشهادات لمدة 90 يوماً               |
 
 ---
 
@@ -216,12 +217,12 @@ openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365 -node
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                                    |
+| --------- | --------------------------------------------------------- |
 | درس مرتبط | [NSG & Firewalls](./02-network-security-groups-firewalls) |
-| درس مرتبط | [Security Operations](./04-security-operations-soc) |
-| شهادة | AZ-500 (Security) |
-| موقع | [SSL Labs](https://ssllabs.com/ssltest/) — فحص تكوين TLS |
+| درس مرتبط | [Security Operations](./04-security-operations-soc)       |
+| شهادة     | AZ-500 (Security)                                         |
+| موقع      | [SSL Labs](https://ssllabs.com/ssltest/) — فحص تكوين TLS  |
 
 ---
 

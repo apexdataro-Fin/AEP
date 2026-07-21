@@ -21,14 +21,14 @@ description: "Azure Cost Optimization — Reserved Instances، Savings Plans، R
 
 ## 🏗️ استراتيجيات التوفير
 
-| الاستراتيجية | التوفير | التعقيد |
-|-------------|---------|---------|
-| **Reserved Instances** | 72% | منخفض |
-| **Savings Plans** | 65% | منخفض |
-| **Spot VMs** | 90% | عالي |
-| **Auto-shutdown** | 60% | منخفض |
-| **Right-sizing** | 30% | متوسط |
-| **Azure Hybrid Benefit** | 40% | منخفض |
+| الاستراتيجية             | التوفير | التعقيد |
+| ------------------------ | ------- | ------- |
+| **Reserved Instances**   | 72%     | منخفض   |
+| **Savings Plans**        | 65%     | منخفض   |
+| **Spot VMs**             | 90%     | عالي    |
+| **Auto-shutdown**        | 60%     | منخفض   |
+| **Right-sizing**         | 30%     | متوسط   |
+| **Azure Hybrid Benefit** | 40%     | منخفض   |
 
 ### Reserved Instances
 
@@ -59,6 +59,7 @@ az vm auto-shutdown \
 ## 🏛️ طبقة الإنتاج: سيناريو CloudNova
 
 **فاتورة $15,000 الشهر الماضي.** التحقيق:
+
 1. 3 VMs `Standard_D8s_v3` تستخدم 15% CPU فقط → Right-size إلى `D2s_v3`: توفير $600/شهر
 2. Dev environment تعمل 24/7 → Auto-shutdown: توفير $400/شهر
 3. اشترِ Reserved Instances لـ 5 VMs إنتاج: توفير $2000/شهر
@@ -75,17 +76,18 @@ az advisor recommendation list --query "[?category=='Cost']" -o table
 
 ## 🎨 Reserved vs Savings Plans
 
-| | Reserved Instances | Savings Plans |
-|---|-------------------|-------------|
-| **المرونة** | VM محدد | أي compute |
-| **التوفير** | حتى 72% | حتى 65% |
-| **الإلغاء** | محدود | لا يمكن |
+|             | Reserved Instances | Savings Plans |
+| ----------- | ------------------ | ------------- |
+| **المرونة** | VM محدد            | أي compute    |
+| **التوفير** | حتى 72%            | حتى 65%       |
+| **الإلغاء** | محدود              | لا يمكن       |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: شغّل Azure Advisor وطبق توصياته
+
 ### تحدي: احسب توفير 6 أشهر من right-sizing
 
 ---
@@ -93,20 +95,23 @@ az advisor recommendation list --query "[?category=='Cost']" -o table
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين Reserved Instances و Savings Plans؟
 2. متى تستخدم Spot VMs؟
 3. كيف تخفض فاتورة التطوير؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Reserved Instance | شراء VM لمدة 1-3 سنوات بتخفيض |
-| Spot VM | VM بتخفيض 90% لكن Azure قد يستردها |
-| Right-sizing | تغيير حجم VM ليناسب الاستخدام الفعلي |
+
+| السؤال            | الإجابة                              |
+| ----------------- | ------------------------------------ |
+| Reserved Instance | شراء VM لمدة 1-3 سنوات بتخفيض        |
+| Spot VM           | VM بتخفيض 90% لكن Azure قد يستردها   |
+| Right-sizing      | تغيير حجم VM ليناسب الاستخدام الفعلي |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف خفضت فاتورة Azure في شركتك؟"** → RI + Right-sizing + Auto-shutdown + Spot
 2. **"Reserved Instances vs Savings Plans؟"** → RI لـ VM محدد. SP لأي compute
 

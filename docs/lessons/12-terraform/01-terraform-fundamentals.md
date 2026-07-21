@@ -394,7 +394,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write  # لـ OIDC مع Azure
+      id-token: write # لـ OIDC مع Azure
 
     steps:
       - uses: actions/checkout@v4
@@ -499,18 +499,18 @@ inputs = {
 
 ## 📋 ورقة غش الأوامر المتقدمة
 
-| الأمر | الاستخدام |
-|-------|-----------|
-| `terraform state list` | عرض كل الموارد في الـ state |
-| `terraform state show <addr>` | تفاصيل مورد واحد |
-| `terraform state rm <addr>` | إزالة مورد من الـ state (بدون حذف حقيقي!) |
-| `terraform import <addr> <id>` | استيراد مورد موجود لـ state |
-| `terraform refresh` | تحديث الـ state ليطابق الواقع |
-| `terraform taint <addr>` | إجبار إعادة إنشاء مورد |
-| `terraform untaint <addr>` | إلغاء taint |
-| `terraform graph \| dot -Tsvg > graph.svg` | رسم dependency graph |
-| `terraform workspace new staging` | إنشاء workspace جديد |
-| `terraform workspace select prod` | التبديل لـ workspace |
+| الأمر                                      | الاستخدام                                 |
+| ------------------------------------------ | ----------------------------------------- |
+| `terraform state list`                     | عرض كل الموارد في الـ state               |
+| `terraform state show <addr>`              | تفاصيل مورد واحد                          |
+| `terraform state rm <addr>`                | إزالة مورد من الـ state (بدون حذف حقيقي!) |
+| `terraform import <addr> <id>`             | استيراد مورد موجود لـ state               |
+| `terraform refresh`                        | تحديث الـ state ليطابق الواقع             |
+| `terraform taint <addr>`                   | إجبار إعادة إنشاء مورد                    |
+| `terraform untaint <addr>`                 | إلغاء taint                               |
+| `terraform graph \| dot -Tsvg > graph.svg` | رسم dependency graph                      |
+| `terraform workspace new staging`          | إنشاء workspace جديد                      |
+| `terraform workspace select prod`          | التبديل لـ workspace                      |
 
 ---
 
@@ -574,12 +574,15 @@ inputs = {
 ## 🛠️ تدريبات عملية
 
 ### تمرين ١: ابنِ بيئتك الأولى (سهل)
+
 > باستخدام Terraform: VNet + Subnet + NSG + VM. استخدم variables للبيئات.
 
 ### تمرين ٢: أصلح drift (متوسط)
+
 > شخص في الفريق عدّل NSG rule يدوياً في Azure portal. اكتشف الـ drift وأصلحه.
 
 ### تحدي: CI/CD Pipeline (متقدم)
+
 > ابنِ GitHub Actions workflow: fmt → validate → plan (مع تعليق على PR) → apply بعد merge.
 
 ### 📝 تقييم
@@ -594,6 +597,7 @@ inputs = {
 <details><summary>الإجابة</summary>count يستخدم list index — حذف عنصر يغير كل العناصر بعده. for_each يستخدم map keys — حذف عنصر يؤثر عليه فقط.</details>
 
 ### 🧠 استدعاء نشط
+
 1. ارسم دورة Terraform: init → plan → apply → destroy.
 2. كيف تحمي production resources من الحذف الخطأ؟
 3. كيف تدمج Terraform مع Azure Key Vault للأسرار؟
@@ -609,6 +613,7 @@ inputs = {
 ---
 
 ## 📚 مراجع
+
 - [Terraform Modules](./02-terraform-modules)
 - [GitHub Workflows](../14-github/01-github-workflows)
 - 📖 [Terraform Documentation](https://developer.hashicorp.com/terraform)

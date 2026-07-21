@@ -447,12 +447,15 @@ git commit -m "Configure Git LFS for model files"
 ## 🛠️ تدريبات
 
 ### تمرين ١: Squash commits (سهل)
+
 > ادمج آخر 5 commits في commit واحد مع رسالة واضحة.
 
 ### تمرين ٢: bisect آلي (متوسط)
+
 > اكتب script يختبر endpoint. استخدمه مع `git bisect run`.
 
 ### تحدي: كارثة محاكاة (متقدم)
+
 > أحدهم force push على main. استعد الحالة. فعّل branch protection.
 
 ### 📝 تقييم
@@ -477,6 +480,7 @@ git commit -m "Configure Git LFS for model files"
 ---
 
 ## 📚 مراجع
+
 - [Git Fundamentals](./01-git-fundamentals)
 - [GitHub Workflows](../14-github/01-github-workflows)
 - 📖 [Pro Git Book](https://git-scm.com/book/en/v2)

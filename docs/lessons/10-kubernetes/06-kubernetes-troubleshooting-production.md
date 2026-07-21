@@ -85,19 +85,20 @@ graph TD
 
 ## 🎨 أدوات debugging
 
-| الأداة | الاستخدام |
-|--------|-----------|
-| `kubectl describe` | تفاصيل + Events |
-| `kubectl logs` | سجلات التطبيق |
-| `stern` | tail logs لعدة pods |
-| `k9s` | terminal UI تفاعلي |
-| `kubectl debug` | حاوية مؤقتة للفحص |
+| الأداة             | الاستخدام           |
+| ------------------ | ------------------- |
+| `kubectl describe` | تفاصيل + Events     |
+| `kubectl logs`     | سجلات التطبيق       |
+| `stern`            | tail logs لعدة pods |
+| `k9s`              | terminal UI تفاعلي  |
+| `kubectl debug`    | حاوية مؤقتة للفحص   |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: شخّص CrashLoopBackOff عن عمد
+
 ### تحدي: استخدم stern لمراقبة logs 5 pods معاً
 
 ---
@@ -105,20 +106,23 @@ graph TD
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. كيف تشخص CrashLoopBackOff؟
 2. ما الفرق بين OOMKilled و Pending؟
 3. متى تستخدم `kubectl debug`؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
+
+| السؤال           | الإجابة                            |
+| ---------------- | ---------------------------------- |
 | CrashLoopBackOff | pod يعيد التشغيل باستمرار بسبب خطأ |
-| OOMKilled | قُتل بسبب تجاوز memory limit |
-| `--previous` | logs من المحاولة السابقة للـ pod |
+| OOMKilled        | قُتل بسبب تجاوز memory limit       |
+| `--previous`     | logs من المحاولة السابقة للـ pod   |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"احكِ عن أسوأ حادثة Kubernetes تعاملت معها"** → STAR format
 2. **"كيف تشخص بطء pod بدون أخطاء؟"** → `kubectl top` + `kubectl exec` + metrics inspection
 
@@ -126,10 +130,10 @@ graph TD
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                             |
+| --------- | -------------------------------------------------- |
 | درس مرتبط | [Operators & CRDs](./05-kubernetes-operators-crds) |
-| أداة | [k9s](https://k9scli.io) |
+| أداة      | [k9s](https://k9scli.io)                           |
 
 ---
 

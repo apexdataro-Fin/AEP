@@ -120,6 +120,7 @@ human.initiate_chat(
 ```
 
 **النتيجة:**
+
 - الوقت: 4 ساعات بدلاً من 3 أيام لكل تطبيق
 - الأخطاء: صفر أخطاء في 50 تطبيقاً (المراجع يمسكها قبل النشر)
 - التكلفة: $45 في استدعاءات GPT-4 (مقابل ~$1,500 في وقت مهندس)
@@ -128,13 +129,13 @@ human.initiate_chat(
 
 ## 🎨 طبقة المعماري: مقارنة أنماط الاتصال
 
-| النمط | الوصف | متى؟ | الإيجابيات | السلبيات |
-|-------|-------|------|-----------|---------|
-| **Round Robin** | الجميع يتحدث بالدور | مهام منظمة | منظم، لا أحد يُنسى | بطيء |
-| **Auto (LLM)** | LLM يختار المتحدث التالي | مهام ديناميكية | مرن، طبيعي | تكلفة إضافية |
-| **Manager-Worker** | manager يوزع المهام | مهام قابلة للتقسيم | تخصص، كفاءة | عنق زجاجة |
-| **Debate** | وكيلان يتناقشان | قرارات صعبة | منظورين مختلفين | استهلاك tokens |
-| **Hierarchical** | طبقات: مدير → قادة → منفذين | مؤسسات كبيرة | scalability | تعقيد |
+| النمط              | الوصف                       | متى؟               | الإيجابيات         | السلبيات       |
+| ------------------ | --------------------------- | ------------------ | ------------------ | -------------- |
+| **Round Robin**    | الجميع يتحدث بالدور         | مهام منظمة         | منظم، لا أحد يُنسى | بطيء           |
+| **Auto (LLM)**     | LLM يختار المتحدث التالي    | مهام ديناميكية     | مرن، طبيعي         | تكلفة إضافية   |
+| **Manager-Worker** | manager يوزع المهام         | مهام قابلة للتقسيم | تخصص، كفاءة        | عنق زجاجة      |
+| **Debate**         | وكيلان يتناقشان             | قرارات صعبة        | منظورين مختلفين    | استهلاك tokens |
+| **Hierarchical**   | طبقات: مدير → قادة → منفذين | مؤسسات كبيرة       | scalability        | تعقيد          |
 
 ### متى لا تستخدم Multi-Agent؟
 
@@ -147,6 +148,7 @@ human.initiate_chat(
 ## 🛠️ تدريبات عملية
 
 ### تمرين 1: فريق Code Review
+
 ```python
 # ابنِ فريقاً من 3 وكلاء لمراجعة Terraform code
 # الوكيل 1: يراجع security
@@ -170,17 +172,18 @@ def review_terraform(module_code):
 ```
 
 ### تمرين 2: Debate Pattern لاتخاذ قرار
+
 ```python
 # وكيلان يتناقشان: هل نستخدم AKS أم ACA (Container Apps)؟
 
 debate_topic = """
-نحتاج لنشر 10 microservices. 
+نحتاج لنشر 10 microservices.
 الخيار 1: AKS (مرونة كاملة، تعقيد عالي)
 الخيار 2: Azure Container Apps (بساطة، أقل مرونة)
 أي الخيارين أفضل لـ CloudNova؟
 """
 
-aks_advocate = AssistantAgent("aks_advocate", 
+aks_advocate = AssistantAgent("aks_advocate",
     system_message="دافع عن AKS. ركز على: المرونة، Kubernetes ecosystem، multi-cloud")
 
 aca_advocate = AssistantAgent("aca_advocate",
@@ -194,6 +197,7 @@ for round in range(3):
 ```
 
 ### تحدي: نظام دعم فني متعدد الوكلاء
+
 ```python
 # التحدي: ابنِ نظام دعم فني بـ 5 وكلاء:
 # 1. Receptionist: يستقبل المشكلة ويصنفها
@@ -208,6 +212,7 @@ for round in range(3):
 ## 📝 تقييم
 
 ### ✅ Knowledge Checks
+
 1. ما الفرق بين Round Robin و Auto speaker selection؟
 2. متى تستخدم Debate pattern بدلاً من Manager-Worker؟
 3. ما أكبر تحدي في Multi-Agent Systems؟
@@ -215,64 +220,75 @@ for round in range(3):
 5. ما أفضل نمط اتصال لترحيل 50 تطبيقاً؟
 
 ### 🧠 Quiz
+
 **س1:** في GroupChat، `max_round=10` يعني:
+
 - أ) 10 وكلاء
 - ب) 10 جولات من المحادثة ✅
 - ج) 10 رسائل
 - د) 10 دقائق
 
 **س2:** متى يكون Debate pattern مفيداً؟
+
 - أ) قرارات ثنائية تحتاج منظورين ✅
 - ب) مهام روتينية
 - ج) أسئلة بسيطة
 - د) كل ما سبق
 
 **س3:** أكبر مشكلة في Multi-Agent:
+
 - أ) التكلفة التراكمية للـ tokens ✅
 - ب) السرعة
 - ج) اللغة
 - د) لا مشاكل
 
 ### 🗣️ Active Recall
+
 1. صف 3 أنماط اتصال بين الوكلاء من الذاكرة
 2. ارسم diagram لـ Manager-Worker مع 5 وكلاء
 3. متى يكون الوكيل الواحد أفضل من الفريق؟
 4. اشرح `max_round` ولماذا هو مهم
 
 ### 🎓 Feynman Exercise
+
 > اشرح Multi-Agent Systems لغير تقني: "مثل فريق طوارئ في مستشفى: طبيب التشخيص يحلل، الجراح يعالج، الممرض يجهز، الصيدلاني يصرف الدواء. كل واحد خبير في مجاله، ينسقون عبر قائد الفريق."
 
 ### 🃏 بطاقات تعلم
-| السؤال | الإجابة |
-|--------|---------|
-| ما AutoGen؟ | إطار عمل من Microsoft لبناء أنظمة متعددة الوكلاء |
-| ما GroupChat؟ | محادثة منظمة بين عدة وكلاء |
-| ما Manager Agent؟ | وكيل يوزع المهام على الوكلاء المتخصصين |
-| متى تستخدم Human-in-the-loop؟ | كل قرار حاسم: نشر، حذف، تغيير production |
-| ما الفرق بين AutoGen و CrewAI؟ | AutoGen = محادثات، CrewAI = أدوار + مهام |
+
+| السؤال                         | الإجابة                                          |
+| ------------------------------ | ------------------------------------------------ |
+| ما AutoGen؟                    | إطار عمل من Microsoft لبناء أنظمة متعددة الوكلاء |
+| ما GroupChat؟                  | محادثة منظمة بين عدة وكلاء                       |
+| ما Manager Agent؟              | وكيل يوزع المهام على الوكلاء المتخصصين           |
+| متى تستخدم Human-in-the-loop؟  | كل قرار حاسم: نشر، حذف، تغيير production         |
+| ما الفرق بين AutoGen و CrewAI؟ | AutoGen = محادثات، CrewAI = أدوار + مهام         |
 
 ---
 
 ## 🎤 أسئلة المقابلة
 
 **س1 (تقني):** "كيف تصمم نظام وكلاء لا يخرج عن السيطرة؟"
+
 > `max_round` للحد من التكرار. Human-in-the-loop للقرارات الحاسمة. Allow-listing للأدوات المسموحة. Audit logging لكل إجراء. Rate limiting على استدعاءات LLM. والأهم: اختبار شامل boundary cases.
 
 **س2 (System Design):** "صمم نظام Multi-Agent لـ DevOps."
+
 > 4 وكلاء: Monitor Agent (يكتشف المشاكل من Prometheus)، Diagnose Agent (يحلل logs)، Fix Agent (ينشئ PR مع fix)، Deploy Agent (ينشر بعد موافقة بشرية). التنسيق عبر Manager-Worker pattern. Human approval قبل deploy.
 
 **س3 (سلوكي):** "كيف تقنع فريقك باستخدام AI Agents؟"
+
 > أبدأ بـ POC صغير: عامل واحد لمهمة محددة (مثلاً، كتابة Terraform docs). أقيس الوقت الموفر. أشارك النتائج. أنتقل تدريجياً لفريق وكلاء. في CloudNova، بدأنا بوكيل واحد لمراجعة security — وفر 5 ساعات/أسبوع. الآن 4 وكلاء.
 
 ---
 
 ## 📚 المراجع
-| النوع | الرابط |
-|--------|--------|
-| **درس ذو صلة** | [AI Agents](./01-ai-agents) |
-| **درس ذو صلة** | [Agent Frameworks](./03-agent-frameworks-comparison) |
-| **أداة** | [AutoGen](https://microsoft.github.io/autogen/) |
-| **أداة** | [CrewAI](https://docs.crewai.com/) |
+
+| النوع          | الرابط                                                                          |
+| -------------- | ------------------------------------------------------------------------------- |
+| **درس ذو صلة** | [AI Agents](./01-ai-agents)                                                     |
+| **درس ذو صلة** | [Agent Frameworks](./03-agent-frameworks-comparison)                            |
+| **أداة**       | [AutoGen](https://microsoft.github.io/autogen/)                                 |
+| **أداة**       | [CrewAI](https://docs.crewai.com/)                                              |
 | **ورقة بحثية** | [AutoGen: Enabling Next-Gen LLM Applications](https://arxiv.org/abs/2308.08155) |
 
 ---

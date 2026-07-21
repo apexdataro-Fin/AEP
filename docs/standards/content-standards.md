@@ -11,6 +11,7 @@ ai_metadata:
   prerequisites: [documentation-standards]
   tags: [content, education, quality]
 ---
+
 displayed_sidebar: devSidebar
 
 # Content Standards
@@ -36,6 +37,7 @@ Every lesson must follow this structure:
 displayed_sidebar: devSidebar
 # Frontmatter (see Metadata Guide)
 ---
+
 displayed_sidebar: devSidebar
 
 # Lesson Title

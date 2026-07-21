@@ -20,13 +20,13 @@ description: "LangChain vs AutoGen vs CrewAI vs Semantic Kernel — مقارنة
 
 ## 🏗️ مقارنة
 
-| | LangChain | AutoGen | CrewAI | Semantic Kernel |
-|---|----------|---------|--------|----------------|
-| **المنشئ** | LangChain Inc | Microsoft | CrewAI | Microsoft |
+|             | LangChain       | AutoGen                  | CrewAI            | Semantic Kernel |
+| ----------- | --------------- | ------------------------ | ----------------- | --------------- |
+| **المنشئ**  | LangChain Inc   | Microsoft                | CrewAI            | Microsoft       |
 | **التركيز** | General purpose | Multi-agent conversation | Role-based agents | Enterprise .NET |
-| **Python** | ✅ | ✅ | ✅ | ✅ |
-| **C#/.NET** | ❌ | ❌ | ❌ | ✅ |
-| **التعقيد** | عالي | متوسط | منخفض | متوسط |
+| **Python**  | ✅              | ✅                       | ✅                | ✅              |
+| **C#/.NET** | ❌              | ❌                       | ❌                | ✅              |
+| **التعقيد** | عالي            | متوسط                    | منخفض             | متوسط           |
 
 ### متى تختار ماذا؟
 
@@ -81,18 +81,18 @@ for fw, s in scores.items():
 
 ### مقارنة موسعة
 
-| المعيار | LangChain | AutoGen | CrewAI | Semantic Kernel |
-|---------|-----------|---------|--------|-----------------|
-| **سنة الإطلاق** | 2022 | 2023 | 2024 | 2023 |
-| **GitHub Stars** | 95K+ | 35K+ | 20K+ | 21K+ |
-| **اللغة الأساسية** | Python, JS | Python | Python | C#, Python, Java |
-| **Azure Integration** | متوسط | جيد | أساسي | ممتاز ✅ |
-| **Multi-Agent** | LangGraph | ✅ أصلي | ✅ أصلي | عبر plugins |
-| **Memory** | قوي (30+ نوع) | جيد | أساسي | جيد |
-| **Tool Calling** | 700+ integrations | OpenAI tools | LangChain tools | OpenAI + native |
-| **Observability** | LangSmith | Limited | Limited | Azure Monitor |
-| **Enterprise Readiness** | جيد | متوسط | منخفض | ممتاز ✅ |
-| **Learning Curve** | حاد 📈 | متوسط | سهل 📉 | متوسط |
+| المعيار                  | LangChain         | AutoGen      | CrewAI          | Semantic Kernel  |
+| ------------------------ | ----------------- | ------------ | --------------- | ---------------- |
+| **سنة الإطلاق**          | 2022              | 2023         | 2024            | 2023             |
+| **GitHub Stars**         | 95K+              | 35K+         | 20K+            | 21K+             |
+| **اللغة الأساسية**       | Python, JS        | Python       | Python          | C#, Python, Java |
+| **Azure Integration**    | متوسط             | جيد          | أساسي           | ممتاز ✅         |
+| **Multi-Agent**          | LangGraph         | ✅ أصلي      | ✅ أصلي         | عبر plugins      |
+| **Memory**               | قوي (30+ نوع)     | جيد          | أساسي           | جيد              |
+| **Tool Calling**         | 700+ integrations | OpenAI tools | LangChain tools | OpenAI + native  |
+| **Observability**        | LangSmith         | Limited      | Limited         | Azure Monitor    |
+| **Enterprise Readiness** | جيد               | متوسط        | منخفض           | ممتاز ✅         |
+| **Learning Curve**       | حاد 📈            | متوسط        | سهل 📉          | متوسط            |
 
 ### مصفوفة القرار
 
@@ -174,6 +174,7 @@ kernel = sk.Kernel()
 ## 📝 تقييم
 
 ### ✅ Knowledge Checks
+
 1. ما أفضل framework لتكامل Azure العميق؟
 2. متى تختار CrewAI على LangChain؟
 3. ما ميزة LangGraph على باقي frameworks؟
@@ -181,65 +182,76 @@ kernel = sk.Kernel()
 5. ما الفرق بين LangChain Expression Language و Semantic Kernel Planner؟
 
 ### 🧠 Quiz
+
 **س1:** أفضل framework لمشروع .NET + Azure:
+
 - أ) LangChain
 - ب) AutoGen
 - ج) CrewAI
 - د) Semantic Kernel ✅
 
 **س2:** متى تتجنب LangChain؟
+
 - أ) مشاريع بسيطة جداً (over-engineering) ✅
 - ب) دائماً
 - ج) أبداً
 - د) فقط في Python
 
 **س3:** أكبر نقطة ضعف في CrewAI:
+
 - أ) غير مناسب للـ enterprise (observability, security) ✅
 - ب) صعب التعلم
 - ج) لا يدعم Python
 - د) غالي
 
 ### 🗣️ Active Recall
+
 1. قارن بين LangChain و AutoGen من الذاكرة
 2. ارسم decision tree لاختيار framework
 3. ما أهم 3 معايير لاختيار framework في مؤسستك؟
 4. صف تجربة ترحيل بين frameworks
 
 ### 🎓 Feynman Exercise
+
 > اشرح frameworks الأربعة كأنها مطاعم: LangChain = بوفيه مفتوح (اختيارات كثيرة، معقد). CrewAI = وجبة سريعة (سريع، محدود). AutoGen = مطعم عائلي (محادثات جماعية). Semantic Kernel = مطعم فندق 5 نجوم (فخم، مخصص لـ Azure).
 
 ### 🃏 بطاقات تعلم
-| السؤال | الإجابة |
-|--------|---------|
-| أفضل framework لـ Azure؟ | Semantic Kernel |
-| أفضل framework لمرونة قصوى؟ | LangChain + LangGraph |
-| أفضل framework لمحادثات متعددة؟ | AutoGen |
-| أفضل framework لبداية سريعة؟ | CrewAI |
-| متى لا تستخدم أي framework؟ | مشروع بسيط بـ 1-2 أدوات |
+
+| السؤال                          | الإجابة                 |
+| ------------------------------- | ----------------------- |
+| أفضل framework لـ Azure؟        | Semantic Kernel         |
+| أفضل framework لمرونة قصوى؟     | LangChain + LangGraph   |
+| أفضل framework لمحادثات متعددة؟ | AutoGen                 |
+| أفضل framework لبداية سريعة؟    | CrewAI                  |
+| متى لا تستخدم أي framework؟     | مشروع بسيط بـ 1-2 أدوات |
 
 ---
 
 ## 🎤 أسئلة المقابلة
 
 **س1 (تقني):** "قارن بين LangChain و Semantic Kernel."
+
 > LangChain: مرن، مجتمع ضخم، 700+ integration، لكن معقد وقد يكون over-engineering. Semantic Kernel: تكامل Azure أصلي، enterprise-ready، يدعم C# و Python، ممتاز لمؤسسات Microsoft. اختياري: LangChain للمرونة القصوى، Semantic Kernel للـ Azure enterprise.
 
 **س2 (System Design):** "صمم architecture لـ AI Agents في Azure."
+
 > Semantic Kernel كـ orchestration layer. Azure OpenAI للـ LLM. Azure AI Search للـ RAG. Azure Functions لتنفيذ الأدوات. Application Insights للمراقبة. Key Vault للأسرار. Managed Identity للأمان.
 
 **س3 (سلوكي):** "كيف تختار تقنية جديدة لفريقك؟"
+
 > أعمل POC في كل framework بنفس المهمة. أقيس: وقت التطوير، جودة المخرجات، التكلفة، سهولة الصيانة. أناقش النتائج مع الفريق. في CloudNova، اختبرنا 4 frameworks واخترنا Semantic Kernel بناءً على data وليس hype.
 
 ---
 
 ## 📚 المراجع
-| النوع | الرابط |
-|--------|--------|
-| **درس ذو صلة** | [Multi-Agent Systems](./02-multi-agent-systems) |
-| **درس ذو صلة** | [Agent Security](./04-agent-security-governance) |
-| **أداة** | [Semantic Kernel](https://learn.microsoft.com/semantic-kernel/) |
-| **أداة** | [LangGraph](https://langchain-ai.github.io/langgraph/) |
-| **شهادة** | AI-102 — Choose AI services |
+
+| النوع          | الرابط                                                          |
+| -------------- | --------------------------------------------------------------- |
+| **درس ذو صلة** | [Multi-Agent Systems](./02-multi-agent-systems)                 |
+| **درس ذو صلة** | [Agent Security](./04-agent-security-governance)                |
+| **أداة**       | [Semantic Kernel](https://learn.microsoft.com/semantic-kernel/) |
+| **أداة**       | [LangGraph](https://langchain-ai.github.io/langgraph/)          |
+| **شهادة**      | AI-102 — Choose AI services                                     |
 
 ---
 

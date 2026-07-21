@@ -163,7 +163,7 @@ az role assignment create \
 #      - Require approval: Yes (for critical roles)
 
 # ٣. Activation workflow:
-#    User → My roles → Activate → MFA → Justification 
+#    User → My roles → Activate → MFA → Justification
 #    → Approver notified → Approve/Deny → Activated for N hours
 ```
 
@@ -334,12 +334,12 @@ metadata:
 spec:
   serviceAccountName: cloudnova-api-sa
   containers:
-  - name: api
-    image: cloudnova/api:v3.2.0
-    env:
-    # لا secrets! الـ SDK يستخدم workload identity تلقائياً
-    - name: KEY_VAULT_URL
-      value: "https://cloudnova-kv.vault.azure.net"
+    - name: api
+      image: cloudnova/api:v3.2.0
+      env:
+        # لا secrets! الـ SDK يستخدم workload identity تلقائياً
+        - name: KEY_VAULT_URL
+          value: "https://cloudnova-kv.vault.azure.net"
 ```
 
 ### Zero Trust للهوية
@@ -457,6 +457,7 @@ spec:
 ## 🏛️ طبقة الإنتاج: الدفاع الأخير
 
 ### Emergency Break Glass
+
 ```bash
 # حساب طوارئ — لا MFA، لا Conditional Access
 # لكن: تنبيه فوري لكل Global Admins عند استخدامه
@@ -466,14 +467,17 @@ az ad user create --display-name "Emergency Admin" --user-principal-name breakgl
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين:** أنشئ Conditional Access policy. **تحدي:** PIM مع approval workflow.
 
 ### 📝 تقييم
+
 **س١:** AuthN vs AuthZ؟ → من أنت vs ماذا تستطيع.
 **س٢:** PIM؟ → صلاحيات مؤقتة مع MFA + مبرر.
 **س٣:** FIDO2 ضد phishing؟ → private key لا يغادر الجهاز.
 
 ### 🎤 مقابلة
+
 **"كيف تبني Zero Trust؟"** → Conditional Access + PIM + Managed Identity + audit.
 
 ---

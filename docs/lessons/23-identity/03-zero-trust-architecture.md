@@ -83,6 +83,7 @@ graph LR
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ Conditional Access policy
+
 ### تحدي: فعّل JIT VM Access
 
 ---
@@ -90,20 +91,23 @@ graph LR
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما هي مبادئ Zero Trust الثلاثة؟
 2. كيف يختلف عن الأمن التقليدي؟
 3. ما فائدة JIT Access؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| Zero Trust | لا تثق بشيء. تحقق من كل طلب |
+
+| السؤال             | الإجابة                           |
+| ------------------ | --------------------------------- |
+| Zero Trust         | لا تثق بشيء. تحقق من كل طلب       |
 | Conditional Access | سياسات تحكم الوصول بناءً على شروط |
-| JIT | Just-in-Time — وصول مؤقت ومحدود |
+| JIT                | Just-in-Time — وصول مؤقت ومحدود   |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تطبق Zero Trust في مؤسستك؟"** → Identity → Device → Network → Data
 2. **"ما الفرق بين Zero Trust و traditional security؟"** → Traditional: ثق بالشبكة الداخلية. Zero Trust: لا تثق بشيء
 
@@ -125,6 +129,7 @@ SigninLogs
 ```
 
 **النتيجة:** حساب مهندس DevOps (مُخترق!) يحاول SSH من مقهى إنترنت في بلد آخر. Conditional Access أوقفه في 3 طبقات:
+
 1. **Identity:** MFA required (فشل لأن الـ hacker لا يملك الهاتف)
 2. **Device:** غير compliant (بدون Intune enrollment)
 3. **Network:** IP خارج trusted locations
@@ -137,13 +142,13 @@ SigninLogs
 
 ### CISA Zero Trust Maturity Model
 
-| العمود | Traditional | Initial | Advanced | Optimal |
-|--------|-----------|---------|----------|--------|
-| **Identity** | Password only | MFA for admins | MFA all users | Passwordless + Risk-based |
-| **Device** | Unmanaged | MDM enrolled | Compliance enforced | Real-time risk assessment |
-| **Network** | Flat network | VLAN segmentation | Micro-segmentation | Software-defined perimeter |
-| **Data** | Unclassified | Manual labeling | Auto-classification | DLP + Encryption everywhere |
-| **Apps** | On-prem only | SSO for SaaS | Cloud-native + API security | Continuous authorization |
+| العمود       | Traditional   | Initial           | Advanced                    | Optimal                     |
+| ------------ | ------------- | ----------------- | --------------------------- | --------------------------- |
+| **Identity** | Password only | MFA for admins    | MFA all users               | Passwordless + Risk-based   |
+| **Device**   | Unmanaged     | MDM enrolled      | Compliance enforced         | Real-time risk assessment   |
+| **Network**  | Flat network  | VLAN segmentation | Micro-segmentation          | Software-defined perimeter  |
+| **Data**     | Unclassified  | Manual labeling   | Auto-classification         | DLP + Encryption everywhere |
+| **Apps**     | On-prem only  | SSO for SaaS      | Cloud-native + API security | Continuous authorization    |
 
 ### مصفوفة Conditional Access Policies
 
@@ -151,25 +156,25 @@ SigninLogs
 [
   {
     "name": "Block Legacy Auth",
-    "condition": {"clientAppTypes": ["ExchangeActiveSync", "Other"]},
+    "condition": { "clientAppTypes": ["ExchangeActiveSync", "Other"] },
     "grant": "block",
     "rationale": "Legacy protocols don't support MFA"
   },
   {
     "name": "Require MFA for Admins",
-    "condition": {"directoryRoles": ["Global Admin", "Privileged Role Admin"]},
+    "condition": { "directoryRoles": ["Global Admin", "Privileged Role Admin"] },
     "grant": "mfa",
     "rationale": "Admins have keys to the kingdom"
   },
   {
     "name": "Block High-Risk Sign-ins",
-    "condition": {"signInRiskLevels": ["high"]},
+    "condition": { "signInRiskLevels": ["high"] },
     "grant": "block",
     "rationale": "Impossible travel, leaked credentials, etc."
   },
   {
     "name": "Require Compliant Device",
-    "condition": {"applications": ["Office 365", "Azure Portal"]},
+    "condition": { "applications": ["Office 365", "Azure Portal"] },
     "grant": "compliantDevice + mfa",
     "rationale": "Ensure corporate data stays on managed devices"
   }
@@ -178,12 +183,12 @@ SigninLogs
 
 ### Anti-Patterns
 
-| الخطأ | المشكلة | التصحيح |
-|-------|---------|---------|
-| Zero Trust = منتج واحد | Zero Trust استراتيجية، ليس منتجاً | طبقات: Identity, Device, Network, Data, Apps |
-| Conditional Access معطل في report-only | أمان وهمي | بدّل إلى enforce mode تدريجياً |
-| JIT بلا expiration | وصول دائم بحجة JIT | max 3 hours for JIT, auto-revoke |
-| Micro-segmentation بلا monitoring | لا تعرف إن كان يعمل فعلاً | NSG flow logs + Sentinel analytics |
+| الخطأ                                  | المشكلة                           | التصحيح                                      |
+| -------------------------------------- | --------------------------------- | -------------------------------------------- |
+| Zero Trust = منتج واحد                 | Zero Trust استراتيجية، ليس منتجاً | طبقات: Identity, Device, Network, Data, Apps |
+| Conditional Access معطل في report-only | أمان وهمي                         | بدّل إلى enforce mode تدريجياً               |
+| JIT بلا expiration                     | وصول دائم بحجة JIT                | max 3 hours for JIT, auto-revoke             |
+| Micro-segmentation بلا monitoring      | لا تعرف إن كان يعمل فعلاً         | NSG flow logs + Sentinel analytics           |
 
 ---
 
@@ -235,7 +240,7 @@ az security jit-vm initiate \
 # Network Security Group مع Zero Trust
 resource "azurerm_network_security_group" "zero_trust" {
   name = "zero-trust-nsg"
-  
+
   security_rule {
     name                       = "AllowFromBastion"
     priority                   = 100
@@ -247,7 +252,7 @@ resource "azurerm_network_security_group" "zero_trust" {
     source_port_range          = "*"
     destination_address_prefix = "*"
   }
-  
+
   security_rule {
     name                       = "DenyAllInbound"
     priority                   = 4096
@@ -265,6 +270,7 @@ resource "azurerm_network_security_group" "zero_trust" {
 ## 📝 تقييم شامل
 
 ### ✅ فحص المعرفة (5)
+
 1. ما هي مبادئ Zero Trust الثلاثة؟
 2. كيف يختلف Zero Trust عن الأمن التقليدي (perimeter-based)؟
 3. ما فائدة Conditional Access في Zero Trust؟
@@ -272,6 +278,7 @@ resource "azurerm_network_security_group" "zero_trust" {
 5. لماذا micro-segmentation أهم من network perimeter؟
 
 ### 📝 اختبار (3)
+
 1. **موظف يسافر لبلد جديد ويريد الوصول لـ Azure Portal. كيف يتعامل Conditional Access؟**
    <details><summary>الإجابة</summary>Risk-based: impossible travel detection → risk level high → block or require MFA + compliant device. Azure AD Identity Protection يتعامل مع هذا تلقائياً.</details>
 
@@ -282,6 +289,7 @@ resource "azurerm_network_security_group" "zero_trust" {
    <details><summary>الإجابة</summary>ZTA: إطار عمل شامل (Identity, Device, Network, Data, Apps). ZTNA: تطبيق Zero Trust على network access فقط (مثل VPN البديل).</details>
 
 ### 🧠 Active Recall (5)
+
 - ارسم Zero Trust Maturity Model من الذاكرة
 - اشرح كيف يختلف Zero Trust عن "trust but verify"
 - صف 3 Conditional Access policies أساسية
@@ -289,25 +297,28 @@ resource "azurerm_network_security_group" "zero_trust" {
 - متى يكون Zero Trust عبئاً وليس حماية؟
 
 ### 🎓 Feynman: Zero Trust لغير التقني
+
 "تخيل أنك تدخل مبنى حكومي. الأمن التقليدي = تفحص هويتك عند البوابة فقط، ثم تتجول بحرية. Zero Trust = تفحص هويتك عند كل باب، كل مكتب، وكل درج. حتى لو دخلت، لا تثق بك."
 
 ### 🃏 بطاقات (8)
-| السؤال | الإجابة |
-|--------|---------|
-| Zero Trust | Never trust, always verify — تحقق من كل طلب |
+
+| السؤال             | الإجابة                                                              |
+| ------------------ | -------------------------------------------------------------------- |
+| Zero Trust         | Never trust, always verify — تحقق من كل طلب                          |
 | Conditional Access | سياسات تحكم بالوصول بناءً على signals (user, device, location, risk) |
-| JIT Access | Just-in-Time — وصول مؤقت ينتهي تلقائياً |
-| Micro-segmentation | تقسيم الشبكة لقطع صغيرة معزولة (east-west traffic control) |
-| PIM | Privileged Identity Management — صلاحيات مؤقتة للمسؤولين |
-| Passwordless | مصادقة بدون كلمة مرور (FIDO2, Windows Hello) |
-| Risk-based CA | Conditional Access يتكيف مع مستوى المخاطرة |
-| Assume Breach | افترض أنك مخترق — صمم دفاعاتك بناءً على ذلك |
+| JIT Access         | Just-in-Time — وصول مؤقت ينتهي تلقائياً                              |
+| Micro-segmentation | تقسيم الشبكة لقطع صغيرة معزولة (east-west traffic control)           |
+| PIM                | Privileged Identity Management — صلاحيات مؤقتة للمسؤولين             |
+| Passwordless       | مصادقة بدون كلمة مرور (FIDO2, Windows Hello)                         |
+| Risk-based CA      | Conditional Access يتكيف مع مستوى المخاطرة                           |
+| Assume Breach      | افترض أنك مخترق — صمم دفاعاتك بناءً على ذلك                          |
 
 ---
 
 ## 🎤 أسئلة المقابلة الموسعة
 
 ### تقني
+
 1. **"صمم Zero Trust Architecture لشركة لديها 5000 موظف و 200 تطبيق."**
    - Identity: Azure AD + MFA + Passwordless
    - Device: Intune enrollment + compliance policies
@@ -322,13 +333,16 @@ resource "azurerm_network_security_group" "zero_trust" {
    - Session controls: read-only access for unmanaged devices
 
 ### System Design
+
 **"صمم نظام مصادقة مقاوم للـ phishing."**
+
 - Passwordless: FIDO2 security keys + Windows Hello for Business
 - Conditional Access: require phishing-resistant MFA
 - Continuous Access Evaluation: revoke tokens فوراً عند تغير risk
 - Identity Protection: auto-remediate risky users
 
 ### Behavioral (STAR)
+
 **"كيف أقنعت leadership بتبني Zero Trust؟"**
 
 **S:** Leadership يرى Zero Trust كتكلفة إضافية بدون عائد.

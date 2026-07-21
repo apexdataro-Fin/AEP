@@ -20,12 +20,12 @@ description: "LLM Cost Optimization — Caching، Batching، Model Selection."
 
 ## 🏗️ استراتيجيات التوفير
 
-| الاستراتيجية | التوفير | التعقيد |
-|-------------|---------|---------|
-| **Semantic Cache** | 40-60% | متوسط |
-| **Model Selection** | 50-80% | منخفض |
-| **Prompt Compression** | 20-30% | عالي |
-| **Batching** | 10-20% | متوسط |
+| الاستراتيجية           | التوفير | التعقيد |
+| ---------------------- | ------- | ------- |
+| **Semantic Cache**     | 40-60%  | متوسط   |
+| **Model Selection**    | 50-80%  | منخفض   |
+| **Prompt Compression** | 20-30%  | عالي    |
+| **Batching**           | 10-20%  | متوسط   |
 
 ### اختيار النموذج المناسب
 
@@ -59,6 +59,7 @@ def cached_llm(prompt):
 **سلطان** مدير البنية التحتية. يتلقى فاتورة Azure OpenAI: **$22,437** لشهر واحد!
 
 **التحليل:**
+
 - 85% من الاستدعاءات أسئلة بسيطة ("ما سياسة AKS؟")
 - لكن كلها تُرسل إلى GPT-4 ($30/1M tokens)
 - 40% من الأسئلة مكررة بين المهندسين
@@ -71,7 +72,7 @@ def cached_llm(prompt):
 class SmartRouter:
     def route(self, query):
         complexity = self.estimate_complexity(query)
-        
+
         if complexity < 0.2:
             return "gpt-3.5-turbo", 0.50   # $0.50/1M tokens
         elif complexity < 0.6:
@@ -80,7 +81,7 @@ class SmartRouter:
             return "gpt-4o", 5.00          # $5/1M
         else:
             return "gpt-4", 30.00          # $30/1M
-    
+
     def estimate_complexity(self, query):
         # عوامل: طول السؤال، keywords تقنية، هل يحتاج reasoning؟
         score = 0
@@ -111,6 +112,7 @@ def async_batch_processor(queries):
 ```
 
 **النتائج بعد شهر:**
+
 - فاتورة Azure OpenAI: $22,437 → **$6,200** (توفير 72%!)
 - Latency: 8s → 2s (بسبب cache)
 - رضا المستخدمين: لم يتغير
@@ -119,14 +121,14 @@ def async_batch_processor(queries):
 
 ## 🎨 طبقة المعماري: تحليل ROI
 
-| الاستراتيجية | التوفير | تكلفة التنفيذ | وقت التنفيذ | ROI |
-|-------------|---------|-------------|------------|-----|
-| **Semantic Cache** | 35-50% | $200/شهر (Redis) | أسبوع | ⭐⭐⭐⭐⭐ |
-| **Model Tiering** | 50-70% | صفر | يوم | ⭐⭐⭐⭐⭐ |
-| **Prompt Compression** | 15-25% | صفر | ساعات | ⭐⭐⭐⭐ |
-| **Rate Limiting** | 10-20% | صفر | ساعات | ⭐⭐⭐⭐ |
-| **Batch Processing** | 20-30% | $100/شهر (Queue) | أسبوعين | ⭐⭐⭐ |
-| **Fine-tuning** | 60-80% | $500 تدريب | شهر | ⭐⭐⭐⭐ |
+| الاستراتيجية           | التوفير | تكلفة التنفيذ    | وقت التنفيذ | ROI        |
+| ---------------------- | ------- | ---------------- | ----------- | ---------- |
+| **Semantic Cache**     | 35-50%  | $200/شهر (Redis) | أسبوع       | ⭐⭐⭐⭐⭐ |
+| **Model Tiering**      | 50-70%  | صفر              | يوم         | ⭐⭐⭐⭐⭐ |
+| **Prompt Compression** | 15-25%  | صفر              | ساعات       | ⭐⭐⭐⭐   |
+| **Rate Limiting**      | 10-20%  | صفر              | ساعات       | ⭐⭐⭐⭐   |
+| **Batch Processing**   | 20-30%  | $100/شهر (Queue) | أسبوعين     | ⭐⭐⭐     |
+| **Fine-tuning**        | 60-80%  | $500 تدريب       | شهر         | ⭐⭐⭐⭐   |
 
 ### الأولويات
 
@@ -137,7 +139,7 @@ graph TD
     C --> D[Semantic Cache - أسبوع]
     D --> E[Rate Limiting - ساعة]
     E --> F[Batch Processing - أسبوعين]
-    
+
     style A fill:#c8e6c9
     style B fill:#81c784
 ```
@@ -147,6 +149,7 @@ graph TD
 ## 🛠️ تدريبات عملية
 
 ### تمرين 1: حاسبة تكلفة LLM
+
 ```python
 def calculate_cost(model, input_tokens, output_tokens):
     pricing = {
@@ -155,7 +158,7 @@ def calculate_cost(model, input_tokens, output_tokens):
         "gpt-4o-mini": {"input": 0.15, "output": 0.60},
         "gpt-3.5-turbo": {"input": 0.50, "output": 1.50},
     }
-    
+
     price = pricing[model]
     input_cost = (input_tokens / 1_000_000) * price["input"]
     output_cost = (output_tokens / 1_000_000) * price["output"]
@@ -167,6 +170,7 @@ def calculate_cost(model, input_tokens, output_tokens):
 ```
 
 ### تمرين 2: Model Router ذكي
+
 ```python
 # ابنِ router يختار النموذج بناءً على:
 # 1. طول السؤال
@@ -176,25 +180,26 @@ def calculate_cost(model, input_tokens, output_tokens):
 
 def smart_model_selector(query, time_of_day):
     score = 0
-    
+
     # طول السؤال
     if len(query) > 300: score += 2
     elif len(query) > 100: score += 1
-    
+
     # تعقيد تقني
     complex_keywords = ["design", "architecture", "migrate", "troubleshoot", "security"]
     score += sum(1 for kw in complex_keywords if kw.lower() in query.lower())
-    
+
     # وقت الذروة
     if time_of_day == "off_peak":
         score -= 1  # استخدم نموذج أرخص خارج الذروة
-    
+
     if score >= 4: return "gpt-4"
     elif score >= 2: return "gpt-4o"
     else: return "gpt-4o-mini"
 ```
 
 ### تحدي: نظام Budget-Aware LLM
+
 ```python
 # التحدي: صمم نظاماً يراقب الميزانية الشهرية:
 # 1. Budget = $5,000/شهر
@@ -209,6 +214,7 @@ def smart_model_selector(query, time_of_day):
 ## 📝 تقييم
 
 ### ✅ Knowledge Checks
+
 1. ما أسرع استراتيجية لتوفير تكلفة LLM؟
 2. كم توفر الـ Model Tiering تقريباً؟
 3. ما الفرق بين Semantic Cache و Exact Cache؟
@@ -216,64 +222,75 @@ def smart_model_selector(query, time_of_day):
 5. كيف تحسب تكلفة استدعاء LLM واحد؟
 
 ### 🧠 Quiz
+
 **س1:** أكبر توفير يأتي من:
+
 - أ) Model Tiering (استخدم نموذج أرخص للأسئلة البسيطة) ✅
 - ب) إغلاق النظام
 - ج) تقليل users
 - د) استخدام GPU
 
 **س2:** Semantic Cache يوفر المال لأنه:
+
 - أ) يمنع استدعاء LLM للأسئلة المتشابهة ✅
 - ب) يسرع النموذج
 - ج) يضغط البيانات
 - د) يحذف الأسئلة
 
 **س3:** تكلفة 1M input tokens على GPT-4:
+
 - أ) $0.15
 - ب) $5
 - ج) $30 ✅
 - د) $100
 
 ### 🗣️ Active Recall
+
 1. صف 5 استراتيجيات لتقليل تكلفة LLM
 2. ارسم رسم بياني لتكلفة النماذج المختلفة
 3. كيف تكتشف abuse في استهلاك API؟
 4. متى يكون التوفير على حساب الجودة مقبولاً؟
 
 ### 🎓 Feynman Exercise
+
 > اشرح Model Tiering لصاحب شركة: "مثل أسطول سيارات: تستخدم السيارة الصغيرة للتنقل اليومي (GPT-4o-mini)، والشاحنة للنقل الثقيل فقط (GPT-4). لا تستخدم الشاحنة للذهاب للسوبرماركت!"
 
 ### 🃏 بطاقات تعلم
-| السؤال | الإجابة |
-|--------|---------|
-| ما Model Tiering؟ | استخدام نماذج مختلفة حسب تعقيد السؤال |
-| كم توفر الـ Semantic Cache؟ | 35-50% من التكلفة |
-| ما أفضل استراتيجية؟ | Model Tiering (تطبيق سهل، توفير كبير) |
-| GPT-4o-mini سعر 1M input؟ | $0.15 |
-| متى تستخدم Fine-tuning؟ | > 100K استعلام/شهر بنفس النمط |
+
+| السؤال                      | الإجابة                               |
+| --------------------------- | ------------------------------------- |
+| ما Model Tiering؟           | استخدام نماذج مختلفة حسب تعقيد السؤال |
+| كم توفر الـ Semantic Cache؟ | 35-50% من التكلفة                     |
+| ما أفضل استراتيجية؟         | Model Tiering (تطبيق سهل، توفير كبير) |
+| GPT-4o-mini سعر 1M input؟   | $0.15                                 |
+| متى تستخدم Fine-tuning؟     | > 100K استعلام/شهر بنفس النمط         |
 
 ---
 
 ## 🎤 أسئلة المقابلة
 
 **س1 (تقني):** "كيف تخفض تكلفة LLM في production بنسبة 70%؟"
-> 1) Model Tiering: توجيه 80% من الأسئلة إلى GPT-4o-mini (توفير 95% مقارنة بـ GPT-4). 2) Semantic Cache: 35% cache hit rate. 3) Prompt Compression: اختصار system prompts. 4) Batch processing للأسئلة غير العاجلة. كلها معاً تخفض التكلفة 70%+ بدون تأثير ملحوظ على الجودة.
+
+> 1. Model Tiering: توجيه 80% من الأسئلة إلى GPT-4o-mini (توفير 95% مقارنة بـ GPT-4). 2) Semantic Cache: 35% cache hit rate. 3) Prompt Compression: اختصار system prompts. 4) Batch processing للأسئلة غير العاجلة. كلها معاً تخفض التكلفة 70%+ بدون تأثير ملحوظ على الجودة.
 
 **س2 (System Design):** "صمم نظام Budget Management للـ LLM."
+
 > Budget per department/team. Real-time cost tracking. Alerts عند 50%, 80%, 95% من الميزانية. Auto-downgrade عند 90%. Daily cost reports. Azure Cost Management + Grafana dashboard.
 
 **س3 (سلوكي):** "كيف تقنع الإدارة بتحسين التكلفة دون التضحية بالجودة؟"
+
 > أعرض A/B test: فريق يستخدم GPT-4 حصرياً، فريق يستخدم Model Tiering. أقيس: التكلفة، رضا المستخدمين، task completion rate. النتائج: تكلفة أقل 70%، نفس الرضا. الأرقام تقنع.
 
 ---
 
 ## 📚 المراجع
-| النوع | الرابط |
-|--------|--------|
-| **درس ذو صلة** | [Evaluation Frameworks](./02-llm-evaluation-frameworks) |
-| **درس ذو صلة** | [FinOps](../../22-finops/01-finops-fundamentals) |
-| **أداة** | [OpenAI Tokenizer](https://platform.openai.com/tokenizer) |
-| **مرجع** | [Azure OpenAI Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) |
+
+| النوع          | الرابط                                                                                                 |
+| -------------- | ------------------------------------------------------------------------------------------------------ |
+| **درس ذو صلة** | [Evaluation Frameworks](./02-llm-evaluation-frameworks)                                                |
+| **درس ذو صلة** | [FinOps](../../22-finops/01-finops-fundamentals)                                                       |
+| **أداة**       | [OpenAI Tokenizer](https://platform.openai.com/tokenizer)                                              |
+| **مرجع**       | [Azure OpenAI Pricing](https://azure.microsoft.com/pricing/details/cognitive-services/openai-service/) |
 
 ---
 

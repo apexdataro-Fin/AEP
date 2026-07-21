@@ -73,7 +73,8 @@ chmod +x .git/hooks/commit-msg
 
 دفع أحد المطورين Azure Storage Key إلى GitHub. Git hook كان سيمنعه لكنه لم يكن مفعّلاً على جهازه.
 
-**الحل**: 
+**الحل**:
+
 1. تثبيت pre-commit hooks عبر `pre-commit` framework (وليس hooks يدوية)
 2. GitHub Secret Scanning كخط دفاع ثاني
 3. تدوير المفاتيح فوراً
@@ -97,12 +98,12 @@ repos:
 
 ## 🎨 طبقة المعماري: Client vs Server Hooks
 
-| | Client-Side | Server-Side |
-|---|-----------|------------|
-| **أين يعمل** | جهاز المطور | GitHub/GitLab server |
-| **متى** | قبل commit/push | قبل/بعد push |
-| **يتجاوز؟** | `--no-verify` | لا يمكن تجاوزه |
-| **مثال** | pre-commit, pre-push | pre-receive, post-receive |
+|              | Client-Side          | Server-Side               |
+| ------------ | -------------------- | ------------------------- |
+| **أين يعمل** | جهاز المطور          | GitHub/GitLab server      |
+| **متى**      | قبل commit/push      | قبل/بعد push              |
+| **يتجاوز؟**  | `--no-verify`        | لا يمكن تجاوزه            |
+| **مثال**     | pre-commit, pre-push | pre-receive, post-receive |
 
 **الأفضل**: Client-side للسرعة + Server-side للأمان (لا يمكن تجاوزه).
 
@@ -111,7 +112,9 @@ repos:
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ pre-commit hook يفحص عن `.env` files
+
 ### تمرين: أنشئ commit-msg hook يرفض commits أطول من 72 حرفاً
+
 ### تحدي: ثبت `pre-commit` framework مع gitleaks
 
 ---
@@ -119,21 +122,23 @@ repos:
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين client-side و server-side hooks؟
 2. كيف تمنع دفع secrets إلى Git؟
 3. لماذا `pre-commit` framework أفضل من hooks اليدوية؟
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| pre-commit | hook يعمل قبل commit |
-| gitleaks | يفحص الكود عن secrets |
+| السؤال        | الإجابة                    |
+| ------------- | -------------------------- |
+| pre-commit    | hook يعمل قبل commit       |
+| gitleaks      | يفحص الكود عن secrets      |
 | `--no-verify` | يتجاوز hooks — لا تستخدمه! |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تمنع تسريب secrets في فريقك؟"** → pre-commit hooks + gitleaks + GitHub Secret Scanning
 2. **"كيف تفرض تنسيق commit messages؟"** → commit-msg hook + conventional commits
 

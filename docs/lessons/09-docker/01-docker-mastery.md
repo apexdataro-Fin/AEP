@@ -311,21 +311,21 @@ graph LR
 
 ## 📋 ورقة غش الأوامر اليومية
 
-| الأمر                                   | الغرض           |
-| --------------------------------------- | --------------- |
-| `docker build -t name:tag .`            | بناء صورة       |
-| `docker run -d --name x -p 8080:80 img` | تشغيل حاوية     |
-| `docker ps`                             | الحاويات النشطة |
-| `docker ps -a`                          | كل الحاويات     |
-| `docker logs -f container`              | سجلات مباشرة    |
-| `docker exec -it container bash`        | ادخل الحاوية    |
-| `docker inspect container`              | تفاصيل كاملة    |
-| `docker stats`                          | استهلاك الموارد |
-| `docker system prune -a`                | تنظيف كل شيء    |
-| `docker image history img`              | طبقات الصورة    |
-| `docker compose up -d`                  | تشغيل compose   |
-| `docker compose down -v`                | إيقاف وتنظيف    |
-| `docker compose logs -f`                | سجلات compose   |
+| الأمر                                   | الغرض                   |
+| --------------------------------------- | ----------------------- |
+| `docker build -t name:tag .`            | بناء صورة               |
+| `docker run -d --name x -p 8080:80 img` | تشغيل حاوية             |
+| `docker ps`                             | الحاويات النشطة         |
+| `docker ps -a`                          | كل الحاويات             |
+| `docker logs -f container`              | سجلات مباشرة            |
+| `docker exec -it container bash`        | ادخل الحاوية            |
+| `docker inspect container`              | تفاصيل كاملة            |
+| `docker stats`                          | استهلاك الموارد         |
+| `docker system prune -a`                | تنظيف كل شيء            |
+| `docker image history img`              | طبقات الصورة            |
+| `docker compose up -d`                  | تشغيل compose           |
+| `docker compose down -v`                | إيقاف وتنظيف            |
+| `docker compose logs -f`                | سجلات compose           |
 | `docker image prune -a`                 | حذف الصور غير المستخدمة |
 
 ---
@@ -560,22 +560,22 @@ echo "0 3 * * 0 docker system prune -a --filter 'until=168h' --force" | sudo cro
 
 ### Docker vs Podman vs containerd — مقارنة معمارية
 
-| المعيار | Docker | Podman | containerd |
-|---------|--------|--------|------------|
-| **Daemon** | ✅ (dockerd) | ❌ (fork-exec model) | ✅ (containerd) |
-| **Rootless** | مؤخراً (v20+) | ✅ افتراضي | ❌
-| **Compose** | docker-compose | podman-compose | ❌ (K8s native) |
-| **K8s integration** | عبر cri-dockerd | ❌ | ✅ (مباشر) |
-| **Images** | OCI | OCI | OCI |
-| **حجم التثبيت** | كبير | متوسط | صغير |
+| المعيار             | Docker          | Podman               | containerd      |
+| ------------------- | --------------- | -------------------- | --------------- |
+| **Daemon**          | ✅ (dockerd)    | ❌ (fork-exec model) | ✅ (containerd) |
+| **Rootless**        | مؤخراً (v20+)   | ✅ افتراضي           | ❌              |
+| **Compose**         | docker-compose  | podman-compose       | ❌ (K8s native) |
+| **K8s integration** | عبر cri-dockerd | ❌                   | ✅ (مباشر)      |
+| **Images**          | OCI             | OCI                  | OCI             |
+| **حجم التثبيت**     | كبير            | متوسط                | صغير            |
 
 ### متى لا تستخدم Docker؟
 
-| السيناريو | لماذا؟ | البديل |
-|-----------|-------|--------|
-| **Kubernetes 1.24+** | Docker runtime أُزيل | containerd (مدمج) |
-| **حاويات بدون root مطلقاً** | Docker يحتاج root للـ daemon | Podman (rootless) |
-| **بناء صور لـ ARM** | Docker buildx يعمل لكن Podman أسرع | Podman multi-arch |
+| السيناريو                   | لماذا؟                             | البديل            |
+| --------------------------- | ---------------------------------- | ----------------- |
+| **Kubernetes 1.24+**        | Docker runtime أُزيل               | containerd (مدمج) |
+| **حاويات بدون root مطلقاً** | Docker يحتاج root للـ daemon       | Podman (rootless) |
+| **بناء صور لـ ARM**         | Docker buildx يعمل لكن Podman أسرع | Podman multi-arch |
 
 ### استراتيجية التخزين المؤقت (Caching)
 
@@ -598,17 +598,22 @@ COPY app.py .
 ## 🛠️ تدريبات عملية
 
 ### تمرين ١: صورة مثالية (سهل)
+
 > ابنِ Dockerfile لـ Node.js app:
+>
 > - Multi-stage: builder (npm build) + production (nginx)
 > - حجم أقل من 30MB
 > - non-root user
 > - HEALTHCHECK
 
 ### تمرين ٢: تحقيق security scan (متوسط)
+
 > شغّل Trivy على صور CloudNova. وثّق كل HIGH/CRITICAL vulnerabilities وخطة علاجها.
 
 ### تحدي: CI/CD Pipeline (متقدم)
+
 > صمم GitHub Actions workflow:
+>
 > 1. Build multi-arch image
 > 2. Scan with Trivy (block on CRITICAL)
 > 3. Push to ACR
@@ -616,6 +621,7 @@ COPY app.py .
 > 5. Smoke tests
 
 ### مشروع CloudNova
+
 > **Ticket #CN-901:** "صور Docker تستهلك 45GB على الخادم. نظف وامنع التراكم."
 
 ---
@@ -623,6 +629,7 @@ COPY app.py .
 ## 📝 تقييم المعرفة
 
 ### ✅ تحقق من فهمك (5)
+
 1. كيف تقلل حجم صورة من 900MB إلى 150MB؟
 2. لماذا `USER 1000` أفضل من `USER root`؟
 3. ما فائدة BuildKit secrets؟
@@ -665,6 +672,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 </details>
 
 ### 🧠 استدعاء نشط
+
 1. ارسم مراحل Multi-stage build من الذاكرة.
 2. اذكر 7 قواعد أمنية لـ Dockerfile.
 3. كيف تشخص حاوية لا تستجيب؟ (5 خطوات)
@@ -672,23 +680,25 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 5. كيف تبني صورة لـ ARM و x86 معاً؟
 
 ### ✍️ تمرين Feynman
+
 اشرح Docker لـ 3 شخصيات:
+
 - **طاهٍ**: "الصورة = وصفة مجمدة. الحاوية = وجبة جاهزة للأكل."
 - **مدير شحن**: "الحاوية = حاوية شحن بحري ISO. تغلف المنتج وتنقله لأي مكان."
 - **طفل ١٢ سنة**: "Docker = صندوق سحري يحمل لعبتك المفضلة بكل إعداداتها. تفتح الصندوق على أي كمبيوتر وتلعب فوراً."
 
 ### 🎴 بطاقات (8)
 
-| السؤال | الإجابة |
-|--------|---------|
-| Layer | كل أمر في Dockerfile = طبقة |
-| BuildKit | محرك بناء حديث — cache أفضل، secrets آمنة |
-| Multi-stage | فصل البناء عن التشغيل — حجم أقل 80%+ |
-| Volume | تخزين دائم ينجو من حذف الحاوية |
-| HEALTHCHECK | أمر يفحص صحة الحاوية دورياً |
-| Registry | مستودع لتخزين وتوزيع الصور |
-| .dockerignore | ملف يمنع نسخ ملفات غير ضرورية للصورة |
-| Trivy | أداة فحص ثغرات أمنية في صور الحاويات |
+| السؤال        | الإجابة                                   |
+| ------------- | ----------------------------------------- |
+| Layer         | كل أمر في Dockerfile = طبقة               |
+| BuildKit      | محرك بناء حديث — cache أفضل، secrets آمنة |
+| Multi-stage   | فصل البناء عن التشغيل — حجم أقل 80%+      |
+| Volume        | تخزين دائم ينجو من حذف الحاوية            |
+| HEALTHCHECK   | أمر يفحص صحة الحاوية دورياً               |
+| Registry      | مستودع لتخزين وتوزيع الصور                |
+| .dockerignore | ملف يمنع نسخ ملفات غير ضرورية للصورة      |
+| Trivy         | أداة فحص ثغرات أمنية في صور الحاويات      |
 
 ---
 
@@ -721,6 +731,7 @@ CI/CD:
 ├── Parallel builds (matrix strategy)
 └── Nightly rebuild of base image
 ```
+
 </details>
 
 ### سؤال تقني
@@ -755,6 +766,7 @@ docker build \
   --build-arg GIT_COMMIT=$(git rev-parse HEAD) \
   -t api:v1.2.3 .
 ```
+
 </details>
 
 ### سؤال سلوكي (STAR)
@@ -771,26 +783,30 @@ docker build \
 ## 📚 المراجع والروابط
 
 ### دروس مرتبطة
+
 - [Container Fundamentals](../08-containers/01-container-fundamentals) — Namespaces, cgroups
 - [Docker Compose Production](./02-docker-compose-production) — Compose في الإنتاج
 - [CI/CD Pipelines](../15-cicd/01-cicd-pipelines) — Docker في CI/CD
 
 ### شهادات
+
 - **DCA**: Docker Certified Associate
 - **AZ-104**: Azure Administrator (ACR, ACI)
 
 ### مصادر خارجية
+
 - 📖 [Dockerfile Best Practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)
 - 📖 [BuildKit Documentation](https://docs.docker.com/build/buildkit/)
 - 📺 "Docker Deep Dive" — Nigel Poulton
 
 ### مصطلحات
-| المصطلح | التعريف |
-|---------|---------|
+
+| المصطلح               | التعريف                                        |
+| --------------------- | ---------------------------------------------- |
 | **Multi-stage Build** | بناء بمراحل — الصورة النهائية تحتوي binary فقط |
-| **BuildKit** | محرك بناء حديث — caching ذكي، secrets آمن |
-| **OCI** | معيار مفتوح لصور و runtimes الحاويات |
-| **Registry** | مستودع لتخزين وتوزيع الصور |
+| **BuildKit**          | محرك بناء حديث — caching ذكي، secrets آمن      |
+| **OCI**               | معيار مفتوح لصور و runtimes الحاويات           |
+| **Registry**          | مستودع لتخزين وتوزيع الصور                     |
 
 ---
 

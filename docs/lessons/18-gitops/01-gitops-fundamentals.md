@@ -55,15 +55,15 @@ graph TD
 
 ## 🧱 الطبقة المهنية: Argo CD مقابل Flux CD
 
-| المعيار | Argo CD | Flux CD |
-|---------|---------|---------|
-| **واجهة مستخدم** | Web UI ممتازة | لا واجهة (CLI فقط) |
-| **التثبيت** | `kubectl apply` | `flux bootstrap` |
-| **النضج** | CNCF Graduated | CNCF Graduated |
-| **التعقيد** | متوسط — سهل البدء | أعلى — أكثر مرونة |
-| **Image Updates** | Argo CD Image Updater | Flux Image Automation (مدمج) |
-| **Multi-tenancy** | Projects + AppProjects | Namespace-based |
-| **متى تختاره؟** | تريد UI + سهولة | تريد GitOps Toolkit كامل |
+| المعيار           | Argo CD                | Flux CD                      |
+| ----------------- | ---------------------- | ---------------------------- |
+| **واجهة مستخدم**  | Web UI ممتازة          | لا واجهة (CLI فقط)           |
+| **التثبيت**       | `kubectl apply`        | `flux bootstrap`             |
+| **النضج**         | CNCF Graduated         | CNCF Graduated               |
+| **التعقيد**       | متوسط — سهل البدء      | أعلى — أكثر مرونة            |
+| **Image Updates** | Argo CD Image Updater  | Flux Image Automation (مدمج) |
+| **Multi-tenancy** | Projects + AppProjects | Namespace-based              |
+| **متى تختاره؟**   | تريد UI + سهولة        | تريد GitOps Toolkit كامل     |
 
 ### Flux CD — تثبيت وتطبيق
 
@@ -246,13 +246,13 @@ spec:
   strategy:
     canary:
       steps:
-        - setWeight: 20    # 20% للنسخة الجديدة
+        - setWeight: 20 # 20% للنسخة الجديدة
         - pause:
-            duration: 5m   # انتظر 5 دقائق
+            duration: 5m # انتظر 5 دقائق
         - setWeight: 50
         - pause:
             duration: 10m
-        - setWeight: 100   # 100% بعد التأكد
+        - setWeight: 100 # 100% بعد التأكد
       analysis:
         templates:
           - templateName: error-rate-check
@@ -412,6 +412,7 @@ argocd app set cloudnova-api --sync-policy none
 ## 🏛️ طبقة الإنتاج: GitOps في المؤسسة
 
 ### Argo CD Health Checks
+
 ```yaml
 healthChecks:
   - apiVersion: apps/v1
@@ -420,23 +421,28 @@ healthChecks:
 ```
 
 ### متى يفشل GitOps؟
+
 - **Drift**: شخص عدّل يدوياً في K8s → Argo CD يصحح تلقائياً
 - **Secrets**: لا تخزن secrets في Git → External Secrets Operator
 
 ### 🚨 CloudNova: Drift detection saves the day
+
 > مهندس عدّل replicas يدوياً. Argo CD أعادها بعد 3 دقائق.
 
 ---
 
 ## 🛠️ تدريبات
+
 **تمرين ١:** ثبت Argo CD. **تمرين ٢:** Flux Image Automation. **تحدي:** Argo Rollouts canary.
 
 ### 📝 تقييم
+
 **س١:** Push vs Pull CD؟ → Push: CI يدفع. Pull: agent يسحب من Git.
 **س٢:** Drift = ؟ → فرق بين Git والحالة الفعلية.
 **س٣:** Argo vs Flux؟ → Argo: UI ممتازة. Flux: GitOps Toolkit كامل.
 
 ### 🎤 مقابلة
+
 **"كيف تختلف GitOps عن CI/CD التقليدي؟"** → Pull-based. Agent داخل K8s. Self-healing.
 
 ---

@@ -35,9 +35,9 @@ metadata:
   namespace: development
   name: pod-reader
 rules:
-- apiGroups: [""]
-  resources: ["pods", "pods/log"]
-  verbs: ["get", "list", "watch"]
+  - apiGroups: [""]
+    resources: ["pods", "pods/log"]
+    verbs: ["get", "list", "watch"]
 ---
 # RoleBinding: ربط الـ Role بمستخدم
 apiVersion: rbac.authorization.k8s.io/v1
@@ -46,9 +46,9 @@ metadata:
   namespace: development
   name: read-pods-binding
 subjects:
-- kind: User
-  name: alice@cloudnova.com
-  apiGroup: rbac.authorization.k8s.io
+  - kind: User
+    name: alice@cloudnova.com
+    apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: Role
   name: pod-reader
@@ -90,21 +90,21 @@ spec:
       app: api
   policyTypes: [Ingress, Egress]
   ingress:
-  - from:
-    - podSelector:
-        matchLabels:
-          app: frontend
-    ports:
-    - protocol: TCP
-      port: 8080
+    - from:
+        - podSelector:
+            matchLabels:
+              app: frontend
+      ports:
+        - protocol: TCP
+          port: 8080
   egress:
-  - to:
-    - podSelector:
-        matchLabels:
-          app: database
-    ports:
-    - protocol: TCP
-      port: 5432
+    - to:
+        - podSelector:
+            matchLabels:
+              app: database
+      ports:
+        - protocol: TCP
+          port: 5432
 ```
 
 ---
@@ -142,6 +142,7 @@ spec:
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ Role يسمح فقط بقراءة ConfigMaps
+
 ### تحدي: طبق Network Policy تمنع كل ingress ما عدا من `frontend`
 
 ---
@@ -149,18 +150,19 @@ spec:
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. ما الفرق بين Role و ClusterRole؟
 2. لماذا Network Policy مهمة؟
 3. كيف تمنع pods من التشغيل كـ root؟
 
 ### 🃏 بطاقات
 
-| السؤال | الإجابة |
-|--------|---------|
-| RBAC | Role-Based Access Control |
-| PSS | Pod Security Standards |
-| NetworkPolicy | يتحكم في اتصالات الـ pods |
-| OPA | Open Policy Agent — سياسات مخصصة |
+| السؤال        | الإجابة                          |
+| ------------- | -------------------------------- |
+| RBAC          | Role-Based Access Control        |
+| PSS           | Pod Security Standards           |
+| NetworkPolicy | يتحكم في اتصالات الـ pods        |
+| OPA           | Open Policy Agent — سياسات مخصصة |
 
 ---
 
@@ -175,10 +177,10 @@ spec:
 
 ## 📚 مراجع
 
-| النوع | الرابط |
-|-------|--------|
+| النوع     | الرابط                                                    |
+| --------- | --------------------------------------------------------- |
 | درس مرتبط | [K8s Storage](./04-kubernetes-storage-persistent-volumes) |
-| شهادة | CKA / CKS |
+| شهادة     | CKA / CKS                                                 |
 
 ---
 

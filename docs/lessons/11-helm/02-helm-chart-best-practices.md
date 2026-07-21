@@ -75,10 +75,10 @@ metadata:
     helm.sh/hook: test
 spec:
   containers:
-  - name: test
-    image: busybox
-    command: ['wget']
-    args: ['{{ .Release.Name }}-service:{{ .Values.service.port }}']
+    - name: test
+      image: busybox
+      command: ["wget"]
+      args: ["{{ .Release.Name }}-service:{{ .Values.service.port }}"]
   restartPolicy: Never
 ```
 
@@ -95,6 +95,7 @@ helm test myapp -n production
 نشر أحدهم Chart بدون `resources.limits`. الـ pod استهلك كل ذاكرة الـ node. 3 pods أخرى تعطلت.
 
 **الحل**:
+
 ```yaml
 # values-prod.yaml — دائماً حدد limits
 resources:
@@ -113,27 +114,29 @@ resources:
 strategy:
   rollingUpdate:
     maxSurge: 1
-    maxUnavailable: 0  # صفر downtime!
+    maxUnavailable: 0 # صفر downtime!
 ```
 
 ---
 
 ## 🎨 طبقة المعماري: Chart Organization
 
-| النمط | متى تستخدمه |
-|-------|-----------|
-| **Monochart** | تطبيق بسيط، خدمة واحدة |
-| **Library + App** | عدة تطبيقات تشترك في templates |
-| **Umbrella Chart** | عدة خدمات في Chart واحد |
+| النمط              | متى تستخدمه                    |
+| ------------------ | ------------------------------ |
+| **Monochart**      | تطبيق بسيط، خدمة واحدة         |
+| **Library + App**  | عدة تطبيقات تشترك في templates |
+| **Umbrella Chart** | عدة خدمات في Chart واحد        |
 
 ---
 
 ## 🛠️ تدريبات
 
 ### تمرين: أنشئ Chart library
+
 أنشئ library chart يحتوي على labels و annotations مشتركة.
 
 ### تحدي: Helm Test متقدم
+
 اكتب Helm test يتحقق من اتصال الـ pod بقاعدة البيانات.
 
 ---
@@ -141,30 +144,34 @@ strategy:
 ## 📝 تقييم
 
 ### ✅ فحص المعرفة
+
 1. لماذا `resources.limits` ضرورية في الإنتاج؟
 2. ما فائدة Library Charts؟
 3. كيف تدير قيم مختلفة لكل بيئة؟
 
 ### 🃏 بطاقات
-| السؤال | الإجابة |
-|--------|---------|
-| values-prod.yaml | قيم مخصصة لبيئة الإنتاج |
-| Library Chart | Chart يحتوي templates قابلة لإعادة الاستخدام |
-| `helm test` | تشغيل اختبارات التحقق بعد النشر |
+
+| السؤال           | الإجابة                                      |
+| ---------------- | -------------------------------------------- |
+| values-prod.yaml | قيم مخصصة لبيئة الإنتاج                      |
+| Library Chart    | Chart يحتوي templates قابلة لإعادة الاستخدام |
+| `helm test`      | تشغيل اختبارات التحقق بعد النشر              |
 
 ---
 
 ## 🎤 مقابلة
+
 1. **"كيف تنظم Helm Charts لمؤسسة؟"** → Library + App charts + Helmfile + Argo CD
 2. **"كيف تضمن عدم وجود downtime أثناء الترقية؟"** → Rolling update + readiness probes + Helm hooks
 
 ---
 
 ## 📚 مراجع
-| النوع | الرابط |
-|-------|--------|
+
+| النوع     | الرابط                                                |
+| --------- | ----------------------------------------------------- |
 | درس مرتبط | [Helmfile & GitOps](./03-helmfile-gitops-integration) |
-| شهادة | CKA |
+| شهادة     | CKA                                                   |
 
 ---
 

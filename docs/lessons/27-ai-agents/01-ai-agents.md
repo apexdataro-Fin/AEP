@@ -70,16 +70,16 @@ class SafeAgent:
         "delete_resource", "restart_production",
         "modify_firewall", "drop_database"
     ]
-    
+
     def execute(self, action: str, params: dict):
         if action in self.DANGEROUS_ACTIONS:
             # طلب موافقة بشرية
             approval = self.request_approval(action, params)
             if not approval:
                 return {"status": "rejected", "reason": "human declined"}
-        
+
         return self._execute_action(action, params)
-    
+
     def request_approval(self, action, params):
         # إرسال لـ Slack/Teams للموافقة
         return slack_approval(
@@ -101,12 +101,12 @@ class ObservableAgent:
     def run(self, query: str):
         with tracer.start_as_current_span("agent.run") as span:
             span.set_attribute("agent.query", query)
-            
+
             # تتبع كل خطوة
             with tracer.start_as_current_span("agent.plan"):
                 plan = self.planner.plan(query)
                 span.set_attribute("agent.steps", len(plan))
-            
+
             for step in plan:
                 with tracer.start_as_current_span(
                     f"agent.step.{step.tool}"
@@ -119,7 +119,7 @@ class ObservableAgent:
                     step_span.set_attribute(
                         "tool.duration_ms", result.duration_ms
                     )
-            
+
             return self.synthesize()
 
 # Metrics للتتبع
@@ -204,23 +204,23 @@ Planner: التوصية:
 ```python
 class CostManagedAgent:
     DAILY_BUDGET = 50  # سقف يومي
-    
+
     def __init__(self):
         self.spent_today = 0
         self.model_router = {
             "simple": "gpt-3.5-turbo",   # $0.002/1K tokens
             "complex": "gpt-4",          # $0.03/1K tokens
         }
-    
+
     def route_query(self, query: str) -> str:
         """اختيار النموذج حسب تعقيد السؤال"""
         complexity = self.assess_complexity(query)
-        
+
         if self.spent_today > self.DAILY_BUDGET * 0.8:
             return "gpt-3.5-turbo"  # تجاوزنا 80% من الميزانية
-        
+
         return self.model_router[complexity]
-    
+
     def assess_complexity(self, query: str) -> str:
         # كلمات تدل على تعقيد
         complex_keywords = ["design", "architecture", "migrate", "debug"]
@@ -236,29 +236,29 @@ class CostManagedAgent:
 ```python
 class CloudNovaDevOpsAgent:
     """Agent يرد على حوادث الإنتاج تلقائياً"""
-    
+
     def respond_to_incident(self, alert: dict):
         alert_type = alert["type"]
-        
+
         if alert_type == "HighCPU":
             return self.handle_high_cpu(alert)
         elif alert_type == "HighErrorRate":
             return self.handle_high_errors(alert)
         elif alert_type == "DiskSpace":
             return self.handle_disk_space(alert)
-    
+
     def handle_high_cpu(self, alert):
         # ١. تشخيص
         metrics = get_cpu_metrics(alert["resource"])
-        
+
         # ٢. إجراء (مع human approval)
         if metrics["avg"] > 90:
             actions = ["Scale replicas +2", "Check recent deploys"]
-            
+
             if confirm_auto_remediation(alert):
                 scale_replicas(alert["resource"], "+2")
                 notify_slack(f"Auto-scaled {alert['resource']}")
-            
+
             return {
                 "diagnosis": "CPU saturation detected",
                 "actions_taken": ["scaled_replicas"],
