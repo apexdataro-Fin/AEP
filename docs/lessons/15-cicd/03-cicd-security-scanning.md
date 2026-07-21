@@ -347,25 +347,16 @@ rules:
 ### 📝 اختبار (3)
 
 1. **Semgrep يبلغ 200 warning. ماذا تفعل؟**
-   
 
 <details><summary>الإجابة</summary>1. تصنيف: blocker vs noise. 2. Tuning القواعد. 3. إضافة `.semgrepignore`. 4. معالجة الحقيقية أولاً.</details>
 
-
-
 2. **SCA وجد CVE في مكتبة عميقة (dependency of dependency). كيف تصلح؟**
-   
 
 <details><summary>الإجابة</summary>1. تحقق من توفر fix. 2. override الـ transitive dependency في `package.json`/`pom.xml`. 3. إذا لم يتوفر fix، استخدم بديلاً.</details>
 
-
-
 3. **كيف تقيس فعالية DevSecOps pipeline؟**
-   
 
 <details><summary>الإجابة</summary>Time-to-Fix (من CVE إلى fix)، Defect Escape Rate (ثغرات وصلت للإنتاج)، Mean Time to Detect، عدد الثغرات المفتوحة > 30 يوم.</details>
-
-
 
 ### 🧠 Active Recall (5)
 

@@ -644,18 +644,12 @@ COPY app.py .
 - **ب)** COPY requirements.txt ثم RUN pip install ثم COPY . .
 - **ج)** لا فرق
 
-
-
 :::tip الإجابة
 
 **ب.** ضع الاعتماديات أولاً لأنها تتغير أقل من الكود. Docker يعيد استخدام كل طبقة قبل الطبقة التي تغيرت.
 :::
 
-
-
 **س٢:** كيف تسحب صورة من ACR خاص بـ Private Endpoint؟
-
-
 
 :::tip الإجابة
 
@@ -666,25 +660,22 @@ docker pull cloudnovaregistry.azurecr.io/api:v3
 # أو استخدم Managed Identity:
 az acr login --name cloudnovaregistry --expose-token
 ```
+
 :::
 
-
-
 **س٣:** ما فائدة `--mount=type=cache` في BuildKit؟
-
-
 
 :::tip الإجابة
 
 يحفظ cache directory عبر builds المختلفة.
+
 ```dockerfile
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 ```
+
 المكتبات تُحمل مرة واحدة فقط. البناء التالي: pip install فوري تقريباً — وفر 90% من وقت البناء.
 :::
-
-
 
 ### 🧠 استدعاء نشط
 
@@ -723,8 +714,6 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 **"صمم CI/CD pipeline لـ 30 microservice كل منها في repo منفصل."**
 
-
-
 :::tip نموذج الإجابة
 
 ```
@@ -751,13 +740,9 @@ CI/CD:
 
 :::
 
-
-
 ### سؤال تقني
 
 **"كيف تحقق build reproducible (نفس الـ hash كل مرة)؟"**
-
-
 
 :::tip الإجابة
 
@@ -789,8 +774,6 @@ docker build \
 ```
 
 :::
-
-
 
 ### سؤال سلوكي (STAR)
 

@@ -248,25 +248,16 @@ gate.record_incident(5)   # ⚠️ Exception!
 ### 📝 اختبار (3 أسئلة)
 
 1. **خدمة API بمتوسط 3 ملايين طلب/شهر. كم طلباً يمكن أن يفشل إذا كان SLO = 99.95%؟**
-   
 
 <details><summary>الإجابة</summary>0.05% × 3,000,000 = 1,500 طلب فاشل مسموح شهرياً</details>
 
-
-
 2. **إذا استهلكت 80% من error budget في أول أسبوع، ماذا تفعل؟**
-   
 
 <details><summary>الإجابة</summary>تجميد deployments غير الضرورية، مراجعة سبب الاستهلاك، تحسين monitoring</details>
 
-
-
 3. **ما العلاقة بين SLO و CI/CD pipeline؟**
-   
 
 <details><summary>الإجابة</summary>CI/CD يجب أن يتحقق من error budget قبل السماح بـ deployment جديد</details>
-
-
 
 ### 🧠 Active Recall (5)
 

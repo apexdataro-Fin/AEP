@@ -462,24 +462,15 @@ git commit -m "Configure Git LFS for model files"
 
 **س١:** كيف تدمج آخر 3 commits في واحد؟
 
-
 <details><summary>الإجابة</summary>`git rebase -i HEAD~3` ثم `squash` للـ commits 2 و 3.</details>
-
-
 
 **س٢:** ما فائدة `git worktree`؟
 
-
 <details><summary>الإجابة</summary>العمل على فرعين في نفس الوقت بدون clone جديد. مثالي لـ hotfix أثناء العمل على feature.</details>
-
-
 
 **س٣:** كيف تمنع force push على main؟
 
-
 <details><summary>الإجابة</summary>Branch protection rules في GitHub: "Block force pushes" + "Require PR before merging".</details>
-
-
 
 ### 🎤 مقابلة
 

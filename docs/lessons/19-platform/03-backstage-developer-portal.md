@@ -485,25 +485,16 @@ spec:
 ### 📝 اختبار (3)
 
 1. **لديك 500 خدمة و 20 فريقاً. كيف تنظم Backstage catalog؟**
-   
 
 <details><summary>الإجابة</summary>Systems (business capabilities) > Domains > Components. كل فريق owns components. استخدم Groups لتنظيم الفرق. استخدم ownership tags.</details>
 
-
-
 2. **مطور ينشئ خدمة جديدة عبر Software Template لكن الـ CI/CD يفشل. كيف تشخص؟**
-   
 
 <details><summary>الإجابة</summary>افحص Scaffolder logs: `kubectl logs -n backstage scaffolder-xxx`. تحقق من GitHub Action run. تحقق من صلاحيات GitHub token. تأكد من صحة template skeleton.</details>
 
-
-
 3. **كيف تقيس نجاح Backstage adoption؟**
-   
 
 <details><summary>الإجابة</summary>Number of catalog entities, Software Template executions/week, Developer NPS survey, Time-to-10th-PR, "Where do I find X?" questions in Slack (should decrease).</details>
-
-
 
 ### 🧠 Active Recall (5)
 

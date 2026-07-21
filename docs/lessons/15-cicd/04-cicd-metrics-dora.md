@@ -341,31 +341,22 @@ class DORAAlertBot:
 ### 📝 اختبار (3)
 
 1. **فريقك Elite في كل المقاييس ما عدا Change Failure Rate (15%). كيف تصلح؟**
-   
 
 :::tip الإجابة
 
 أضف canary deployments، حسن automated testing، قلل حجم الـ PRs، أضف integration tests إجبارية.</details>
 
-
-
 2. **كيف تقيس DORA metrics في فريق لا يستخدم GitHub؟**
-   
 
 :::tip الإجابة
 
 أي CI/CD system: عد deployments الناجحة/الفاشلة. Lead time: من commit timestamp إلى deploy timestamp. MTTR: من incident creation إلى resolution.</details>
 
-
-
 3. **هل يمكن لشركة ناشئة أن تكون Elite؟**
-   
 
 :::tip الإجابة
 
 نعم! الشركات الناشئة غالباً أسرع في التبني. فقط تحتاج: CI/CD منذ اليوم الأول، automated testing، feature flags، monitoring جيد.</details>
-
-
 
 ### 🧠 Active Recall (5)
 

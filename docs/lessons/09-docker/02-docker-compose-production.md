@@ -612,24 +612,15 @@ docker compose -p cloudnova-blue down
 
 **س١:** ما فائدة `internal: true` في network؟
 
-
 <details><summary>الإجابة</summary>يمنع الحاويات على هذه الشبكة من الوصول للإنترنت. للـ backend networks مثل database — أمان إضافي.</details>
-
-
 
 **س٢:** متى تستخدم `deploy.resources.reservations` vs `limits`؟
 
-
 <details><summary>الإجابة</summary>reservations = الحد الأدنى المضمون. limits = السقف. مثال: api يحتاج 256MB على الأقل لكن قد يصل لـ 512MB في الذروة.</details>
-
-
 
 **س٣:** كيف تنقل بيانات PostgreSQL من compose قديم لجديد؟
 
-
 <details><summary>الإجابة</summary>`docker exec old-postgres pg_dump -U user db | docker exec -i new-postgres psql -U user db`</details>
-
-
 
 ### 🎤 مقابلة
 

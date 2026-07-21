@@ -366,25 +366,16 @@ vault read database/creds/readonly
 ### 📝 اختبار (3)
 
 1. **Secret تسرب على GitHub public repo. ماذا تفعل في أول 5 دقائق؟**
-   
 
 <details><summary>الإجابة</summary>1. Rotate secret فوراً. 2. فحص access logs. 3. Force push لحذف الـ commit. 4. إبلاغ security team. 5. مراجعة باقي الـ repo لـ secrets أخرى.</details>
 
-
-
 2. **كيف تدير secrets في multi-cloud (AWS + Azure)؟**
-   
 
 <details><summary>الإجابة</summary>HashiCorp Vault (cloud-agnostic). أو External Secrets Operator مع SecretStore لكل cloud. أو استخدام CSI Driver لكل provider.</details>
 
-
-
 3. **لماذا Vault dynamic secrets أفضل من static secrets في Key Vault؟**
-   
 
 <details><summary>الإجابة</summary>Dynamic secrets: تنشأ عند الطلب، تنتهي تلقائياً (TTL)، unique لكل client. Static secrets: موجودة دائماً، إذا تسربت تبقى صالحة حتى التدوير.</details>
-
-
 
 ### 🧠 Active Recall (5)
 

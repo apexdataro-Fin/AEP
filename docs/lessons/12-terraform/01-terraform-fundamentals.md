@@ -589,24 +589,15 @@ inputs = {
 
 **س١:** لماذا لا ترفع `terraform.tfstate` لـ Git؟
 
-
 <details><summary>الإجابة</summary>يحتوي resource IDs وقد يحتوي secrets (مثل passwords). استخدم remote backend.</details>
-
-
 
 **س٢:** ما فائدة `terraform plan -detailed-exitcode`؟
 
-
 <details><summary>الإجابة</summary>Exit code 0 = no changes, 1 = error, 2 = drift detected. مفيد لـ CI/CD للكشف عن التغييرات اليدوية.</details>
-
-
 
 **س٣:** `count` vs `for_each`؟
 
-
 <details><summary>الإجابة</summary>count يستخدم list index — حذف عنصر يغير كل العناصر بعده. for_each يستخدم map keys — حذف عنصر يؤثر عليه فقط.</details>
-
-
 
 ### 🧠 استدعاء نشط
 

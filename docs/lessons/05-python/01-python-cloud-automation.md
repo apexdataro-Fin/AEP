@@ -582,7 +582,6 @@ graph TD
 - اعرض الموارد التي ستحذف قبل الحذف (`--dry-run`)
 - سجّل كل عملية حذف
 
-
 <details style="display:none">
 <summary>💡 تلميح</summary>
 
@@ -606,9 +605,7 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
                     client.resource_groups.begin_delete(rg.name)
 ```
 
-
 </details>
-
 
 ### تمرين ٢: مراقب الشهادات (متوسط)
 
@@ -648,22 +645,17 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
 - **ب)** `click`
 - **ج)** `sys.argv`
 
-
 <details style="display:none">
 <summary>الإجابة</summary>
-
 
 **ب) `click`** — تدعم nested commands، validation، environment variables، و output formatting. `argparse` جيد للأدوات البسيطة لكنه يصبح مرهقاً مع أوامر متعددة.
 
 </details>
 
-
 **س٢:** كيف تختبر سكربت يتصل بـ Azure APIs بدون اتصال حقيقي؟
-
 
 <details style="display:none">
 <summary>الإجابة</summary>
-
 
 استخدم `unittest.mock` لمحاكاة Azure clients:
 
@@ -679,16 +671,12 @@ def test_list_vms(mock_compute):
     assert len(result) == 1
 ```
 
-
 </details>
-
 
 **س٣:** ما هو نمط `exponential backoff` ولماذا هو مهم؟
 
-
 <details style="display:none">
 <summary>الإجابة</summary>
-
 
 بدلاً من إعادة المحاولة فوراً عند الفشل، تنتظر وقتاً متزايداً بين المحاولات (1s → 2s → 4s → 8s). هذا يمنع:
 
@@ -696,9 +684,7 @@ def test_list_vms(mock_compute):
 - استهلاك rate limits بسرعة
 - تفاقم المشكلة إذا كان السبب overload مؤقت
 
-
 </details>
-
 
 ### 🧠 استدعاء نشط (5)
 
@@ -729,7 +715,6 @@ def test_list_vms(mock_compute):
 ### System Design
 
 **"صمم نظام أتمتة cloud cleanup لمؤسسة تدير ٢٠ اشتراك Azure."**
-
 
 <details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
@@ -778,14 +763,11 @@ def test_list_vms(mock_compute):
 الإجمالي: ~$15/شهر ✅
 ```
 
-
 </details>
-
 
 ### سؤال تقني
 
 **"كيف تكتب test لسكربت يستخدم Azure SDK؟"**
-
 
 <details style="display:none">
 <summary>👀 الإجابة</summary>
@@ -849,9 +831,7 @@ class TestCloudNovaCLI:
         assert mock_func.call_count == 3
 ```
 
-
 </details>
-
 
 ### سؤال سلوكي (STAR)
 

@@ -428,24 +428,15 @@ git push origin recovered-main:main --force
 
 **س١:** كيف تستعيد commit "محذوف"؟
 
-
 <details><summary>الإجابة</summary>`git reflog` → ابحث عن commit hash → `git cherry-pick <hash>` أو `git checkout -b recovered <hash>`.</details>
-
-
 
 **س٢:** لماذا لا ترفع `.tfstate`؟
 
-
 <details><summary>الإجابة</summary>يحتوي resource IDs وأحياناً secrets. استخدم remote backend مع encryption.</details>
-
-
 
 **س٣:** `merge` vs `rebase` — متى كل منهما؟
 
-
 <details><summary>الإجابة</summary>merge = دمج PR لـ main (تاريخ حقيقي). rebase = تحديث feature branch من main (تاريخ نظيف).</details>
-
-
 
 ### 🧠 استدعاء نشط
 

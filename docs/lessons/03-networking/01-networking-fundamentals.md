@@ -668,39 +668,24 @@ curl -I https://app.cloudnova.com
 ### Knowledge Check
 
 1. **كم عنواناً في /28؟**
-   
 
 <details><summary>الإجابة</summary>16 عنواناً (14 usable). Azure Gateway Subnet يحتاج /27 أو أكبر.</details>
 
-
-
 2. **ما الفرق بين NSG و Azure Firewall؟**
-   
 
 <details><summary>الإجابة</summary>NSG: Layer 4 filtering، مجاني، لكل subnet/NIC. Firewall: Layer 7 filtering، مدفوع، مركزي مع FQDN و threat intelligence.</details>
 
-
-
 3. **كيف تفحص شهادة SSL من الـ CLI؟**
-   
 
 <details><summary>الإجابة</summary>`openssl s_client -connect host:443 -servername host | openssl x509 -noout -text`</details>
 
-
-
 4. **ما هو TTL في DNS ولماذا يهم؟**
-   
 
 <details><summary>الإجابة</summary>Time To Live: كم ثانية يُخزّن الـ resolver السجل. منخفض = تحديث أسرع لكن DNS queries أكثر.</details>
 
-
-
 5. **كيف يعمل Three-Way Handshake؟**
-   
 
 <details><summary>الإجابة</summary>Client → SYN → Server. Server → SYN-ACK → Client. Client → ACK → Server. اتصال مفتوح!</details>
-
-
 
 ### Quiz
 
@@ -708,31 +693,22 @@ curl -I https://app.cloudnova.com
    a) Azure Load Balancer
    b) Application Gateway
    c) Traffic Manager
-   
 
 <details><summary>الإجابة</summary>b) Application Gateway — يفهم HTTP/HTTPS ويوجه حسب المسار أو الـ hostname</details>
-
-
 
 2. **أي عنوان IP للشبكات الخاصة؟**
    a) 172.32.0.1
    b) 192.168.1.1
    c) 11.0.0.1
-   
 
 <details><summary>الإجابة</summary>b) 192.168.x.x. النطاقات الخاصة: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16</details>
-
-
 
 3. **ماذا يعني HTTP 502؟**
    a) Not Found
    b) Bad Gateway
    c) Internal Server Error
-   
 
 <details><summary>الإجابة</summary>b) Bad Gateway — الـ proxy تلقى رداً غير صالح من الـ upstream server</details>
-
-
 
 ### 5 أسئلة للتذكّر النشط
 

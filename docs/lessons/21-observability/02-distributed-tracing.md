@@ -329,25 +329,16 @@ def analyze_trace(trace_data):
 ### 📝 اختبار (3)
 
 1. **كم trace سأخزن شهرياً إذا كان عندي 10K req/s مع 10% sampling؟**
-   
 
 <details><summary>الإجابة</summary>10,000 × 86,400 × 30 × 0.10 = 2,592,000,000 trace في الشهر (2.6 مليار). سيأخذ ~50TB إذا كان متوسط trace size 20KB!</details>
 
-
-
 2. **الـ trace غير مكتمل — بعض الـ spans مفقودة من services معينة. لماذا؟**
-   
 
 <details><summary>الإجابة</summary>Trace context غير منقول بشكل صحيح (headers مفقودة). SDK غير مثبت في تلك services. Sampling rate مختلف بين الـ services.</details>
 
-
-
 3. **كيف تبرر تكلفة distributed tracing لـ CFO؟**
-   
 
 <details><summary>الإجابة</summary>Tracing خفض MTTR من 4 ساعات إلى 15 دقيقة. وفر $200K/سنة في engineer time + $500K في downtime avoidance. ROI = 5x.</details>
-
-
 
 ### 🧠 Active Recall (5)
 

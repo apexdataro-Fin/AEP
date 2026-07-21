@@ -659,24 +659,15 @@ etcdctl snapshot restore /backup/etcd-20260716-0200.db
 
 **س١:** ماذا يحدث عندما يموت kubelet؟
 
-
 <details><summary>الإجابة</summary>الـ Control Plane يعلّم Node كـ NotReady. بعد 5 دقائق (pod-eviction-timeout)، pods تُجدول على nodes أخرى. الـ pods الميتة تبقى في Terminating حتى يعود kubelet.</details>
-
-
 
 **س٢:** ما الفرق بين Deployment و StatefulSet؟
 
-
 <details><summary>الإجابة</summary>Deployment: Pods متطابقة، أي pod يستبدل الآخر. StatefulSet: Pods بهوية ثابتة و persistent volumes — للـ databases.</details>
-
-
 
 **س٣:** كيف تصمم K8s cluster لـ 500 microservice؟
 
-
 <details><summary>الإجابة</summary>Namespaces للفرق. ResourceQuota لكل ns. NetworkPolicies (deny-all). Istio للمراقبة والـ mTLS. Argo CD للنشر. Cluster Autoscaler. Backup etcd كل 6 ساعات.</details>
-
-
 
 ### 🧠 استدعاء نشط
 

@@ -590,24 +590,15 @@ kubectl rollout restart deployment/coredns -n kube-system
 
 **س١:** لماذا prefer Ingress over LoadBalancer؟
 
-
 <details><summary>الإجابة</summary>Ingress واحد = LB واحد = تكلفة أقل. Path-based routing. TLS termination موحد.</details>
-
-
 
 **س٢:** كيف تمنع Pod من الاتصال بأي شيء خارج namespace؟
 
-
 <details><summary>الإجابة</summary>NetworkPolicy مع `podSelector: {}` و `policyTypes: [Egress]` بدون أي `to` rules.</details>
-
-
 
 **س٣:** ما فائدة Service Mesh؟
 
-
 <details><summary>الإجابة</summary>mTLS تلقائي، distributed tracing، retry/circuit breaking، traffic splitting للـ canary deployments.</details>
-
-
 
 ### 🧠 استدعاء نشط
 

@@ -416,24 +416,15 @@ curl -f https://api.cloudnova.com/health
 
 **س١:** CI vs CD؟
 
-
 <details><summary>الإجابة</summary>CI = build + test تلقائي. CD = deploy تلقائي.</details>
-
-
 
 **س٢:** متى Canary أفضل من Rolling؟
 
-
 <details><summary>الإجابة</summary>تغييرات عالية المخاطر — اختبر على 5% أولاً.</details>
-
-
 
 **س٣:** كيف تحمي production secrets؟
 
-
 <details><summary>الإجابة</summary>GitHub Secrets + Environment protection + OIDC.</details>
-
-
 
 ### 🎤 مقابلة
 

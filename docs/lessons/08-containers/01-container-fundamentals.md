@@ -582,7 +582,6 @@ graph TD
 - **ب)** الطبقات تُشارك بين الصور لتوفير مساحة
 - **ج)** كل طبقة مستقلة تماماً
 
-
 <details style="display:none">
 <summary>الإجابة</summary>
 
@@ -590,23 +589,20 @@ graph TD
 
 </details>
 
-
 **س٢:** ما فائدة `.dockerignore`؟
-
 
 <details style="display:none">
 <summary>الإجابة</summary>
 
 يمنع إرسال ملفات غير ضرورية لـ build context (مثل `node_modules/`، `.git/`). الفوائد:
+
 1. أسرع build (context أصغر)
 2. أمان (لن تصل `.env` للصورة بالخطأ)
 3. cache أكثر فعالية
 
 </details>
 
-
 **س٣:** ما الفرق بين `livenessProbe` و `readinessProbe`؟
-
 
 <details style="display:none">
 <summary>الإجابة</summary>
@@ -617,7 +613,6 @@ graph TD
 مثال: حاوية تعمل لكن قاعدة البيانات لم تصل بعد = liveness OK ولكن readiness لا.
 
 </details>
-
 
 ### 🧠 استدعاء نشط (5)
 
@@ -656,7 +651,6 @@ graph TD
 
 **"صمم استراتيجية حاويات لشركة بـ 50 خدمة microservice."**
 
-
 <details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
 
@@ -690,14 +684,11 @@ graph TD
 └── AlertManager (تنبيهات)
 ```
 
-
 </details>
-
 
 ### سؤال تقني
 
 **"كيف تقلص Docker image من 1.2GB إلى 15MB؟"**
-
 
 <details style="display:none">
 <summary>👀 الإجابة</summary>
@@ -736,9 +727,7 @@ CMD ["python3", "app.py"]
 5. دمج RUN commands لتقليل الطبقات
 6. `.dockerignore`: استبعد node_modules, .git
 
-
 </details>
-
 
 ### سؤال سلوكي (STAR)
 

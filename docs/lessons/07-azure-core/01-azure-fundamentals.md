@@ -662,7 +662,6 @@ graph TD
 - **ب)** Azure Functions (Consumption Plan)
 - **ج)** AKS cluster
 
-
 <details style="display:none">
 <summary>الإجابة</summary>
 
@@ -670,9 +669,7 @@ graph TD
 
 </details>
 
-
 **س٢:** كم تكلفة تشغيل App Service P1v2 (٢ instances) + Azure SQL GP (٢ vCores) شهرياً تقريباً؟
-
 
 <details style="display:none">
 <summary>الإجابة</summary>
@@ -684,9 +681,7 @@ Azure SQL GP 2 vCores: ~$375
 
 </details>
 
-
 **س٣:** ما الفرق بين Azure Policy و Azure RBAC؟
-
 
 <details style="display:none">
 <summary>الإجابة</summary>
@@ -697,7 +692,6 @@ Azure SQL GP 2 vCores: ~$375
 RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 
 </details>
-
 
 ### 🧠 استدعاء نشط (5)
 
@@ -736,7 +730,6 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 
 **"صمم منصة SaaS على Azure تخدم 50,000 مستخدم وتنمو 20% شهرياً."**
 
-
 <details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
 
@@ -768,14 +761,11 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 قابلية النمو: تلقائية مع auto-scaling
 ```
 
-
 </details>
-
 
 ### سؤال تقني
 
 **"كيف تنقل تطبيق NET Framework 4.8 ضخم إلى Azure؟"**
-
 
 <details style="display:none">
 <summary>👀 الإجابة</summary>
@@ -798,9 +788,7 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 - Function apps للأجزاء المستقلة
 - CI/CD مع GitHub Actions + deployment slots
 
-
 </details>
-
 
 ### سؤال سلوكي (STAR)
 

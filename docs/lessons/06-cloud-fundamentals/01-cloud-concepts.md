@@ -442,7 +442,6 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 - **ب)** Rehost
 - **ج)** Retire
 
-
 <details style="display:none">
 <summary>الإجابة</summary>
 
@@ -450,13 +449,10 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 </details>
 
-
 **س٢:** كم دقيقة تعطل في السنة = 99.95% availability؟
-
 
 <details style="display:none">
 <summary>الإجابة</summary>
-
 
 ```
 365 days × 24 hours × 60 minutes = 525,600 دقيقة/سنة
@@ -468,13 +464,10 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 </details>
 
-
 **س٣:** ما الفرق بين Capital Expenditure (CapEx) و Operational Expenditure (OpEx)؟
-
 
 <details style="display:none">
 <summary>الإجابة</summary>
-
 
 |             | CapEx (On-Premises)       | OpEx (Cloud)              |
 | ----------- | ------------------------- | ------------------------- |
@@ -487,7 +480,6 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 التحول من CapEx → OpEx هو أحد أكبر دوافع الهجرة للسحابة.
 
 </details>
-
 
 ### 🧠 استدعاء نشط (5)
 
@@ -525,7 +517,6 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 ### System Design
 
 **"صمم بنية تحتية سحابية لـ fintech startup تخدم مليون مستخدم."**
-
 
 <details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
@@ -573,14 +564,11 @@ North Europe (DR):
 └── الإجمالي: ~$5,500/شهر ✅ (داخل الميزانية)
 ```
 
-
 </details>
-
 
 ### سؤال تقني
 
 **"كيف تشرح لمدير مالي لماذا فاتورة السحابة ارتفعت من $5K إلى $12K هذا الشهر؟"**
-
 
 <details style="display:none">
 <summary>👀 الإجابة</summary>
@@ -595,14 +583,11 @@ North Europe (DR):
    - أضفنا auto-shutdown لبيئة dev — وفر $800
 4. **التوصية**: صافي الزيادة الدائمة ~$2,700/شهر مقابل نمو 40% في الإيرادات.
 
-
 </details>
-
 
 ### سؤال سلوكي (STAR)
 
 **"احكِ عن مرة خفضت فيها تكلفة السحابة دون التأثير على الأداء."**
-
 
 <details style="display:none">
 <summary>👀 مثال</summary>
@@ -612,9 +597,7 @@ North Europe (DR):
 > **A**: نفذت تدقيق FinOps: وجدت ٢٠ VM idle بعد 8pm، ١٥ قرص غير مرتبط، و٣ قواعد بيانات test بحجم production. أضفت auto-shutdown، right-sizing، و cleanup سكريبت.  
 > **R**: وفرنا ٢٨٪ ($4,200/شهر = $50,400/سنة). أعدنا استثمار التوفير في ميزات جديدة.
 
-
 </details>
-
 
 ---
 
