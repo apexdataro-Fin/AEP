@@ -408,7 +408,7 @@ graph TD
 > تطبيقك بطيء. المستخدمون يشتكون. كيف تشخص المشكلة باستخدام المبادئ الأولى؟
 > اكتب خطة تشخيص من ١٠ خطوات.
 
-<details style="display:none">
+<details>
 <summary>💡 نموذج</summary>
 
 1. حدد: "بطيء" = أي صفحة؟ كم milliseconds؟
@@ -459,7 +459,7 @@ graph TD
 - **ب)** يسأل "لماذا" قبل "كيف"، ويقترح حلولاً بديلة
 - **ج)** يستخدم أحدث التقنيات دائماً
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 **ب)** المهندس الحقيقي يفهم المشكلة قبل أن يحلها. يسأل عن constraints، يقترح trade-offs، ولا يقفز للحل الأول.
@@ -468,7 +468,7 @@ graph TD
 
 **س٢:** ما هو "5 Whys" ولماذا هو مهم؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 تقنية للوصول للسبب الجذري بسؤال "لماذا؟" ٥ مرات متتالية:
@@ -485,7 +485,7 @@ graph TD
 
 **س٣:** ما الفرق بين complicated و complex system؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 - **Complicated** (معقد): أجزاء كثيرة لكن يمكن فهمها — مثل طائرة. تتبع الخطوات → تصل للسبب.
@@ -534,7 +534,7 @@ graph TD
 
 **"صمم نظاماً لشركة ناشئة تتوقع نمواً من ١٠٠ إلى ١٠٠,٠٠٠ مستخدم خلال سنة."**
 
-<details style="display:none">
+<details>
 <summary>👀 نموذج التفكير</summary>
 
 ```
@@ -568,7 +568,7 @@ graph TD
 
 **"كيف تقنع مديراً تقنياً أن Kubernetes ليس الحل المناسب لفريقكم الصغير؟"**
 
-<details style="display:none">
+<details>
 <summary>👀 الإجابة</summary>
 
 استخدم البيانات لا الآراء:

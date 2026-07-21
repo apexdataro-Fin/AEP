@@ -442,7 +442,7 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 - **ب)** Rehost
 - **ج)** Retire
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 **ب) Rehost (Lift & Shift).** التطبيق لا يمكن تعديله — لكن يمكن نقله كما هو إلى Azure VM. لاحقاً، يمكن replatform إلى Azure App Service عند توفر الوقت.
@@ -451,7 +451,7 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 **س٢:** كم دقيقة تعطل في السنة = 99.95% availability؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 ```
@@ -466,7 +466,7 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 **س٣:** ما الفرق بين Capital Expenditure (CapEx) و Operational Expenditure (OpEx)؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 |             | CapEx (On-Premises)       | OpEx (Cloud)              |
@@ -518,7 +518,7 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 **"صمم بنية تحتية سحابية لـ fintech startup تخدم مليون مستخدم."**
 
-<details style="display:none">
+<details>
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -570,7 +570,7 @@ North Europe (DR):
 
 **"كيف تشرح لمدير مالي لماذا فاتورة السحابة ارتفعت من $5K إلى $12K هذا الشهر؟"**
 
-<details style="display:none">
+<details>
 <summary>👀 الإجابة</summary>
 
 1. **لا تقل "السحابة غالية"**. قل: "استخدامنا زاد — وهذا جيد لأنه يعني نمواً."
@@ -589,7 +589,7 @@ North Europe (DR):
 
 **"احكِ عن مرة خفضت فيها تكلفة السحابة دون التأثير على الأداء."**
 
-<details style="display:none">
+<details>
 <summary>👀 مثال</summary>
 
 > **S**: فاتورة Azure ارتفعت ٣٥٪ ربع سنوي دون زيادة في المستخدمين.  

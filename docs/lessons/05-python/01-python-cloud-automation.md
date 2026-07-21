@@ -582,7 +582,7 @@ graph TD
 - اعرض الموارد التي ستحذف قبل الحذف (`--dry-run`)
 - سجّل كل عملية حذف
 
-<details style="display:none">
+<details>
 <summary>💡 تلميح</summary>
 
 ```python
@@ -645,7 +645,7 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
 - **ب)** `click`
 - **ج)** `sys.argv`
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 **ب) `click`** — تدعم nested commands، validation، environment variables، و output formatting. `argparse` جيد للأدوات البسيطة لكنه يصبح مرهقاً مع أوامر متعددة.
@@ -654,7 +654,7 @@ def cleanup_auto_delete_rgs(credential, subscription_id, dry_run=False):
 
 **س٢:** كيف تختبر سكربت يتصل بـ Azure APIs بدون اتصال حقيقي؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 استخدم `unittest.mock` لمحاكاة Azure clients:
@@ -675,7 +675,7 @@ def test_list_vms(mock_compute):
 
 **س٣:** ما هو نمط `exponential backoff` ولماذا هو مهم؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 بدلاً من إعادة المحاولة فوراً عند الفشل، تنتظر وقتاً متزايداً بين المحاولات (1s → 2s → 4s → 8s). هذا يمنع:
@@ -716,7 +716,7 @@ def test_list_vms(mock_compute):
 
 **"صمم نظام أتمتة cloud cleanup لمؤسسة تدير ٢٠ اشتراك Azure."**
 
-<details style="display:none">
+<details>
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -769,7 +769,7 @@ def test_list_vms(mock_compute):
 
 **"كيف تكتب test لسكربت يستخدم Azure SDK؟"**
 
-<details style="display:none">
+<details>
 <summary>👀 الإجابة</summary>
 
 ```python
