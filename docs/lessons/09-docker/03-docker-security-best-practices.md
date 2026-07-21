@@ -2,6 +2,7 @@
 sidebar_position: 3
 title: "أفضل ممارسات أمن Docker"
 description: "Docker Security — non-root، read-only، seccomp، AppArmor، تأمين الحاويات من اليوم الأول."
+---
 
 # أفضل ممارسات أمن Docker
 

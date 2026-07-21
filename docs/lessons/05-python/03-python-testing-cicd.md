@@ -2,6 +2,7 @@
 sidebar_position: 3
 title: "اختبار Python و CI/CD"
 description: "pytest، unittest، mocking، GitHub Actions للـ Python — دمج الاختبارات في خط الأنابيب."
+---
 
 # اختبار Python و CI/CD
 

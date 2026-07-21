@@ -2,6 +2,7 @@
 sidebar_position: 2
 title: "تحسين السيرة الذاتية و LinkedIn"
 description: "Resume Optimization — كتابة سيرة ذاتية تجتاز ATS وتجذب مسؤولي التوظيف."
+---
 
 # تحسين السيرة الذاتية و LinkedIn
 

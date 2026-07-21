@@ -2,6 +2,7 @@
 sidebar_position: 2
 title: "DNS بعمق"
 description: "DNS Architecture، Azure DNS، Private DNS Zones، DNSSEC — كل ما تحتاجه عن نظام أسماء النطاقات."
+---
 
 # DNS بعمق
 

@@ -2,6 +2,7 @@
 sidebar_position: 2
 title: "Azure SDK for Python"
 description: "azure-sdk-for-python، azure-identity، azure-mgmt-compute — إدارة Azure برمجياً."
+---
 
 # Azure SDK for Python
 

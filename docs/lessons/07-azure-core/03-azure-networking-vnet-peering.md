@@ -2,6 +2,7 @@
 sidebar_position: 3
 title: "شبكات Azure المتقدمة"
 description: "VNet Peering، Private Endpoints، Service Endpoints، Hub-Spoke — تصميم شبكات Azure على نطاق المؤسسة."
+---
 
 # شبكات Azure المتقدمة
 

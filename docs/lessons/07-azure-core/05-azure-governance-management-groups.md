@@ -2,6 +2,7 @@
 sidebar_position: 5
 title: "الحوكمة ومجموعات الإدارة"
 description: "Management Groups، Azure Policy، Blueprints، Cost Management — حوكمة على نطاق المؤسسة."
+---
 
 # الحوكمة ومجموعات الإدارة
 

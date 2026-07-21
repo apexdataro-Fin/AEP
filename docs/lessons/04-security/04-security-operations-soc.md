@@ -2,6 +2,7 @@
 sidebar_position: 4
 title: "عمليات الأمن (SOC)"
 description: "Security Operations Center، Azure Sentinel، Incident Response، Threat Hunting، SIEM — تشغيل الأمن على نطاق المؤسسة."
+---
 
 # عمليات الأمن (SOC)
 

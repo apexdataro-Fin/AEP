@@ -2,6 +2,7 @@
 sidebar_position: 4
 title: "تأمين Linux"
 description: "تأمين خوادم Linux: auditd، SELinux/AppArmor، fail2ban، CIS Benchmark، وأفضل الممارسات."
+---
 
 # تأمين Linux للإنتاج
 
