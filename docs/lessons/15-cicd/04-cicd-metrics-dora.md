@@ -173,16 +173,16 @@ def reduce_mttr():
 
 ### 🃏 بطاقات
 
-| السؤال               | الإجابة                                            |
-| -------------------- | -------------------------------------------------- |
-| DORA                 | DevOps Research & Assessment — معيار أداء DevOps   |
-| Deployment Frequency | عدد deployments للإنتاج لكل أسبوع                  |
-| Lead Time            | الوقت من commit إلى production                     |
-| MTTR                 | Mean Time to Recovery — متوسط وقت الإصلاح          |
-| Change Failure Rate  | نسبة deployments التي تسبب incidents               |
+| السؤال               | الإجابة                                                  |
+| -------------------- | -------------------------------------------------------- |
+| DORA                 | DevOps Research & Assessment — معيار أداء DevOps         |
+| Deployment Frequency | عدد deployments للإنتاج لكل أسبوع                        |
+| Lead Time            | الوقت من commit إلى production                           |
+| MTTR                 | Mean Time to Recovery — متوسط وقت الإصلاح                |
+| Change Failure Rate  | نسبة deployments التي تسبب incidents                     |
 | Elite                | أعلى تصنيف DORA (On-demand deploys, أقل من 1h lead time) |
-| MTTD                 | Mean Time to Detect — متوسط وقت الاكتشاف           |
-| Feature Flags        | تفعيل/تعطيل features بدون deployment جديد          |
+| MTTD                 | Mean Time to Detect — متوسط وقت الاكتشاف                 |
+| Feature Flags        | تفعيل/تعطيل features بدون deployment جديد                |
 
 ---
 
