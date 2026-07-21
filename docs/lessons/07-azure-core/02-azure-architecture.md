@@ -682,7 +682,7 @@ graph LR
 - **ب)** Layer 7 (HTTP/HTTPS) مع global routing
 - **ج)** Layer 3 (Network)
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 **ب) Layer 7 مع global routing.** Front Door ليس load balancer عادي — إنه global anycast service يوجه المستخدمين لأقرب region ويوفر SSL termination و WAF.
@@ -691,7 +691,7 @@ graph LR
 
 **س٢:** كم تكلفة تشغيل 3 AZ + Region Pair لـ DR؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 ```
@@ -714,7 +714,7 @@ DR (Pilot Light):
 
 **س٣:** أيهما أفضل: Azure Firewall أم NSG؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 الاثنان معاً — ليس أحدهما:
@@ -761,7 +761,7 @@ DR (Pilot Light):
 
 **"صمم بنية تحتية لمؤسسة مالية على Azure — تخدم 5 ملايين عميل."**
 
-<details style="display:none">
+<details>
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -799,7 +799,7 @@ DR (Pilot Light):
 
 **"كيف تصمم شبكة لمؤسسة بـ 500 مهندس و 50 تطبيقاً؟"**
 
-<details style="display:none">
+<details>
 <summary>👀 الإجابة</summary>
 
 ```

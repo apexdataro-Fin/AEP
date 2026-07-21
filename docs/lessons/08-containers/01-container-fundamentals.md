@@ -582,7 +582,7 @@ graph TD
 - **ب)** الطبقات تُشارك بين الصور لتوفير مساحة
 - **ج)** كل طبقة مستقلة تماماً
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 **ب) الطبقات تُشارك بين الصور.** إذا استخدمت 10 صور `FROM ubuntu:22.04`، طبقة ubuntu تخزّن مرة واحدة فقط. Docker يستخدم copy-on-write.
@@ -591,7 +591,7 @@ graph TD
 
 **س٢:** ما فائدة `.dockerignore`؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 يمنع إرسال ملفات غير ضرورية لـ build context (مثل `node_modules/`، `.git/`). الفوائد:
@@ -604,7 +604,7 @@ graph TD
 
 **س٣:** ما الفرق بين `livenessProbe` و `readinessProbe`؟
 
-<details style="display:none">
+<details>
 <summary>الإجابة</summary>
 
 - **livenessProbe**: هل الحاوية حيّة؟ إذا فشلت → K8s يعيد تشغيلها
@@ -651,7 +651,7 @@ graph TD
 
 **"صمم استراتيجية حاويات لشركة بـ 50 خدمة microservice."**
 
-<details style="display:none">
+<details>
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -690,7 +690,7 @@ graph TD
 
 **"كيف تقلص Docker image من 1.2GB إلى 15MB؟"**
 
-<details style="display:none">
+<details>
 <summary>👀 الإجابة</summary>
 
 ```dockerfile
