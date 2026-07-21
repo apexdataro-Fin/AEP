@@ -19,7 +19,6 @@ import TabItem from '@theme/TabItem';
 - [**إتقان Azure SDK**](02-python-azure-sdk-mastery) — إدارة Azure برمجياً
 - [**الاختبارات و CI/CD**](03-python-testing-cicd) — اختبارات احترافية
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -28,14 +27,14 @@ Python • Azure SDK • pytest • أتمتة • CI/CD
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط |
-| **الوقت المقدر** | 5 ساعات |
-| **المتطلبات** | Linux |
-| **الشهادات** | AZ-104 |
-| **المشاريع** | سكريبت جرد Azure |
-| **المختبرات** | — |
+| العنصر           | القيمة           |
+| ---------------- | ---------------- |
+| **المستوى**      | متوسط            |
+| **الوقت المقدر** | 5 ساعات          |
+| **المتطلبات**    | Linux            |
+| **الشهادات**     | AZ-104           |
+| **المشاريع**     | سكريبت جرد Azure |
+| **المختبرات**    | —                |
 
 ## 🏛️ مهمة CloudNova
 
@@ -59,7 +58,6 @@ graph LR
 - [**أتمتة Python**](01-python-cloud-automation) — أتمتة الموارد السحابية
 - [**إتقان Azure SDK**](02-python-azure-sdk-mastery) — إدارة Azure برمجياً
 - [**الاختبارات و CI/CD**](03-python-testing-cicd) — اختبارات احترافية
-
 
 </TabItem>
 </Tabs>

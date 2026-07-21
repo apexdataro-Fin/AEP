@@ -19,7 +19,6 @@ import TabItem from '@theme/TabItem';
 - [**نماذج الخدمة بعمق**](02-cloud-service-models-deep) — متى تختار ماذا
 - [**استراتيجية Multi-Cloud**](03-multi-cloud-strategy) — AWS + Azure + GCP
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -28,14 +27,14 @@ import TabItem from '@theme/TabItem';
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | مبتدئ |
-| **الوقت المقدر** | 4 ساعات |
-| **المتطلبات** | الأسس الهندسية |
-| **الشهادات** | AZ-900 |
-| **المشاريع** | — |
-| **المختبرات** | — |
+| العنصر           | القيمة         |
+| ---------------- | -------------- |
+| **المستوى**      | مبتدئ          |
+| **الوقت المقدر** | 4 ساعات        |
+| **المتطلبات**    | الأسس الهندسية |
+| **الشهادات**     | AZ-900         |
+| **المشاريع**     | —              |
+| **المختبرات**    | —              |
 
 ## 🏛️ مهمة CloudNova
 
@@ -59,7 +58,6 @@ graph TD
 - [**مفاهيم السحابة**](01-cloud-concepts) — IaaS، PaaS، SaaS
 - [**نماذج الخدمة بعمق**](02-cloud-service-models-deep) — متى تختار ماذا
 - [**استراتيجية Multi-Cloud**](03-multi-cloud-strategy) — AWS + Azure + GCP
-
 
 </TabItem>
 </Tabs>

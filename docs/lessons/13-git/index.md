@@ -16,19 +16,18 @@ description: "من الأساسيات إلى Git internals — hooks، rebase، 
 - [**Git متقدم**](02-git-advanced) — rebase، cherry-pick، bisect
 - [**Git Hooks**](03-git-hooks-automation) — أتمتة ما قبل commit
 
-
 ## 💡 المهارات التي ستكتسبها
 
 Git • Rebase • Bisect • Hooks • Workflows
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | مبتدئ إلى متوسط |
-| **الوقت المقدر** | 4 ساعات |
-| **المتطلبات** | Linux |
-| **الشهادات** | — |
+| العنصر           | القيمة          |
+| ---------------- | --------------- |
+| **المستوى**      | مبتدئ إلى متوسط |
+| **الوقت المقدر** | 4 ساعات         |
+| **المتطلبات**    | Linux           |
+| **الشهادات**     | —               |
 
 ## 🏛️ مهمة CloudNova
 
@@ -48,7 +47,6 @@ graph TD
 - [**أساسيات Git**](01-git-fundamentals) — commit، branch، merge
 - [**Git متقدم**](02-git-advanced) — rebase، cherry-pick، bisect
 - [**Git Hooks**](03-git-hooks-automation) — أتمتة ما قبل commit
-
 
 ## 🚀 ابدأ التعلم
 

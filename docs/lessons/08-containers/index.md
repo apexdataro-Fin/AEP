@@ -19,7 +19,6 @@ import TabItem from '@theme/TabItem';
 - [**فحص أمن الحاويات**](02-container-security-scanning) — Trivy و Snyk
 - [**مقارنة التنسيق**](03-container-orchestration-comparison) — K8s vs Swarm vs Nomad
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -28,14 +27,14 @@ Namespaces • cgroups • OCI • Container Security • Orchestration
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط |
-| **الوقت المقدر** | 4 ساعات |
-| **المتطلبات** | Linux |
-| **الشهادات** | AZ-104, CKA |
-| **المشاريع** | — |
-| **المختبرات** | — |
+| العنصر           | القيمة      |
+| ---------------- | ----------- |
+| **المستوى**      | متوسط       |
+| **الوقت المقدر** | 4 ساعات     |
+| **المتطلبات**    | Linux       |
+| **الشهادات**     | AZ-104, CKA |
+| **المشاريع**     | —           |
+| **المختبرات**    | —           |
 
 ## 🏛️ مهمة CloudNova
 
@@ -59,7 +58,6 @@ graph TD
 - [**أساسيات الحاويات**](01-container-fundamentals) — كيف تعمل الحاويات
 - [**فحص أمن الحاويات**](02-container-security-scanning) — Trivy و Snyk
 - [**مقارنة التنسيق**](03-container-orchestration-comparison) — K8s vs Swarm vs Nomad
-
 
 </TabItem>
 </Tabs>

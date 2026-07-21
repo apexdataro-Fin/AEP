@@ -16,19 +16,18 @@ description: "Argo CD، Flux CD — إدارة Kubernetes بطريقة GitOps."
 - [**Argo CD**](02-argo-cd-production) — نشر إنتاجي
 - [**Flux CD**](03-flux-cd-production) — بديل Argo CD
 
-
 ## 💡 المهارات التي ستكتسبها
 
 GitOps • Argo CD • Flux CD • Declarative Deployments
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متقدم |
-| **الوقت المقدر** | 5 ساعات |
-| **المتطلبات** | Kubernetes + Git |
-| **الشهادات** | CKA |
+| العنصر           | القيمة           |
+| ---------------- | ---------------- |
+| **المستوى**      | متقدم            |
+| **الوقت المقدر** | 5 ساعات          |
+| **المتطلبات**    | Kubernetes + Git |
+| **الشهادات**     | CKA              |
 
 ## 🏛️ مهمة CloudNova
 
@@ -48,7 +47,6 @@ graph LR
 - [**أساسيات GitOps**](01-gitops-fundamentals) — Pull vs Push
 - [**Argo CD**](02-argo-cd-production) — نشر إنتاجي
 - [**Flux CD**](03-flux-cd-production) — بديل Argo CD
-
 
 ## 🚀 ابدأ التعلم
 

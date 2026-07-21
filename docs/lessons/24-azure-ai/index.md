@@ -17,19 +17,18 @@ description: "Cognitive Services، Azure ML، Azure OpenAI — الذكاء ال
 - [**Azure ML Studio**](03-azure-machine-learning-studio) — تدريب النماذج
 - [**Azure OpenAI**](04-azure-openai-production) — GPT في الإنتاج
 
-
 ## 💡 المهارات التي ستكتسبها
 
 Cognitive Services • Azure ML • Azure OpenAI • Vision • Speech
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط |
-| **الوقت المقدر** | 7 ساعات |
-| **المتطلبات** | Azure Core |
-| **الشهادات** | AI-102, AI-900 |
+| العنصر           | القيمة         |
+| ---------------- | -------------- |
+| **المستوى**      | متوسط          |
+| **الوقت المقدر** | 7 ساعات        |
+| **المتطلبات**    | Azure Core     |
+| **الشهادات**     | AI-102, AI-900 |
 
 ## 🏛️ مهمة CloudNova
 
@@ -50,7 +49,6 @@ graph LR
 - [**Cognitive Services**](02-cognitive-services-vision-speech) — رؤية وكلام
 - [**Azure ML Studio**](03-azure-machine-learning-studio) — تدريب النماذج
 - [**Azure OpenAI**](04-azure-openai-production) — GPT في الإنتاج
-
 
 ## 🚀 ابدأ التعلم
 

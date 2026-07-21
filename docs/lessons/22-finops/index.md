@@ -16,19 +16,18 @@ description: "تحسين التكاليف السحابية، TCO، Reserved Inst
 - [**تحسين تكاليف Azure**](02-azure-cost-optimization-deep) — RI، Savings Plans
 - [**اقتصاديات السحابة**](03-cloud-economics-tco-analysis) — TCO Analysis
 
-
 ## 💡 المهارات التي ستكتسبها
 
 Cost Optimization • TCO • Reserved Instances • Budgets
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط |
-| **الوقت المقدر** | 4 ساعات |
-| **المتطلبات** | Azure Core |
-| **الشهادات** | FinOps Certified |
+| العنصر           | القيمة           |
+| ---------------- | ---------------- |
+| **المستوى**      | متوسط            |
+| **الوقت المقدر** | 4 ساعات          |
+| **المتطلبات**    | Azure Core       |
+| **الشهادات**     | FinOps Certified |
 
 ## 🏛️ مهمة CloudNova
 
@@ -48,7 +47,6 @@ graph LR
 - [**أساسيات FinOps**](01-finops-fundamentals) — Inform, Optimize, Operate
 - [**تحسين تكاليف Azure**](02-azure-cost-optimization-deep) — RI، Savings Plans
 - [**اقتصاديات السحابة**](03-cloud-economics-tco-analysis) — TCO Analysis
-
 
 ## 🚀 ابدأ التعلم
 

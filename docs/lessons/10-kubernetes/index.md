@@ -22,7 +22,6 @@ import TabItem from '@theme/TabItem';
 - [**Operators**](05-kubernetes-operators-crds) — أتمتة الإدارة
 - [**استكشاف الأعطال**](06-kubernetes-troubleshooting-production) — تشخيص الإنتاج
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -31,14 +30,14 @@ K8s Architecture • Networking • RBAC • Storage • Operators • Troublesh
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متقدم |
-| **الوقت المقدر** | 12 ساعة |
-| **المتطلبات** | Docker |
-| **الشهادات** | CKA, CKAD, CKS |
-| **المشاريع** | ترحيل إلى AKS |
-| **المختبرات** | K8s Playground |
+| العنصر           | القيمة         |
+| ---------------- | -------------- |
+| **المستوى**      | متقدم          |
+| **الوقت المقدر** | 12 ساعة        |
+| **المتطلبات**    | Docker         |
+| **الشهادات**     | CKA, CKAD, CKS |
+| **المشاريع**     | ترحيل إلى AKS  |
+| **المختبرات**    | K8s Playground |
 
 ## 🏛️ مهمة CloudNova
 
@@ -66,7 +65,6 @@ graph TD
 - [**تخزين K8s**](04-kubernetes-storage-persistent-volumes) — PV و PVC
 - [**Operators**](05-kubernetes-operators-crds) — أتمتة الإدارة
 - [**استكشاف الأعطال**](06-kubernetes-troubleshooting-production) — تشخيص الإنتاج
-
 
 </TabItem>
 </Tabs>

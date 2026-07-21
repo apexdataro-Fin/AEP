@@ -16,19 +16,18 @@ description: "Internal Developer Platform، Backstage — بناء منصة لل
 - [**IDP**](02-internal-developer-portal) — منصة المطور الداخلية
 - [**Backstage**](03-backstage-developer-portal) — بوابة المطور
 
-
 ## 💡 المهارات التي ستكتسبها
 
 IDP • Backstage • DevEx • Scaffolding
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متقدم |
-| **الوقت المقدر** | 5 ساعات |
-| **المتطلبات** | Kubernetes + DevOps |
-| **الشهادات** | — |
+| العنصر           | القيمة              |
+| ---------------- | ------------------- |
+| **المستوى**      | متقدم               |
+| **الوقت المقدر** | 5 ساعات             |
+| **المتطلبات**    | Kubernetes + DevOps |
+| **الشهادات**     | —                   |
 
 ## 🏛️ مهمة CloudNova
 
@@ -47,7 +46,6 @@ graph LR
 - [**Platform Engineering**](01-platform-engineering) — مقدمة
 - [**IDP**](02-internal-developer-portal) — منصة المطور الداخلية
 - [**Backstage**](03-backstage-developer-portal) — بوابة المطور
-
 
 ## 🚀 ابدأ التعلم
 

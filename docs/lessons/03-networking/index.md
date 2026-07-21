@@ -20,7 +20,6 @@ import TabItem from '@theme/TabItem';
 - [**موازنة الحمل**](03-load-balancing-reverse-proxy) — Azure Load Balancer، Application Gateway
 - [**أمن الشبكات**](04-network-security-firewalls) — NSG، ASG، Azure Firewall
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -29,14 +28,14 @@ DNS • Load Balancing • Firewalls • VNet Design • Network Security
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط |
-| **الوقت المقدر** | 6 ساعات |
-| **المتطلبات** | Linux |
-| **الشهادات** | AZ-104, AZ-700 |
-| **المشاريع** | تصميم Hub-Spoke Network |
-| **المختبرات** | — |
+| العنصر           | القيمة                  |
+| ---------------- | ----------------------- |
+| **المستوى**      | متوسط                   |
+| **الوقت المقدر** | 6 ساعات                 |
+| **المتطلبات**    | Linux                   |
+| **الشهادات**     | AZ-104, AZ-700          |
+| **المشاريع**     | تصميم Hub-Spoke Network |
+| **المختبرات**    | —                       |
 
 ## 🏛️ مهمة CloudNova
 
@@ -60,7 +59,6 @@ graph LR
 - [**DNS بعمق**](02-dns-deep-dive) — كل شيء عن نظام أسماء النطاقات
 - [**موازنة الحمل**](03-load-balancing-reverse-proxy) — Azure Load Balancer، Application Gateway
 - [**أمن الشبكات**](04-network-security-firewalls) — NSG، ASG، Azure Firewall
-
 
 </TabItem>
 </Tabs>

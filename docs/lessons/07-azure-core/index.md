@@ -21,7 +21,6 @@ import TabItem from '@theme/TabItem';
 - [**تخزين Azure**](04-azure-storage-deep-dive) — Blob، Files، Disks
 - [**الحوكمة**](05-azure-governance-management-groups) — Policy و Management Groups
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -30,14 +29,14 @@ Azure Architecture • VNet • Storage • Governance • Management Groups
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط |
-| **الوقت المقدر** | 10 ساعات |
-| **المتطلبات** | أساسيات السحابة |
-| **الشهادات** | AZ-104, AZ-305 |
-| **المشاريع** | نشر بيئة كاملة |
-| **المختبرات** | Azure Portal |
+| العنصر           | القيمة          |
+| ---------------- | --------------- |
+| **المستوى**      | متوسط           |
+| **الوقت المقدر** | 10 ساعات        |
+| **المتطلبات**    | أساسيات السحابة |
+| **الشهادات**     | AZ-104, AZ-305  |
+| **المشاريع**     | نشر بيئة كاملة  |
+| **المختبرات**    | Azure Portal    |
 
 ## 🏛️ مهمة CloudNova
 
@@ -64,7 +63,6 @@ graph LR
 - [**شبكات Azure**](03-azure-networking-vnet-peering) — VNet Peering
 - [**تخزين Azure**](04-azure-storage-deep-dive) — Blob، Files، Disks
 - [**الحوكمة**](05-azure-governance-management-groups) — Policy و Management Groups
-
 
 </TabItem>
 </Tabs>

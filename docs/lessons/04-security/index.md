@@ -20,7 +20,6 @@ import TabItem from '@theme/TabItem';
 - [**التشفير و TLS/PKI**](03-encryption-tls-pki) — حماية البيانات
 - [**عمليات الأمن**](04-security-operations-soc) — SOC و Sentinel
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -29,14 +28,14 @@ IAM و RBAC • التشفير • TLS/PKI • SOC • Incident Response
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط إلى متقدم |
-| **الوقت المقدر** | 7 ساعات |
-| **المتطلبات** | الشبكات |
-| **الشهادات** | AZ-500, SC-200, SC-300 |
-| **المشاريع** | تطبيق Zero Trust |
-| **المختبرات** | — |
+| العنصر           | القيمة                 |
+| ---------------- | ---------------------- |
+| **المستوى**      | متوسط إلى متقدم        |
+| **الوقت المقدر** | 7 ساعات                |
+| **المتطلبات**    | الشبكات                |
+| **الشهادات**     | AZ-500, SC-200, SC-300 |
+| **المشاريع**     | تطبيق Zero Trust       |
+| **المختبرات**    | —                      |
 
 ## 🏛️ مهمة CloudNova
 
@@ -61,7 +60,6 @@ graph TD
 - [**مجموعات أمن الشبكة**](02-network-security-groups-firewalls) — NSG و ASG
 - [**التشفير و TLS/PKI**](03-encryption-tls-pki) — حماية البيانات
 - [**عمليات الأمن**](04-security-operations-soc) — SOC و Sentinel
-
 
 </TabItem>
 </Tabs>

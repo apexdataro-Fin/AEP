@@ -19,7 +19,6 @@ import TabItem from '@theme/TabItem';
 - [**أفضل ممارسات Helm**](02-helm-chart-best-practices) — تصميم Charts احترافية
 - [**Helmfile و GitOps**](03-helmfile-gitops-integration) — دمج مع GitOps
 
-
 ## 💡 المهارات التي ستكتسبها
 
 <div style={{ background: 'var(--ifm-color-emphasis-100)', padding: '1rem', borderRadius: '8px', marginBottom: '1rem' }}>
@@ -28,14 +27,14 @@ Helm Charts • Helmfile • Chart Best Practices • GitOps
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط |
-| **الوقت المقدر** | 4 ساعات |
-| **المتطلبات** | Kubernetes |
-| **الشهادات** | CKA |
-| **المشاريع** | — |
-| **المختبرات** | — |
+| العنصر           | القيمة     |
+| ---------------- | ---------- |
+| **المستوى**      | متوسط      |
+| **الوقت المقدر** | 4 ساعات    |
+| **المتطلبات**    | Kubernetes |
+| **الشهادات**     | CKA        |
+| **المشاريع**     | —          |
+| **المختبرات**    | —          |
 
 ## 🏛️ مهمة CloudNova
 
@@ -58,7 +57,6 @@ graph LR
 - [**أساسيات Helm**](01-helm-fundamentals) — Charts و Releases
 - [**أفضل ممارسات Helm**](02-helm-chart-best-practices) — تصميم Charts احترافية
 - [**Helmfile و GitOps**](03-helmfile-gitops-integration) — دمج مع GitOps
-
 
 </TabItem>
 </Tabs>

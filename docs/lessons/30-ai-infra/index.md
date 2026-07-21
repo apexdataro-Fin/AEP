@@ -16,19 +16,18 @@ description: "GPU Clusters، Model Serving، Inference Optimization — البن
 - [**GPU Clusters**](02-gpu-cluster-management) — إدارة مجموعات GPU
 - [**Model Serving**](03-model-serving-inference) — استدلال النماذج
 
-
 ## 💡 المهارات التي ستكتسبها
 
 GPU • Model Serving • Inference • vLLM • Triton
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متقدم |
-| **الوقت المقدر** | 5 ساعات |
-| **المتطلبات** | Kubernetes |
-| **الشهادات** | — |
+| العنصر           | القيمة     |
+| ---------------- | ---------- |
+| **المستوى**      | متقدم      |
+| **الوقت المقدر** | 5 ساعات    |
+| **المتطلبات**    | Kubernetes |
+| **الشهادات**     | —          |
 
 ## 🏛️ مهمة CloudNova
 
@@ -48,7 +47,6 @@ graph LR
 - [**AI Infrastructure**](01-ai-infrastructure) — مقدمة
 - [**GPU Clusters**](02-gpu-cluster-management) — إدارة مجموعات GPU
 - [**Model Serving**](03-model-serving-inference) — استدلال النماذج
-
 
 ## 🚀 ابدأ التعلم
 

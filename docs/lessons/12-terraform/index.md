@@ -18,19 +18,18 @@ description: "البنية التحتية ككود — Terraform، State، Modul
 - [**Atlantis و CI/CD**](04-terraform-cicd-atlantis) — أتمتة Terraform
 - [**Azure Provider**](05-terraform-azure-provider-deep) — Terraform على Azure
 
-
 ## 💡 المهارات التي ستكتسبها
 
 Terraform • HCL • State Management • Modules • Atlantis • Azure Provider
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متوسط إلى متقدم |
-| **الوقت المقدر** | 8 ساعات |
-| **المتطلبات** | Azure Core |
-| **الشهادات** | AZ-104, HashiCorp Certified |
+| العنصر           | القيمة                      |
+| ---------------- | --------------------------- |
+| **المستوى**      | متوسط إلى متقدم             |
+| **الوقت المقدر** | 8 ساعات                     |
+| **المتطلبات**    | Azure Core                  |
+| **الشهادات**     | AZ-104, HashiCorp Certified |
 
 ## 🏛️ مهمة CloudNova
 
@@ -53,7 +52,6 @@ graph LR
 - [**إدارة State**](03-terraform-state-management-deep) — تخزين آمن ومشاركة
 - [**Atlantis و CI/CD**](04-terraform-cicd-atlantis) — أتمتة Terraform
 - [**Azure Provider**](05-terraform-azure-provider-deep) — Terraform على Azure
-
 
 ## 🚀 ابدأ التعلم
 

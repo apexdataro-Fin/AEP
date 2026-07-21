@@ -17,19 +17,18 @@ description: "Azure AD، B2C، Zero Trust، Federated Identity — الهوية 
 - [**Zero Trust**](03-zero-trust-architecture) — لا تثق بأحد
 - [**الهوية الموحدة**](04-federated-identity-saml-wsfed) — SAML و WS-Fed
 
-
 ## 💡 المهارات التي ستكتسبها
 
 Azure AD • B2C • Zero Trust • SAML • WS-Fed • Federation
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متقدم |
+| العنصر           | القيمة  |
+| ---------------- | ------- |
+| **المستوى**      | متقدم   |
 | **الوقت المقدر** | 7 ساعات |
-| **المتطلبات** | الأمن |
-| **الشهادات** | SC-300 |
+| **المتطلبات**    | الأمن   |
+| **الشهادات**     | SC-300  |
 
 ## 🏛️ مهمة CloudNova
 
@@ -50,7 +49,6 @@ graph LR
 - [**Azure AD B2C**](02-azure-ad-b2c-customers) — هوية العملاء
 - [**Zero Trust**](03-zero-trust-architecture) — لا تثق بأحد
 - [**الهوية الموحدة**](04-federated-identity-saml-wsfed) — SAML و WS-Fed
-
 
 ## 🚀 ابدأ التعلم
 

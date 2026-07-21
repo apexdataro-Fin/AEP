@@ -16,19 +16,18 @@ description: "MLOps — Model Monitoring، Experiment Tracking — تشغيل ML
 - [**مراقبة النماذج**](02-model-monitoring-production) — Data Drift
 - [**تتبع التجارب**](03-ml-experiment-tracking) — MLflow
 
-
 ## 💡 المهارات التي ستكتسبها
 
 MLOps • Model Monitoring • Experiment Tracking • MLflow
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متقدم |
-| **الوقت المقدر** | 4 ساعات |
-| **المتطلبات** | Azure AI |
-| **الشهادات** | — |
+| العنصر           | القيمة   |
+| ---------------- | -------- |
+| **المستوى**      | متقدم    |
+| **الوقت المقدر** | 4 ساعات  |
+| **المتطلبات**    | Azure AI |
+| **الشهادات**     | —        |
 
 ## 🏛️ مهمة CloudNova
 
@@ -48,7 +47,6 @@ graph LR
 - [**أساسيات MLOps**](01-mlops-fundamentals) — دورة حياة ML
 - [**مراقبة النماذج**](02-model-monitoring-production) — Data Drift
 - [**تتبع التجارب**](03-ml-experiment-tracking) — MLflow
-
 
 ## 🚀 ابدأ التعلم
 

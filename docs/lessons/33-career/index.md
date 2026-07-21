@@ -17,19 +17,18 @@ description: "مسارات السحابة، السيرة الذاتية، Linked
 - [**شبكة العلاقات**](03-networking-personal-brand) — Personal Brand
 - [**العمل الحر**](04-freelancing-consulting) — استشارات
 
-
 ## 💡 المهارات التي ستكتسبها
 
 Career Paths • Resume • LinkedIn • Networking • Freelancing
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | مبتدئ |
-| **الوقت المقدر** | 5 ساعات |
-| **المتطلبات** | المقابلات |
-| **الشهادات** | — |
+| العنصر           | القيمة    |
+| ---------------- | --------- |
+| **المستوى**      | مبتدئ     |
+| **الوقت المقدر** | 5 ساعات   |
+| **المتطلبات**    | المقابلات |
+| **الشهادات**     | —         |
 
 ## 🏛️ مهمة CloudNova
 
@@ -51,7 +50,6 @@ graph LR
 - [**سيرة ذاتية**](02-resume-linkedin-optimization) — ATS Optimization
 - [**شبكة العلاقات**](03-networking-personal-brand) — Personal Brand
 - [**العمل الحر**](04-freelancing-consulting) — استشارات
-
 
 ## 🚀 ابدأ التعلم
 

@@ -16,19 +16,18 @@ description: "LLMOps — تقييم LLM، تحسين التكاليف — تشغ
 - [**تقييم LLM**](02-llm-evaluation-frameworks) — أطر التقييم
 - [**تحسين التكاليف**](03-llm-cost-optimization-advanced) — Caching، Batching
 
-
 ## 💡 المهارات التي ستكتسبها
 
 LLMOps • LLM Evaluation • Cost Optimization • Prompt Engineering
 
 ## 📊 معلومات الوحدة
 
-| العنصر | القيمة |
-| ------ | ------ |
-| **المستوى** | متقدم |
+| العنصر           | القيمة  |
+| ---------------- | ------- |
+| **المستوى**      | متقدم   |
 | **الوقت المقدر** | 4 ساعات |
-| **المتطلبات** | RAG |
-| **الشهادات** | — |
+| **المتطلبات**    | RAG     |
+| **الشهادات**     | —       |
 
 ## 🏛️ مهمة CloudNova
 
@@ -48,7 +47,6 @@ graph LR
 - [**أساسيات LLMOps**](01-llmops-fundamentals) — LLM Lifecycle
 - [**تقييم LLM**](02-llm-evaluation-frameworks) — أطر التقييم
 - [**تحسين التكاليف**](03-llm-cost-optimization-advanced) — Caching، Batching
-
 
 ## 🚀 ابدأ التعلم
 
