@@ -442,13 +442,21 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 - **ب)** Rehost
 - **ج)** Retire
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 **ب) Rehost (Lift & Shift).** التطبيق لا يمكن تعديله — لكن يمكن نقله كما هو إلى Azure VM. لاحقاً، يمكن replatform إلى Azure App Service عند توفر الوقت.
+
 </details>
+
 
 **س٢:** كم دقيقة تعطل في السنة = 99.95% availability؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 
 ```
 365 days × 24 hours × 60 minutes = 525,600 دقيقة/سنة
@@ -457,11 +465,16 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 ```
 
 هذا لماذا 99.95% (٢ AZ) مقبول لتطبيقات كثيرة — ٤ ساعات تعطل سنوياً تكفي للصيانة والتعافي من الأعطال.
+
 </details>
+
 
 **س٣:** ما الفرق بين Capital Expenditure (CapEx) و Operational Expenditure (OpEx)؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 
 |             | CapEx (On-Premises)       | OpEx (Cloud)              |
 | ----------- | ------------------------- | ------------------------- |
@@ -472,7 +485,9 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 | **التنبؤ**  | صعب — ماذا لو احتجت أكثر؟ | سهل — scale مع الطلب      |
 
 التحول من CapEx → OpEx هو أحد أكبر دوافع الهجرة للسحابة.
+
 </details>
+
 
 ### 🧠 استدعاء نشط (5)
 
@@ -511,7 +526,8 @@ VMware vSphere    ←──Azure Arc──→ Azure Management
 
 **"صمم بنية تحتية سحابية لـ fintech startup تخدم مليون مستخدم."**
 
-<details>
+
+<details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -557,13 +573,16 @@ North Europe (DR):
 └── الإجمالي: ~$5,500/شهر ✅ (داخل الميزانية)
 ```
 
+
 </details>
+
 
 ### سؤال تقني
 
 **"كيف تشرح لمدير مالي لماذا فاتورة السحابة ارتفعت من $5K إلى $12K هذا الشهر؟"**
 
-<details>
+
+<details style="display:none">
 <summary>👀 الإجابة</summary>
 
 1. **لا تقل "السحابة غالية"**. قل: "استخدامنا زاد — وهذا جيد لأنه يعني نمواً."
@@ -576,13 +595,16 @@ North Europe (DR):
    - أضفنا auto-shutdown لبيئة dev — وفر $800
 4. **التوصية**: صافي الزيادة الدائمة ~$2,700/شهر مقابل نمو 40% في الإيرادات.
 
+
 </details>
+
 
 ### سؤال سلوكي (STAR)
 
 **"احكِ عن مرة خفضت فيها تكلفة السحابة دون التأثير على الأداء."**
 
-<details>
+
+<details style="display:none">
 <summary>👀 مثال</summary>
 
 > **S**: فاتورة Azure ارتفعت ٣٥٪ ربع سنوي دون زيادة في المستخدمين.  
@@ -590,7 +612,9 @@ North Europe (DR):
 > **A**: نفذت تدقيق FinOps: وجدت ٢٠ VM idle بعد 8pm، ١٥ قرص غير مرتبط، و٣ قواعد بيانات test بحجم production. أضفت auto-shutdown، right-sizing، و cleanup سكريبت.  
 > **R**: وفرنا ٢٨٪ ($4,200/شهر = $50,400/سنة). أعدنا استثمار التوفير في ميزات جديدة.
 
+
 </details>
+
 
 ---
 

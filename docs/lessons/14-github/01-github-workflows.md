@@ -551,13 +551,25 @@ docker push ghcr.io/cloudnova/api:v1.0.0
 ### 📝 تقييم
 
 **س١:** لماذا OIDC أفضل من secrets الدائمة؟
+
+
 <details><summary>الإجابة</summary>OIDC يطلب token مؤقت من Azure/AWS لكل workflow run. لا secrets دائمة يمكن أن تتسرب. الـ token ينتهي بعد minutes.</details>
 
+
+
 **س٢:** كيف تمنع نشر كود بدون مراجعة؟
+
+
 <details><summary>الإجابة</summary>Branch protection: require PR + 2 approvals + CI checks passing. Deployment environments: required reviewers قبل النشر.</details>
 
+
+
 **س٣:** ما فائدة CODEOWNERS؟
+
+
 <details><summary>الإجابة</summary>يحدد من يجب أن يراجع ملفات معينة. مثال: `*.tf @platform-team` = أي تغيير في Terraform يحتاج مراجعة فريق المنصة.</details>
+
+
 
 ### 🧠 استدعاء نشط
 

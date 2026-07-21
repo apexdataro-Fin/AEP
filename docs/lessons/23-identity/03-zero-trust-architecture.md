@@ -280,13 +280,25 @@ resource "azurerm_network_security_group" "zero_trust" {
 ### 📝 اختبار (3)
 
 1. **موظف يسافر لبلد جديد ويريد الوصول لـ Azure Portal. كيف يتعامل Conditional Access؟**
-   <details><summary>الإجابة</summary>Risk-based: impossible travel detection → risk level high → block or require MFA + compliant device. Azure AD Identity Protection يتعامل مع هذا تلقائياً.</details>
+   
+
+<details><summary>الإجابة</summary>Risk-based: impossible travel detection → risk level high → block or require MFA + compliant device. Azure AD Identity Protection يتعامل مع هذا تلقائياً.</details>
+
+
 
 2. **كيف تطبق Zero Trust في مؤسسة تستخدم legacy apps لا تدعم MFA؟**
-   <details><summary>الإجابة</summary>Azure AD Application Proxy + Azure AD Conditional Access أمام الـ legacy app. أو استخدام Hardware MFA tokens (FIDO2) إذا كانت التطبيقات قديمة جداً.</details>
+   
+
+<details><summary>الإجابة</summary>Azure AD Application Proxy + Azure AD Conditional Access أمام الـ legacy app. أو استخدام Hardware MFA tokens (FIDO2) إذا كانت التطبيقات قديمة جداً.</details>
+
+
 
 3. **ما الفرق بين Zero Trust Architecture (ZTA) و Zero Trust Network Access (ZTNA)؟**
-   <details><summary>الإجابة</summary>ZTA: إطار عمل شامل (Identity, Device, Network, Data, Apps). ZTNA: تطبيق Zero Trust على network access فقط (مثل VPN البديل).</details>
+   
+
+<details><summary>الإجابة</summary>ZTA: إطار عمل شامل (Identity, Device, Network, Data, Apps). ZTNA: تطبيق Zero Trust على network access فقط (مثل VPN البديل).</details>
+
+
 
 ### 🧠 Active Recall (5)
 

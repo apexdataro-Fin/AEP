@@ -575,13 +575,25 @@ spec:
 ### 📝 تقييم
 
 **س١:** لماذا أزال Helm v3 Tiller؟
+
+
 <details><summary>الإجابة</summary>Tiller يحتاج cluster-admin permissions = خطر أمني. Helm v3 يتصل مباشرة بـ K8s API ويخزن releases كـ Secrets داخل namespace التطبيق.</details>
 
+
+
 **س٢:** ما الفرق بين `helm install` و `helm upgrade --install`؟
+
+
 <details><summary>الإجابة</summary>install يفشل إذا الـ release موجود. upgrade --install يثبّت إذا لم يوجد أو يرقّي إذا وجد. الأفضل لـ CI/CD.</details>
 
+
+
 **س٣:** كيف تدير secrets في Helm؟
+
+
 <details><summary>الإجابة</summary>External Secrets Operator، Sealed Secrets، أو `existingSecret`. ولا تخزّن secrets أبداً في values.yaml.</details>
+
+
 
 ### 🧠 استدعاء نشط
 

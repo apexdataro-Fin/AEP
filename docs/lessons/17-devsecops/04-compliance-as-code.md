@@ -223,13 +223,25 @@ spec:
 ### 📝 اختبار (3)
 
 1. **InSpec = 85% compliance. كيف ترفع لـ 95%؟**
-   <details><summary>الإجابة</summary>ركز على HIGH impact controls، صنف الفشل، ضع Azure Policies لمنع drift، auto-remediation للـ technical debt.</details>
+   
+
+<details><summary>الإجابة</summary>ركز على HIGH impact controls، صنف الفشل، ضع Azure Policies لمنع drift، auto-remediation للـ technical debt.</details>
+
+
 
 2. **مدقق SOC2 يطلب evidence. كيف تقدم؟**
-   <details><summary>الإجابة</summary>InSpec reports، Azure Policy dashboard، CI/CD logs، Azure AD access reviews.</details>
+   
+
+<details><summary>الإجابة</summary>InSpec reports، Azure Policy dashboard، CI/CD logs، Azure AD access reviews.</details>
+
+
 
 3. **Azure Policy يمنع deployment شرعي. الحل؟**
-   <details><summary>الإجابة</summary>Exemption مؤقت مع justification. Fix root cause: policy too broad?</details>
+   
+
+<details><summary>الإجابة</summary>Exemption مؤقت مع justification. Fix root cause: policy too broad?</details>
+
+
 
 ### 🧠 Active Recall (5)
 

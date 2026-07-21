@@ -340,13 +340,25 @@ class SearchABTest:
 ### 📝 اختبار (3)
 
 1. **Hybrid Search يرجع وثائق غير ذات صلة لاستعلام "AKS cluster size". لماذا؟**
-   <details><summary>الإجابة</summary>alpha قريب من 1 (vector heavy). "size" في vector space يرتبط بـ "scaling" و "performance" وليس "node count". خفض alpha لـ 0.3 لزيادة تأثير keyword.</details>
+   
+
+<details><summary>الإجابة</summary>alpha قريب من 1 (vector heavy). "size" في vector space يرتبط بـ "scaling" و "performance" وليس "node count". خفض alpha لـ 0.3 لزيادة تأثير keyword.</details>
+
+
 
 2. **RRF: doc A rank 1 في vector, rank 10 في BM25. doc B rank 5 في الاثنين. من يفوز؟**
-   <details><summary>الإجابة</summary>RRF(A) = 1/(60+1) + 1/(60+10) = 0.0164 + 0.0143 = 0.0307. RRF(B) = 1/(60+5) + 1/(60+5) = 0.0154 + 0.0154 = 0.0308. B يفوز بفارق ضئيل! الاتساق يهزم التفوق في استراتيجية واحدة.</details>
+   
+
+<details><summary>الإجابة</summary>RRF(A) = 1/(60+1) + 1/(60+10) = 0.0164 + 0.0143 = 0.0307. RRF(B) = 1/(60+5) + 1/(60+5) = 0.0154 + 0.0154 = 0.0308. B يفوز بفارق ضئيل! الاتساق يهزم التفوق في استراتيجية واحدة.</details>
+
+
 
 3. **كيف تبني Hybrid Search بدون Weaviate/Pinecone؟**
-   <details><summary>الإجابة</summary>Elasticsearch مع dense_vector field + BM25. أو PostgreSQL pgvector + full-text search مع RRF يدوي. أو OpenSearch 2.9+ مع neural search.</details>
+   
+
+<details><summary>الإجابة</summary>Elasticsearch مع dense_vector field + BM25. أو PostgreSQL pgvector + full-text search مع RRF يدوي. أو OpenSearch 2.9+ مع neural search.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

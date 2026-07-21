@@ -458,13 +458,25 @@ print(f"Prompt Score: {score:.2f}/1.0")
 ### 📝 اختبار (3)
 
 1. **مستخدم يرسل 1000 كلمة كـ prompt. كيف تتعامل من ناحية التكلفة؟**
-   <details><summary>الإجابة</summary>اقتطع الـ prompt إذا تجاوز limit معين. استخدم summarization للـ context الطويل. ضع max_tokens للـ completion. تحذير المستخدم عند تجاوز الـ budget.</details>
+   
+
+<details><summary>الإجابة</summary>اقتطع الـ prompt إذا تجاوز limit معين. استخدم summarization للـ context الطويل. ضع max_tokens للـ completion. تحذير المستخدم عند تجاوز الـ budget.</details>
+
+
 
 2. **كيف تتعامل مع regional outage لـ Azure OpenAI؟**
-   <details><summary>الإجابة</summary>Multi-region deployment (West Europe + North Europe). Azure Front Door للتوزيع. Fallback إلى region ثانٍ تلقائياً. Cache للاستجابات الشائعة.</details>
+   
+
+<details><summary>الإجابة</summary>Multi-region deployment (West Europe + North Europe). Azure Front Door للتوزيع. Fallback إلى region ثانٍ تلقائياً. Cache للاستجابات الشائعة.</details>
+
+
 
 3. **مستخدم يقول: "أجب بصيغة JSON." والـ model يرجع نص عادي. لماذا؟**
-   <details><summary>الإجابة</summary>temperature عالي جداً (> 0.8). أو system prompt لم يحدد output format. استخدم `response_format: { "type": "json_object" }`.</details>
+   
+
+<details><summary>الإجابة</summary>temperature عالي جداً (> 0.8). أو system prompt لم يحدد output format. استخدم `response_format: { "type": "json_object" }`.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

@@ -396,13 +396,25 @@ spec:
 ### 📝 اختبار (3)
 
 1. **HelmRelease فشل. كيف تشخص المشكلة مع Flux؟**
-   <details><summary>الإجابة</summary>`flux get helmreleases`, `kubectl describe helmrelease <name>`, `flux events --for HelmRelease/<name>`, فحص logs: `kubectl logs -n flux-system helm-controller-xxx`</details>
+   
+
+<details><summary>الإجابة</summary>`flux get helmreleases`, `kubectl describe helmrelease <name>`, `flux events --for HelmRelease/<name>`, فحص logs: `kubectl logs -n flux-system helm-controller-xxx`</details>
+
+
 
 2. **Flux اكتشف image جديدة لكنه لم يحدث الـ deployment. لماذا؟**
-   <details><summary>الإجابة</summary>ImagePolicy semver range لا يتطابق. أو ImageRepository لم يكتشف الـ image بعد (interval). أو HelmRelease معلق بـ `dependsOn`.</details>
+   
+
+<details><summary>الإجابة</summary>ImagePolicy semver range لا يتطابق. أو ImageRepository لم يكتشف الـ image بعد (interval). أو HelmRelease معلق بـ `dependsOn`.</details>
+
+
 
 3. **كيف تنقل من Argo CD إلى Flux؟**
-   <details><summary>الإجابة</summary>1. Bootstrap Flux على نفس cluster. 2. نقل HelmReleases/Kustomizations تدريجياً. 3. استخدام `dependsOn` للحفاظ على الترتيب. 4. تعطيل Argo CD بعد التحقق.</details>
+   
+
+<details><summary>الإجابة</summary>1. Bootstrap Flux على نفس cluster. 2. نقل HelmReleases/Kustomizations تدريجياً. 3. استخدام `dependsOn` للحفاظ على الترتيب. 4. تعطيل Argo CD بعد التحقق.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

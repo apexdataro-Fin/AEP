@@ -352,13 +352,25 @@ processors:
 ### 📝 اختبار (3)
 
 1. **لديك 3 exporters في collector. أحدهم يفشل. هل يتوقف الـ pipeline كله؟**
-   <details><summary>الإجابة</summary>لا. كل exporter مستقل. لكن إذا فشل receiver واحد، كل الـ pipelines المرتبطة به تتأثر. استخدم queues + retries.</details>
+   
+
+<details><summary>الإجابة</summary>لا. كل exporter مستقل. لكن إذا فشل receiver واحد، كل الـ pipelines المرتبطة به تتأثر. استخدم queues + retries.</details>
+
+
 
 2. **كيف تهاجر من Jaeger SDK إلى OTel بدون downtime؟**
-   <details><summary>الإجابة</summary>1. Deploy OTel Collector مع Jaeger exporter. 2. استبدل SDK تدريجياً (canary deployment). 3. تحقق من تطابق البيانات. 4. أزل Jaeger SDK.</details>
+   
+
+<details><summary>الإجابة</summary>1. Deploy OTel Collector مع Jaeger exporter. 2. استبدل SDK تدريجياً (canary deployment). 3. تحقق من تطابق البيانات. 4. أزل Jaeger SDK.</details>
+
+
 
 3. **كم تكلفة OTel Collector في الإنتاج (memory, CPU)؟**
-   <details><summary>الإجابة</summary>Agent (DaemonSet): 128MB memory, 100m CPU. Gateway (Deployment): 512MB-2GB memory, 500m-2 CPU حسب الـ throughput. استخدم memory_limiter processor.</details>
+   
+
+<details><summary>الإجابة</summary>Agent (DaemonSet): 128MB memory, 100m CPU. Gateway (Deployment): 512MB-2GB memory, 500m-2 CPU حسب الـ throughput. استخدم memory_limiter processor.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

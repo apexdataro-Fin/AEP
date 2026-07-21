@@ -353,13 +353,25 @@ def compare_multi_vs_single_cloud():
 ### 📝 اختبار (3)
 
 1. **شركة لديها 50 خادماً تستخدم 24/7 بنسبة 95%. هل تنتقل للسحابة؟**
-   <details><summary>الإجابة</summary>على الأرجح لا. استخدام عال + ثابت = on-prem أرخص مع Reserved Instances. لكن احسب TCO أولاً — قد توفر المنصات المدارة (managed DB) تكاليف staff كبيرة.</details>
+   
+
+<details><summary>الإجابة</summary>على الأرجح لا. استخدام عال + ثابت = on-prem أرخص مع Reserved Instances. لكن احسب TCO أولاً — قد توفر المنصات المدارة (managed DB) تكاليف staff كبيرة.</details>
+
+
 
 2. **كيف تقنع CFO الذي يخشى cloud costs غير المتوقعة؟**
-   <details><summary>الإجابة</summary>Azure Budgets + alerts, Reserved Instances للتكاليف الثابتة, FinOps governance, show TCO analysis with worst-case scenario, reference customers who saved money.</details>
+   
+
+<details><summary>الإجابة</summary>Azure Budgets + alerts, Reserved Instances للتكاليف الثابتة, FinOps governance, show TCO analysis with worst-case scenario, reference customers who saved money.</details>
+
+
 
 3. **ما هي التكاليف الخفية للـ cloud؟**
-   <details><summary>الإجابة</summary>Egress bandwidth, unused resources (zombie VMs, unattached disks), Dev/Test environments left running, training, managed service charges, support plan.</details>
+   
+
+<details><summary>الإجابة</summary>Egress bandwidth, unused resources (zombie VMs, unattached disks), Dev/Test environments left running, training, managed service charges, support plan.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

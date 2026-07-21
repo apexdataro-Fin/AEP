@@ -582,27 +582,42 @@ graph TD
 - **ب)** الطبقات تُشارك بين الصور لتوفير مساحة
 - **ج)** كل طبقة مستقلة تماماً
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 **ب) الطبقات تُشارك بين الصور.** إذا استخدمت 10 صور `FROM ubuntu:22.04`، طبقة ubuntu تخزّن مرة واحدة فقط. Docker يستخدم copy-on-write.
+
 </details>
+
 
 **س٢:** ما فائدة `.dockerignore`؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 يمنع إرسال ملفات غير ضرورية لـ build context (مثل `node_modules/`، `.git/`). الفوائد:
 1. أسرع build (context أصغر)
 2. أمان (لن تصل `.env` للصورة بالخطأ)
 3. cache أكثر فعالية
+
 </details>
+
 
 **س٣:** ما الفرق بين `livenessProbe` و `readinessProbe`؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 - **livenessProbe**: هل الحاوية حيّة؟ إذا فشلت → K8s يعيد تشغيلها
 - **readinessProbe**: هل الحاوية جاهزة لاستقبال طلبات؟ إذا فشلت → K8s يزيلها من الـ Service مؤقتاً
 
 مثال: حاوية تعمل لكن قاعدة البيانات لم تصل بعد = liveness OK ولكن readiness لا.
+
 </details>
+
 
 ### 🧠 استدعاء نشط (5)
 
@@ -641,7 +656,8 @@ graph TD
 
 **"صمم استراتيجية حاويات لشركة بـ 50 خدمة microservice."**
 
-<details>
+
+<details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -674,13 +690,16 @@ graph TD
 └── AlertManager (تنبيهات)
 ```
 
+
 </details>
+
 
 ### سؤال تقني
 
 **"كيف تقلص Docker image من 1.2GB إلى 15MB؟"**
 
-<details>
+
+<details style="display:none">
 <summary>👀 الإجابة</summary>
 
 ```dockerfile
@@ -717,7 +736,9 @@ CMD ["python3", "app.py"]
 5. دمج RUN commands لتقليل الطبقات
 6. `.dockerignore`: استبعد node_modules, .git
 
+
 </details>
+
 
 ### سؤال سلوكي (STAR)
 

@@ -892,19 +892,39 @@ done
 ### Knowledge Check
 
 1. **ما الأمر لعرض آخر 50 سطراً من ملف سجل؟**
-   <details><summary>الإجابة</summary>`tail -50 /var/log/syslog`</details>
+   
+
+<details><summary>الإجابة</summary>`tail -50 /var/log/syslog`</details>
+
+
 
 2. **ما الفرق بين `systemctl restart` و `systemctl reload`؟**
-   <details><summary>الإجابة</summary>restart يوقف ثم يبدأ (انقطاع). reload يعيد قراءة config بدون توقف (إذا كانت الخدمة تدعمه).</details>
+   
+
+<details><summary>الإجابة</summary>restart يوقف ثم يبدأ (انقطاع). reload يعيد قراءة config بدون توقف (إذا كانت الخدمة تدعمه).</details>
+
+
 
 3. **كيف تجد كل الملفات المعدلة في آخر 24 ساعة؟**
-   <details><summary>الإجابة</summary>`find / -type f -mtime -1 2>/dev/null`</details>
+   
+
+<details><summary>الإجابة</summary>`find / -type f -mtime -1 2>/dev/null`</details>
+
+
 
 4. **ما معنى `chmod 750`؟**
-   <details><summary>الإجابة</summary>مالك: rwx (7)، مجموعة: r-x (5)، آخرون: --- (0)</details>
+   
+
+<details><summary>الإجابة</summary>مالك: rwx (7)، مجموعة: r-x (5)، آخرون: --- (0)</details>
+
+
 
 5. **كيف تمنع service من التشغيل التلقائي عند الإقلاع؟**
-   <details><summary>الإجابة</summary>`systemctl disable service-name`</details>
+   
+
+<details><summary>الإجابة</summary>`systemctl disable service-name`</details>
+
+
 
 ### Quiz
 
@@ -912,19 +932,31 @@ done
    a) `df -h`
    b) `free -h`
    c) `du -sh`
-   <details><summary>الإجابة</summary>b) `free -h`</details>
+   
+
+<details><summary>الإجابة</summary>b) `free -h`</details>
+
+
 
 2. **كيف تشغل أمراً كل ساعة في cron؟**
    a) `* */1 * * * command`
    b) `0 * * * * command`
    c) `@hourly command`
-   <details><summary>الإجابة</summary>b و c صحيحان. `0 * * * *` في الدقيقة 0 من كل ساعة. `@hourly` اختصار.</details>
+   
+
+<details><summary>الإجابة</summary>b و c صحيحان. `0 * * * *` في الدقيقة 0 من كل ساعة. `@hourly` اختصار.</details>
+
+
 
 3. **أي PID للإشارة لأعلى عملية تستهلك CPU؟**
    a) `kill -9`
    b) `top` ثم sort بـ `P`
    c) `ps aux | grep cpu`
-   <details><summary>الإجابة</summary>b) `top` ثم اضغط P للترتيب حسب CPU</details>
+   
+
+<details><summary>الإجابة</summary>b) `top` ثم اضغط P للترتيب حسب CPU</details>
+
+
 
 ### 5 أسئلة للتذكّر النشط
 

@@ -310,13 +310,25 @@ resource "azurerm_frontdoor" "b2c" {
 ### 📝 اختبار (3)
 
 1. **عميل يريد Facebook + Apple + Email login. أي حل تقترح؟**
-   <details><summary>الإجابة</summary>Azure AD B2C مع Identity Providers: Facebook, Apple, Local Account. User Flow واحد لـ signup/signin.</details>
+   
+
+<details><summary>الإجابة</summary>Azure AD B2C مع Identity Providers: Facebook, Apple, Local Account. User Flow واحد لـ signup/signin.</details>
+
+
 
 2. **كيف تنقل بيانات المستخدم من نظام قديم إلى B2C؟**
-   <details><summary>الإجابة</summary>Microsoft Graph API للـ bulk import. أو Custom Policy مع REST API للتحقق من النظام القديم في أول login.</details>
+   
+
+<details><summary>الإجابة</summary>Microsoft Graph API للـ bulk import. أو Custom Policy مع REST API للتحقق من النظام القديم في أول login.</details>
+
+
 
 3. **B2C يرجع 429 errors عند 500K مستخدم. ماذا تفعل؟**
-   <details><summary>الإجابة</summary>Upgrade tier, إضافة caching (Redis), Front Door للتوزيع, rate limiting في الـ API gateway قبل B2C.</details>
+   
+
+<details><summary>الإجابة</summary>Upgrade tier, إضافة caching (Redis), Front Door للتوزيع, rate limiting في الـ API gateway قبل B2C.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

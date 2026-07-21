@@ -676,19 +676,39 @@ az role assignment create \
 ### Knowledge Check
 
 1. **ما الفرق بين RBAC و Azure Policy؟**
-   <details><summary>الإجابة</summary>RBAC: من يستطيع فعل ماذا (Authorization). Policy: ما هو مسموح أساساً (Governance).</details>
+   
+
+<details><summary>الإجابة</summary>RBAC: من يستطيع فعل ماذا (Authorization). Policy: ما هو مسموح أساساً (Governance).</details>
+
+
 
 2. **لماذا Managed Identity أكثر أماناً من Service Principal secrets؟**
-   <details><summary>الإجابة</summary>لا secrets لتُسرق. Azure يدير التدوير تلقائياً. الهوية مرتبطة بالمورد نفسه.</details>
+   
+
+<details><summary>الإجابة</summary>لا secrets لتُسرق. Azure يدير التدوير تلقائياً. الهوية مرتبطة بالمورد نفسه.</details>
+
+
 
 3. **ما هو PIM ولماذا هو ضروري؟**
-   <details><summary>الإجابة</summary>Privileged Identity Management: صلاحيات مؤقتة بدلاً من دائمة. يمنع misuse ويراقب كل activation.</details>
+   
+
+<details><summary>الإجابة</summary>Privileged Identity Management: صلاحيات مؤقتة بدلاً من دائمة. يمنع misuse ويراقب كل activation.</details>
+
+
 
 4. **كيف يعمل Conditional Access؟**
-   <details><summary>الإجابة</summary>إذا تحقق شرط (موقع، جهاز، خطر) → نفّذ إجراء (MFA، منع، جلسة محدودة).</details>
+   
+
+<details><summary>الإجابة</summary>إذا تحقق شرط (موقع، جهاز، خطر) → نفّذ إجراء (MFA، منع، جلسة محدودة).</details>
+
+
 
 5. **ما هي مبادئ Zero Trust الثلاثة؟**
-   <details><summary>الإجابة</summary>1. تحقق صريح. 2. أقل صلاحية. 3. افترض الاختراق.</details>
+   
+
+<details><summary>الإجابة</summary>1. تحقق صريح. 2. أقل صلاحية. 3. افترض الاختراق.</details>
+
+
 
 ### Quiz
 
@@ -696,19 +716,31 @@ az role assignment create \
    a) Azure Sentinel
    b) Azure Key Vault
    c) Azure Policy
-   <details><summary>الإجابة</summary>b) Key Vault. يدير secrets, keys, certificates مع HSM.</details>
+   
+
+<details><summary>الإجابة</summary>b) Key Vault. يدير secrets, keys, certificates مع HSM.</details>
+
+
 
 2. **ما هو JIT VM Access؟**
    a) Just-in-Time — وصول SSH/RDP مؤقت
    b) Java Integration Toolkit
    c) نوع من VMs السريعة
-   <details><summary>الإجابة</summary>a) يفتح NSG rule مؤقتاً (حسب الوقت المطلوب) ثم يغلقها تلقائياً.</details>
+   
+
+<details><summary>الإجابة</summary>a) يفتح NSG rule مؤقتاً (حسب الوقت المطلوب) ثم يغلقها تلقائياً.</details>
+
+
 
 3. **أي أداة لتحليل security logs في Azure؟**
    a) Azure Monitor
    b) Azure Sentinel
    c) Azure Advisor
-   <details><summary>الإجابة</summary>b) Sentinel = SIEM + SOAR. يجمع logs ويحللها ويكتشف threats.</details>
+   
+
+<details><summary>الإجابة</summary>b) Sentinel = SIEM + SOAR. يجمع logs ويحللها ويكتشف threats.</details>
+
+
 
 ### 5 أسئلة للتذكّر النشط
 

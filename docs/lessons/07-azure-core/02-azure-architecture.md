@@ -682,13 +682,21 @@ graph LR
 - **ب)** Layer 7 (HTTP/HTTPS) مع global routing
 - **ج)** Layer 3 (Network)
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 **ب) Layer 7 مع global routing.** Front Door ليس load balancer عادي — إنه global anycast service يوجه المستخدمين لأقرب region ويوفر SSL termination و WAF.
+
 </details>
+
 
 **س٢:** كم تكلفة تشغيل 3 AZ + Region Pair لـ DR؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 
 ```
 Primary (3 AZ):
@@ -706,17 +714,24 @@ DR (Pilot Light):
 (Active-Passive يوفر 60% مقابل Active-Active)
 ```
 
+
 </details>
+
 
 **س٣:** أيهما أفضل: Azure Firewall أم NSG؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 الاثنان معاً — ليس أحدهما:
 - **NSG**: Layer 4 filtering على subnet/NIC. بسيط وسريع ومجاني
 - **Azure Firewall**: Layer 7 inspection، threat intelligence، FQDN filtering، IDPS. مدفوع (~$900/شهر)
 
 استخدم NSG للقواعد البسيطة (allow HTTPS). استخدم Firewall للـ egress filtering والتهديدات المتقدمة.
+
 </details>
+
 
 ### 🧠 استدعاء نشط (5)
 
@@ -753,7 +768,8 @@ DR (Pilot Light):
 
 **"صمم بنية تحتية لمؤسسة مالية على Azure — تخدم 5 ملايين عميل."**
 
-<details>
+
+<details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -785,13 +801,16 @@ DR (Pilot Light):
 └── Reserved 3 سنوات: وفر 40%
 ```
 
+
 </details>
+
 
 ### سؤال تقني
 
 **"كيف تصمم شبكة لمؤسسة بـ 500 مهندس و 50 تطبيقاً؟"**
 
-<details>
+
+<details style="display:none">
 <summary>👀 الإجابة</summary>
 
 ```
@@ -823,7 +842,9 @@ VNet Peering:
 التكلفة: ~$1,500/شهر للـ networking
 ```
 
+
 </details>
+
 
 ### سؤال سلوكي (STAR)
 

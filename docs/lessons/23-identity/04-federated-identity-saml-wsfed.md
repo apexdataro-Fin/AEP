@@ -323,13 +323,25 @@ def saml_proxy():
 ### 📝 اختبار (3)
 
 1. **تطبيق قديم يستخدم SAML 1.1. Azure AD يدعم SAML 2.0 فقط. الحل؟**
-   <details><summary>الإجابة</summary>IdP Proxy (مثل Shibboleth أو custom proxy) يحول SAML 1.1 إلى SAML 2.0.</details>
+   
+
+<details><summary>الإجابة</summary>IdP Proxy (مثل Shibboleth أو custom proxy) يحول SAML 1.1 إلى SAML 2.0.</details>
+
+
 
 2. **موظف من شركة شقيقة يحتاج وصولاً دائماً لتطبيقين فقط. الحل؟**
-   <details><summary>الإجابة</summary>B2B Direct Connect مع Cross-Tenant Access Settings — يحدد التطبيقين فقط.</details>
+   
+
+<details><summary>الإجابة</summary>B2B Direct Connect مع Cross-Tenant Access Settings — يحدد التطبيقين فقط.</details>
+
+
 
 3. **كيف تخطط لانقطاع IdP المخطط (planned maintenance)؟**
-   <details><summary>الإجابة</summary>IdP ثانوي احتياطي، إشعار المستخدمين قبل أسبوع، نافذة صيانة في أقل وقت استخدام، اختبار failover قبل الصيانة.</details>
+   
+
+<details><summary>الإجابة</summary>IdP ثانوي احتياطي، إشعار المستخدمين قبل أسبوع، نافذة صيانة في أقل وقت استخدام، اختبار failover قبل الصيانة.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

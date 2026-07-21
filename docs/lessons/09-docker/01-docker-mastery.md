@@ -644,13 +644,21 @@ COPY app.py .
 - **ب)** COPY requirements.txt ثم RUN pip install ثم COPY . .
 - **ج)** لا فرق
 
-<details><summary>الإجابة</summary>
+
+
+:::tip الإجابة
+
 **ب.** ضع الاعتماديات أولاً لأنها تتغير أقل من الكود. Docker يعيد استخدام كل طبقة قبل الطبقة التي تغيرت.
-</details>
+:::
+
+
 
 **س٢:** كيف تسحب صورة من ACR خاص بـ Private Endpoint؟
 
-<details><summary>الإجابة</summary>
+
+
+:::tip الإجابة
+
 ```bash
 # يجب أن تكون على VNet المرتبط بـ Private Endpoint
 az acr login --name cloudnovaregistry
@@ -658,18 +666,25 @@ docker pull cloudnovaregistry.azurecr.io/api:v3
 # أو استخدم Managed Identity:
 az acr login --name cloudnovaregistry --expose-token
 ```
-</details>
+:::
+
+
 
 **س٣:** ما فائدة `--mount=type=cache` في BuildKit؟
 
-<details><summary>الإجابة</summary>
+
+
+:::tip الإجابة
+
 يحفظ cache directory عبر builds المختلفة.
 ```dockerfile
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 ```
 المكتبات تُحمل مرة واحدة فقط. البناء التالي: pip install فوري تقريباً — وفر 90% من وقت البناء.
-</details>
+:::
+
+
 
 ### 🧠 استدعاء نشط
 
@@ -708,7 +723,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 **"صمم CI/CD pipeline لـ 30 microservice كل منها في repo منفصل."**
 
-<details><summary>نموذج الإجابة</summary>
+
+
+:::tip نموذج الإجابة
 
 ```
 استراتيجية الصور:
@@ -732,13 +749,17 @@ CI/CD:
 └── Nightly rebuild of base image
 ```
 
-</details>
+:::
+
+
 
 ### سؤال تقني
 
 **"كيف تحقق build reproducible (نفس الـ hash كل مرة)؟"**
 
-<details><summary>الإجابة</summary>
+
+
+:::tip الإجابة
 
 ```dockerfile
 # ١. Pin versions (لا latest)
@@ -767,7 +788,9 @@ docker build \
   -t api:v1.2.3 .
 ```
 
-</details>
+:::
+
+
 
 ### سؤال سلوكي (STAR)
 

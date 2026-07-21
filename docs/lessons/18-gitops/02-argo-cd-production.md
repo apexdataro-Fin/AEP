@@ -362,13 +362,25 @@ echo "✅ Recovery time: $(date)"
 ### 📝 اختبار (3)
 
 1. **Argo CD يظهر OutOfSync لكن الـ app يعمل في الكلاستر. لماذا؟**
-   <details><summary>الإجابة</summary>Manual changes في الكلاستر بدون Git. Argo CD يكتشف الـ drift. إذا selfHeal=true، سيعيد الـ Git state. إذا false، سيبقى OutOfSync.</details>
+   
+
+<details><summary>الإجابة</summary>Manual changes في الكلاستر بدون Git. Argo CD يكتشف الـ drift. إذا selfHeal=true، سيعيد الـ Git state. إذا false، سيبقى OutOfSync.</details>
+
+
 
 2. **كيف تمنع Argo CD من sync في ساعات الذروة؟**
-   <details><summary>الإجابة</summary>Sync windows: `syncWindows: - kind: deny, schedule: '0 9-17 * * 1-5', duration: 8h, applications: ['*']`</details>
+   
+
+<details><summary>الإجابة</summary>Sync windows: `syncWindows: - kind: deny, schedule: '0 9-17 * * 1-5', duration: 8h, applications: ['*']`</details>
+
+
 
 3. **Argo CD يستهلك 8GB memory. كيف تشخص؟**
-   <details><summary>الإجابة</summary>عدد كبير من applications + clusters. Reduce sync interval. Use sharding: `--application-namespaces`. Check memory leak.</details>
+   
+
+<details><summary>الإجابة</summary>عدد كبير من applications + clusters. Reduce sync interval. Use sharding: `--application-namespaces`. Check memory leak.</details>
+
+
 
 ### 🧠 Active Recall (5)
 

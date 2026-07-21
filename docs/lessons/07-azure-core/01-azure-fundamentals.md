@@ -662,27 +662,42 @@ graph TD
 - **ب)** Azure Functions (Consumption Plan)
 - **ج)** AKS cluster
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 **ب) Azure Functions.** الـ job دوري (أسبوعي) وليس مستمراً. Consumption Plan = تدفع فقط عند التنفيذ. VM 24/7 = تدفع 168 ساعة أسبوعياً مقابل بضع ساعات معالجة.
+
 </details>
+
 
 **س٢:** كم تكلفة تشغيل App Service P1v2 (٢ instances) + Azure SQL GP (٢ vCores) شهرياً تقريباً؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 App Service P1v2: ~$146/instance × 2 = $292
 Azure SQL GP 2 vCores: ~$375
 الإجمالي التقريبي: ~$667/شهر
 (مع Reserved Instances سنة: ~$450/شهر — وفر 33%)
+
 </details>
+
 
 **س٣:** ما الفرق بين Azure Policy و Azure RBAC؟
 
-<details><summary>الإجابة</summary>
+
+<details style="display:none">
+<summary>الإجابة</summary>
+
 - **RBAC**: من يستطيع فعل ماذا (صلاحيات). مثال: "Ahmed يستطيع قراءة VMs في prod-rg"
 - **Azure Policy**: ما يمكن فعله (قواعد). مثال: "لا أحد يستطيع إنشاء VM بدون managed disk"
 
 RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
+
 </details>
+
 
 ### 🧠 استدعاء نشط (5)
 
@@ -721,7 +736,8 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 
 **"صمم منصة SaaS على Azure تخدم 50,000 مستخدم وتنمو 20% شهرياً."**
 
-<details>
+
+<details style="display:none">
 <summary>👀 نموذج الإجابة</summary>
 
 ```
@@ -752,13 +768,16 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 قابلية النمو: تلقائية مع auto-scaling
 ```
 
+
 </details>
+
 
 ### سؤال تقني
 
 **"كيف تنقل تطبيق NET Framework 4.8 ضخم إلى Azure؟"**
 
-<details>
+
+<details style="display:none">
 <summary>👀 الإجابة</summary>
 
 المرحلة ١: Rehost (Lift & Shift)
@@ -779,7 +798,9 @@ RBAC يتحكم في الوصول. Policy تتحكم في الخصائص.
 - Function apps للأجزاء المستقلة
 - CI/CD مع GitHub Actions + deployment slots
 
+
 </details>
+
 
 ### سؤال سلوكي (STAR)
 
